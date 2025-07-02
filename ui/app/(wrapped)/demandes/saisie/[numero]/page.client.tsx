@@ -7,8 +7,8 @@ import { client } from "@/api.client";
 import { DemandeSpinner } from "@/app/(wrapped)/demandes/saisie/components/DemandeSpinner";
 import { DemandeForm } from "@/app/(wrapped)/demandes/saisie/demandeForm/DemandeForm";
 import { DemandeFilesProvider } from "@/app/(wrapped)/demandes/saisie/demandeForm/observationsSection/filesSection/filesContext";
-import { canCorrectDemande, canEditDemande,canEditDemandeCfdUai } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
 import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
+import { canCorrectDemande, canEditDemande,canEditDemandeCfdUai } from '@/utils/permissionsDemandeUtils';
 import { GuardSaisieDemande } from "@/utils/security/GuardSaisieDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
