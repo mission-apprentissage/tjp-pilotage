@@ -9,8 +9,8 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 
 import type { Demandes } from "@/app/(wrapped)/demandes/saisie/types";
-import { canCorrectDemande, canEditDemande, canEditDemandeCfdUai, canEditDemandeStatut } from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
 import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
+import { canCorrectDemande, canEditDemande, canEditDemandeCfdUai, canEditDemandeStatut } from "@/utils/permissionsDemandeUtils";
 
 
 export const ModificationDemandeButton = chakra(

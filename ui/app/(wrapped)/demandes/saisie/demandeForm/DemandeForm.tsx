@@ -34,12 +34,12 @@ import { Conseils } from "@/app/(wrapped)/demandes/saisie/components/Conseils";
 import { MenuFormulaire } from "@/app/(wrapped)/demandes/saisie/components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
 import type { Demande, DemandeMetadata } from "@/app/(wrapped)/demandes/types";
-import { canCorrectDemande, canEditDemandeCfdUai} from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import type { DetailedApiError } from "@/utils/apiError";
 import { getDetailedErrorMessage } from "@/utils/apiError";
 import { getRoutingAccessSaisieDemande} from "@/utils/getRoutingAccesDemande";
+import { canCorrectDemande, canEditDemandeCfdUai} from "@/utils/permissionsDemandeUtils";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";

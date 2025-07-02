@@ -11,9 +11,8 @@ import { isCampagneEnCours, isCampagneTerminee } from 'shared/utils/campagneUtil
 import {isStatutDemandeValidee, isStatutRefusee} from 'shared/utils/statutDemandeUtils';
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
 
-import {feature} from '@/utils/feature';
-import { isUserPartOfSaisieDemande } from '@/utils/isPartOfSaisieDemande';
-
+import {feature} from './feature';
+import { isUserPartOfSaisieDemande } from './isPartOfSaisieDemande';
 
 export type Demande = {
   campagne: CampagneType,
@@ -103,7 +102,7 @@ export const canEditDemandeStatut = ({
     DemandeStatutEnum["refusée"],
   ];
 
-  if(!demande || !demande.statut) return false;
+  if(!demande?.statut) return false;
   if(hasRole({ user, role: RoleEnum["perdir"] })) return editableStatutsPerdir.includes(demande.statut);
   if(isAdmin({ user })) return editableStatutsAdmin.includes(demande.statut);
   else return editableStatuts.includes(demande.statut);

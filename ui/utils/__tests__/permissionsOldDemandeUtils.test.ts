@@ -9,9 +9,9 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import {beforeEach,describe, expect, it} from 'vitest';
 
-import type { Demande } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
-import { canCorrectDemande, canCreateDemande, canDeleteDemande, canEditDemande, canImportDemande } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
 import { feature } from '@/utils/feature';
+import type { Demande } from '@/utils/permissionsDemandeUtils';
+import { canCorrectDemande, canCreateDemande, canDeleteDemande, canEditDemande, canImportDemande } from '@/utils/permissionsDemandeUtils';
 
 const createUserBuilder = ({
   role,

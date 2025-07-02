@@ -396,9 +396,6 @@ const ModalModificationStatut = ({
           >
             {text}
           </Highlight>
-          <Text color="red" mt={2}>
-              Attention, ce changement est irréversible
-          </Text>
         </ModalBody>
         <ModalFooter>
           <Button
