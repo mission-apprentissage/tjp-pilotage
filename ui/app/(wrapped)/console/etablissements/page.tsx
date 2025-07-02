@@ -63,6 +63,7 @@ const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS
   "rentreeScolaire",
   "libelleEtablissement",
   "libelleFormation",
+  "numero",
   "dateEffetTransformation",
   "typeDemande",
 ];
@@ -327,7 +328,7 @@ const Page = () => {
         ...etablissement,
         typeDemande: etablissement.typeDemande
           ? etablissement.typeDemande
-            .split(" ,")
+            .split(", ")
             .map((typeDemande) => formatTypeDemande(typeDemande as TypeDemandeType))
             .join(", ")
           : undefined
@@ -497,7 +498,7 @@ const Page = () => {
   }, [filters.rentreeScolaire]);
 
   return (
-    <>
+    <Flex direction="column" overflowY="auto" bgColor={"bluefrance.975"}>
       <HeaderSection
         setSearchParams={setSearchParams}
         searchParams={searchParams}
@@ -508,9 +509,14 @@ const Page = () => {
         setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
       <Flex direction={"row"} flex={1} position="relative" minH="0">
-        <SideSection searchParams={searchParams} filtersList={data?.filters} handleFilters={handleFilters} />
+        <SideSection
+          searchParams={searchParams}
+          filtersList={data?.filters}
+          handleFilters={handleFilters}
+          user={user}
+        />
         <Flex direction="column" flex={1} position="relative" minW={0}>
-          <Flex direction={"column"}>
+          <Flex direction={"column"} bgColor={"white"}>
             <TableHeader
               p={4}
               SaveFiltersButton={
@@ -586,7 +592,7 @@ const Page = () => {
           page="formationEtablissement"
         />
       )}
-    </>
+    </Flex>
   );
 };
 

@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_RENTREE } from "shared";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import type { TypeFamille } from "shared/enum/typeFamilleEnum";
@@ -47,6 +48,8 @@ export const getFormationEtablissementsQuery = async ({
   positionQuadrant,
   withAnneeCommune,
   formationSpecifique,
+  dateEffetTransformation,
+  typeDemande,
   search,
   order,
   orderBy,
@@ -139,6 +142,33 @@ export const getFormationEtablissementsQuery = async ({
           sql<string>`string_agg(("demandeConstat"."rentreeScolaire"::varchar), ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("dateEffetTransformation"),
           sql<string>`string_agg("demandeConstat"."annee", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("anneeCampagne"),
         ])
+        .$call((q) => {
+          if (!dateEffetTransformation) return q;
+          return q.where((eb) => eb.or(
+            dateEffetTransformation.map((rs) =>
+              eb("demandeConstat.rentreeScolaire", "=", parseInt(rs))
+            )
+          ));
+        })
+        .$call((q) => {
+          if (!typeDemande) return q;
+          return q.where((eb) => eb.or(
+            typeDemande.map((type) => {
+              if(type === DemandeTypeEnum["augmentation_compensation"] || type === DemandeTypeEnum["augmentation_nette"])
+                return eb("demandeConstat.typeDemande", "in", [
+                  DemandeTypeEnum["augmentation_compensation"],
+                  DemandeTypeEnum["augmentation_nette"]
+                ]);
+              if(type === DemandeTypeEnum["ouverture_compensation"] || type === DemandeTypeEnum["ouverture_nette"])
+                return eb("demandeConstat.typeDemande", "in", [
+                  DemandeTypeEnum["ouverture_compensation"],
+                  DemandeTypeEnum["ouverture_nette"]
+                ]);
+              return eb("demandeConstat.typeDemande", "=", type);
+            }
+            )
+          ));
+        })
     )
     .select((eb) => [
       sql<number>`COUNT(*) OVER()`.as("count"),
