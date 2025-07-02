@@ -1,26 +1,32 @@
 import {Button, Checkbox, Divider, Flex, Select, Text, useDisclosure, VisuallyHidden} from '@chakra-ui/react';
 import { CURRENT_RENTREE } from 'shared';
+import type { TypeDemandeType } from 'shared/enum/demandeTypeEnum';
+import type { UserType } from 'shared/schema/userSchema';
 
 import type { Filters, FiltersList } from "@/app/(wrapped)/console/etablissements/types";
 import { DoubleArrowLeft } from "@/components/icons/DoubleArrowLeft";
 import { DoubleArrowRight } from "@/components/icons/DoubleArrowRight";
 import { Multiselect } from "@/components/Multiselect";
+import { feature } from "@/utils/feature";
+import { formatTypeDemande } from '@/utils/formatLibelle';
 
 export const SideSection = ({
   handleFilters,
   searchParams,
   filtersList,
+  user,
 }: {
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   searchParams: {
     filters?: Partial<Filters>;
   };
   filtersList?: FiltersList;
+  user?: UserType;
 }) => {
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
 
   return (
-    <Flex flex={"shrink"} direction={"column"} bgColor={"bluefrance.975"} p={2} gap={5}>
+    <Flex direction={"column"}  p={2} pb={4} gap={5} minH={"100%"} h={"fit-content"} >
       {isOpen ? (
         <Button
           variant="externalLink"
@@ -84,7 +90,7 @@ export const SideSection = ({
             options={filtersList?.etablissements}
             value={searchParams.filters?.uai ?? []}
           >
-            Établissement
+                    Établissement
           </Multiselect>
           <Divider />
           <Multiselect
@@ -162,6 +168,36 @@ export const SideSection = ({
           >
             Position dans le quadrant
           </Multiselect>
+          <Divider />
+          {feature.donneesTransfoConsole && user && (
+            <>
+              <Multiselect
+                size="md"
+                variant="newInput"
+                width="18rem"
+                onChange={(selected) => handleFilters("dateEffetTransformation", selected)}
+                options={filtersList?.datesEffetTransformation}
+                value={searchParams.filters?.dateEffetTransformation ?? []}
+              >
+                Date d'effet de la transformation
+              </Multiselect>
+              <Multiselect
+                size="md"
+                variant="newInput"
+                width="18rem"
+                onChange={(selected) => handleFilters("typeDemande", selected)}
+                options={filtersList?.typesDemande.map(
+                  (typeDemande) => ({
+                    value: typeDemande.value,
+                    label: formatTypeDemande(typeDemande.label as TypeDemandeType)
+                  })
+                )}
+                value={searchParams.filters?.typeDemande ?? []}
+              >
+                Type de demande
+              </Multiselect>
+            </>
+          )}
         </Flex>
       )}
     </Flex>

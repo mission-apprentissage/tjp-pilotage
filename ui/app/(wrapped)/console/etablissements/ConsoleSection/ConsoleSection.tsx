@@ -98,7 +98,7 @@ export const ConsoleSection = ({
   }, []);
 
   return (
-    <TableContainer overflowY="auto" ref={tableRef}>
+    <TableContainer overflowY="auto" ref={tableRef} minH={"110%"}>
       <Table variant="simple" size={"sm"}>
         <HeadLineContent
           isFirstColumnSticky={isFirstColumnSticky}

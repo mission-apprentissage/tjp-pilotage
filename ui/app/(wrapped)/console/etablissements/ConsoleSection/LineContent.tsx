@@ -344,7 +344,7 @@ export const EtablissementLineContent = ({
               <Link
                 key={numero + index}
                 as={NextLink}
-                href={`/demandes/saisie/${numero}`}
+                href={`/demandes/synthese/${numero}`}
                 target="_blank"
                 color="bluefrance.113"
               >
