@@ -28,9 +28,9 @@ export const AutreMotifRefusField = chakra(({ disabled, className }: { disabled?
         {visible && (
           <Textarea
             {...register("autreMotifRefus", {
-              disabled,
               required: "Veuillez préciser votre motif",
             })}
+            isDisabled={disabled}
           />
         )}
         {errors.autreMotifRefus && <FormErrorMessage>{errors.autreMotifRefus.message}</FormErrorMessage>}

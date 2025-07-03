@@ -156,7 +156,7 @@ export interface Demande {
   motif: string[] | null;
   autreMotif: string | null;
   coloration: boolean | null;
-  libelleColoration: string | null;
+  libelleColoration1: string | null;
   amiCma: boolean | null;
   commentaire: string | null;
   statut: string;
@@ -221,7 +221,7 @@ export interface Demande {
   achatEquipementCout: number | null;
   travauxAmenagementCout: number | null;
   isOldDemande: Generated<boolean>;
-  libellecoloration: string | null;
+  libelleColoration2: string | null;
 }
 
 export interface DemandeAccessLog {
@@ -441,7 +441,7 @@ export interface LatestDemandeNonMaterializedView {
   motif: string[] | null;
   autreMotif: string | null;
   coloration: boolean | null;
-  libelleColoration: string | null;
+  libelleColoration1: string | null;
   amiCma: boolean | null;
   commentaire: string | null;
   statut: string | null;
@@ -506,7 +506,7 @@ export interface LatestDemandeNonMaterializedView {
   achatEquipementCout: number | null;
   travauxAmenagementCout: number | null;
   isOldDemande: boolean | null;
-  libellecoloration: string | null;
+  libelleColoration2: string | null;
 }
 
 export interface Maintenance {

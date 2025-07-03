@@ -2,15 +2,16 @@ import type { Role} from 'shared';
 import { RoleEnum } from 'shared';
 import type { CampagneStatut} from 'shared/enum/campagneStatutEnum';
 import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
-import type { DemandeStatutType} from 'shared/enum/demandeStatutEnum';
-import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
+import type { DemandeStatutTypeWithoutSupprimee } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import {DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import {beforeEach,describe, expect, it} from 'vitest';
 
-import type { Demande } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
-import { canCorrectDemande, canCreateDemande, canDeleteDemande, canEditDemande, canImportDemande } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
+import { feature } from '@/utils/feature';
+import type { Demande } from '@/utils/permissionsDemandeUtils';
+import { canCorrectDemande, canCreateDemande, canDeleteDemande, canEditDemande, canEditDemandeCfdUai,canImportDemande } from "@/utils/permissionsDemandeUtils";
 
 const createUserBuilder = ({
   role,
@@ -75,7 +76,7 @@ const fixtureBuilder = () => {
   let canImport: boolean | undefined = undefined;
   let canCreate: boolean | undefined = undefined;
   let canShowCorrectionButton: boolean | undefined = undefined;
-
+  let canEditCfdUai: boolean | undefined = undefined;
 
   return {
     given: {
@@ -85,7 +86,7 @@ const fixtureBuilder = () => {
       utilisateurInvite: () => {
         user = createUserBuilder({role: RoleEnum["invite"]});
       },
-      utilisateurNational: () => {
+      utilisateurAdminNational: () => {
         user = createUserBuilder({role: RoleEnum["admin"]});
       },
       utilisateurPerdir: () => {
@@ -94,17 +95,20 @@ const fixtureBuilder = () => {
       utilisateurAdminRegion: () => {
         user = createUserBuilder({role: RoleEnum["admin_region"], codeRegion: "76"});
       },
-      utilisateurRegion: () => {
+      utilisateurExpertRegion: () => {
         user = createUserBuilder({role: RoleEnum["expert_region"], codeRegion: "76"});
       },
-      campagne2023: () => {
-        campagne = createCampagneBuilder({annee: "2023"});
+      utilisateurGestionnaireRegion: () => {
+        user = createUserBuilder({role: RoleEnum["gestionnaire_region"], codeRegion: "76"});
+      },
+      campagne2023EnCours: () => {
+        campagne = createCampagneBuilder({annee: "2023", statut: CampagneStatutEnum["en cours"]});
       },
       campagne2023Terminee: () => {
         campagne = createCampagneBuilder({annee: "2023", statut: CampagneStatutEnum["terminée"]});
       },
-      campagne2024: () => {
-        campagne = createCampagneBuilder({annee: "2024"});
+      campagne2024EnCours: () => {
+        campagne = createCampagneBuilder({annee: "2024", statut: CampagneStatutEnum["en cours"]});
       },
       campagne2025EnAttente: () => {
         campagne = createCampagneBuilder({annee: "2025", statut: CampagneStatutEnum["en attente"]});
@@ -115,7 +119,7 @@ const fixtureBuilder = () => {
       campagneRegionaleEnCoursWithoutSaisiePerdir: () => {
         campagne = createCampagneBuilder({annee: "2025", codeRegion: "76", withSaisiePerdir: false });
       },
-      demandeEditable: (statut?: DemandeStatutType) => {
+      demandeEditable: (statut?: DemandeStatutTypeWithoutSupprimee) => {
         demande = createDemandeBuilder({
           campagne,
           statut: statut ?? DemandeStatutEnum["projet de demande"],
@@ -124,7 +128,7 @@ const fixtureBuilder = () => {
           isOldDemande: true
         });
       },
-      demandeNonEditable: (statut?: DemandeStatutType) => {
+      demandeNonEditable: (statut?: DemandeStatutTypeWithoutSupprimee) => {
         demande = createDemandeBuilder({
           campagne,
           statut: statut ?? DemandeStatutEnum["projet de demande"],
@@ -137,6 +141,15 @@ const fixtureBuilder = () => {
         demande = createDemandeBuilder({
           campagne,
           statut: DemandeStatutEnum["demande validée"],
+          typeDemande: DemandeTypeEnum["ouverture_nette"],
+          canEdit: true,
+          isOldDemande: true
+        });
+      },
+      demandeRefusee: () => {
+        demande = createDemandeBuilder({
+          campagne,
+          statut: DemandeStatutEnum["refusée"],
           typeDemande: DemandeTypeEnum["ouverture_nette"],
           canEdit: true,
           isOldDemande: true
@@ -173,6 +186,9 @@ const fixtureBuilder = () => {
       },
       canShowCorrectionButton: () => {
         canShowCorrectionButton = canCorrectDemande({demande, user});
+      },
+      canEditDemandeCfdUai: () => {
+        canEditCfdUai = canEditDemandeCfdUai({demande, user});
       }
     },
     then: {
@@ -206,6 +222,12 @@ const fixtureBuilder = () => {
       verifierCanNotShowCorrectionButton: () => {
         expect(canShowCorrectionButton).toBe(false);
       },
+      verifierCanEditDemandeCfdUai: () => {
+        expect(canEditCfdUai).toBe(true);
+      },
+      verifierCanNotEditDemandeCfdUai: () => {
+        expect(canEditCfdUai).toBe(false);
+      },
     },
   };
 };
@@ -219,7 +241,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
   });
 
   it("Un utilisateur national doit pouvoir importer une demande d'une campagne terminée", () => {
-    fixture.given.utilisateurNational();
+    fixture.given.utilisateurAdminNational();
     fixture.given.campagne2023Terminee();
     fixture.given.demandeValidee();
     fixture.given.isNotAlreadyImported();
@@ -229,7 +251,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
   });
 
   it("Un utilisateur national ne doit pas pouvoir importer une demande d'une campagne terminée qui a déjà été importée", () => {
-    fixture.given.utilisateurNational();
+    fixture.given.utilisateurAdminNational();
     fixture.given.campagne2023Terminee();
     fixture.given.demandeValidee();
     fixture.given.isAlreadyImported();
@@ -239,8 +261,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
   });
 
   it("Un utilisateur national ne doit pas pouvoir importer une demande d'une campagne non terminée", () => {
-    fixture.given.utilisateurNational();
-    fixture.given.campagne2023();
+    fixture.given.utilisateurAdminNational();
+    fixture.given.campagne2023EnCours();
     fixture.given.demandeValidee();
     fixture.given.isNotAlreadyImported();
 
@@ -276,13 +298,14 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.when.canDeleteDemande();
     fixture.then.verifierCanNotDelete();
 
+    if(!feature.correction) return;
     fixture.when.canShowCorrectionButton();
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
   it("Un utilisateur national doit pouvoir modifier une demande", () => {
-    fixture.given.utilisateurNational();
-    fixture.given.campagne2024();
+    fixture.given.utilisateurAdminNational();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
@@ -292,34 +315,34 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanDelete();
   });
 
-  it("Un utilisateur national doit pouvoir modifier une demande non éditable", () => {
-    fixture.given.utilisateurNational();
-    fixture.given.campagne2024();
+  it("Un utilisateur national ne doit pas pouvoir modifier une demande non éditable", () => {
+    fixture.given.utilisateurAdminNational();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeNonEditable();
 
     fixture.when.canEditDemande();
-    fixture.then.verifierCanEdit();
+    fixture.then.verifierCanNotEdit();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir créer, mais doit pouvoir modifier une demande pendant une campagne terminée", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur national ne pas doit pouvoir créer ou modifier une demande pendant une campagne terminée", () => {
+    fixture.given.utilisateurAdminNational();
     fixture.given.campagne2023Terminee();
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
-    fixture.then.verifierCanEdit();
+    fixture.then.verifierCanNotEdit();
 
     fixture.when.canCreateDemande();
     fixture.then.verifierCanNotCreate();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir créer, mais doit pouvoir modifier une demande pendant une campagne en attente", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur national ne pas doit pouvoir créer ou modifier une demande pendant une campagne en attente", () => {
+    fixture.given.utilisateurAdminNational();
     fixture.given.campagne2025EnAttente();
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
-    fixture.then.verifierCanEdit();
+    fixture.then.verifierCanNotEdit();
 
     fixture.when.canCreateDemande();
     fixture.then.verifierCanNotCreate();
@@ -327,7 +350,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
   it("Un utilisateur admin région doit pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagne2024();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
@@ -344,7 +367,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
   it("Un utilisateur perdir doit pouvoir créer ou modifier une demande sur laquelle il a des droits", () => {
     fixture.given.utilisateurPerdir();
-    fixture.given.campagne2024();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
@@ -358,8 +381,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
   });
 
   it("Un utilisateur national doit pouvoir modifier une demande lors d'une campagne qui n'est pas la dernière en cours", () => {
-    fixture.given.utilisateurNational();
-    fixture.given.campagne2024();
+    fixture.given.utilisateurAdminNational();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
@@ -367,8 +390,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
   });
 
   it("Un utilisateur expert région ne doit pas pouvoir modifier une demande pour laquelle il n'a pas les droits", () => {
-    fixture.given.utilisateurRegion();
-    fixture.given.campagne2024();
+    fixture.given.utilisateurExpertRegion();
+    fixture.given.campagne2024EnCours();
 
     fixture.given.demandeNonEditable();
     fixture.when.canEditDemande();
@@ -377,7 +400,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
   it("Un utilisateur invité ne doit pas pouvoir modifier une demande pour laquelle il n'a pas les droits", () => {
     fixture.given.utilisateurInvite();
-    fixture.given.campagne2024();
+    fixture.given.campagne2024EnCours();
 
     fixture.given.demandeEditable();
     fixture.when.canEditDemande();
@@ -386,7 +409,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
   it("Un utilisateur anonyme ne doit pas pouvoir modifier une demande pour laquelle il n'a pas les droits", () => {
     fixture.given.utilisateurAnonyme();
-    fixture.given.campagne2024();
+    fixture.given.campagne2024EnCours();
 
     fixture.given.demandeEditable();
     fixture.when.canEditDemande();
@@ -394,8 +417,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
   });
 
   it("Un utilisateur perdir région ne doit pas pouvoir delete une demande", () => {
-    fixture.given.utilisateurRegion();
-    fixture.given.campagne2024();
+    fixture.given.utilisateurExpertRegion();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeEditable();
 
     fixture.when.canDeleteDemande();
@@ -404,8 +427,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
   });
 
   it("Un utilisateur expert région ne doit pas pouvoir delete une demande", () => {
-    fixture.given.utilisateurRegion();
-    fixture.given.campagne2024();
+    fixture.given.utilisateurExpertRegion();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeEditable();
 
     fixture.when.canDeleteDemande();
@@ -415,7 +438,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
   it("Un utilisateur admin région doit pouvoir delete ses demandes", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagne2024();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeEditable();
 
     fixture.when.canDeleteDemande();
@@ -430,6 +453,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.correction) return;
     fixture.then.verifierCanShowCorrectionButton();
   });
 
@@ -440,6 +464,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -450,6 +475,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -460,26 +486,29 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
   it("Un utilisateur expert région ne doit pas pouvoir effectuer une correction sur une demande", () => {
-    fixture.given.utilisateurRegion();
+    fixture.given.utilisateurExpertRegion();
     fixture.given.campagne2023Terminee();
     fixture.given.demandeValidee();
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
   it("Un utilisateur admin région ne doit pas pouvoir effectuer une correction sur une demande d'une campagne en cours", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagne2024();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeValidee();
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -490,16 +519,62 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
   it("Un utilisateur admin région ne doit pas pouvoir créer une demande ", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagne2024();
+    fixture.given.campagne2024EnCours();
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
 
     fixture.then.verifierCanEdit();
+  });
+
+  it("Un utilisateur admin national doit pouvoir modifier le CFD/UAI d'une demande validée d'une campagne terminée", () => {
+    fixture.given.utilisateurAdminNational();
+    fixture.given.campagne2023Terminee();
+    fixture.given.demandeValidee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanEditDemandeCfdUai();
+  });
+
+  it("Un utilisateur admin régional doit pouvoir modifier le CFD/UAI d'une demande validée d'une campagne terminée", () => {
+    fixture.given.utilisateurAdminRegion();
+    fixture.given.campagne2023Terminee();
+    fixture.given.demandeValidee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanEditDemandeCfdUai();
+  });
+
+  it("Un utilisateur admin national ne doit pas pouvoir modifier le CFD/UAI d'une demande refusée d'une campagne terminée", () => {
+    fixture.given.utilisateurAdminNational();
+    fixture.given.campagne2023Terminee();
+    fixture.given.demandeRefusee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanNotEditDemandeCfdUai();
+  });
+
+  it("Un utilisateur gestionnaire région ne doit pas pouvoir modifier le CFD/UAI d'une demande validée d'une campagne en cours", () => {
+    fixture.given.utilisateurAdminNational();
+    fixture.given.campagne2024EnCours();
+    fixture.given.demandeValidee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanNotEditDemandeCfdUai();
+  });
+
+  it("Un utilisateur gestionnaire région ne doit pas pouvoir modifier le CFD/UAI d'une demande refusée d'une campagne terminée", () => {
+    fixture.given.utilisateurGestionnaireRegion();
+    fixture.given.campagne2023Terminee();
+    fixture.given.demandeValidee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanNotEditDemandeCfdUai();
   });
 });

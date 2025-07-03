@@ -50,7 +50,6 @@ function RadioCard({
     <Box
       display="flex"
       flexDirection="column"
-      onClick={!disabled ? props.onClick : undefined}
       flex={1}
       cursor={disabled ? "not-allowed" : "pointer"}
       borderWidth="1px"
@@ -63,6 +62,7 @@ function RadioCard({
       p={4}
       opacity={disabled ? "0.5" : "1"}
       {...props}
+      onClick={!disabled ? props.onClick : undefined}
     >
       <Flex mb="3">
         <Img

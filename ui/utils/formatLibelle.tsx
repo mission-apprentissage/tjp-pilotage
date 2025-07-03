@@ -238,3 +238,15 @@ export const formatTypeDemandeArray = (typeDemande: string):
       value: typeDemande as TypeDemandeType,
     }));
 
+export const formatLibellesColoration = (demande: {
+  libelleColoration1?: string;
+  libelleColoration2?: string;
+}) => {
+  if (demande.libelleColoration1) {
+    if (demande.libelleColoration2) {
+      return `${demande.libelleColoration1} / ${demande.libelleColoration2}`;
+    }
+    return demande.libelleColoration1;
+  }
+  return undefined;
+};

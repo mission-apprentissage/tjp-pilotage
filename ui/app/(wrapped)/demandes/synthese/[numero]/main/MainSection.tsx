@@ -5,8 +5,8 @@ import NextLink from "next/link";
 import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
-import { canEditDemande } from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
-import {getRoutingAccessSaisieDemande} from '@/utils/getRoutingAccesDemande';
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
+import { canEditDemande } from "@/utils/permissionsDemandeUtils";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { ChangementStatutEtAvisSection } from "./changementStatutEtAvis/ChangementStatutEtAvisSection";

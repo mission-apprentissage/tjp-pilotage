@@ -87,8 +87,11 @@ export const up = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
+          // @ts-ignore
           getKbdClient()
+            // @ts-ignore
             .selectFrom("demande")
+            // @ts-ignore
             .select([
               "numero",
               "cfd",
