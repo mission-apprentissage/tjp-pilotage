@@ -20,7 +20,7 @@ export const AccesRapide = () => {
       <ShortLink
         iconRight={"ri:arrow-right-line"}
         label={"Ouvrir la console des formations"}
-        href={""}
+        href={link}
         target="_blank"
       />
     </HStack>

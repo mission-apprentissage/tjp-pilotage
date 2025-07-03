@@ -1,10 +1,12 @@
 import { sql } from "kysely";
-import {jsonArrayFrom,jsonBuildObject} from 'kysely/helpers/postgres';
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { jsonArrayFrom, jsonBuildObject } from 'kysely/helpers/postgres';
+import { CURRENT_RENTREE } from "shared";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import type { TypeFamille } from "shared/enum/typeFamilleEnum";
 import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -18,13 +20,13 @@ import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
 import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
 import { premiersVoeuxAnnee } from "@/modules/data/utils/premiersVoeuxAnnee";
 import { selectTauxDevenirFavorableAgg, withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
-import {selectTauxInsertion6mois, selectTauxInsertion6moisAgg,withInsertionReg} from '@/modules/data/utils/tauxInsertion6mois';
-import {selectTauxPoursuite, selectTauxPoursuiteAgg,withPoursuiteReg} from '@/modules/data/utils/tauxPoursuite';
-import {selectTauxPression, selectTauxPressionAgg} from '@/modules/data/utils/tauxPression';
-import {selectTauxRemplissage, selectTauxRemplissageAgg} from '@/modules/data/utils/tauxRemplissage';
+import { selectTauxInsertion6mois, selectTauxInsertion6moisAgg,withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
+import { selectTauxPoursuite, selectTauxPoursuiteAgg,withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
+import { selectTauxPression, selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
+import { selectTauxRemplissage, selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
-import { isFormationRenovee } from '@/modules/utils/isFormationRenovee';
+import { isFormationRenovee } from "@/modules/utils/isFormationRenovee";
 import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
@@ -32,7 +34,6 @@ export const getFormationEtablissementsQuery = async ({
   offset = 0,
   limit = MAX_LIMIT,
   rentreeScolaire = [CURRENT_RENTREE],
-  millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -47,11 +48,15 @@ export const getFormationEtablissementsQuery = async ({
   positionQuadrant,
   withAnneeCommune,
   formationSpecifique,
+  dateEffetTransformation,
+  typeDemande,
   search,
   order,
   orderBy,
+  user
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
+  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: rentreeScolaire[0], offset: 0 });
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
@@ -83,9 +88,11 @@ export const getFormationEtablissementsQuery = async ({
     .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .leftJoin("formationView as formationContinuum", "formationContinuum.cfd", "indicateurSortie.cfdContinuum")
+    .leftJoin("dataFormation as formationContinuum", "formationContinuum.cfd", "indicateurSortie.cfdContinuum")
     .leftJoin("formationHistorique", (join) =>
-      join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique)
+      join
+        .onRef("formationHistorique.ancienCFD", "=", "formationView.cfd")
+        .on(isScolaireFormationHistorique)
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
@@ -113,6 +120,71 @@ export const getFormationEtablissementsQuery = async ({
         .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
         .onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion")
     )
+    .$if(!!user, (eb) =>
+      eb
+        .leftJoin("demandeConstatView as demandeConstat", (join) =>
+          join
+            .onRef("demandeConstat.cfd", "=", "formationEtablissement.cfd")
+            .onRef("demandeConstat.codeDispositif", "=", "formationEtablissement.codeDispositif")
+            .onRef("demandeConstat.uai", "=", "formationEtablissement.uai")
+            .on("demandeConstat.rentreeScolaire", ">=", parseInt(rentreeScolaire[0]))
+            .on((eb) =>
+              eb.or([
+                eb(sql<number>`
+                  abs(${eb.ref("demandeConstat.differenceCapaciteScolaire")}) +
+                  abs(${eb.ref("demandeConstat.differenceCapaciteApprentissage")})
+                `, ">", 1),
+                eb(sql<number>`
+                  abs(${eb.ref("demandeConstat.differenceCapaciteScolaireColoree")}) +
+                  abs(${eb.ref("demandeConstat.differenceCapaciteApprentissageColoree")})
+                `, ">", 1),
+              ])
+            )
+        )
+        .select([
+          sql<string>`string_agg("demandeConstat"."numero", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("numero"),
+          sql<string>`string_agg("demandeConstat"."typeDemande", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("typeDemande"),
+          sql<string>`string_agg(("demandeConstat"."rentreeScolaire"::varchar), ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("dateEffetTransformation"),
+          sql<string>`string_agg("demandeConstat"."annee", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("anneeCampagne"),
+          sql<string>`
+            string_agg(
+              ("demandeConstat"."differenceCapaciteScolaire"::varchar), ', ' ORDER BY "demandeConstat"."rentreeScolaire"
+            )
+          `.as("differenceCapaciteScolaire"),
+          sql<string>`
+            string_agg(
+              ("demandeConstat"."differenceCapaciteApprentissage"::varchar), ', ' ORDER BY "demandeConstat"."rentreeScolaire"
+            )
+          `.as("differenceCapaciteApprentissage"),
+        ])
+        .$call((q) => {
+          if (!dateEffetTransformation) return q;
+          return q.where((eb) => eb.or(
+            dateEffetTransformation.map((rs) =>
+              eb("demandeConstat.rentreeScolaire", "=", parseInt(rs))
+            )
+          ));
+        })
+        .$call((q) => {
+          if (!typeDemande) return q;
+          return q.where((eb) => eb.or(
+            typeDemande.map((type) => {
+              if(type === DemandeTypeEnum["augmentation_compensation"] || type === DemandeTypeEnum["augmentation_nette"])
+                return eb("demandeConstat.typeDemande", "in", [
+                  DemandeTypeEnum["augmentation_compensation"],
+                  DemandeTypeEnum["augmentation_nette"]
+                ]);
+              if(type === DemandeTypeEnum["ouverture_compensation"] || type === DemandeTypeEnum["ouverture_nette"])
+                return eb("demandeConstat.typeDemande", "in", [
+                  DemandeTypeEnum["ouverture_compensation"],
+                  DemandeTypeEnum["ouverture_nette"]
+                ]);
+              return eb("demandeConstat.typeDemande", "=", type);
+            }
+            )
+          ));
+        })
+    )
     .select((eb) => [
       sql<number>`COUNT(*) OVER()`.as("count"),
       "etablissement.libelleEtablissement",
@@ -130,7 +202,7 @@ export const getFormationEtablissementsQuery = async ({
       "academie.codeAcademie",
       "region.libelleRegion",
       "etablissement.codeRegion",
-      "etablissement.uai as uai",
+      "etablissement.uai",
       "formationView.typeFamille",
       "familleMetier.libelleFamille",
       "dispositif.libelleDispositif",
@@ -139,7 +211,7 @@ export const getFormationEtablissementsQuery = async ({
       "indicateurEntree.rentreeScolaire",
       "indicateurEtablissement.valeurAjoutee",
       "indicateurEntree.anneeDebut",
-      "formationHistorique.cfd as formationRenovee",
+      sql<string>`string_agg("formationHistorique"."cfd", ', ')`.as("formationRenovee"),
       selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
       effectifAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as("effectif1"),
@@ -166,8 +238,7 @@ export const getFormationEtablissementsQuery = async ({
         )
         .end()
         .as("continuumEtablissement"),
-      isFormationRenovee({ eb, rentreeScolaire: rentreeScolaire[0] })
-        .as("isFormationRenovee"),
+      isFormationRenovee({ eb, rentreeScolaire: rentreeScolaire[0] }).as("isFormationRenovee"),
       isFormationActionPrioritaire({
         cfdRef: "formationEtablissement.cfd",
         codeDispositifRef: "formationEtablissement.codeDispositif",
@@ -257,45 +328,39 @@ export const getFormationEtablissementsQuery = async ({
           ])
           .orderBy("indicateurEntree.rentreeScolaire", "asc")
       ).as("evolutionTauxEntree"),
+      hasContinuum({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("continuum"),
+      withPoursuiteReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("tauxPoursuite"),
+      withInsertionReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("tauxInsertion"),
+      withTauxDevenirFavorableReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("tauxDevenirFavorable"),
     ])
     .$narrowType<{
       continuumEtablissement: { cfd: string; libelleFormation: string };
       typeFamille: TypeFamille;
     }>()
-    .select([
-      (eb) =>
-        hasContinuum({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("continuum"),
-      (eb) =>
-        withPoursuiteReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxPoursuite"),
-      (eb) =>
-        withInsertionReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxInsertion"),
-      (eb) =>
-        withTauxDevenirFavorableReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxDevenirFavorable"),
-    ])
     .$call((eb) => {
       if (search)
         return eb.where((eb) =>
@@ -430,7 +495,6 @@ export const getFormationEtablissementsQuery = async ({
       "formationView.isTransitionNumerique",
       "dataFormation.cfd",
       "nsf.libelleNsf",
-      "formationHistorique.cfd",
       "etablissement.id",
       "departement.libelleDepartement",
       "departement.codeDepartement",

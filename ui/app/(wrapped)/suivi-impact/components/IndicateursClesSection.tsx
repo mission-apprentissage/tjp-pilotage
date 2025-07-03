@@ -300,7 +300,7 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
             label="taux d'emploi à 6 mois"
             data={data}
             tooltip={<TooltipDefinitionTauxEmploi6Mois />}
-          ></StatCard>
+          />
           <StatCard
             label="taux poursuite d'études"
             data={data}
@@ -317,7 +317,7 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
                 onClick={() => openGlossaire("taux-poursuite-etudes")}
               />
             }
-          ></StatCard>
+          />
         </SimpleGrid>
       </VStack>
     </Flex>

@@ -1,9 +1,15 @@
+import { CURRENT_IJ_MILLESIME } from "shared";
+
 import { themeDefinition } from "@/theme/theme";
+import { formatMillesime } from "@/utils/formatLibelle";
 
 import type {
   FORMATION_ETABLISSEMENT_COLUMNS,
+  FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED,
   FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
+  FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED,
   FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL,
+  FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED,
 } from "./FORMATION_ETABLISSEMENT_COLUMNS";
 
 export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
@@ -80,20 +86,20 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
       tauxPression: "Taux de pression",
       evolutionTauxPression: "Évolution du taux de pression",
       tauxRemplissage: "Taux de remplissage",
-      positionQuadrant: "Position dans le quadrant",
       evolutionTauxRemplissage: "Évolution du taux de remplissage",
-      tauxInsertion: "Taux d'emploi 6 mois régional",
-      evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
-      tauxPoursuite: "Taux de poursuite d'études régional",
-      evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
-      tauxDevenirFavorable: "Taux de devenir favorable régional",
-      evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
-      tauxInsertionEtablissement: "Taux d'emploi 6 mois de la formation dans l'établissement",
-      evolutionTauxInsertionEtablissement: "Évolution du taux d'emploi à 6 mois de la formation dans l'établissement",
-      tauxPoursuiteEtablissement: "Taux de poursuite d'études de la formation dans l'établissement",
-      evolutionTauxPoursuiteEtablissement: "Évolution du taux de poursuite d'études de la formation dans l'établissement",
-      tauxDevenirFavorableEtablissement: "Taux de devenir favorable de la formation dans l'établissement",
-      evolutionTauxDevenirFavorableEtablissement: "Évolution du taux de devenir favorable de la formation dans l'établissement",
+      positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxDevenirFavorable: `Taux de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxDevenirFavorable: `Évolution du taux de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxInsertion: `Taux d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxInsertion: `Évolution du taux d'emploi à 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxPoursuite: `Taux de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxPoursuite: `Évolution du taux de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxDevenirFavorableEtablissement: `Taux de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxDevenirFavorableEtablissement: `Évolution du taux de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxInsertionEtablissement: `Taux d'emploi 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxInsertionEtablissement: `Évolution du taux d'emploi à 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxPoursuiteEtablissement: `Taux de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxPoursuiteEtablissement: `Évolution du taux de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
       valeurAjoutee: "Valeur ajoutée",
     },
   },
@@ -173,20 +179,20 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
       tauxPression: "Taux de pression",
       evolutionTauxPression: "Évolution du taux de pression",
       tauxRemplissage: "Taux de remplissage",
-      positionQuadrant: "Position dans le quadrant",
       evolutionTauxRemplissage: "Évolution du taux de remplissage",
-      tauxInsertion: "Taux d'emploi 6 mois régional",
-      evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
-      tauxPoursuite: "Taux de poursuite d'études régional",
-      evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
-      tauxDevenirFavorable: "Taux de devenir favorable régional",
-      evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
-      tauxInsertionEtablissement: "Taux d'emploi 6 mois de la formation dans l'établissement",
-      evolutionTauxInsertionEtablissement: "Évolution du taux d'emploi à 6 mois de la formation dans l'établissement",
-      tauxPoursuiteEtablissement: "Taux de poursuite d'études de la formation dans l'établissement",
-      evolutionTauxPoursuiteEtablissement: "Évolution du taux de poursuite d'études de la formation dans l'établissement",
-      tauxDevenirFavorableEtablissement: "Taux de devenir favorable de la formation dans l'établissement",
-      evolutionTauxDevenirFavorableEtablissement: "Évolution du taux de devenir favorable de la formation dans l'établissement",
+      positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxDevenirFavorable: `Taux de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxDevenirFavorable: `Évolution du taux de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxInsertion: `Taux d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxInsertion: `Évolution du taux d'emploi à 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxPoursuite: `Taux de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxPoursuite: `Évolution du taux de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxDevenirFavorableEtablissement: `Taux de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxDevenirFavorableEtablissement: `Évolution du taux de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxInsertionEtablissement: `Taux d'emploi 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxInsertionEtablissement: `Évolution du taux d'emploi à 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxPoursuiteEtablissement: `Taux de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxPoursuiteEtablissement: `Évolution du taux de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
       valeurAjoutee: "Valeur ajoutée",
     },
   },
@@ -254,20 +260,20 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
       tauxPression: "Taux de pression",
       evolutionTauxPression: "Évolution du taux de pression",
       tauxRemplissage: "Taux de remplissage",
-      positionQuadrant: "Position dans le quadrant",
       evolutionTauxRemplissage: "Évolution du taux de remplissage",
-      tauxInsertion: "Taux d'emploi 6 mois régional",
-      evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
-      tauxPoursuite: "Taux de poursuite d'études régional",
-      evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
-      tauxDevenirFavorable: "Taux de devenir favorable régional",
-      evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
-      tauxInsertionEtablissement: "Taux d'emploi 6 mois de la formation dans l'établissement",
-      evolutionTauxInsertionEtablissement: "Évolution du taux d'emploi à 6 mois de la formation dans l'établissement",
-      tauxPoursuiteEtablissement: "Taux de poursuite d'études de la formation dans l'établissement",
-      evolutionTauxPoursuiteEtablissement: "Évolution du taux de poursuite d'études de la formation dans l'établissement",
-      tauxDevenirFavorableEtablissement: "Taux de devenir favorable de la formation dans l'établissement",
-      evolutionTauxDevenirFavorableEtablissement: "Évolution du taux de devenir favorable de la formation dans l'établissement",
+      positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxDevenirFavorable: `Taux de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxDevenirFavorable: `Évolution du taux de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxInsertion: `Taux d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxInsertion: `Évolution du taux d'emploi à 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxPoursuite: `Taux de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxPoursuite: `Évolution du taux de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxDevenirFavorableEtablissement: `Taux de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxDevenirFavorableEtablissement: `Évolution du taux de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxInsertionEtablissement: `Taux d'emploi 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxInsertionEtablissement: `Évolution du taux d'emploi à 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      tauxPoursuiteEtablissement: `Taux de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+      evolutionTauxPoursuiteEtablissement: `Évolution du taux de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
       valeurAjoutee: "Valeur ajoutée",
     },
   },
@@ -276,5 +282,87 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
   {
     color: string;
     options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT>;
+  }
+>;
+
+export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED: Record<
+  string,
+  {
+    color: string;
+    cellColor: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED>;
+  }
+> = {
+  ...GROUPED_FORMATION_ETABLISSEMENT_COLUMNS,
+  // Caractéristiques de la transformation
+  ["transformation"]: {
+    color: themeDefinition.colors.greenArchipel[950],
+    cellColor: "inherit",
+    options: {
+      numero: "Numéro de la demande",
+      typeDemande: "Type de demande",
+      dateEffetTransformation: "Date d'effet de la transformation",
+    },
+  },
+} as Record<
+  string,
+  {
+    color: string;
+    cellColor: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED>;
+  }
+>;
+
+export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED: Record<
+  string,
+  {
+    color: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED>;
+  }
+> = {
+  ...GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL,
+  // Caractéristiques de la transformation
+  ["transformation"]: {
+    color: themeDefinition.colors.greenArchipel[950],
+    cellColor: "inherit",
+    options: {
+
+      numero: "Numéro de la demande",
+      typeDemande: "Type de demande",
+      dateEffetTransformation: "Date d'effet de la transformation",
+    },
+  },
+} as Record<
+  string,
+  {
+    color: string;
+    cellColor: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED>;
+  }
+>;
+
+export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED: Record<
+  string,
+  {
+    color: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED>;
+  }
+> = {
+  ...GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
+  // Caractéristiques de la transformation
+  ["transformation"]: {
+    color: themeDefinition.colors.greenArchipel[950],
+    cellColor: "inherit",
+    options: {
+      numero: "Numéro de la demande",
+      typeDemande: "Type de demande",
+      dateEffetTransformation: "Date d'effet de la transformation",
+    },
+  },
+} as Record<
+  string,
+  {
+    color: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED>;
   }
 >;

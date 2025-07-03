@@ -40,6 +40,11 @@ export const themeColors = {
     "975_hover": "#d7dffb",
     "975_active": "#c3cffa",
   },
+  blueEcumeMoon: {
+    675: "#869ECE",
+    "675_hover": "#b8c5e2",
+    "675_active": "#ced6ea",
+  },
   blueCumulus: {
     526: "#417dc4",
   },
@@ -160,6 +165,9 @@ export const themeColors = {
     950: "#C7F6FC",
     "950_hover": "#64ecf8",
     "950_active": "#5bd8e3",
+    200: "#233e41",
+    "200_hover": "#3e686d",
+    "200_active": "#4d7f85",
   },
   orangeTerreBattue: {
     645: "#E4794A",
@@ -201,4 +209,5 @@ export const themeColors = {
     383: "#685c48",
     950: "#f7ecdb",
   },
+  white: "#ffffff",
 };
