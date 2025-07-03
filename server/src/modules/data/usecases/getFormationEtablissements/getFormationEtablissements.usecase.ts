@@ -16,7 +16,7 @@ export interface Filters extends z.infer<typeof getFormationEtablissementsSchema
 const getFormationsRenoveeEnseignees = (
   formationRenovee: string | undefined,
   formationsRenoveesEnseignees: string[]
-) => formationRenovee?.split(", ").map((formation) => {
+) => formationRenovee?.split(", ").filter((formation) => {
   return formationsRenoveesEnseignees.includes(formation);
 }).join(", ");
 
