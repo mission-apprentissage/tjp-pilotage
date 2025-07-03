@@ -330,7 +330,7 @@ export const CHANGELOG: IChangelog[] = [
     "document": "",
   },
   {
-    "id": "ee116a79-536f-4d25-a232-d921c22f8a74",
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "deployed": true,
     "show": true,
     "title": "Filtre rentrée scolaire dans la console établissement (1)",
