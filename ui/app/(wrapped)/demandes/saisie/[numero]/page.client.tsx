@@ -44,7 +44,7 @@ export const PageClient = ({
   const isDisabled = !(canEditDemande({ demande, user }) || isAdjustDemande || isCorrection);
 
   return (
-    <GuardSaisieDemande campagne={demande.campagne}>
+    <GuardSaisieDemande campagne={demande.campagne} demande={demande}>
       <DemandeFilesProvider numero={numero}>
         <DemandeForm
           disabled={isDisabled}
