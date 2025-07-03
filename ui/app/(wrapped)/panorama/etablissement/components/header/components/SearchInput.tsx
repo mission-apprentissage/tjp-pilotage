@@ -41,7 +41,7 @@ export const SearchInput = ({ uai }: { uai: string }) => {
   const searchEtablissement = _.debounce((inputValue: string, callback: (options: Options) => void) => {
     if (inputValue.length >= 3) {
       client
-        .ref("[GET]/etablissement/perdir/search/:search")
+        .ref("[GET]/etablissement/search/:search")
         .query({ params: { search: inputValue }, query: { filtered: true } })
         .then(options => callback(options));
     }

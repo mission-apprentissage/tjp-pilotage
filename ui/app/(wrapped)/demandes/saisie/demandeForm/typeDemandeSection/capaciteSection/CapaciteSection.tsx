@@ -1,8 +1,16 @@
-import { Box, Flex, FormErrorMessage, Input, Table, Tbody, Td, Th, Thead, Tr, VisuallyHidden } from "@chakra-ui/react";
+import { Box, Flex, FormErrorMessage, Highlight, Input, Table, Tbody, Td, Text, Th, Thead, Tr, VisuallyHidden } from "@chakra-ui/react";
+import {Icon} from '@iconify/react';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import type { RefObject} from "react";
+import {useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeColoration } from "shared/utils/typeDemandeUtils";
+import { CURRENT_RENTREE } from "shared";
+import { isTypeColoration, isTypeOuverture } from "shared/utils/typeDemandeUtils";
 
+import {client} from '@/api.client';
+import {InfoBox} from '@/app/(wrapped)/demandes/saisie/components/InfoBox';
 import type { DemandeFormType } from "@/app/(wrapped)/demandes/saisie/demandeForm/types";
+import { SCROLL_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
 
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeActuelleField } from "./CapaciteApprentissageColoreeActuelleField";
@@ -37,14 +45,26 @@ const differenceCapacité = (valueA: number | undefined, valueB: number | undefi
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
 
-export const CapaciteSection = ({ disabled }: { disabled?: boolean }) => {
+export const CapaciteSection = ({
+  disabled,
+  capaciteRef
+}: {
+  disabled?: boolean;
+  capaciteRef: RefObject<HTMLDivElement>;
+}) => {
+  const queryClient = useQueryClient();
+
+  const [hasEffectif, setHasEffectif] = useState(false);
+
   const {
     watch,
     formState: { errors },
+    setValue,
   } = useFormContext<DemandeFormType>();
 
   const coloration = watch("coloration");
   const typeDemande = watch("typeDemande");
+  const ouverture = isTypeOuverture(typeDemande);
 
   const [capaciteScolaire, capaciteScolaireActuelle] = watch(["capaciteScolaire", "capaciteScolaireActuelle"]);
   const [capaciteApprentissage, capaciteApprentissageActuelle] = watch([
@@ -62,10 +82,94 @@ export const CapaciteSection = ({ disabled }: { disabled?: boolean }) => {
     return differenceCapacité(capaciteApprentissage, capaciteApprentissageActuelle);
   })();
 
+  const cfd = watch("cfd");
+  const uai = watch("uai");
+  const codeDispositif = watch("codeDispositif");
+
+  const shouldFetchCapacite = !!cfd && !!uai && !!codeDispositif && !disabled;
+
+  const { data: capacitePrecedente } = useQuery({
+    keepPreviousData: false,
+    staleTime: 10000000,
+    queryKey: ["capacite", cfd, uai, codeDispositif],
+    enabled: shouldFetchCapacite,
+    queryFn: async () => {
+      if (!shouldFetchCapacite) return;
+      return (
+        await client.ref("[GET]/capacite-precedente").query({
+          query: {
+            cfd,
+            uai,
+            codeDispositif,
+          },
+        })
+      ).capacite ?? 0;
+    },
+    onSuccess: (capacite) => {
+      if (capacite) {
+        setHasEffectif(true);
+        if(isTypeOuverture(typeDemande)) {
+          setValue("capaciteScolaireActuelle", 0);
+          return;
+        }
+        setValue("capaciteScolaireActuelle", capacite);
+      } else {
+        setHasEffectif(false);
+        setValue("capaciteScolaireActuelle", 0);
+      }
+    },
+  });
+
+  useEffect(
+    () =>
+      watch((_, { name }) => {
+        if (name !== "typeDemande") return;
+        queryClient.invalidateQueries({ queryKey: ["capacite", cfd, uai, codeDispositif] });
+        if(isTypeOuverture(typeDemande)) setValue("capaciteScolaireActuelle", 0);
+      }).unsubscribe
+  );
+
   return (
-    <Flex gap="6" mb="4" direction={"column"}>
+    <Flex ref={capaciteRef} scrollMarginTop={SCROLL_OFFSET} gap="6" mb="4" direction={"column"}>
       <ColorationField disabled={disabled} />
       <LibelleColorationField disabled={disabled} />
+      {hasEffectif && (
+        ouverture ? (
+          <InfoBox type="danger">
+            <Flex direction={"row"} gap={3}>
+              <Icon icon="ri:information-fill" fontSize="24px" />
+              <Flex direction={"column"} gap={2}>
+                <Text>
+                  <Highlight query={`${capacitePrecedente} élèves`} styles={{ fontWeight: "700", textDecoration: "underline", color: "inherit" }}>
+                    {
+                      `Une capacité de ${capacitePrecedente} élèves a été trouvée pour cette offre de formation
+                      pour la rentrée ${CURRENT_RENTREE}.`
+                    }
+                  </Highlight>
+                </Text>
+                <Text>
+                  Assurez-vous que la formation n'est pas déjà ouverte dans cet établissement.
+                </Text>
+              </Flex>
+            </Flex>
+          </InfoBox>
+        ): (
+          <InfoBox>
+            <Flex direction={"row"} gap={3}>
+              <Icon icon="ri:information-fill" fontSize="24px" />
+              <Flex direction={"column"} gap={2}>
+                <Text>
+                  Une capacité pour cette offre de formation a été trouvée
+                  pour la rentrée {CURRENT_RENTREE} et a été pré-remplie dans le formulaire.
+                </Text>
+                <Text>
+                  Si cette capacité ne correspond pas à la réalité, vous pouvez la modifier.
+                </Text>
+              </Flex>
+            </Flex>
+          </InfoBox>
+        )
+      )}
       <Table columnGap={1} rowGap={1}>
         <Thead>
           <Tr borderBottom={"2px solid black"} bgColor={"grey.975"}>
@@ -147,7 +251,7 @@ export const CapaciteSection = ({ disabled }: { disabled?: boolean }) => {
             </Td>
             <Td p={0} border={"none"}>
               <VisuallyHidden as="label" htmlFor="capaciteApprentissageActuelle">
-                  Capacité en apprentissage actuelle
+                Capacité en apprentissage actuelle
               </VisuallyHidden>
               <CapaciteApprentissageActuelleField
                 id={"capaciteApprentissageActuelle"}
@@ -158,7 +262,7 @@ export const CapaciteSection = ({ disabled }: { disabled?: boolean }) => {
             </Td>
             <Td p={0} border={"none"}>
               <VisuallyHidden as="label" htmlFor="capaciteApprentissage">
-                  Capacité en apprentissage
+                Capacité en apprentissage
               </VisuallyHidden>
               <CapaciteApprentissageField id={"capaciteApprentissage"} disabled={disabled} maxW={240} flex={1} />
             </Td>

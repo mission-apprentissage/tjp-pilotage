@@ -42,7 +42,7 @@ export const STATS_DEMANDES_COLUMNS = {
   capaciteScolaireColoree: "Future capacité colorée en voie scolaire",
   capaciteApprentissageColoreeActuelle: "Capacité colorée actuelle en apprentissage",
   capaciteApprentissageColoree: "Future capacité colorée en apprentissage",
-  libelleColoration: "Libellé coloration",
+  libelleColoration: "Libellé(s) coloration(s)",
   libelleFCIL: "Libellé FCIL",
   amiCma: "AMI/CMA ?",
   amiCmaValide: "Financement AMI/CMA validé ?",
@@ -100,6 +100,7 @@ export const STATS_DEMANDES_COLUMNS = {
   pilotageTauxDemande: "Tx Demande RS {0}",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/restitution/demandes"]["demandes"][number] & {
+    libelleColoration: string;
     disciplinesRecrutementRH: string;
     disciplinesReconversionRH: string;
     disciplinesProfesseurAssocieRH: string;
