@@ -107,8 +107,7 @@ export const DemandeForm = ({
       }
 
       await handleFiles(body.numero);
-
-      push(`/demandes/saisie`);
+      push(getRoutingAccessSaisieDemande({user, campagne, suffix: `?filters[campagne]=${campagne.annee}`}));
     },
     onError: (e: unknown) => {
       if(isAxiosError<DetailedApiError>(e)) {
