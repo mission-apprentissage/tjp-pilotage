@@ -1,8 +1,8 @@
-import {chakra, Td, Tooltip} from '@chakra-ui/react';
+import { chakra, Td, Tooltip } from "@chakra-ui/react";
 import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
-import {SecteurEnum} from 'shared/enum/secteurEnum';
-import { getMillesimeFromCampagne } from 'shared/time/millesimes';
-import {unEscapeString} from 'shared/utils/escapeString';
+import { SecteurEnum } from "shared/enum/secteurEnum";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
+import { unEscapeString } from "shared/utils/escapeString";
 
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
 import type { DemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
@@ -15,8 +15,8 @@ import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeU
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
-import {formatCommuneLibelleWithCodeDepartement, formatMillesime} from '@/utils/formatLibelle';
-import {formatNumber,formatNumberToMonetaryString, formatNumberToString, formatPercentageFixedDigits} from '@/utils/formatUtils';
+import { formatCommuneLibelleWithCodeDepartement, formatLibellesColoration, formatMillesime } from "@/utils/formatLibelle";
+import { formatNumber,formatNumberToMonetaryString, formatNumberToString, formatPercentageFixedDigits } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 const formatBooleanValue = (value?: boolean) => (value ? "Oui" : "Non");
@@ -235,7 +235,7 @@ export const LineContent = ({
         maxW={300}
         bgColor={getCellColor("libelleColoration")}
       >
-        {demande.libelleColoration}
+        {formatLibellesColoration(demande)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

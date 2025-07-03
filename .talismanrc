@@ -143,6 +143,10 @@ fileignoreconfig:
   checksum: 2c57a4ce66aae5885864beab7369094022c779c45800ef2861bdb1a2830ca38f
 - filename: ui/utils/__tests__/isPartOfSaisieDemande.test.ts
   checksum: a9edcc318486f4d65e1d748e650eb7243f387075f093d9568d6f26d4cc03a5b6
+- filename: ui/utils/__tests__/permissionsDemandeUtils.test.ts
+  checksum: be0fe006a8ba22785eae0b72ad24c396ab61f1621550b515f5137fc2401da1e7
+- filename: ui/utils/__tests__/permissionsOldDemandeUtils.test.ts
+  checksum: 4143cc02a050869ae63aa3c4f787e11e995e219fd910e7112e0db54abfe34839
 - filename: ui/utils/security/__tests__/GuardSaisieDemande.test.tsx
   checksum: 26e715515a91e89432de7a0f83edce0b9765e92e4a15f3e731de1abb56090d9e
 scopeconfig:

@@ -9,7 +9,7 @@ import type { AnneeCampagneMotifDemande,MotifDemandeLabel } from "@/app/(wrapped
 import { getMotifDemandeLabel,hasMotifAutre } from "@/app/(wrapped)/demandes/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeUtils";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
-import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
+import {formatDepartementLibelleWithCodeDepartement, formatLibellesColoration} from '@/utils/formatLibelle';
 import { formatArray, formatBoolean, formatDate } from "@/utils/formatUtils";
 
 import { FilesSection } from "./files/FilesSection";
@@ -205,8 +205,8 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
           </Flex>
           {demande.coloration && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Heading as="h4" fontSize={14} fontWeight={400}>Libellé de la coloration</Heading>
-              <Text fontSize={14}>{demande.libelleColoration}</Text>
+              <Heading as="h4" fontSize={14} fontWeight={400}>Libellé(s) de(s) coloration(s)</Heading>
+              <Text fontSize={14}>{formatLibellesColoration(demande)}</Text>
             </Flex>
           )}
           <Divider my={3} borderColor={"grey.900"} />

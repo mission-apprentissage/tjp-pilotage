@@ -8,8 +8,7 @@ import type { UserType } from 'shared/schema/userSchema';
 import { hasRole, isAdmin } from 'shared/security/securityUtils';
 
 import type { Demande } from "@/app/(wrapped)/demandes/types";
-
-import { isOldDemande } from "./permissionsDemandeUtils";
+import { isOldDemande } from "@/utils/permissionsDemandeUtils";
 
 const possibleStatuts: Array<DemandeStatutType> =
   Object.values(DemandeStatutEnum).filter((statut) => (
