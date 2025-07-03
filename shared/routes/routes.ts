@@ -13,6 +13,7 @@ import { getCampagneSchema} from './schemas/get.campagne.schema';
 import { getCampagnesSchema } from "./schemas/get.campagnes.schema";
 import { getCampagnesRegionSchema } from "./schemas/get.campagnes-region.schema";
 import { searchCampusSchema } from "./schemas/get.campus.search.search.schema";
+import {getCapacitePrecedenteSchema} from './schemas/get.capacite-precedente.schema';
 import { getCorrectionsSchema } from "./schemas/get.corrections.schema";
 import { getDemandeFilesSchema } from "./schemas/get.demande.numero.files.schema";
 import { getDemandeFileDownloadUrlSchema } from "./schemas/get.demande.numero.files.url.schema";
@@ -28,8 +29,7 @@ import { getDneUrlSchema } from "./schemas/get.dne_url.schema";
 import { getDomaineDeFormationCodeNsfSchema } from "./schemas/get.domaine-de-formation.codeNsf.schema";
 import { getDomaineDeFormationSchema } from "./schemas/get.domaine-de-formation.schema";
 import { searchDomaineProfessionnelSchema } from "./schemas/get.domaine-professionnel.search.search.schema";
-import { searchEtablissementPerdirSchema } from "./schemas/get.etablissement.perdir.search.search.schema";
-import { searchEtablissementSchema } from "./schemas/get.etablissement.search.search.schema";
+import { searchEtablissementSchema } from "./schemas/get.etablissement.search.schema";
 import { getAnalyseDetailleeEtablissementSchema } from "./schemas/get.etablissement.uai.analyse-detaillee.schema";
 import { getHeaderEtablissementSchema } from "./schemas/get.etablissement.uai.header.schema";
 import { getDataForEtablissementMapListSchema } from "./schemas/get.etablissement.uai.map.list.schema";
@@ -421,6 +421,11 @@ export const ROUTES = {
     method: "DELETE",
     schema: deleteSuiviSchema,
   },
+  "[GET]/capacite-precedente": {
+    url: "/capacite-precedente",
+    method: "GET",
+    schema: getCapacitePrecedenteSchema,
+  },
   "[GET]/demande/:numero": {
     url: "/demande/:numero",
     method: "GET",
@@ -450,11 +455,6 @@ export const ROUTES = {
     url: "/demandes/statut/submit",
     method: "POST",
     schema: submitDemandesStatutSchema,
-  },
-  "[GET]/etablissement/perdir/search/:search": {
-    url: "/etablissement/perdir/search/:search",
-    method: "GET",
-    schema: searchEtablissementPerdirSchema,
   },
   "[POST]/demande/avis/submit": {
     url: "/demande/avis/submit",

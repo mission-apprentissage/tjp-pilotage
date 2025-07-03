@@ -1,18 +1,14 @@
-import {Box, Button,chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip, VisuallyHidden} from '@chakra-ui/react';
+import {Box,chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip, VisuallyHidden} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
-import {useRouter, useSearchParams} from 'next/navigation';
 import type { RefObject } from "react";
 import { useState } from "react";
 import {DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 
 import { SCROLL_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
-import type { Demande } from '@/app/(wrapped)/demandes/types';
-import { canCorrectDemande } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
 import {shouldDisplayAjustement} from '@/app/(wrapped)/demandes/utils/typeDemandeUtils';
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
-import {getRoutingAccessSaisieDemande} from '@/utils/getRoutingAccesDemande';
 import {useAuth} from '@/utils/security/useAuth';
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
@@ -79,21 +75,16 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
 });
 export const TypeDemandeSection = ({
   disabled,
-  demande,
   campagne,
   typeDemandeRef,
+  capaciteRef
 }: {
   disabled?: boolean;
-  demande?: Demande;
   campagne: CampagneType;
   typeDemandeRef: RefObject<HTMLDivElement>;
+  capaciteRef: RefObject<HTMLDivElement>;
 }) => {
   const { user } = useAuth();
-  const router = useRouter();
-
-  const queryParams = useSearchParams();
-  const isCorrection = queryParams.get("correction")
-   && canCorrectDemande({demande, user});
 
   return (
     <Flex ref={typeDemandeRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"} gap={6}>
@@ -120,27 +111,7 @@ export const TypeDemandeSection = ({
           <Text>Vous cherchez à faire un transfert de places entre établissements ?</Text>
         </Flex>
       </Tooltip>
-      <CapaciteSection disabled={disabled} />
-      {isCorrection && (
-        <Flex justify={"right"}>
-          <Button
-            w="fit-content"
-            bgColor="transparent"
-            border="1px solid black"
-            onClick={() => {
-              router.replace(
-                getRoutingAccessSaisieDemande({
-                  user,
-                  campagne,
-                  suffix: `${demande!.numero}?correction=true`,
-                })
-              );
-            }}
-          >
-            {demande!.correction ? "Consulter la correction" : "Rectifier les capacités"}
-          </Button>
-        </Flex>
-      )}
+      <CapaciteSection disabled={disabled} capaciteRef={capaciteRef} />
     </Flex>
   );
 };

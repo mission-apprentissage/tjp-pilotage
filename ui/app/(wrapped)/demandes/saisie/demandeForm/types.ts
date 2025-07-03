@@ -14,7 +14,8 @@ export type DemandeFormType = {
   rentreeScolaire: number;
   typeDemande: TypeDemandeType;
   coloration: boolean;
-  libelleColoration?: string;
+  libelleColoration1?: string;
+  libelleColoration2?: string;
   // Capacité
   mixte: boolean;
   capaciteScolaireActuelle?: number;
@@ -44,7 +45,7 @@ export type DemandeFormType = {
   nbRecrutementRH?: number;
   discipline1RecrutementRH?: string;
   discipline2RecrutementRH?: string;
-  reconversionRH: boolean;
+  reconversionRH?: boolean;
   nbReconversionRH?: number;
   discipline1ReconversionRH?: string;
   discipline2ReconversionRH?: string;

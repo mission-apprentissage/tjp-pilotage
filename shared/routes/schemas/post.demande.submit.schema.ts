@@ -15,7 +15,8 @@ export const submitDemandeSchema = {
       rentreeScolaire: z.coerce.number(),
       typeDemande: DemandeTypeZodType,
       coloration: z.boolean(),
-      libelleColoration: z.string().optional(),
+      libelleColoration1: z.string().optional(),
+      libelleColoration2: z.string().optional(),
       // Capacité
       mixte: z.boolean().optional(),
       capaciteScolaireActuelle: z.coerce.number().optional(),
@@ -48,7 +49,7 @@ export const submitDemandeSchema = {
       nbRecrutementRH: z.coerce.number().optional(),
       discipline1RecrutementRH: z.string().optional(),
       discipline2RecrutementRH: z.string().optional(),
-      reconversionRH: z.boolean(),
+      reconversionRH: z.boolean().optional(),
       nbReconversionRH: z.coerce.number().optional(),
       discipline1ReconversionRH: z.string().optional(),
       discipline2ReconversionRH: z.string().optional(),

@@ -41,7 +41,6 @@ import { isCampagneTerminee } from "shared/utils/campagneUtils";
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/demandes/components/StatutTag";
 import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/demandes/utils/messageAccompagnementUtils";
-import { canCheckDemande, canCorrectDemande, canCreateDemande, canDeleteDemande, canEditDemande, canImportDemande} from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/demandes/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -50,16 +49,17 @@ import type { DetailedApiError} from "@/utils/apiError";
 import {getDetailedErrorMessage } from "@/utils/apiError";
 import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { getRoutingAccessSaisieDemande, getRoutingAccesSyntheseDemande } from "@/utils/getRoutingAccesDemande";
+import { canCheckDemande, canCreateDemande, canDeleteDemande,canEditDemande, canImportDemande} from "@/utils/permissionsDemandeUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 import { useStateParams } from "@/utils/useFilters";
 
 import { AvisTags } from "./components/AvisTags";
-import { CorrectionDemandeButton } from "./components/CorrectionDemandeButton";
 import { DeleteDemandeButton } from "./components/DeleteDemandeButton";
 import { DemandeSpinner } from "./components/DemandeSpinner";
 import { Header } from "./components/Header";
 import { MenuBoiteReception } from "./components/MenuBoiteReception";
+import { ModificationDemandeButton } from "./components/ModificationDemandeButton";
 import { ProgressSteps } from "./components/ProgressSteps";
 import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
 import type { Filters, Order } from "./types";
@@ -231,6 +231,7 @@ export const PageClient = () => {
   });
 
   const [ checkedDemandes, setCheckedDemandes ] = useState<CheckedDemandesType | undefined>();
+  const [ statut, setStatut ] = useState<DemandeStatutType | undefined>();
   const canCheckDemandes = hasPermission(user?.role, PermissionEnum["demande-statut/ecriture"]);
 
   const onChangeCheckedDemandes = (demande: { statut: DemandeStatutType, numero: string }) => {
@@ -306,6 +307,8 @@ export const PageClient = () => {
               checkedDemandes={checkedDemandes}
               setCheckedDemandes={setCheckedDemandes}
               setIsModifyingGroup={setIsModifyingGroup}
+              statut={statut}
+              setStatut={setStatut}
             />
             {isModifyingGroup ? (
               <DemandeSpinner mt={6}/>
@@ -389,12 +392,6 @@ export const PageClient = () => {
                       <Tbody>
                         {data?.demandes.map((demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]) => {
 
-                          const linkSaisie = getRoutingAccessSaisieDemande({
-                            user,
-                            campagne: data?.campagne,
-                            suffix: demande.numero
-                          });
-
                           const linkSaisieImported = getRoutingAccessSaisieDemande({
                             user,
                             campagne: data?.campagne,
@@ -430,18 +427,10 @@ export const PageClient = () => {
                             campagne: data?.campagne,
                           });
 
-                          const isCorrectionDisabled = !canCorrectDemande({
-                            demande : {
-                              ...demande,
-                              campagne: data?.campagne
-                            },
-                            user
-                          });
-
                           const isChecked = checkedDemandes !== undefined &&
                           checkedDemandes.demandes.length > 0 &&
                           checkedDemandes.demandes.includes(demande.numero);
-                          const canBeChecked = !isModificationDisabled && canCheckDemande({
+                          const canBeChecked = canCheckDemande({
                             demande: {
                               ...demande,
                               campagne: data?.campagne
@@ -557,26 +546,14 @@ export const PageClient = () => {
                                       icon={<Icon icon="ri:eye-line" width={"24px"} color={bluefrance113} />}
                                     />
                                   </Tooltip>
-                                  {
-                                    !isModificationDisabled && (
-                                      <Tooltip label="Modifier la demande" shouldWrapChildren>
-                                        <IconButton
-                                          disabled={isModificationDisabled}
-                                          as={NextLink}
-                                          href={linkSaisie}
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            router.push(linkSaisie);
-                                          }}
-                                          aria-label="Modifier la demande"
-                                          color={"bluefrance.113"}
-                                          bgColor={"transparent"}
-                                          icon={<Icon icon="ri:pencil-line" width={"24px"} color={bluefrance113} />}
-                                        />
-                                      </Tooltip>
-                                    )}
-                                  { !isDeleteDisabled && (<DeleteDemandeButton demande={demande} />) }
+                                  <ModificationDemandeButton
+                                    user={user}
+                                    demande={demande}
+                                    campagne={data?.campagne}
+                                    onChangeCheckedDemandes={onChangeCheckedDemandes}
+                                    setStatut={setStatut}
+                                  />
+                                  {!isDeleteDisabled && (<DeleteDemandeButton demande={demande} />) }
                                   <Tooltip label="Suivre la demande" shouldWrapChildren>
                                     <IconButton
                                       onClick={() => {
@@ -642,13 +619,6 @@ export const PageClient = () => {
                                     />
                                   </Tooltip>
                                 ))}
-                                  {!isCorrectionDisabled &&
-                                 (<CorrectionDemandeButton
-                                   user={user}
-                                   demande={demande}
-                                   campagne={data?.campagne}
-                                 />)
-                                  }
                                 </Flex>
                               </Td>
                               <Td textAlign={"center"}>
