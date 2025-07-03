@@ -127,13 +127,18 @@ export const getFormationEtablissementsQuery = async ({
             .onRef("demandeConstat.cfd", "=", "formationEtablissement.cfd")
             .onRef("demandeConstat.codeDispositif", "=", "formationEtablissement.codeDispositif")
             .onRef("demandeConstat.uai", "=", "formationEtablissement.uai")
-            // .on("demandeConstat.rentreeScolaire", "=", parseInt(rentreeScolaire[0]))
             .on("demandeConstat.rentreeScolaire", ">=", parseInt(rentreeScolaire[0]))
             .on((eb) =>
-              eb(sql<number>`
-                abs(${eb.ref("demandeConstat.differenceCapaciteScolaire")}) +
-                abs(${eb.ref("demandeConstat.differenceCapaciteApprentissage")})
-              `, ">", 1)
+              eb.or([
+                eb(sql<number>`
+                  abs(${eb.ref("demandeConstat.differenceCapaciteScolaire")}) +
+                  abs(${eb.ref("demandeConstat.differenceCapaciteApprentissage")})
+                `, ">", 1),
+                eb(sql<number>`
+                  abs(${eb.ref("demandeConstat.differenceCapaciteScolaireColoree")}) +
+                  abs(${eb.ref("demandeConstat.differenceCapaciteApprentissageColoree")})
+                `, ">", 1),
+              ])
             )
         )
         .select([
@@ -141,6 +146,16 @@ export const getFormationEtablissementsQuery = async ({
           sql<string>`string_agg("demandeConstat"."typeDemande", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("typeDemande"),
           sql<string>`string_agg(("demandeConstat"."rentreeScolaire"::varchar), ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("dateEffetTransformation"),
           sql<string>`string_agg("demandeConstat"."annee", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("anneeCampagne"),
+          sql<string>`
+            string_agg(
+              ("demandeConstat"."differenceCapaciteScolaire"::varchar), ', ' ORDER BY "demandeConstat"."rentreeScolaire"
+            )
+          `.as("differenceCapaciteScolaire"),
+          sql<string>`
+            string_agg(
+              ("demandeConstat"."differenceCapaciteApprentissage"::varchar), ', ' ORDER BY "demandeConstat"."rentreeScolaire"
+            )
+          `.as("differenceCapaciteApprentissage"),
         ])
         .$call((q) => {
           if (!dateEffetTransformation) return q;

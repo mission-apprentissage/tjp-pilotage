@@ -269,7 +269,6 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED: Record<
     color: themeDefinition.colors.greenArchipel[950],
     cellColor: "inherit",
     options: {
-
       numero: "Numéro de la demande",
       typeDemande: "Type de demande",
       dateEffetTransformation: "Date d'effet de la transformation",

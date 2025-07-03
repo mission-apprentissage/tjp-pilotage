@@ -135,7 +135,6 @@ const getTypeDemandeTooltipLabel = ({
     [DemandeTypeEnum["diminution"]]:
       (
         <Flex direction="column" gap={4}>
-          <Text>La capacité d’accueil de cette formation a été diminuée.</Text>
           <Text>
             {
               `La capacité d’accueil de cette formation a été diminuée lors de la campagne de saisie ${rentreeScolaire}.

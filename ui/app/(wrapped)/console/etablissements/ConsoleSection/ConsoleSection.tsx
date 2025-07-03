@@ -108,6 +108,7 @@ export const ConsoleSection = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           user={user}
+          filters={filters}
         />
         <Tbody>
           {data?.etablissements.map((line) => (

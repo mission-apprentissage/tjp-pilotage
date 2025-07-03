@@ -1,4 +1,3 @@
-import type { MILLESIMES_IJ } from "shared";
 import type { getFormationEtablissementsSchema } from "shared/routes/schemas/get.etablissements.schema";
 import type { z } from "zod";
 
@@ -9,7 +8,6 @@ import { getFormationEtablissementsQuery } from "./deps/getFormationEtablissemen
 import {getFormationsRenoveesEnseigneesQuery} from './deps/getFormationsRenoveesEnseigneesQuery.dep';
 
 export interface Filters extends z.infer<typeof getFormationEtablissementsSchema.querystring> {
-  millesimeSortie: (typeof MILLESIMES_IJ)[number];
   user?: RequestUser
 }
 

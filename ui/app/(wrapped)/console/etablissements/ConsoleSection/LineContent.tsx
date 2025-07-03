@@ -4,6 +4,7 @@ import NextLink from "next/link";
 import { Fragment } from "react";
 import { CURRENT_IJ_MILLESIME } from "shared";
 import type { UserType } from "shared/schema/userSchema";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
 import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Line } from "@/app/(wrapped)/console/etablissements/types";
@@ -235,102 +236,6 @@ export const EtablissementLineContent = ({
     <ConditionalTd colonne="libelleNsf" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNsf ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne="effectif1" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.effectif1 ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd colonne="effectif2" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.effectif2 ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd colonne="effectif3" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.effectif3 ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd colonne="effectifEntree" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.effectifEntree ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd colonne="capacite" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.capacite ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="tauxPression"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      textAlign={"center"}
-    >
-      <TableBadge sx={
-        getTauxPressionStyle(line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : undefined)
-      }>
-        {formatNumberToString(line.tauxPression, 2, "-")}
-      </TableBadge>
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="tauxRemplissage"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      textAlign={"center"}
-    >
-      <GraphWrapper value={line.tauxRemplissage} />
-    </ConditionalTd>
-    <ConditionalTd colonne="positionQuadrant" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <Tooltip
-        label={`Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`}
-        placement="top"
-      >
-        {line.positionQuadrant ?? "-"}
-      </Tooltip>
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="tauxInsertion"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      textAlign={"center"}
-    >
-      <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} millesime={CURRENT_IJ_MILLESIME} />
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="tauxPoursuite"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      textAlign={"center"}
-    >
-      <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} millesime={CURRENT_IJ_MILLESIME} />
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="tauxDevenirFavorable"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      textAlign="center"
-    >
-      <GraphWrapper continuum={line.continuum} value={line.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} />
-    </ConditionalTd>
-    <ConditionalTd colonne="tauxInsertionEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper
-        continuum={line.continuumEtablissement}
-        value={line.tauxInsertionEtablissement}
-        millesime={CURRENT_IJ_MILLESIME}
-      />
-    </ConditionalTd>
-    <ConditionalTd colonne="tauxPoursuiteEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper
-        continuum={line.continuumEtablissement}
-        value={line.tauxPoursuiteEtablissement}
-        millesime={CURRENT_IJ_MILLESIME}
-      />
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="tauxDevenirFavorableEtablissement"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      textAlign="center"
-    >
-      <GraphWrapper
-        continuum={line.continuumEtablissement}
-        value={line.tauxDevenirFavorableEtablissement}
-        millesime={CURRENT_IJ_MILLESIME}
-      />
-    </ConditionalTd>
-    <ConditionalTd colonne="valeurAjoutee" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.valeurAjoutee ?? "-"}
-    </ConditionalTd>
     {feature.donneesTransfoConsole && user && (
       <>
         <ConditionalTd
@@ -382,6 +287,138 @@ export const EtablissementLineContent = ({
         </ConditionalTd>
       </>
     )}
+    <ConditionalTd colonne="effectif1" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+      {line.effectif1 ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="effectif2" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+      {line.effectif2 ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="effectif3" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+      {line.effectif3 ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="effectifEntree" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+      {line.effectifEntree ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="capacite" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+      {line.capacite ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="tauxPression"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <TableBadge sx={
+        getTauxPressionStyle(line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : undefined)
+      }>
+        {formatNumberToString(line.tauxPression, 2, "-")}
+      </TableBadge>
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="tauxRemplissage"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <GraphWrapper value={line.tauxRemplissage} />
+    </ConditionalTd>
+    <ConditionalTd colonne="positionQuadrant" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      <Tooltip
+        label={`Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`}
+        placement="top"
+      >
+        {line.positionQuadrant ?? "-"}
+      </Tooltip>
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="tauxDevenirFavorable"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign="center"
+    >
+      <GraphWrapper
+        continuum={line.continuum}
+        value={line.tauxDevenirFavorable}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="tauxInsertion"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <GraphWrapper
+        continuum={line.continuum}
+        value={line.tauxInsertion}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="tauxPoursuite"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <GraphWrapper
+        continuum={line.continuum}
+        value={line.tauxPoursuite}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="tauxDevenirFavorableEtablissement"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign="center"
+    >
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxDevenirFavorableEtablissement}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
+    </ConditionalTd>
+    <ConditionalTd colonne="tauxInsertionEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxInsertionEtablissement}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
+    </ConditionalTd>
+    <ConditionalTd colonne="tauxPoursuiteEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxPoursuiteEtablissement}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
+    </ConditionalTd>
+    <ConditionalTd colonne="valeurAjoutee" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+      {line.valeurAjoutee ?? "-"}
+    </ConditionalTd>
   </>
 );
 
