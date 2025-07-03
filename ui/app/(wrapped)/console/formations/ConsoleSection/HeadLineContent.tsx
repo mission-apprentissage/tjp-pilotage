@@ -233,6 +233,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           maxWidth={36}
+          icon={<TooltipDefinitionNombreEleves />}
         >
           {FORMATION_COLUMNS.evolutionEffectif}
         </ConditionalTh>
@@ -300,6 +301,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           maxWidth={36}
+          icon={<TooltipDefinitionTauxDePression />}
         >
           {FORMATION_COLUMNS.evolutionTauxPression}
         </ConditionalTh>
@@ -320,6 +322,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           maxWidth={36}
+          icon={<TooltipDefinitionTauxRemplissage />}
         >
           {FORMATION_COLUMNS.evolutionTauxRemplissage}
         </ConditionalTh>
@@ -337,6 +340,27 @@ export const HeadLineContent = ({
           </ConditionalTh>
         )}
         <ConditionalTh
+          colonne={"tauxDevenirFavorable"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          cursor="pointer"
+          onClick={handleOrder}
+          textAlign={"center"}
+          icon={<TooltipDefinitionTauxDevenirFavorable />}
+        >
+          <OrderIcon {...order} column="tauxDevenirFavorable" />
+          {FORMATION_COLUMNS.tauxDevenirFavorable}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"evolutionTauxDevenirFavorable"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          maxWidth={36}
+          icon={<TooltipDefinitionTauxDevenirFavorable />}
+        >
+          {FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
+        </ConditionalTh>
+        <ConditionalTh
           colonne={"tauxInsertion"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -353,6 +377,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           maxWidth={36}
+          icon={<TooltipDefinitionTauxEmploi6Mois />}
         >
           {FORMATION_COLUMNS.evolutionTauxInsertion}
         </ConditionalTh>
@@ -373,28 +398,9 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           maxWidth={36}
+          icon={<TooltipDefinitionTauxPoursuiteEtudes />}
         >
           {FORMATION_COLUMNS.evolutionTauxPoursuite}
-        </ConditionalTh>
-        <ConditionalTh
-          colonne={"tauxDevenirFavorable"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          cursor="pointer"
-          onClick={handleOrder}
-          textAlign={"center"}
-          icon={<TooltipDefinitionTauxDevenirFavorable />}
-        >
-          <OrderIcon {...order} column="tauxDevenirFavorable" />
-          {FORMATION_COLUMNS.tauxDevenirFavorable}
-        </ConditionalTh>
-        <ConditionalTh
-          colonne={"evolutionTauxDevenirFavorable"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          maxWidth={36}
-        >
-          {FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
         </ConditionalTh>
       </Tr>
     </Thead>

@@ -1,13 +1,16 @@
 "use client";
 
-import {Button, Center, chakra, Flex, MenuButton,Spinner, useDisclosure} from '@chakra-ui/react';
+import { Button, Center, chakra, Flex, MenuButton, Spinner, Tab, TabList, Tabs, Text,useDisclosure } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
+import { CURRENT_RENTREE } from 'shared';
+import type { TypeDemandeType } from 'shared/enum/demandeTypeEnum';
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import type { UserType } from 'shared/schema/userSchema';
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
@@ -20,24 +23,134 @@ import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { feature } from "@/utils/feature";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import {formatLibelleFormationWithoutTags} from '@/utils/formatLibelle';
+import {formatLibelleFormationWithoutTags, formatTypeDemande} from '@/utils/formatLibelle';
 import { formatArray } from "@/utils/formatUtils";
 import { useAuth } from '@/utils/security/useAuth';
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   FORMATION_ETABLISSEMENT_COLUMNS,
+  FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED,
   FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
+  FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED,
 } from "./FORMATION_ETABLISSEMENT_COLUMNS";
-import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
+import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL, GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED } from "./GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { SideSection } from "./SideSection/SideSection";
-import type { Filters, Order } from "./types";
+import type { Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS, Order } from "./types";
 
 const PAGE_SIZE = 30;
 
 type QueryResult = (typeof client.infer)["[GET]/etablissements"];
+
+const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
+  "rentreeScolaire",
+  "libelleEtablissement",
+  "libelleFormation",
+  "tauxPression",
+  "evolutionTauxPression",
+  "tauxRemplissage",
+  "evolutionTauxRemplissage",
+  "positionQuadrant",
+  "tauxDevenirFavorable",
+  "evolutionTauxDevenirFavorable",
+  "tauxInsertion",
+  "evolutionTauxInsertion",
+  "tauxPoursuite",
+  "evolutionTauxPoursuite",
+  "tauxDevenirFavorableEtablissement",
+  "evolutionTauxDevenirFavorableEtablissement",
+  "tauxInsertionEtablissement",
+  "evolutionTauxInsertionEtablissement",
+  "tauxPoursuiteEtablissement",
+  "evolutionTauxPoursuiteEtablissement",
+];
+
+const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
+  "rentreeScolaire",
+  "libelleEtablissement",
+  "libelleFormation",
+  "numero",
+  "dateEffetTransformation",
+  "typeDemande",
+  "tauxPression",
+  "tauxRemplissage",
+  "tauxInsertion",
+  "tauxPoursuite",
+  "positionQuadrant",
+  "tauxDevenirFavorable",
+  "tauxInsertion",
+  "tauxPoursuite",
+  "tauxDevenirFavorableEtablissement",
+  "tauxInsertionEtablissement",
+  "tauxPoursuiteEtablissement",
+];
+
+const TabsSection = chakra((
+  {
+    handleColonneFilters,
+  }:
+  {
+    handleColonneFilters: (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => void;
+  }
+) => {
+  return (<Tabs
+    isLazy={true}
+    // index={getTabIndex()}
+    display="flex"
+    flex="1"
+    flexDirection="column"
+    variant="blue-border"
+    minHeight="0"
+    width={"100%"}
+  >
+    <TabList>
+      <Tab
+        as={Button}
+        onClick={() => {
+          handleColonneFilters(
+            Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]
+          );
+        }}
+        p={2}
+      >
+        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+          <Icon icon="ri:slideshow-line" />
+          <Text>Vue globale</Text>
+        </Flex>
+      </Tab>
+      {feature.donneesEvolutionTauxConsole && (
+        <Tab
+          as={Button}
+          onClick={() => {
+            handleColonneFilters(COLONNES_EVOLUTION_TAUX);
+          }}
+          p={2}
+        >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+            <Icon icon="ri:line-chart-line" />
+            <Text>Évolution des taux</Text>
+          </Flex>
+        </Tab>
+      )}
+      <Tab
+        as={Button}
+        onClick={() => {
+          handleColonneFilters(COLONNES_SUIVI_TRANSFO);
+        }}
+        p={2}
+      >
+        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+          <Icon icon="ri:seedling-line" />
+          <Text>Suivi de la transformation</Text>
+        </Flex>
+      </Tab>
+    </TabList>
+  </Tabs>
+  );
+});
 
 const ColonneFilterSection = chakra(
   ({
@@ -45,30 +158,44 @@ const ColonneFilterSection = chakra(
     forcedColonnes,
     handleColonneFilters,
     trackEvent,
+    user,
+    className
   }: {
-    colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    forcedColonnes?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    handleColonneFilters: (value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]) => void;
+    colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+    forcedColonnes?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+    handleColonneFilters: (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => void;
     trackEvent: (name: string, params?: Record<string, unknown>) => void;
-  }) =>
-    <Flex justifyContent={"start"} direction="row">
-      <GroupedMultiselect
-        width={"48"}
-        size="md"
-        variant={"newInput"}
-        onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[])}
-        groupedOptions={Object.entries(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL).reduce(
-          (acc, [group, { color, options }]) => {
-            acc[group] = {
-              color,
-              options: Object.entries(options).map(([value, label]) => ({
-                label,
-                value,
-                isDisabled: forcedColonnes?.includes(value as keyof typeof FORMATION_ETABLISSEMENT_COLUMNS),
-              })),
-            };
-            return acc;
-          },
+    user?: UserType;
+    className?: string;
+  }) => {
+
+    const groupedOptions = user
+      ? Object.entries(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED)
+      : Object.entries(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL);
+
+    const options = user
+      ? Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED)
+      : Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT);
+
+    return (
+      <Flex justifyContent={"start"} direction="row" className={className}>
+        <GroupedMultiselect
+          width={"48"}
+          size="md"
+          variant={"newInput"}
+          onChange={(selected) => handleColonneFilters(selected as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[])}
+          groupedOptions={groupedOptions.reduce(
+            (acc, [group, { color, options }]) => {
+              acc[group] = {
+                color,
+                options: Object.entries(options).map(([value, label]) => ({
+                  label,
+                  value,
+                  isDisabled: forcedColonnes?.includes(value as FORMATION_ETABLISSEMENT_COLUMNS_KEYS),
+                })),
+              };
+              return acc;
+            },
           {} as Record<
             string,
             {
@@ -76,27 +203,29 @@ const ColonneFilterSection = chakra(
               options: { label: string; value: string; disabled?: boolean }[];
             }
           >
-        )}
-        defaultOptions={Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)?.map(([value, label]) => {
-          return {
-            label,
-            value,
-          };
-        })}
-        value={colonneFilters ?? []}
-        customButton={
-          <MenuButton
-            as={Button}
-            variant={"externalLink"}
-            leftIcon={<Icon icon={"ri:table-line"} />}
-            color="bluefrance.113"
-            onClick={() => trackEvent("etablissements:affichage-colonnes")}
-          >
+          )}
+          defaultOptions={options?.map(([value, label]) => {
+            return {
+              label,
+              value,
+            };
+          })}
+          value={colonneFilters ?? []}
+          customButton={
+            <MenuButton
+              as={Button}
+              variant={"externalLink"}
+              leftIcon={<Icon icon={"ri:table-line"} />}
+              color="bluefrance.113"
+              onClick={() => trackEvent("etablissements:affichage-colonnes")}
+            >
             Modifier les colonnes
-          </MenuButton>
-        }
-      />
-    </Flex>
+            </MenuButton>
+          }
+        />
+      </Flex>
+    );
+  }
 );
 
 const Page = () => {
@@ -104,11 +233,11 @@ const Page = () => {
   const trackEvent = usePlausible();
   const router = useRouter();
   const queryParams = useSearchParams();
-  const { auth } = useAuth();
+  const { auth, user } = useAuth();
   const searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+    columns?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     order?: Partial<Order>;
     page?: string;
   } = parse(queryParams.toString(), { arrayLimit: Infinity });
@@ -149,6 +278,7 @@ const Page = () => {
       query: getEtablissementsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
     {
+      enabled: !!filters.rentreeScolaire,
       staleTime: 10000000,
     }
   );
@@ -180,7 +310,7 @@ const Page = () => {
     };
 
     const columns = {
-      ..._.omit(FORMATION_ETABLISSEMENT_COLUMNS, "formationSpecifique"),
+      ..._.omit(user ? FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED : FORMATION_ETABLISSEMENT_COLUMNS, "formationSpecifique"),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
@@ -189,7 +319,7 @@ const Page = () => {
     let etablissements = [];
 
     etablissements = data.etablissements.map((etablissement) => ({
-      ...etablissement,
+      ..._.pick(etablissement, Object.keys(FORMATION_ETABLISSEMENT_COLUMNS)),
       ...(filters.codeRegion && region
         ? {
           selectedCodeRegion: region.value,
@@ -216,6 +346,15 @@ const Page = () => {
       isFormationRenovee: etablissement.isFormationRenovee,
       isHistorique: !!etablissement.formationRenovee,
       isHistoriqueCoExistant: etablissement.isHistoriqueCoExistant,
+      ...user && {
+        ...etablissement,
+        typeDemande: etablissement.typeDemande
+          ? etablissement.typeDemande
+            .split(", ")
+            .map((typeDemande) => formatTypeDemande(typeDemande as TypeDemandeType))
+            .join(", ")
+          : undefined
+      }
     }));
 
     return {
@@ -246,13 +385,18 @@ const Page = () => {
     downloadExcel(formatExportFilename("etablissement_export"), etablissements, columns);
   };
 
-  const [colonneFilters, setColonneFilters] = useState<(keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]>(
-    (columns.length
+  const defaultColumns = (user ?
+    Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED)
+    : Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+
+  const [colonneFilters, setColonneFilters] = useState<FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]>(
+    (columns && Array.isArray(columns) && columns.length
       ? columns
-      : Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)) as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]
+      : defaultColumns
+    )
   );
 
-  const handleColonneFilters = (value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]) => {
+  const handleColonneFilters = (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => {
     setSearchParams({ columns: value });
     setColonneFilters(value);
   };
@@ -268,6 +412,7 @@ const Page = () => {
   const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
   const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
   const { uais } = useContext(UaisContext);
+  const rentreeScolaire = CURRENT_RENTREE;
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
@@ -361,11 +506,21 @@ const Page = () => {
       filters.uai = uais;
       setSearchParams({ filters: filters });
     }
+    if(rentreeScolaire && !filters.rentreeScolaire?.length) {
+      filters.rentreeScolaire = [rentreeScolaire];
+      setSearchParams({ filters: filters });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if(!filters.rentreeScolaire?.length)
+      setSearchParams({ filters: { ...filters, rentreeScolaire: [CURRENT_RENTREE] } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.rentreeScolaire]);
+
   return (
-    <>
+    <Flex direction="column" overflowY="auto" bgColor={"bluefrance.975"}>
       <HeaderSection
         setSearchParams={setSearchParams}
         searchParams={searchParams}
@@ -376,53 +531,65 @@ const Page = () => {
         setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
       <Flex direction={"row"} flex={1} position="relative" minH="0">
-        <SideSection searchParams={searchParams} filtersList={data?.filters} handleFilters={handleFilters} />
+        <SideSection
+          searchParams={searchParams}
+          filtersList={data?.filters}
+          handleFilters={handleFilters}
+          user={user}
+        />
         <Flex direction="column" flex={1} position="relative" minW={0}>
-          <TableHeader
-            p={4}
-            SaveFiltersButton={
-              <Flex py="2">
-                <Button
-                  variant={"externalLink"}
-                  leftIcon={<Icon icon="ri:save-3-line" />}
-                  onClick={() => {
-                    onOpen();
+          <Flex direction={"column"} bgColor={"white"}>
+            <TableHeader
+              p={4}
+              SaveFiltersButton={
+                <Flex py="2">
+                  <Button
+                    variant={"externalLink"}
+                    leftIcon={<Icon icon="ri:save-3-line" />}
+                    onClick={() => {
+                      onOpen();
+                    }}
+                  >
+                    Enregistrer la requête
+                  </Button>
+                </Flex>
+              }
+              SearchInput={
+                <ConsoleSearchInput
+                  placeholder="Rechercher dans les résultats"
+                  onChange={(newValue) => {
+                    const oldValue = searchFormationEtablissement;
+                    setSearchFormationEtablissement(newValue);
+                    if (newValue.length > 2 || oldValue.length > newValue.length) {
+                      onSearch();
+                    }
                   }}
-                >
-                  Enregistrer la requête
-                </Button>
-              </Flex>
-            }
-            SearchInput={
-              <ConsoleSearchInput
-                placeholder="Rechercher dans les résultats"
-                onChange={(newValue) => {
-                  const oldValue = searchFormationEtablissement;
-                  setSearchFormationEtablissement(newValue);
-                  if (newValue.length > 2 || oldValue.length > newValue.length) {
-                    onSearch();
-                  }
-                }}
-                value={searchFormationEtablissement}
-                onClick={onSearch}
-                width={{ base: "15rem", ["2xl"]: "25rem" }}
-              />
-            }
-            ColonneFilter={
+                  value={searchFormationEtablissement}
+                  onClick={onSearch}
+                  width={{ base: "15rem", ["2xl"]: "25rem" }}
+                />
+              }
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
+              page={page}
+              pageSize={PAGE_SIZE}
+              count={data?.count}
+              onPageChange={(newPage) => setSearchParams({ page: newPage })}
+            />
+            <Flex ms={"auto"} p={4} gap={2} flexWrap="wrap" alignItems="center">
               <ColonneFilterSection
                 colonneFilters={colonneFilters}
                 handleColonneFilters={handleColonneFilters}
                 forcedColonnes={["libelleEtablissement", "libelleFormation"]}
                 trackEvent={trackEvent}
+                user={user}
+                ms={"auto"}
               />
-            }
-            onExportCsv={onExportCsv}
-            onExportExcel={onExportExcel}
-            page={page}
-            pageSize={PAGE_SIZE}
-            count={data?.count}
-            onPageChange={(newPage) => setSearchParams({ page: newPage })}
-          />
+              <TabsSection
+                handleColonneFilters={handleColonneFilters}
+              />
+            </Flex>
+          </Flex>
           {isLoading && (
             <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
               <Spinner />
@@ -434,6 +601,7 @@ const Page = () => {
             order={order}
             setSearchParams={setSearchParams}
             colonneFilters={colonneFilters}
+            user={user}
           />
         </Flex>
       </Flex>
@@ -446,7 +614,7 @@ const Page = () => {
           page="formationEtablissement"
         />
       )}
-    </>
+    </Flex>
   );
 };
 

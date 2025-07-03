@@ -231,6 +231,36 @@ export interface DemandeAccessLog {
   updatedAt: Timestamp | null;
 }
 
+export interface DemandeConstatNonMaterializedView {
+  numero: string | null;
+  typeDemande: string | null;
+  cfd: string | null;
+  codeDispositif: string | null;
+  uai: string | null;
+  rentreeScolaire: number | null;
+  capaciteScolaireActuelle: number | null;
+  capaciteScolaire: number | null;
+  capaciteScolaireColoreeActuelle: number | null;
+  capaciteScolaireColoree: number | null;
+  capaciteApprentissageActuelle: number | null;
+  capaciteApprentissage: number | null;
+  capaciteApprentissageColoreeActuelle: number | null;
+  capaciteApprentissageColoree: number | null;
+  differenceCapaciteScolaire: number | null;
+  differenceCapaciteScolaireColoree: number | null;
+  differenceCapaciteApprentissage: number | null;
+  differenceCapaciteApprentissageColoree: number | null;
+  annee: string | null;
+  effectifEntreeAvant: number | null;
+  effectifEntreeApres: number | null;
+  deltaEffectif: number | null;
+  capaciteEntreeAvant: number | null;
+  capaciteEntreeApres: number | null;
+  deltaCapacite: number | null;
+  voeuEntreeAvant: number | null;
+  voeuEntreeApres: number | null;
+}
+
 export interface Departement {
   codeDepartement: string;
   libelleDepartement: string;
@@ -614,6 +644,7 @@ export interface DB {
   dataFormation: DataFormation;
   demande: Demande;
   demandeAccessLog: DemandeAccessLog;
+  demandeConstatNonMaterializedView: DemandeConstatNonMaterializedView;
   departement: Departement;
   diplomeProfessionnel: DiplomeProfessionnel;
   discipline: Discipline;

@@ -263,6 +263,16 @@ export const FormationLineContent = ({
         </Tooltip>
       </ConditionalTd>
     )}
+    <ConditionalTd colonne={"tauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      <GraphWrapper continuum={formation.continuum} value={formation.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} my="auto" />
+    </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
+        data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxDevenirFavorable"})}
+        isPercentage={true}
+      />
+    </ConditionalTd>
     <ConditionalTd
       colonne={"tauxInsertion"}
       colonneFilters={colonneFilters}
@@ -290,16 +300,6 @@ export const FormationLineContent = ({
       <GraphEvolution
         title={FORMATION_COLUMNS.evolutionTauxPoursuite}
         data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxPoursuite"})}
-        isPercentage={true}
-      />
-    </ConditionalTd>
-    <ConditionalTd colonne={"tauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} my="auto" />
-    </ConditionalTd>
-    <ConditionalTd colonne={"evolutionTauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
-      <GraphEvolution
-        title={FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
-        data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxDevenirFavorable"})}
         isPercentage={true}
       />
     </ConditionalTd>

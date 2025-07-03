@@ -2,6 +2,7 @@ import { CloseIcon } from "@chakra-ui/icons";
 import { Box, Button, chakra, IconButton, Tag, Text, Tooltip, Wrap } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { CURRENT_RENTREE } from "shared";
 
 import { useAuth } from "@/utils/security/useAuth";
 
@@ -20,6 +21,7 @@ enum FILTRES_KEYS {
   "cfd" = "formations",
   "cfdFamille" = "familles",
   "positionQuadrant" = "positionsQuadrant",
+  "rentreeScolaire" = "rentreesScolaires",
 }
 
 export const FilterTags = chakra(
@@ -72,6 +74,12 @@ export const FilterTags = chakra(
 
     const [shouldShowAllFilters, setShouldShowAllFilters] = useState<boolean>(false);
 
+    const isFilterEditable = ({ key, value }: { key: string; value: string }) => {
+      if (!isEditable) return false;
+      if (key === "rentreeScolaire" && value === CURRENT_RENTREE) return false;
+      return true;
+    };
+
     if (!filters) return <Box h={9} />;
 
     return (
@@ -97,7 +105,7 @@ export const FilterTags = chakra(
                       <Text maxW={56} whiteSpace="nowrap" textOverflow="ellipsis" overflowX="clip">
                         {getFilterValue({ key, value })}
                       </Text>
-                      {isEditable && handleFilters && (
+                      {isFilterEditable({ key, value }) && handleFilters && (
                         <IconButton
                           aria-label="Supprimer le filtre"
                           variant={"unstyled"}
