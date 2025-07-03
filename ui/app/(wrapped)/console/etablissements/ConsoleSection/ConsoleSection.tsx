@@ -1,21 +1,20 @@
 import { Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
+import type { UserType } from "shared/schema/userSchema";
 
 import { client } from "@/api.client";
-import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Etablissements, Filters, LineId, Order } from "@/app/(wrapped)/console/etablissements/types";
+import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "@/app/(wrapped)/console/etablissements/GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
+import type { Etablissements, Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS, LineId,Order } from "@/app/(wrapped)/console/etablissements/types";
 
 import { HeadLineContent } from "./HeadLineContent";
 import { EtablissementLineContent, EtablissementLineLoader, EtablissementLinePlaceholder } from "./LineContent";
 
-const getCellBgColor = (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => {
-  const groupLabel = Object.keys(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS).find((groupLabel) => {
-    return Object.keys(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS[groupLabel].options).includes(column);
+const getCellBgColor = (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => {
+  const groupLabel = Object.keys(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED).find((groupLabel) => {
+    return Object.keys(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[groupLabel].options).includes(column);
   });
-  return GROUPED_FORMATION_ETABLISSEMENT_COLUMNS[groupLabel as string].cellColor;
+  return GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[groupLabel as string].cellColor;
 };
 
 export const ConsoleSection = ({
@@ -24,6 +23,7 @@ export const ConsoleSection = ({
   order,
   setSearchParams,
   colonneFilters,
+  user
 }: {
   data?: Etablissements;
   filters: Partial<Filters>;
@@ -31,11 +31,12 @@ export const ConsoleSection = ({
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+    columns?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     order?: Partial<Order>;
     page?: number;
   }) => void;
-  colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+  colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+  user?: UserType;
 }) => {
   const [historiqueId, setHistoriqueId] = useState<LineId>();
 
@@ -56,7 +57,10 @@ export const ConsoleSection = ({
             limit: 2,
             order: "desc",
             orderBy: "rentreeScolaire",
-            rentreeScolaire: RENTREES_SCOLAIRES.filter((rentree) => rentree !== CURRENT_RENTREE),
+            rentreeScolaire: filters?.rentreeScolaire?.[0] ? [
+              `${parseInt(filters.rentreeScolaire[0]) - 1}`,
+              `${parseInt(filters.rentreeScolaire[0]) - 2}`
+            ] : [],
           },
         })
       ).etablissements;
@@ -94,7 +98,7 @@ export const ConsoleSection = ({
   }, []);
 
   return (
-    <TableContainer overflowY="auto" ref={tableRef}>
+    <TableContainer overflowY="auto" ref={tableRef} minH={"110%"}>
       <Table variant="simple" size={"sm"}>
         <HeadLineContent
           isFirstColumnSticky={isFirstColumnSticky}
@@ -103,6 +107,8 @@ export const ConsoleSection = ({
           setSearchParams={setSearchParams}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          user={user}
+          filters={filters}
         />
         <Tbody>
           {data?.etablissements.map((line) => (
@@ -127,6 +133,7 @@ export const ConsoleSection = ({
                   onClickCollapse={() => setHistoriqueId(undefined)}
                   colonneFilters={colonneFilters}
                   getCellBgColor={getCellBgColor}
+                  user={user}
                 />
               </Tr>
               {historiqueId?.cfd === line.cfd &&
@@ -141,14 +148,17 @@ export const ConsoleSection = ({
                         line={historiqueLine}
                         colonneFilters={colonneFilters}
                         getCellBgColor={getCellBgColor}
+                        user={user}
                       />
                     </Tr>
                   ))}
-
                   {historiqueData && !historiqueData.length && (
-                    <EtablissementLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+                    <EtablissementLinePlaceholder
+                      colonneFilters={colonneFilters}
+                      getCellBgColor={getCellBgColor}
+                      user={user}
+                    />
                   )}
-
                   {isFetchingHistoriqueData && <EtablissementLineLoader />}
                 </>
               )}

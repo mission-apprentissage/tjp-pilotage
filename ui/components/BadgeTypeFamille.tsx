@@ -61,6 +61,7 @@ export const BadgeTypeFamille = chakra(({
   return (
     <Badge
       variant={typeFamilleVariant}
+      my={"auto"}
       h={"fit-content"}
       flex={"shrink"}
       size={size}
