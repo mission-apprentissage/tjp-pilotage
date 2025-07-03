@@ -31,7 +31,7 @@ export const ModificationDemandeButton = chakra(
     const bluefrance113 = useToken("colors", "bluefrance.113");
 
     const canEdit = canEditDemande({ demande: { ...demande, campagne }, user });
-    const canEditCfdUai = canEditDemandeCfdUai({ demande, user });
+    const canEditCfdUai = canEditDemandeCfdUai({ demande: { ...demande, campagne }, user });
     const canEditStatut = canEditDemandeStatut({ demande: { ...demande, campagne }, user }) && hasPermission(user?.role, PermissionEnum["demande-statut/ecriture"]);
     const canCorrect = canCorrectDemande({ demande: { ...demande, campagne }, user });
 
@@ -70,7 +70,7 @@ export const ModificationDemandeButton = chakra(
               </Flex>
             </MenuItem>
           )}
-          {!canEdit && canEditCfdUai && (
+          {canEditCfdUai && (
             <MenuItem
               px={2}
               py={3}

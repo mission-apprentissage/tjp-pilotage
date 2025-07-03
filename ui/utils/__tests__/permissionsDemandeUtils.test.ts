@@ -11,7 +11,7 @@ import {beforeEach,describe, expect, it} from 'vitest';
 
 import { feature } from "@/utils/feature";
 import type { Demande } from '@/utils/permissionsDemandeUtils';
-import { canCorrectDemande, canCreateDemande, canDeleteDemande, canEditDemande, canImportDemande } from '@/utils/permissionsDemandeUtils';
+import { canCorrectDemande, canCreateDemande, canDeleteDemande, canEditDemande, canEditDemandeCfdUai, canImportDemande } from '@/utils/permissionsDemandeUtils';
 
 const createUserBuilder = ({
   role,
@@ -77,6 +77,7 @@ const fixtureBuilder = () => {
   let canImport: boolean | undefined = undefined;
   let canCreate: boolean | undefined = undefined;
   let canShowCorrectionButton: boolean | undefined = undefined;
+  let canEditCfdUai: boolean | undefined = undefined;
 
   return {
     given: {
@@ -146,6 +147,15 @@ const fixtureBuilder = () => {
           isOldDemande
         });
       },
+      demandeRefusee: (isOldDemande: boolean = false) => {
+        demande = createDemandeBuilder({
+          campagne,
+          statut: DemandeStatutEnum["refusée"],
+          typeDemande: DemandeTypeEnum["ouverture_nette"],
+          canEdit: true,
+          isOldDemande
+        });
+      },
       demandeAjustement: (isOldDemande: boolean = false) => {
         demande = createDemandeBuilder({
           campagne,
@@ -182,6 +192,9 @@ const fixtureBuilder = () => {
       },
       canShowCorrectionButton: () => {
         canShowCorrectionButton = canCorrectDemande({demande, user});
+      },
+      canEditDemandeCfdUai: () => {
+        canEditCfdUai = canEditDemandeCfdUai({demande, user});
       }
     },
     then: {
@@ -214,6 +227,12 @@ const fixtureBuilder = () => {
       },
       verifierCanNotShowCorrectionButton: () => {
         expect(canShowCorrectionButton).toBe(false);
+      },
+      verifierCanEditDemandeCfdUai: () => {
+        expect(canEditCfdUai).toBe(true);
+      },
+      verifierCanNotEditDemandeCfdUai: () => {
+        expect(canEditCfdUai).toBe(false);
       },
     },
   };
@@ -551,7 +570,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
-    if(!feature.newCorrection) return;
+    if(!feature.correction) return;
     fixture.then.verifierCanShowCorrectionButton();
   });
 
@@ -562,7 +581,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
-    if(!feature.newCorrection) return;
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -573,7 +592,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
-    if(!feature.newCorrection) return;
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -584,7 +603,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
-    if(!feature.newCorrection) return;
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -595,7 +614,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
-    if(!feature.newCorrection) return;
+    if(!feature.correction) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -621,6 +640,51 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.then.verifierCanCreate();
     fixture.then.verifierCanEdit();
+  });
+
+  it("Un utilisateur admin national doit pouvoir modifier le CFD/UAI d'une demande validée d'une campagne terminée", () => {
+    fixture.given.utilisateurAdmin();
+    fixture.given.campagne("2023", CampagneStatutEnum["terminée"]);
+    fixture.given.demandeValidee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanEditDemandeCfdUai();
+  });
+
+  it("Un utilisateur admin régional doit pouvoir modifier le CFD/UAI d'une demande validée d'une campagne terminée", () => {
+    fixture.given.utilisateurAdminRegionExpe();
+    fixture.given.campagne("2023", CampagneStatutEnum["terminée"]);
+    fixture.given.demandeValidee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanEditDemandeCfdUai();
+  });
+
+  it("Un utilisateur admin national ne doit pas pouvoir modifier le CFD/UAI d'une demande refusée d'une campagne terminée", () => {
+    fixture.given.utilisateurAdmin();
+    fixture.given.campagne("2023", CampagneStatutEnum["terminée"]);
+    fixture.given.demandeRefusee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanNotEditDemandeCfdUai();
+  });
+
+  it("Un utilisateur gestionnaire région ne doit pas pouvoir modifier le CFD/UAI d'une demande validée d'une campagne en cours", () => {
+    fixture.given.utilisateurAdmin();
+    fixture.given.campagne("2024", CampagneStatutEnum["en cours"]);
+    fixture.given.demandeValidee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanNotEditDemandeCfdUai();
+  });
+
+  it("Un utilisateur gestionnaire région ne doit pas pouvoir modifier le CFD/UAI d'une demande refusée d'une campagne terminée", () => {
+    fixture.given.utilisateurGestionnaireRegionExpe();
+    fixture.given.campagne("2023", CampagneStatutEnum["terminée"]);
+    fixture.given.demandeValidee();
+
+    fixture.when.canEditDemandeCfdUai();
+    fixture.then.verifierCanNotEditDemandeCfdUai();
   });
 
 });
