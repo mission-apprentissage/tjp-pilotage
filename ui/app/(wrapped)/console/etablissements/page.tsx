@@ -23,6 +23,7 @@ import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { feature } from "@/utils/feature";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 import {formatLibelleFormationWithoutTags, formatTypeDemande} from '@/utils/formatLibelle';
 import { formatArray } from "@/utils/formatUtils";
@@ -54,9 +55,11 @@ const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEY
   "tauxPoursuite",
   "positionQuadrant",
   "tauxDevenirFavorable",
+  "tauxInsertion",
+  "tauxPoursuite",
+  "tauxDevenirFavorableEtablissement",
   "tauxInsertionEtablissement",
   "tauxPoursuiteEtablissement",
-  "tauxDevenirFavorableEtablissement",
 ];
 
 const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
@@ -66,6 +69,17 @@ const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS
   "numero",
   "dateEffetTransformation",
   "typeDemande",
+  "tauxPression",
+  "tauxRemplissage",
+  "tauxInsertion",
+  "tauxPoursuite",
+  "positionQuadrant",
+  "tauxDevenirFavorable",
+  "tauxInsertion",
+  "tauxPoursuite",
+  "tauxDevenirFavorableEtablissement",
+  "tauxInsertionEtablissement",
+  "tauxPoursuiteEtablissement",
 ];
 
 const TabsSection = chakra((
@@ -101,18 +115,20 @@ const TabsSection = chakra((
           <Text>Vue globale</Text>
         </Flex>
       </Tab>
-      <Tab
-        as={Button}
-        onClick={() => {
-          handleColonneFilters(COLONNES_EVOLUTION_TAUX);
-        }}
-        p={2}
-      >
-        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
-          <Icon icon="ri:line-chart-line" />
-          <Text>Évolution des taux</Text>
-        </Flex>
-      </Tab>
+      {feature.donneesEvolutionTauxConsole && (
+        <Tab
+          as={Button}
+          onClick={() => {
+            handleColonneFilters(COLONNES_EVOLUTION_TAUX);
+          }}
+          p={2}
+        >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+            <Icon icon="ri:line-chart-line" />
+            <Text>Évolution des taux</Text>
+          </Flex>
+        </Tab>
+      )}
       <Tab
         as={Button}
         onClick={() => {

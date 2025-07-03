@@ -1,13 +1,14 @@
-import type { MILLESIMES_IJ } from "shared";
 import type { getFormationsSchema } from "shared/routes/schemas/get.formations.schema";
 import type { z } from "zod";
+
+import type { RequestUser } from "@/modules/core/model/User";
 
 import { getFiltersQuery } from "./deps/getFiltersQuery.dep";
 import { getFormationsQuery } from "./deps/getFormationsQuery.dep";
 import { getFormationsScolairesRenoveesQuery } from './deps/getFormationsScolairesRenoveesQuery.dep';
 
 export interface Filters extends z.infer<typeof getFormationsSchema.querystring> {
-  millesimeSortie: (typeof MILLESIMES_IJ)[number];
+  user?: RequestUser
 }
 
 const getFormationsFactory =

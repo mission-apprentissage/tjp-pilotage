@@ -10,8 +10,8 @@ const TYPE_DEMANDE_BG_COLORS: Record<TypeDemandeType, string> = {
   [DemandeTypeEnum["augmentation_compensation"]]: "bluefrance.525",
   [DemandeTypeEnum["ouverture_nette"]]: "bluefrance.525",
   [DemandeTypeEnum["ouverture_compensation"]]: "bluefrance.525",
-  [DemandeTypeEnum["fermeture"]]: "greenArchipel.200_active",
-  [DemandeTypeEnum["diminution"]]: "greenArchipel.200_active",
+  [DemandeTypeEnum["fermeture"]]: "blueEcumeMoon.675",
+  [DemandeTypeEnum["diminution"]]: "blueEcumeMoon.675",
 };
 
 const TYPE_DEMANDE_COLORS: Record<TypeDemandeType, string> = {

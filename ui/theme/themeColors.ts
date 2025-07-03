@@ -40,6 +40,11 @@ export const themeColors = {
     "975_hover": "#d7dffb",
     "975_active": "#c3cffa",
   },
+  blueEcumeMoon: {
+    675: "#869ECE",
+    "675_hover": "#b8c5e2",
+    "675_active": "#ced6ea",
+  },
   blueCumulus: {
     526: "#417dc4",
   },
