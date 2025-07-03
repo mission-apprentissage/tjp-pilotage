@@ -59,17 +59,16 @@ export const MotifRefusBlock = chakra(({ disabled, className }: { disabled?: boo
         <FormLabel mb={2}>Merci de préciser le(s) motif(s) de votre refus :</FormLabel>
         <Controller
           name="motifRefus"
-          disabled={disabled}
           control={control}
           rules={{ required: "Le motif de refus est obligatoire" }}
-          render={({ field: { onChange, value, onBlur, ref, name, disabled } }) => {
+          render={({ field: { onChange, value, onBlur, ref, name } }) => {
             return (
               <CheckboxGroup onChange={onChange} value={value}>
                 <Stack spacing={[3]}>
                   {getMotifOptions(typeDemande).map(({ value, label }) => (
                     <Checkbox
                       ref={ref}
-                      disabled={disabled}
+                      isDisabled={disabled}
                       name={name}
                       isRequired={false}
                       key={`${name}_${label}`}

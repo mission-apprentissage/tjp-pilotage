@@ -116,13 +116,7 @@ export const canEditDemandeCfdUai = ({
     statut?: DemandeStatutType,
   },
   user?: UserType
-}) => {
-  if(isStatutDemandeValidee(demande?.statut)) return (
-    hasRole({ user, role: RoleEnum["admin_region"] })
-    || hasRole({ user, role: RoleEnum["admin"] })
-  );
-  return false;
-};
+}) => isAdmin({ user }) && isStatutDemandeValidee(demande?.statut);
 
 const canEditOldDemande = ({
   demande,

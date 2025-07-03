@@ -91,7 +91,7 @@ export const CapaciteSection = ({
   const { data: capacitePrecedente } = useQuery({
     keepPreviousData: false,
     staleTime: 10000000,
-    queryKey: ["capacite"],
+    queryKey: ["capacite", cfd, uai, codeDispositif],
     enabled: shouldFetchCapacite,
     queryFn: async () => {
       if (!shouldFetchCapacite) return;
@@ -103,7 +103,7 @@ export const CapaciteSection = ({
             codeDispositif,
           },
         })
-      ).capacite;
+      ).capacite ?? 0;
     },
     onSuccess: (capacite) => {
       if (capacite) {
@@ -124,7 +124,7 @@ export const CapaciteSection = ({
     () =>
       watch((_, { name }) => {
         if (name !== "typeDemande") return;
-        queryClient.invalidateQueries({ queryKey: ["capacite"] });
+        queryClient.invalidateQueries({ queryKey: ["capacite", cfd, uai, codeDispositif] });
         if(isTypeOuverture(typeDemande)) setValue("capaciteScolaireActuelle", 0);
       }).unsubscribe
   );

@@ -92,7 +92,6 @@ export const submitDemandeSchema = {
       numero: z.string().optional(),
       campagneId: z.string(),
     }),
-    isEditCfdUai: z.boolean().optional(),
   }),
   response: {
     200: z.object({
