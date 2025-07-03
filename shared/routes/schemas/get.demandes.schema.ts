@@ -39,7 +39,8 @@ const DemandeItem = z.object({
   rentreeScolaire: z.coerce.number().optional(),
   typeDemande: DemandeTypeZodType,
   coloration: z.boolean(),
-  libelleColoration: z.string().optional(),
+  libelleColoration1: z.string().optional(),
+  libelleColoration2: z.string().optional(),
   // Capacité
   mixte: z.boolean().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),

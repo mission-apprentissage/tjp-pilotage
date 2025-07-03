@@ -34,7 +34,8 @@ const CorrectionItem = z.object({
   typeFamille: TypeFamilleZodType.optional(),
   // Demande
   coloration: z.boolean().optional(),
-  libelleColoration: z.string().optional(),
+  libelleColoration1: z.string().optional(),
+  libelleColoration2: z.string().optional(),
   commentaire: z.string().optional(),
   updatedAt: z.string(),
   createdAt: z.string(),

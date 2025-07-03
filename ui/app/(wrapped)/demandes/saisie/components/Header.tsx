@@ -1,9 +1,8 @@
-import {ArrowForwardIcon,ChevronDownIcon} from "@chakra-ui/icons";
+import { ArrowForwardIcon,ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, Button, Collapse, Flex, Highlight, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure, useToast } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { usePlausible } from "next-plausible";
-import { useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { OptionType } from "shared/schema/optionSchema";
@@ -18,12 +17,13 @@ import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton"
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { Multiselect } from "@/components/Multiselect";
 import { SearchInput } from "@/components/SearchInput";
-import type {DetailedApiError} from "@/utils/apiError";
+import type { DetailedApiError } from "@/utils/apiError";
 import { getDetailedErrorMessage } from "@/utils/apiError";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { feature } from "@/utils/feature";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import { useAuth } from "@/utils/security/useAuth";
+import { formatLibellesColoration } from '@/utils/formatLibelle';
+import { useAuth } from '@/utils/security/useAuth';
 
 export const Header = ({
   searchParams,
@@ -41,6 +41,8 @@ export const Header = ({
   checkedDemandes,
   setCheckedDemandes,
   setIsModifyingGroup,
+  statut,
+  setStatut
 }: {
   searchParams: ISearchParams;
   setSearchParams: (params: ISearchParams) => void;
@@ -60,6 +62,8 @@ export const Header = ({
   checkedDemandes: CheckedDemandesType | undefined;
   setCheckedDemandes: (checkedDemandes: CheckedDemandesType | undefined) => void;
   setIsModifyingGroup: (isModifyingGroup: boolean) => void;
+  statut: DemandeStatutType | undefined;
+  setStatut: (statut: DemandeStatutType | undefined) => void;
 }) => {
   const { user } = useAuth();
   const toast = useToast();
@@ -87,6 +91,7 @@ export const Header = ({
       [
         ...data.demandes.map((demande) => ({
           ...demande,
+          libelleColoration: formatLibellesColoration(demande),
           ...demande.avis.reduce(
             (acc, current, index) => {
               acc[`avis${index}`] = [
@@ -114,6 +119,7 @@ export const Header = ({
       [
         ...data.demandes.map((demande) => ({
           ...demande,
+          libelleColoration: formatLibellesColoration(demande),
           ...demande.avis.reduce(
             (acc, current, index) => {
               acc[`avis${index}`] = [
@@ -168,8 +174,6 @@ export const Header = ({
       }, 500);
     },
   });
-
-  const [statut, setStatut] = useState<DemandeStatutType | undefined>();
 
   return (
     <Flex direction={"column"} gap={2} mb={2}>
@@ -392,9 +396,6 @@ const ModalModificationStatut = ({
           >
             {text}
           </Highlight>
-          <Text color="red" mt={2}>
-              Attention, ce changement est irréversible
-          </Text>
         </ModalBody>
         <ModalFooter>
           <Button
