@@ -384,8 +384,8 @@ const Page = () => {
     : Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
 
   const [colonneFilters, setColonneFilters] = useState<FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]>(
-    (columns.length
-      ? columns
+    (availableColumns && Array.isArray(availableColumns) && availableColumns.length
+      ? availableColumns
       : defaultColumns
     )
   );
