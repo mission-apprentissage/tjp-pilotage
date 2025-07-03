@@ -16,14 +16,14 @@ export const DateEffetTransformationComponent = chakra(({
   typeDemande?: string;
   props?: BadgeProps;
 }) => {
-
-
   if(!dateEffetTransformation || !rentreeScolaire || !typeDemande) return null;
   const dateEffetTransformationArray = dateEffetTransformation?.split(", ");
   const typeDemandeArray = formatTypeDemandeArray(typeDemande);
+  const colorKeys = typeDemandeArray.map((typeDemande) => getTypeDemandeBgColor(typeDemande?.value));
+  const fetchedColors = useToken("colors", colorKeys);
   const highlightedColors: Record<string, string> = {};
   dateEffetTransformationArray.forEach((dateEffetTransformation, index) => {
-    highlightedColors[dateEffetTransformation] = useToken("colors", getTypeDemandeBgColor(typeDemandeArray[index]?.value));
+    highlightedColors[dateEffetTransformation] = fetchedColors[index];
   });
 
   return (

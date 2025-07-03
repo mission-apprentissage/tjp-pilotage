@@ -1,13 +1,13 @@
 import { Flex } from "@chakra-ui/react";
-import _ from "lodash";
+import { capitalize } from "lodash";
 import type { ReactNode } from "react";
-import type {Role} from "shared";
+import type { Role } from "shared";
 import { RoleEnum } from "shared";
 import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
-import {SecteurEnum} from 'shared/enum/secteurEnum';
-import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
-import { TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
+import { SecteurEnum } from "shared/enum/secteurEnum";
+import type { TypeFamille } from "shared/enum/typeFamilleEnum";
+import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
 
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 
@@ -223,7 +223,7 @@ export const formatTypeDemande = (typeDemande?: TypeDemandeType): string => {
   case DemandeTypeEnum["coloration"]:
   case DemandeTypeEnum["diminution"]:
   case DemandeTypeEnum["transfert"]:
-    return _.capitalize(typeDemande);
+    return capitalize(typeDemande);
   default:
     return "";
   }
