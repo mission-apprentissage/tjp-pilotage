@@ -100,7 +100,6 @@ export const IndicateursSection = ({
           label={`Taux de remplissage dans votre ${typeTerritoire === "region" ? "région" : "département"}`}
           value={formatPercentage(stats?.tauxRemplissage, 0, "-")}
           tooltip={formatPercentage(stats?.tauxRemplissage, 2, "-")}
-          type={"percentage"}
           glossaire={<TooltipDefinitionTauxRemplissage />}
           badge={<BadgeRentreeScolaire rentreeScolaire={CURRENT_RENTREE} />}
         />
@@ -108,7 +107,6 @@ export const IndicateursSection = ({
           label={`Taux de devenir favorable dans votre région`}
           value={formatPercentage(stats?.tauxDevenirFavorable, 0, "-")}
           tooltip={formatPercentage(stats?.tauxDevenirFavorable, 2, "-")}
-          type={"percentage"}
           glossaire={<TooltipDefinitionTauxDevenirFavorable />}
           badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
         />
@@ -116,7 +114,6 @@ export const IndicateursSection = ({
           label="Taux de poursuite d'études dans votre région"
           value={formatPercentage(stats?.tauxPoursuite, 0, "-")}
           tooltip={formatPercentage(stats?.tauxPoursuite, 2, "-")}
-          type={"percentage"}
           glossaire={<TooltipDefinitionTauxPoursuiteEtudes />}
           badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
         />
@@ -124,7 +121,6 @@ export const IndicateursSection = ({
           label="Taux d'emploi à 6 mois dans votre région"
           value={formatPercentage(stats?.tauxInsertion, 0, "-")}
           tooltip={formatPercentage(stats?.tauxInsertion, 2, "-")}
-          type={"percentage"}
           glossaire={<TooltipDefinitionTauxEmploi6Mois />}
           badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
         />
