@@ -13,13 +13,13 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 
 import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/demandes/utils/messageAccompagnementUtils";
-import { canCreateDemande } from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
 import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisContext } from "@/app/uaiContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
 import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 import { isPerdirPartOfSaisieDemande } from "@/utils/isPartOfSaisieDemande";
+import { canCreateDemande } from "@/utils/permissionsDemandeUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
