@@ -112,11 +112,9 @@ export const canEditDemandeCfdUai = ({
   demande,
   user
 } : {
-  demande?: {
-    statut?: DemandeStatutType,
-  },
+  demande?: Demande,
   user?: UserType
-}) => isAdmin({ user }) && isStatutDemandeValidee(demande?.statut);
+}) => isAdmin({ user }) && isCampagneTerminee(demande?.campagne) && isStatutDemandeValidee(demande?.statut);
 
 const canEditOldDemande = ({
   demande,
@@ -178,7 +176,7 @@ export const canCorrectDemande = ({
   demande?: Demande,
   user?: UserType
 }): boolean =>
-  feature.newCorrection &&
+  feature.correction &&
   !!demande &&
   hasPermission(user?.role, PermissionEnum["demande/ecriture"]) &&
   isCampagneTerminee(demande?.campagne) &&

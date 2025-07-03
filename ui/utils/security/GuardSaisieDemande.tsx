@@ -29,18 +29,3 @@ export const GuardSaisieDemande = (
   if(canCreateDemande({ user, campagne })) return (<>{children}</>);
   return redirect(getRoutingAccessSaisieDemande({ user, campagne }));
 };
-
-
-// export const GuardSaisieDemande = (
-//   { campagne, children }:
-//   { campagne: CampagneType; children: ReactNode }
-// ): ReactNode => {
-//   const { user } = useAuth();
-//   if(feature.saisieDisabled) return redirect(getRoutingAccessSaisieDemande({ user, campagne }));
-//   if(!isUserPartOfSaisieDemande({ user, campagne })) return redirect(getRoutingAccessSaisieDemande({ user, campagne }));
-//   if(isUserNational({ user }) && isCampagneEnCours(campagne)) return (<>{children}</>);
-//   const isCampagneRegionale = !!campagne?.codeRegion;
-//   const withSaisiePerdir = (hasRole({ user, role: RoleEnum["perdir"] }) && isCampagneRegionale) ? !!campagne?.withSaisiePerdir : true;
-//   if(!withSaisiePerdir) return redirect(getRoutingAccessSaisieDemande({ user, campagne }));
-//   return (<>{children}</>);
-// };
