@@ -7,7 +7,6 @@ export const StatCard = chakra(
     value,
     color = "inherit",
     tooltip,
-    type = "absolute",
     badge,
     sub,
     glossaire,
@@ -16,7 +15,6 @@ export const StatCard = chakra(
     value?: string | number;
     color?: string;
     tooltip?: string;
-    type?: "absolute" | "percentage";
     badge?: ReactNode;
     sub?: ReactNode;
     glossaire?: ReactNode;
