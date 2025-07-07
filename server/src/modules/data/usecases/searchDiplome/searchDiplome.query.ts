@@ -133,9 +133,9 @@ export const searchDiplomeQuery = async (filters: Filters) => {
       "dataFormation.dateFermeture"
     ])
     .orderBy([
+      "dataFormation.dateFermeture desc",
       "niveauDiplome.libelleNiveauDiplome",
       "dataFormation.libelleFormation asc",
-      sql`"dataFormation"."dateFermeture" nulls first`,
     ])
     .limit(20)
     .execute()

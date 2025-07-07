@@ -22,7 +22,7 @@ export const DEMANDES_COLUMNS = {
   motif: "Motif",
   autreMotif: "Autre motif",
   coloration: "Coloration",
-  libelleColoration: "Libelle coloration",
+  libelleColoration: "Libellé(s) coloration(s)",
   amiCma: "AMI/CMA ?",
   commentaire: "Commentaire",
   statut: "Statut",
@@ -68,5 +68,7 @@ export const DEMANDES_COLUMNS = {
 } satisfies ExportColumns<
   Demandes[number] & {
     [key: `avis${number}`]: string;
+  } & {
+    libelleColoration?: string;
   }
 >;

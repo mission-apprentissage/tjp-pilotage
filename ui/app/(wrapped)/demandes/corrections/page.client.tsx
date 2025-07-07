@@ -19,6 +19,7 @@ import { TableHeader } from "@/components/TableHeader";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { feature } from "@/utils/feature";
+import {formatLibellesColoration} from '@/utils/formatLibelle';
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import type { CORRECTIONS_COLUMNS_OPTIONAL } from "./CORRECTIONS_COLUMN";
@@ -260,6 +261,7 @@ export const PageClient = () => {
           minute: "2-digit",
         }),
         secteur: correction.secteur === SecteurEnum["PU"] ? "Public" : "Privé",
+        libelleColoration: formatLibellesColoration(correction),
       })),
       CORRECTIONS_COLUMNS
     );

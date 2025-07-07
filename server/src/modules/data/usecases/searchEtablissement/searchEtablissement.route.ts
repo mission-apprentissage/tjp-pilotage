@@ -16,9 +16,10 @@ export const searchEtablissementRoute = (server: Server) => {
       ...props,
       handler: async (request, response) => {
         const { search } = request.params;
-        const { filtered } = request.query;
+        const { filtered, isFormulaire } = request.query;
         const result = await searchEtablissement({
           search,
+          isFormulaire,
           filtered,
           user: request.user,
         });

@@ -16,11 +16,18 @@ export interface DB
     DBSchema,
     | "latestDemandeNonMaterializedView"
     | "formationNonMaterializedView"
+    | "demandeConstatNonMaterializedView"
   > {
 
   latestDemandeView: {
     [K in keyof DBSchema["latestDemandeNonMaterializedView"]]: NonNullable<
       DBSchema["latestDemandeNonMaterializedView"][K]
+    >;
+  };
+
+  demandeConstatView: {
+    [K in keyof DBSchema["demandeConstatNonMaterializedView"]]: NonNullable<
+      DBSchema["demandeConstatNonMaterializedView"][K]
     >;
   };
 

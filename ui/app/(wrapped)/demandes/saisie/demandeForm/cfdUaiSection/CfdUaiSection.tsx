@@ -52,6 +52,7 @@ export const CfdUaiSection = ({
   campagne,
   formId,
   active,
+  isEditCfdUai = false,
   disabled,
   defaultValues,
   formMetadata,
@@ -61,11 +62,12 @@ export const CfdUaiSection = ({
   setDateFermetureFormation,
   submitCFDUAISection,
   isCFDUaiSectionValid,
-  statutComponentRef,
+  submitComponentRef,
 }: {
   campagne?: CampagneType;
   formId?: string;
   active: boolean;
+  isEditCfdUai?: boolean;
   disabled?: boolean;
   defaultValues: PartialDemandeFormType;
   formMetadata?: DemandeMetadata;
@@ -75,7 +77,7 @@ export const CfdUaiSection = ({
   setDateFermetureFormation: (dateFermetureFormation?: string) => void;
   submitCFDUAISection: () => void;
   isCFDUaiSectionValid: (_: Partial<DemandeFormType>) => boolean;
-  statutComponentRef?: React.RefObject<HTMLDivElement>;
+  submitComponentRef?: React.RefObject<HTMLDivElement>;
 }) => {
   const { watch, getValues } = useFormContext<DemandeFormType>();
 
@@ -105,13 +107,13 @@ export const CfdUaiSection = ({
     return () => subscription.unsubscribe();
   }, [watch, getValues, isCFDUaiSectionValid]);
 
-  const anchorToStatus = () => {
-    statutComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
+  const anchorToSubmit = () => {
+    submitComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <DarkMode>
-      <Box color="chakra-body-text" bg="blueecume.400_hover" p="6" borderRadius="6">
+      <Box color="chakra-body-text" bg="blueecume.400_hover" p="6" borderRadius="6" height={"100%"}>
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <TagCampagne campagne={campagne} />
@@ -123,12 +125,17 @@ export const CfdUaiSection = ({
               ml={2}
               aria-label="Editer"
               variant={"ghost"}
-              onClick={() => anchorToStatus()}
+              onClick={() => anchorToSubmit()}
             />
           )}
           {disabled && (
             <Tag size="lg" colorScheme={"red"} ml={"auto"}>
               Mode consultation
+            </Tag>
+          )}
+          {isEditCfdUai && (
+            <Tag size="lg" colorScheme={"orange"} ml={"auto"}>
+              Modification de formation et/ou d'établissement
             </Tag>
           )}
         </Heading>
@@ -144,15 +151,16 @@ export const CfdUaiSection = ({
         <DispositifBlock options={dispositifs} disabled={disabled || !active} />
         <LibelleFCILField shouldDisplay={isFCIL} disabled={disabled || !active} />
         <Flex direction={"row"} justify={"space-between"}>
-          <Flex direction="column" w="100%" maxW="752px">
-            <Box mb="auto" w="100%" maxW="752px">
+          <Flex direction="column" w="100%" maxW="752px" gap={4}>
+            <Box w="100%" maxW="752px">
               <UaiBlock formMetadata={formMetadata} disabled={disabled || !active} setUaiInfo={setUaiInfo} />
             </Box>
-            <Flex minH={16} mt={"auto"} align="flex-end" justify={"space-between"}>
+            <Flex minH={16} align="flex-end" justify={"space-between"}>
               {!disabled && (
                 <Button
                   visibility={active ? "collapse" : "visible"}
-                  mr="auto"
+                  ms="auto"
+                  mb="auto"
                   aria-label="Editer"
                   onClick={onEditUaiCfdSection}
                   leftIcon={<EditIcon />}
@@ -164,7 +172,7 @@ export const CfdUaiSection = ({
                 <Button
                   isDisabled={isSubmitDisabled}
                   onClick={() => submitCFDUAISection()}
-                  mt={8}
+                  mt={16}
                   ms="auto"
                   size="lg"
                   variant={"primary"}

@@ -1,12 +1,10 @@
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, Container, Divider, Flex, forwardRef, Heading } from "@chakra-ui/react";
 import { useMemo } from "react";
-import type {VoieType} from "shared";
 
 import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import type {
-  FormationListItem,
   FormationTab,
 } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { Loading } from "@/components/Loading";
@@ -37,24 +35,6 @@ const TabContent = forwardRef<TabContentProps, "div">(({ tab, ...rest }, ref) =>
     </Box>
   );
 });
-
-const getFirstFormation =
-  (formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>): { cfd: string, voies: VoieType[] } => {
-    const libellesNiveauDiplome = Object.keys(formationsByLibelleNiveauDiplome);
-
-    if (libellesNiveauDiplome.length === 0) {
-      return {
-        cfd: "",
-        voies: []
-      };
-    }
-
-    const firstFormation = formationsByLibelleNiveauDiplome[libellesNiveauDiplome[0]][0];
-    return {
-      cfd: firstFormation.cfd,
-      voies: firstFormation.voies
-    };
-  };
 
 export const FormationSection = () => {
   const { isLoading } = useDomaineDeFormation();
