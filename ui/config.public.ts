@@ -170,6 +170,7 @@ function getEnv(): PublicConfig["env"] {
   case "recette1":
   case "recette2":
   case "qualification":
+  case "diffusion":
   case "local":
     return env;
   default:
