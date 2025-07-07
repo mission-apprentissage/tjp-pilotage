@@ -11,6 +11,7 @@ on:
           - recette1
           - recette2
           - qualification
+          - diffusion
   workflow_call:
     inputs:
       environment:

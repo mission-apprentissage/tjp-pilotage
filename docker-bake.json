@@ -19,6 +19,9 @@
     "qualification": {
       "targets": ["server", "ui-qualification"]
     },
+    "diffusion": {
+      "targets": ["server", "ui-diffusion"]
+    },
     "local": {
       "targets": ["server", "ui-local"]
     }
@@ -53,7 +56,7 @@
     "ui": {
       "inherits": ["common"],
       "matrix": {
-        "ENV": ["production", "recette1", "recette2", "qualification", "local"]
+        "ENV": ["production", "recette1", "recette2", "qualification", "diffusion", "local"]
       },
       "name": "ui-${ENV}",
       "args": {

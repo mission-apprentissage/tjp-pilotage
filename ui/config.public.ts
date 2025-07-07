@@ -9,7 +9,7 @@ export interface PublicConfig {
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" | "recette1" | "recette2" | "qualification" | "production";
+  env: "local" | "recette1" | "recette2" | "qualification" | "diffusion" | "production";
   version: string;
   productMeta: {
     brandName: "orion";
@@ -72,6 +72,26 @@ function getRecette2PublicConfig(): PublicConfig {
     host,
     baseUrl: `https://${host}`,
     env: "recette2",
+    apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
+    productMeta: getProductMeta(),
+  };
+}
+
+function getDiffusionPublicConfig(): PublicConfig {
+  const host = "diffusion.orion.inserjeunes.incubateur.net";
+
+  return {
+    sentry: {
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
+      enabled: true,
+    },
+    crisp: {
+      token: "no-token",
+    },
+    host,
+    baseUrl: `https://${host}`,
+    env: "diffusion",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
     productMeta: getProductMeta(),
@@ -167,6 +187,8 @@ function getPublicConfig(): PublicConfig {
     return getRecette2PublicConfig();
   case "qualification":
     return getQualificationPublicConfig();
+  case "diffusion":
+    return getDiffusionPublicConfig();
   case "local":
     return getLocalPublicConfig();
   }
