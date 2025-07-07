@@ -75,7 +75,6 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
       demande: Demande;
     }) => {
       const currentDemande = demande.numero ? await deps.findOneDemandeQuery(demande.numero) : undefined;
-
       const { cfd, uai, campagneId } = demande;
 
       const dataEtablissement = await deps.findOneDataEtablissementQuery({ uai });
