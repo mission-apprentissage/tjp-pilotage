@@ -75,22 +75,30 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
       demande: Demande;
     }) => {
       const currentDemande = demande.numero ? await deps.findOneDemandeQuery(demande.numero) : undefined;
-
+      console.log(1);
       const { cfd, uai, campagneId } = demande;
 
+      console.log(2);
       const dataEtablissement = await deps.findOneDataEtablissementQuery({ uai });
+      console.log(3);
       const campagne = await deps.findOneCampagneQuery({ id: campagneId });
+      console.log(4);
       if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
+      console.log(5);
       if (!dataEtablissement.codeRegion) throw Boom.badData();
+      console.log(6);
 
       const scope = getPermissionScope(user.role, PermissionEnum["demande/ecriture"]);
+      console.log(7);
       const isAllowed = guardScope(scope, {
         uai: () => user.uais?.includes(demande.uai) ?? false,
         région: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });
+      console.log(8);
       const isCampagneOpen = guardCampagne(campagne) || isAdmin({ user });
 
+      console.log(9);
       if (!isCampagneOpen) {
         logger.error(
           {
@@ -102,6 +110,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         );
         throw Boom.forbidden("Demande soumise en dehors d'une campagne ouverte");
       }
+      console.log(10);
       if (!isAllowed) {
         logger.error(
           {
@@ -114,10 +123,12 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         throw Boom.forbidden("Demande soumise sur un établissement non autorisée");
       }
 
+      console.log(11);
       const sameDemande = await deps.findOneSimilarDemandeQuery({
         ...demande,
         notNumero: demande.numero,
       });
+      console.log(12);
       if (sameDemande) {
         logger.error(
           {
@@ -136,6 +147,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         });
       }
 
+      console.log(13);
       const dataFormation = await deps.findOneDataFormationQuery(cfd);
       if (!dataFormation) {
         logger.error({
@@ -146,6 +158,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         throw Boom.badRequest("CFD non valide");
       }
 
+      console.log(14);
       const demandeData = {
         ...currentDemande,
         libelleColoration1: null,
@@ -165,6 +178,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         ...demande,
       };
 
+      console.log(15);
       const errors = validateDemande(cleanNull(demandeData));
       if (errors) {
         logger.error(
@@ -178,6 +192,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         throw Boom.badData("Donnée incorrectes", { errors });
       }
 
+      console.log(16);
       const created = await deps.createDemandeQuery({
         ...demandeData,
         id: currentDemande?.id ?? generateId(),
@@ -189,6 +204,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         updatedAt: new Date(),
       });
 
+      console.log(17);
       if (created.statut !== currentDemande?.statut) {
         await deps.createChangementStatutQuery({
           id: generateId(),
@@ -200,6 +216,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         });
       }
 
+      console.log(18);
       logDemande(created);
       return created;
     }
