@@ -122,12 +122,31 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   // Indicateurs
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
-  tauxInsertion: "Tx d'emploi 6 mois régional",
-  tauxPoursuite: "Tx de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
-  tauxDevenirFavorable: "Tx de devenir favorable régional",
   tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
   tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
-  valeurAjoutee: "Valeur ajoutée",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL>;
+
+export const FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED = {
+  ...FORMATION_ETABLISSEMENT_COLUMNS,
+  // Caractéristiques de la transformation
+  numero: "Numéro de la demande",
+  typeDemande: "Type de demande",
+  dateEffetTransformation: "Date d'effet de la transformation",
+} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;
+
+export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED = {
+  ...FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL,
+  // Caractéristiques de la transformation
+  numero: "Numéro de la demande",
+  typeDemande: "Type de demande",
+  dateEffetTransformation: "Date d'effet de la transformation",
+} satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED>;
+
+export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED = {
+  ...FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
+  // Caractéristiques de la transformation
+  typeDemande: "Type de demande",
+  dateEffetTransformation: "Date d'effet de la transformation",
+} satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED>;

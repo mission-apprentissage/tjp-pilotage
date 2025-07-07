@@ -1,9 +1,10 @@
 import { sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import type { TypeFamille } from 'shared/enum/typeFamilleEnum';
 import { TypeFamilleEnum } from 'shared/enum/typeFamilleEnum';
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -31,7 +32,6 @@ export const getFormationsQuery = async ({
   offset = 0,
   limit = MAX_LIMIT,
   rentreeScolaire = [CURRENT_RENTREE],
-  millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -50,6 +50,7 @@ export const getFormationsQuery = async ({
   orderBy,
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
+  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: rentreeScolaire[0], offset: 0 });
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")

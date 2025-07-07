@@ -1,22 +1,26 @@
-import { Box, chakra,Th, Thead, Tooltip, Tr, VisuallyHidden } from '@chakra-ui/react';
+import { Box, chakra, Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
+import { CURRENT_IJ_MILLESIME } from "shared";
+import type { UserType } from "shared/schema/userSchema";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
-import { TooltipDefinitionDomaineDeFormation } from '@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation';
-import { TooltipDefinitionEffectifEnEntree } from '@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree';
-import { TooltipDefinitionFormationSpecifique } from '@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique';
-import { TooltipDefinitionNombreEleves } from '@/app/(wrapped)/components/definitions/DefinitionNombreEleves';
-import { TooltipDefinitionPositionQuadrant } from '@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant';
-import { TooltipDefinitionTauxDePression } from '@/app/(wrapped)/components/definitions/DefinitionTauxDePression';
-import { TooltipDefinitionTauxDevenirFavorable } from '@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable';
-import { TooltipDefinitionTauxEmploi6Mois } from '@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois';
-import { TooltipDefinitionTauxPoursuiteEtudes } from '@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes';
-import { TooltipDefinitionTauxRemplissage } from '@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage';
-import { TooltipDefinitionValeurAjoutee } from '@/app/(wrapped)/components/definitions/DefinitionValeurAjoutee';
+import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
+import { TooltipDefinitionEffectifEnEntree } from "@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree";
+import { TooltipDefinitionFormationSpecifique } from "@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique";
+import { TooltipDefinitionNombreEleves } from "@/app/(wrapped)/components/definitions/DefinitionNombreEleves";
+import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
+import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
+import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage";
+import { TooltipDefinitionValeurAjoutee } from "@/app/(wrapped)/components/definitions/DefinitionValeurAjoutee";
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Filters, Order } from "@/app/(wrapped)/console/etablissements/types";
+import { FORMATION_ETABLISSEMENT_COLUMNS, FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
+import type {Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Order} from "@/app/(wrapped)/console/etablissements/types";
 import { OrderIcon } from "@/components/OrderIcon";
+import { feature } from "@/utils/feature";
 
 const ConditionalTh = chakra(
   ({
@@ -33,9 +37,9 @@ const ConditionalTh = chakra(
     className?: string;
     style?: CSSProperties;
     children: React.ReactNode;
-    colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    colonne: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS;
-    getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+    colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+    colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
+    getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
     onClick?: (column: Order["orderBy"]) => void;
     isNumeric?: boolean;
     icon?: React.ReactNode;
@@ -55,7 +59,7 @@ const ConditionalTh = chakra(
             display: "flex",
             alignItems: "center",
           }}>
-            <Tooltip label={FORMATION_ETABLISSEMENT_COLUMNS[colonne]} placement="top">
+            <Tooltip label={FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne]} placement="top">
               <Box
                 fontSize={12}
                 fontWeight={700}
@@ -84,6 +88,8 @@ export const HeadLineContent = ({
   isSecondColumnSticky,
   colonneFilters,
   getCellBgColor,
+  user,
+  filters
 }: {
   order: Partial<Order>;
   setSearchParams: (params: {
@@ -94,8 +100,10 @@ export const HeadLineContent = ({
   }) => void;
   isFirstColumnSticky?: boolean;
   isSecondColumnSticky?: boolean;
-  colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-  getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+  colonneFilters: (FORMATION_ETABLISSEMENT_COLUMNS_KEYS)[];
+  getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
+  user?: UserType;
+  filters?: Partial<Filters>;
 }) => {
   const trackEvent = usePlausible();
 
@@ -293,7 +301,41 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="libelleNsf" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleNsf}
-        </ConditionalTh>
+        </ConditionalTh>{feature.donneesTransfoConsole && user && (
+          <>
+            <ConditionalTh
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              colonne="numero"
+              cursor="pointer"
+              onClick={handleOrder}
+            >
+              <OrderIcon {...order} column="numero" />
+              {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.numero}
+            </ConditionalTh>
+            <ConditionalTh
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              colonne="dateEffetTransformation"
+              cursor="pointer"
+              onClick={handleOrder}
+              maxW={64}
+            >
+              <OrderIcon {...order} column="dateEffetTransformation" />
+              {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.dateEffetTransformation}
+            </ConditionalTh>
+            <ConditionalTh
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              colonne="typeDemande"
+              cursor="pointer"
+              onClick={handleOrder}
+            >
+              <OrderIcon {...order} column="typeDemande" />
+              {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.typeDemande}
+            </ConditionalTh>
+          </>
+        )}
         <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -359,7 +401,7 @@ export const HeadLineContent = ({
           colonne="tauxPression"
           cursor="pointer"
           onClick={handleOrder}
-          icon={<TooltipDefinitionTauxDePression />}
+          icon={<TooltipDefinitionTauxDePression rentreeScolaire={filters?.rentreeScolaire?.[0]} />}
         >
           <OrderIcon {...order} column="tauxPression" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPression}
@@ -370,7 +412,7 @@ export const HeadLineContent = ({
           colonne="tauxRemplissage"
           cursor="pointer"
           onClick={handleOrder}
-          icon={<TooltipDefinitionTauxRemplissage /> }
+          icon={<TooltipDefinitionTauxRemplissage rentreeScolaire={filters?.rentreeScolaire?.[0]} /> }
         >
           <OrderIcon {...order} column="tauxRemplissage" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxRemplissage}
@@ -381,7 +423,15 @@ export const HeadLineContent = ({
           colonne="positionQuadrant"
           cursor="pointer"
           onClick={handleOrder}
-          icon={<TooltipDefinitionPositionQuadrant /> }
+          icon={
+            <TooltipDefinitionPositionQuadrant
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
         >
           <OrderIcon {...order} column="positionQuadrant" />
           {FORMATION_ETABLISSEMENT_COLUMNS.positionQuadrant}
@@ -389,10 +439,37 @@ export const HeadLineContent = ({
         <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          colonne="tauxDevenirFavorable"
+          cursor="pointer"
+          onClick={handleOrder}
+          icon={
+            <TooltipDefinitionTauxDevenirFavorable
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        >
+          <OrderIcon {...order} column="tauxDevenirFavorable" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorable}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
           colonne="tauxInsertion"
           cursor="pointer"
           onClick={handleOrder}
-          icon={<TooltipDefinitionTauxEmploi6Mois />}
+          icon={
+            <TooltipDefinitionTauxEmploi6Mois
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
         >
           <OrderIcon {...order} column="tauxInsertion" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxInsertion}
@@ -403,7 +480,15 @@ export const HeadLineContent = ({
           colonne="tauxPoursuite"
           cursor="pointer"
           onClick={handleOrder}
-          icon={<TooltipDefinitionTauxPoursuiteEtudes />}
+          icon={
+            <TooltipDefinitionTauxPoursuiteEtudes
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
         >
           <OrderIcon {...order} column="tauxPoursuite" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuite}
@@ -411,13 +496,21 @@ export const HeadLineContent = ({
         <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          colonne="tauxDevenirFavorable"
+          colonne="tauxDevenirFavorableEtablissement"
           cursor="pointer"
           onClick={handleOrder}
-          icon={<TooltipDefinitionTauxDevenirFavorable />}
+          icon={
+            <TooltipDefinitionTauxDevenirFavorable
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
         >
-          <OrderIcon {...order} column="tauxDevenirFavorable" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorable}
+          <OrderIcon {...order} column="tauxDevenirFavorableEtablissement" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorableEtablissement}
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}
@@ -425,7 +518,15 @@ export const HeadLineContent = ({
           colonne="tauxInsertionEtablissement"
           cursor="pointer"
           onClick={handleOrder}
-          icon={<TooltipDefinitionTauxEmploi6Mois />}
+          icon={
+            <TooltipDefinitionTauxEmploi6Mois
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
         >
           <OrderIcon {...order} column="tauxInsertionEtablissement" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxInsertionEtablissement}
@@ -436,21 +537,18 @@ export const HeadLineContent = ({
           colonne="tauxPoursuiteEtablissement"
           cursor="pointer"
           onClick={handleOrder}
-          icon={<TooltipDefinitionTauxPoursuiteEtudes />}
+          icon={
+            <TooltipDefinitionTauxPoursuiteEtudes
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
         >
           <OrderIcon {...order} column="tauxPoursuiteEtablissement" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuiteEtablissement}
-        </ConditionalTh>
-        <ConditionalTh
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          colonne="tauxDevenirFavorableEtablissement"
-          cursor="pointer"
-          onClick={handleOrder}
-          icon={<TooltipDefinitionTauxPoursuiteEtudes />}
-        >
-          <OrderIcon {...order} column="tauxDevenirFavorableEtablissement" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorableEtablissement}
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}

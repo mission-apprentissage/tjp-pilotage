@@ -1,10 +1,11 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, LightMode } from "@chakra-ui/react";
+import { Box, Flex, FormControl, FormErrorMessage, FormLabel, LightMode } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { CfdAutocompleteInput } from "@/app/(wrapped)/demandes/saisie/components/CfdAutocomplete";
 import type { DemandeFormType } from "@/app/(wrapped)/demandes/saisie/demandeForm/types";
 import type { DemandeMetadata , Formation } from "@/app/(wrapped)/demandes/types";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 export const CfdBlock = ({
   setDispositifs,
@@ -29,7 +30,14 @@ export const CfdBlock = ({
   return (
     <LightMode>
       <FormControl mb="4" isInvalid={!!errors.cfd?.message} isRequired w="100%" maxW="752px">
-        <FormLabel htmlFor="autocomplete-cfd">Recherche par diplôme et/ou par formation</FormLabel>
+        <Flex direction={"row"}>
+          <FormLabel htmlFor="autocomplete-cfd">
+            Recherche d'une spécialité, un intitulé de formation, un code diplôme...
+          </FormLabel>
+          <TooltipIcon
+            label="Privilégiez les intitulés complets et n'utilisez pas d'acronymes ou d'abréviations pour une recherche efficace. "
+          />
+        </Flex>
         <Box color="chakra-body-text">
           <Controller
             name="cfd"

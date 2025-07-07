@@ -4,8 +4,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import { isCampagneEnAttente, isCampagneTerminee } from "shared/utils/campagneUtils";
 
-import { canCreateDemande } from "./permissionsDemandeUtils";
-
+import { canCreateDemande } from "@/utils/permissionsDemandeUtils";
 
 export const UTILISATEUR_NON_AUTHORISE = `
   Vous n'avez pas les droits nécessaires pour créer une demande

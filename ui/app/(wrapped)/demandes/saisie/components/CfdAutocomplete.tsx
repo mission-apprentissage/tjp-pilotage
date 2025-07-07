@@ -73,7 +73,7 @@ export const CfdAutocompleteInput = ({
   );
 
   const searchDiplome = _.debounce((search: string, callback: (options: Formations) => void) => {
-    if (search.length >= 3)
+    if (search.length >= 5)
       client
         .ref("[GET]/diplome/search/:search")
         .query({ params: { search }, query: {
@@ -113,11 +113,11 @@ export const CfdAutocompleteInput = ({
       loadOptions={searchDiplome}
       formatOptionLabel={formatOptionLabel}
       loadingMessage={({ inputValue }) =>
-        inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
+        inputValue.length >= 5 ? "Recherche..." : "Veuillez rentrer au moins 5 lettres"
       }
       isClearable={true}
       noOptionsMessage={({ inputValue }) => (inputValue ? "Pas de diplôme correspondant" : "Commencez à écrire...")}
-      placeholder="Entrer une spécialité, un intitulé de formation, un code diplôme,..."
+      placeholder="CAP Cuisine, Aéronautique, 40022105..."
       isDisabled={disabled}
     />
   );

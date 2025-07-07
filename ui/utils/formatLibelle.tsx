@@ -1,10 +1,13 @@
 import { Flex } from "@chakra-ui/react";
+import { capitalize } from "lodash";
 import type { ReactNode } from "react";
-import type {Role} from "shared";
+import type { Role } from "shared";
 import { RoleEnum } from "shared";
-import {SecteurEnum} from 'shared/enum/secteurEnum';
-import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
-import { TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
+import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import { SecteurEnum } from "shared/enum/secteurEnum";
+import type { TypeFamille } from "shared/enum/typeFamilleEnum";
+import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
 
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 
@@ -205,4 +208,45 @@ export const formatRole = (role: Role) => {
   default:
     return "Inconnu";
   }
+};
+
+export const formatTypeDemande = (typeDemande?: TypeDemandeType): string => {
+  switch (typeDemande) {
+  case DemandeTypeEnum["ouverture_nette"]:
+  case DemandeTypeEnum["ouverture_compensation"]:
+    return "Ouverture";
+  case DemandeTypeEnum["augmentation_nette"]:
+  case DemandeTypeEnum["augmentation_compensation"]:
+    return "Augmentation";
+  case DemandeTypeEnum["fermeture"]:
+  case DemandeTypeEnum["ajustement"]:
+  case DemandeTypeEnum["coloration"]:
+  case DemandeTypeEnum["diminution"]:
+  case DemandeTypeEnum["transfert"]:
+    return capitalize(typeDemande);
+  default:
+    return "";
+  }
+};
+
+export const formatTypeDemandeArray = (typeDemande: string):
+  Array<{value: TypeDemandeType, label: string}> =>
+  typeDemande
+    .split( ", ")
+    .map((typeDemande) => ({
+      label: formatTypeDemande(typeDemande as TypeDemandeType),
+      value: typeDemande as TypeDemandeType,
+    }));
+
+export const formatLibellesColoration = (demande: {
+  libelleColoration1?: string;
+  libelleColoration2?: string;
+}) => {
+  if (demande.libelleColoration1) {
+    if (demande.libelleColoration2) {
+      return `${demande.libelleColoration1} / ${demande.libelleColoration2}`;
+    }
+    return demande.libelleColoration1;
+  }
+  return undefined;
 };

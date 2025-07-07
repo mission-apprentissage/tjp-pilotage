@@ -1,5 +1,6 @@
 import { inject } from "@/utils/inject";
 
+import { refreshDemandeConstatMaterializedView } from "./refreshDemandeConstatView.dep";
 import { refreshDemandeMaterializedView } from "./refreshDemandeViews.dep";
 import { refreshFormationMaterializedViews } from "./refreshFormationView.dep";
 
@@ -7,6 +8,7 @@ export const [refreshViews] = inject(
   {
     refreshFormationMaterializedViews,
     refreshDemandeMaterializedView,
+    refreshDemandeConstatMaterializedView
   },
   (deps) => {
     return async () => {
