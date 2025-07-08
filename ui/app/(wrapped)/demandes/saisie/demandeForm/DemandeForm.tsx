@@ -19,6 +19,7 @@ import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
 import { useRouter, useSearchParams} from 'next/navigation';
 import { useEffect, useRef, useState } from "react";
+import type { SubmitErrorHandler, SubmitHandler} from "react-hook-form";
 import { FormProvider, useForm } from "react-hook-form";
 import { hasRole, isAdmin, RoleEnum} from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
@@ -228,6 +229,44 @@ export const DemandeForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditCfdUai]);
 
+  const customSubmitForm = () => {
+    const validFormCallback: SubmitHandler<DemandeFormType> = (values) =>
+      submitDemande({
+        body: {
+          demande: {
+            numero: formId,
+            ...values,
+            statut: getStatutSubmit(values.statut),
+            campagneId: values.campagneId ?? campagne?.id,
+            commentaire: escapeString(values.commentaire),
+            autreMotif: escapeString(values.autreMotif),
+            autreMotifRefus: escapeString(values.autreMotifRefus),
+          }
+        },
+      });
+
+    const invalidFormCallback: SubmitErrorHandler<DemandeFormType> = () => {
+      const values = getValues();
+      if (isEditCfdUai) {
+        return submitDemande({
+          body: {
+            demande: {
+              numero: formId,
+              ...values,
+              statut: getStatutSubmit(values.statut),
+              campagneId: values.campagneId ?? campagne?.id,
+              commentaire: escapeString(values.commentaire),
+              autreMotif: escapeString(values.autreMotif),
+              autreMotifRefus: escapeString(values.autreMotifRefus),
+            }
+          },
+        });
+      }
+    };
+
+    return handleSubmit(validFormCallback, invalidFormCallback);
+  };
+
   return (
     <FormProvider {...form}>
       <Box
@@ -377,21 +416,7 @@ export const DemandeForm = ({
                           }
                           isLoading={isSubmitting}
                           variant="primary"
-                          onClick={handleSubmit((values) =>
-                            submitDemande({
-                              body: {
-                                demande: {
-                                  numero: formId,
-                                  ...values,
-                                  statut: getStatutSubmit(values.statut),
-                                  campagneId: values.campagneId ?? campagne?.id,
-                                  commentaire: escapeString(values.commentaire),
-                                  autreMotif: escapeString(values.autreMotif),
-                                  autreMotifRefus: escapeString(values.autreMotifRefus),
-                                }
-                              },
-                            })
-                          )}
+                          onClick={customSubmitForm()}
                           leftIcon={<CheckIcon />}
                         >
                           {getLabelSubmit(getStatutSubmit(defaultValues.statut), defaultValues.statut)}
