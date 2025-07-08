@@ -29,16 +29,23 @@ export const ColorationField = chakra((
     getValues,
   } = useFormContext<DemandeFormType>();
 
-  useEffect(
-    () =>
-      watch((_, { name }) => {
-        if (name === "typeDemande" && isTypeColoration(getValues("typeDemande"))) setValue("coloration", true);
-        if (name === "libelleFCIL" && getValues("libelleFCIL") !== undefined) setValue("coloration", false);
-      }).unsubscribe
-  );
-
   const libelleFCIL = watch("libelleFCIL");
+  const typeDemande = getValues("typeDemande");
   const isColorationDisabled = !!libelleFCIL || disabled;
+
+
+  useEffect(
+    () => {
+      if (isTypeColoration(typeDemande)) {
+        setValue("coloration", true);
+        return;
+      }
+
+      if (libelleFCIL !== undefined) {
+        setValue("coloration", false);
+      }
+    }, [libelleFCIL, typeDemande, setValue]
+  );
 
   return (
     <FormControl as="fieldset" className={className} isInvalid={!!errors.coloration} isRequired>
