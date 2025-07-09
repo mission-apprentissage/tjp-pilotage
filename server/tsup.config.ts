@@ -10,11 +10,14 @@ export default defineConfig((options) => {
   const dir = dirname(fileURLToPath(import.meta.url));
   const migrationFiles = fs.readdirSync(join(dir, "src/migrations"));
 
+  // Filter out non-TypeScript files and ensure they have the .ts extension
+  const migrationFilesFiltered = migrationFiles.filter(file => file.endsWith(".ts"));
+
   const entry: Record<string, string> = {
     index: "src/index.ts",
   };
 
-  for (const file of migrationFiles) {
+  for (const file of migrationFilesFiltered) {
     entry[`migrations/${basename(file, ".ts")}`] = `src/migrations/${file}`;
   }
 
