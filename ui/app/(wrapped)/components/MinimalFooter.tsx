@@ -52,9 +52,6 @@ export const MinimalFooter = () => {
           </Link>
         </Box>
         <Box>
-          <Link href="mailto:orion@inserjeunes.beta.gouv.fr">Nous contacter</Link>
-        </Box>
-        <Box>
           <Link as={NextLink} href="/statistiques" onClick={() => trackEvent("footer:statistiques")}>
             Statistiques
           </Link>
