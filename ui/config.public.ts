@@ -9,7 +9,7 @@ export interface PublicConfig {
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" | "recette1" | "recette2" | "qualification" | "diffusion" | "production";
+  env: "local" | "recette1" | "recette2" | "qualification" | "diffusion" | "preproduction" | "production";
   version: string;
   productMeta: {
     brandName: "orion";
@@ -72,6 +72,26 @@ function getRecette2PublicConfig(): PublicConfig {
     host,
     baseUrl: `https://${host}`,
     env: "recette2",
+    apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
+    productMeta: getProductMeta(),
+  };
+}
+
+function getPreProductionPublicConfig(): PublicConfig {
+  const host = "preproduction.orion.inserjeunes.incubateur.net";
+
+  return {
+    sentry: {
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
+      enabled: true,
+    },
+    crisp: {
+      token: "no-token",
+    },
+    host,
+    baseUrl: `https://${host}`,
+    env: "preproduction",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
     productMeta: getProductMeta(),
@@ -171,6 +191,7 @@ function getEnv(): PublicConfig["env"] {
   case "recette2":
   case "qualification":
   case "diffusion":
+  case "preproduction":
   case "local":
     return env;
   default:
@@ -190,6 +211,8 @@ function getPublicConfig(): PublicConfig {
     return getQualificationPublicConfig();
   case "diffusion":
     return getDiffusionPublicConfig();
+  case "preproduction":
+    return getPreProductionPublicConfig();
   case "local":
     return getLocalPublicConfig();
   }

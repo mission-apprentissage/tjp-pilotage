@@ -8,7 +8,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: 2ac8fc2bc7c276a7cb9c120e5cf82117da518f4dbb0adc5e473d9d68d47a6c6a
+  checksum: e1ddde26b5701f7ac130cf0490f59e0a2f5f82d8ec91957fc9c5e8492a15fbf6
 - filename: .yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
   checksum: a663e9955c2825bee3af55be1ebd6e26cd0a17fe7c614a13d726ddd4c7959b82
 - filename: README.md
@@ -132,7 +132,7 @@ fileignoreconfig:
 - filename: ui/app/(wrapped)/statistiques/page.tsx
   checksum: 4eff930f0a5a1df09c53d1a2e65c8911b3ae7d0ca8d2393ce371d9773af1e217
 - filename: ui/config.public.ts
-  checksum: c25702a7d65bf5e9db02deb8b460863ca9581b9a0e0260c802e5f149c04ca5c0
+  checksum: 3c34af3b3527c5d365de9ca96b6058d728d8ba19a1daa61eb8a7ee2a368e61e5
 - filename: ui/src/config.public.ts
   checksum: b13b0a1f3d9590d335062a88e76609c40ba790129e481f7e5c25fbdab6840617
 - filename: ui/src/utils/generateUri.ts

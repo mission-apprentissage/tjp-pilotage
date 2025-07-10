@@ -22,6 +22,9 @@
     "diffusion": {
       "targets": ["server", "ui-diffusion"]
     },
+    "preproduction": {
+      "targets": ["server", "ui-preproduction"]
+    },
     "local": {
       "targets": ["server", "ui-local"]
     }
@@ -56,7 +59,7 @@
     "ui": {
       "inherits": ["common"],
       "matrix": {
-        "ENV": ["production", "recette1", "recette2", "qualification", "diffusion", "local"]
+        "ENV": ["production", "recette1", "recette2", "qualification", "diffusion", "preproduction", "local"]
       },
       "name": "ui-${ENV}",
       "args": {

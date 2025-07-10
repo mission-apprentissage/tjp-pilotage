@@ -12,6 +12,7 @@ on:
           - recette2
           - qualification
           - diffusion
+          - preproduction
       app_version:
         description: app version
         type: string

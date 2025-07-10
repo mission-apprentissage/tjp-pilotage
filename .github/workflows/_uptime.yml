@@ -12,6 +12,7 @@ on:
           - recette2
           - qualification
           - diffusion
+          - preproduction
   workflow_call:
     inputs:
       environment:
