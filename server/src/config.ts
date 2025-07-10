@@ -3,7 +3,7 @@ import env from "env-var";
 /* eslint-disable-next-line import/no-named-as-default-member */
 const { get } = env;
 
-const environement = get("ENV").required().asEnum(["local", "recette1", "recette2", "qualification", "diffusion", "production", "test"]);
+const environement = get("ENV").required().asEnum(["local", "recette1", "recette2", "qualification", "diffusion", "production", "test", "preproduction"]);
 const publicUrl = get("PUBLIC_URL").required().asString();
 
 // if (process.env.NODE_ENV === "test") {
@@ -60,27 +60,6 @@ const config = {
       pass: get("SMTP_AUTH_PASS").asString(),
     },
     email_from: get("EMAIL_FROM").required().asString(),
-  },
-  slack: {
-    webhook: get("SLACK_WEBHOOK_URL")
-      .required(environement !== "local" && environement !== "test")
-      .asString(),
-    token: get("SLACK_TOKEN")
-      .required(environement === "production")
-      .asString(),
-    signingSecret: get("SLACK_SIGNING_SECRET")
-      .required(environement === "production")
-      .asString(),
-    channel: get("SLACK_CHANNEL")
-      .required(environement !== "local" && environement !== "test")
-      .asString(),
-  },
-  // gitRevision: get("GIT_REVISION").asString(),
-  notion: {
-    token: get("NOTION_TOKEN").required().asString(),
-    dbChangelogId: get("NOTION_DB_CHANGELOG_ID").required().asString(),
-    dbGlossaireId: get("NOTION_DB_GLOSSAIRE_ID").required().asString(),
-    dbEditoId: get("NOTION_DB_EDITO_ID").required().asString(),
   },
   s3: {
     region: get("S3_REGION").asString(),
