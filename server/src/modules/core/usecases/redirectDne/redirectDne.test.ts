@@ -185,6 +185,96 @@ describe("server > src > modules > core > usecases > redirectDne > usecase", () 
       });
     });
 
+
+    it("Doit créer l'utilisateur avec le bon rôle et les bons UAI s'il y a FrEduRne valorisé", async () => {
+      const ssoUserInfo = {
+        FrEduFonctAdm: "DIR",
+        FrEduRne: ["0693045K$UAJ$PU$ADM$0693045K$T3$LP$320"],
+        email: "user@test.test",
+        given_name: "firstname",
+        family_name: "lastname",
+      };
+
+      const deps = {
+        getDneClient: vi.fn().mockResolvedValue({
+          callbackParams: vi.fn(),
+          callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+          userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
+        }),
+        createUserInDB: vi.fn(),
+        authJwtSecret: "authJwtSecret",
+        codeVerifierJwtSecret: "codeVerifierJwtSecret",
+        findUserQuery: vi.fn().mockResolvedValue(undefined),
+        findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+        findRegionFromAcademie: vi.fn(),
+      };
+      const redirectDne = redirectDneFactory(deps);
+
+      const result = await redirectDne({
+        codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
+        url: "localhost?code=mycode",
+      });
+      expect(deps.createUserInDB).toHaveBeenCalledWith({
+        user: expect.objectContaining({
+          email: ssoUserInfo.email,
+          firstname: ssoUserInfo.given_name,
+          lastname: ssoUserInfo.family_name,
+          role: RoleEnum["perdir"],
+          uais: ["0693045K"],
+          codeRegion: "75",
+          password: null,
+        }),
+      });
+      expect(result).toMatchObject({
+        token: expect.stringMatching(""),
+      });
+    });
+
+    it("Doit créer l'utilisateur avec le bon rôle et les bons UAI s'il y a FrEduRne et FrEduRneResp valorisé", async () => {
+      const ssoUserInfo = {
+        FrEduFonctAdm: "DIR",
+        FrEduRne: ["0693045K$UAJ$PU$ADM$0693045K$T3$LP$320"],
+        FrEduRneResp:["0040537M$UAA$PU$N$T8$SMUT$862","0040536L$UAA$PU$N$T8$SMUT$862","0040490L$UAJ$PU$N$T3$LYC$300"],
+        email: "user@test.test",
+        given_name: "firstname",
+        family_name: "lastname",
+      };
+
+      const deps = {
+        getDneClient: vi.fn().mockResolvedValue({
+          callbackParams: vi.fn(),
+          callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+          userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
+        }),
+        createUserInDB: vi.fn(),
+        authJwtSecret: "authJwtSecret",
+        codeVerifierJwtSecret: "codeVerifierJwtSecret",
+        findUserQuery: vi.fn().mockResolvedValue(undefined),
+        findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+        findRegionFromAcademie: vi.fn(),
+      };
+      const redirectDne = redirectDneFactory(deps);
+
+      const result = await redirectDne({
+        codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
+        url: "localhost?code=mycode",
+      });
+      expect(deps.createUserInDB).toHaveBeenCalledWith({
+        user: expect.objectContaining({
+          email: ssoUserInfo.email,
+          firstname: ssoUserInfo.given_name,
+          lastname: ssoUserInfo.family_name,
+          role: RoleEnum["perdir"],
+          uais: ["0693045K", "0040537M", "0040536L", "0040490L"],
+          codeRegion: "75",
+          password: null,
+        }),
+      });
+      expect(result).toMatchObject({
+        token: expect.stringMatching(""),
+      });
+    });
+
     it("Doit créer l'utilisateur avec le bon rôle s'il y a une délégation de rôle", async () => {
       const ssoUserInfo = {
         FrEduRne: ["0693045K$UAJ$PU$ADM$0693045K$T3$LP$320"],
