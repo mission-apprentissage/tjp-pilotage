@@ -79,7 +79,7 @@ function getRecette2PublicConfig(): PublicConfig {
 }
 
 function getPreProductionPublicConfig(): PublicConfig {
-  const host = "preproduction.orion.inserjeunes.incubateur.net";
+  const host = "pp.orion.education.gouv.fr";
 
   return {
     sentry: {
@@ -99,7 +99,7 @@ function getPreProductionPublicConfig(): PublicConfig {
 }
 
 function getDiffusionPublicConfig(): PublicConfig {
-  const host = "diffusion.orion.inserjeunes.incubateur.net";
+  const host = "qp.orion.education.gouv.fr";
 
   return {
     sentry: {
@@ -119,7 +119,7 @@ function getDiffusionPublicConfig(): PublicConfig {
 }
 
 function getQualificationPublicConfig(): PublicConfig {
-  const host = "qualification.orion.inserjeunes.incubateur.net";
+  const host = "qa.orion.education.gouv.fr";
 
   return {
     sentry: {
