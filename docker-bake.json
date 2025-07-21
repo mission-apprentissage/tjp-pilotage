@@ -7,15 +7,6 @@
     "DEPS_ID": {}
   },
   "group": {
-    "production": {
-      "targets": ["server", "ui-production"]
-    },
-    "recette1": {
-      "targets": ["server", "ui-recette1"]
-    },
-    "recette2": {
-      "targets": ["server", "ui-recette2"]
-    },
     "qualification": {
       "targets": ["server", "ui-qualification"]
     },
@@ -25,8 +16,20 @@
     "preproduction": {
       "targets": ["server", "ui-preproduction"]
     },
+    "production": {
+      "targets": ["server", "ui-production"]
+    },
     "local": {
       "targets": ["server", "ui-local"]
+    },
+    "productionij": {
+      "targets": ["server", "ui-productionij"]
+    },
+    "recette1": {
+      "targets": ["server", "ui-recette1"]
+    },
+    "recette2": {
+      "targets": ["server", "ui-recette2"]
     }
   },
   "target": {
@@ -59,7 +62,7 @@
     "ui": {
       "inherits": ["common"],
       "matrix": {
-        "ENV": ["production", "recette1", "recette2", "qualification", "diffusion", "preproduction", "local"]
+        "ENV": ["qualification", "diffusion", "preproduction", "production", "local", "productionij", "recette1", "recette2"]
       },
       "name": "ui-${ENV}",
       "args": {
