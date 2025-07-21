@@ -9,7 +9,7 @@ export interface PublicConfig {
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" | "recette1" | "recette2" | "qualification" | "diffusion" | "preproduction" | "production";
+  env: "local" |  "qualification" | "diffusion" | "preproduction" | "production" | "recette1" | "recette2" | "productionij";
   version: string;
   productMeta: {
     brandName: "orion";
@@ -18,7 +18,7 @@ export interface PublicConfig {
   };
 }
 
-function getProductionPublicConfig(): PublicConfig {
+function getProductionIJPublicConfig(): PublicConfig {
   const host = "orion.inserjeunes.beta.gouv.fr";
 
   return {
@@ -138,6 +138,26 @@ function getQualificationPublicConfig(): PublicConfig {
   };
 }
 
+function getProductionPublicConfig(): PublicConfig {
+  const host = "orion.education.gouv.fr";
+
+  return {
+    sentry: {
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
+      enabled: true,
+    },
+    crisp: {
+      token: "no-token",
+    },
+    host,
+    baseUrl: `https://${host}`,
+    env: "qualification",
+    apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
+    productMeta: getProductMeta(),
+  };
+}
+
 function getLocalPublicConfig(): PublicConfig {
   const host = "localhost";
   return {
@@ -186,13 +206,14 @@ function getProductMeta(): PublicConfig["productMeta"] {
 function getEnv(): PublicConfig["env"] {
   const env = process.env.NEXT_PUBLIC_ENV;
   switch (env) {
-  case "production":
-  case "recette1":
-  case "recette2":
   case "qualification":
   case "diffusion":
   case "preproduction":
+  case "production":
   case "local":
+  case "recette1":
+  case "recette2":
+  case "productionij":
     return env;
   default:
     throw new Error(`Invalid NEXT_PUBLIC_ENV env-vars ${env}`);
@@ -201,20 +222,22 @@ function getEnv(): PublicConfig["env"] {
 
 function getPublicConfig(): PublicConfig {
   switch (getEnv()) {
-  case "production":
-    return getProductionPublicConfig();
-  case "recette1":
-    return getRecette1PublicConfig();
-  case "recette2":
-    return getRecette2PublicConfig();
   case "qualification":
     return getQualificationPublicConfig();
   case "diffusion":
     return getDiffusionPublicConfig();
   case "preproduction":
     return getPreProductionPublicConfig();
+  case "production":
+    return getProductionPublicConfig();
   case "local":
     return getLocalPublicConfig();
+  case "recette1":
+    return getRecette1PublicConfig();
+  case "recette2":
+    return getRecette2PublicConfig();
+  case "productionij":
+    return getProductionIJPublicConfig();
   }
 }
 

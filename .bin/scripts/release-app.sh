@@ -11,4 +11,4 @@ fi
 readonly next_version="${1}"
 readonly mode=${2:-$defaultMode}
 
-"$ROOT_DIR/.bin/scripts/build-images.sh" $next_version $mode production recette1 recette2 qualification diffusion preproduction
+"$ROOT_DIR/.bin/scripts/build-images.sh" $next_version $mode qualification diffusion preproduction production productionij recette1 recette2

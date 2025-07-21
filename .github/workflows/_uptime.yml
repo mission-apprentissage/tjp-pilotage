@@ -7,12 +7,13 @@ on:
         type: choice
         required: true
         options:
-          - production
-          - recette1
-          - recette2
           - qualification
           - diffusion
           - preproduction
+          - production
+          - recette1
+          - recette2
+          - productionij
   workflow_call:
     inputs:
       environment:
