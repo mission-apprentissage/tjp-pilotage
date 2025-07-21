@@ -68,14 +68,6 @@ const config = {
     accessKey: get("S3_ACCESS_KEY").asString(),
     secretKey: get("S3_SECRET_KEY").asString(),
   },
-  sentry: {
-    dsn: get("SENTRY_DSN")
-      .required(environement !== "local" && environement !== "test")
-      .asString(),
-    token: get("SENTRY_AUTH_TOKEN")
-      .required(environement !== "local" && environement !== "test")
-      .asString(),
-  },
   metabase: {
     token: get("METABASE_AUTH_TOKEN")
       .required(environement !== "local" && environement !== "test")

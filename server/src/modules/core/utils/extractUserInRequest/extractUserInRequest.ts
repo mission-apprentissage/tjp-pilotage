@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/node";
 import type { FastifyRequest } from "fastify";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
@@ -19,11 +18,6 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
       const decoded = jwt.verify(token, deps.jwtSecret) as { email: string } | undefined;
       if (!decoded) return;
       const user = await deps.findUserQuery({ email: decoded.email });
-
-      if (user?.id) {
-        Sentry.setUser({ id: user.id });
-        Sentry.setTag("role", user?.role);
-      }
 
       if (!user?.enabled) return;
       request.user = cleanNull(user) as RequestUser;

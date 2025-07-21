@@ -1,8 +1,4 @@
 export interface PublicConfig {
-  sentry: {
-    dsn: string;
-    enabled: boolean;
-  };
   crisp: {
     token: string;
   };
@@ -22,10 +18,6 @@ function getProductionIJPublicConfig(): PublicConfig {
   const host = "orion.inserjeunes.beta.gouv.fr";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "cf473a68-afeb-4611-9d38-55ff6144b9b8",
     },
@@ -42,10 +34,6 @@ function getRecette1PublicConfig(): PublicConfig {
   const host = "recette-1.orion.inserjeunes.incubateur.net";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "no-token",
     },
@@ -62,10 +50,6 @@ function getRecette2PublicConfig(): PublicConfig {
   const host = "recette-2.orion.inserjeunes.incubateur.net";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "no-token",
     },
@@ -82,10 +66,6 @@ function getPreProductionPublicConfig(): PublicConfig {
   const host = "pp.orion.education.gouv.fr";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "no-token",
     },
@@ -102,10 +82,6 @@ function getDiffusionPublicConfig(): PublicConfig {
   const host = "qp.orion.education.gouv.fr";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "no-token",
     },
@@ -122,10 +98,6 @@ function getQualificationPublicConfig(): PublicConfig {
   const host = "qa.orion.education.gouv.fr";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "no-token",
     },
@@ -142,10 +114,6 @@ function getProductionPublicConfig(): PublicConfig {
   const host = "orion.education.gouv.fr";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "no-token",
     },
@@ -161,10 +129,6 @@ function getProductionPublicConfig(): PublicConfig {
 function getLocalPublicConfig(): PublicConfig {
   const host = "localhost";
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: false,
-    },
     crisp: {
       token: "no-token",
     },

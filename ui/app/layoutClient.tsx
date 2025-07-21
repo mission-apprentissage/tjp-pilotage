@@ -2,7 +2,6 @@
 
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, Flex } from "@chakra-ui/react";
-import * as Sentry from "@sentry/nextjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Crisp } from "crisp-sdk-web";
 import { useSearchParams } from "next/navigation";
@@ -95,13 +94,6 @@ export default function RootLayoutClient({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0);
-
-  if (initialAuth) {
-    if (initialAuth.user) {
-      Sentry.setUser({ id: initialAuth.user.id });
-      Sentry.setTag("role", initialAuth.user?.role);
-    }
-  }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const handleScrolling = (e: any) => {
