@@ -119,7 +119,7 @@ function getProductionPublicConfig(): PublicConfig {
     },
     host,
     baseUrl: `https://${host}`,
-    env: "qualification",
+    env: "production",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
     productMeta: getProductMeta(),
