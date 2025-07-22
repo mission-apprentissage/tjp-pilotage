@@ -206,5 +206,6 @@ function getPublicConfig(): PublicConfig {
 }
 
 export const isProduction = getEnv() === "production";
+export const isOldProduction = getEnv() === "productionij";
 
 export const publicConfig: PublicConfig = getPublicConfig();
