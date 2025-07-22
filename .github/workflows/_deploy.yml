@@ -11,8 +11,6 @@ on:
           - diffusion
           - preproduction
           - production
-          - recette1
-          - recette2
           - productionij
       app_version:
         description: app version

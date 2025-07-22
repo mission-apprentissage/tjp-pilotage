@@ -11,8 +11,6 @@ on:
           - diffusion
           - preproduction
           - production
-          - recette1
-          - recette2
           - productionij
   workflow_call:
     inputs:

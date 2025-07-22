@@ -24,12 +24,6 @@
     },
     "productionij": {
       "targets": ["server", "ui-productionij"]
-    },
-    "recette1": {
-      "targets": ["server", "ui-recette1"]
-    },
-    "recette2": {
-      "targets": ["server", "ui-recette2"]
     }
   },
   "target": {
@@ -62,7 +56,7 @@
     "ui": {
       "inherits": ["common"],
       "matrix": {
-        "ENV": ["qualification", "diffusion", "preproduction", "production", "local", "productionij", "recette1", "recette2"]
+        "ENV": ["qualification", "diffusion", "preproduction", "production", "local", "productionij"]
       },
       "name": "ui-${ENV}",
       "args": {
