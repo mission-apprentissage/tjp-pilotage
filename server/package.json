@@ -33,8 +33,6 @@
     "@fastify/swagger-ui": "^4.1.1",
     "@hapi/boom": "^10.0.1",
     "@notionhq/client": "^2.2.15",
-    "@sentry/node": "^8.34.0",
-    "@sentry/profiling-node": "^8.34.0",
     "@types/file-saver": "^2.0.7",
     "axios": "^1.9.0",
     "axios-cache-interceptor": "^1.6.0",
