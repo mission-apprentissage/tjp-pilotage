@@ -12,36 +12,16 @@ readonly OP_ACCOUNT="inserjeunes"
 function runPlaybook() {
   echo "Lancement du playbook ${PLAYBOOK_NAME} pour l'environnement ${ENV_FILTER}..."
 
-  local ansible_extra_opts=()
   if [[ -z "${ANSIBLE_BECOME_PASS:-}" ]]; then
     if [[ $* != *"pass"* ]]; then
-        local become_pass=$(op --account ${OP_ACCOUNT} read op://Private/${PRODUCT_NAME}-$ENV_FILTER/password 2> /dev/null);
-        if [ -z $become_pass ]; then
-          echo "Si vous avez 1password CLI, il est possible de récupérer le password automatiquement"
-          echo "Pour cela, ajouter le dans le vault "Private" l'item ${PRODUCT_NAME}-$ENV_FILTER avec le champs password"
-          ansible_extra_opts+=("--ask-become-pass")
-        else
-          echo "Récupération du mot de passe 'become_pass' depuis 1password" 
-          ansible_extra_opts+=("-e ansible_become_password='$become_pass'")
-        fi;
+      ansible_extra_opts+=("--ask-become-pass")
     fi
-  else
-    echo "Récupération du mot de passe 'become_pass' depuis l'environnement variable ANSIBLE_BECOME_PASS" 
   fi
 
   if [[ -z "${ANSIBLE_REMOTE_USER:-}" ]]; then
     if [[ $* != *"--user"* ]]; then
-        local username=$(op --account ${OP_ACCOUNT} read op://Private/${PRODUCT_NAME}-$ENV_FILTER/username 2> /dev/null);
-        if [ -z $username ]; then
-          echo "Si vous avez 1password CLI, il est possible de récupérer le username automatiquement"
-          echo "Pour cela, ajouter le dans le vault "Private" l'item ${PRODUCT_NAME}-$ENV_FILTER avec le champs username"
-        else
-          echo "Récupération du username depuis 1password" 
-          ansible_extra_opts+=("--user" $username)
-        fi;
+      echo "Vous n'avez pas précisé d'utilisateur, ajoutez l'option --user <username> ou de définissez la variable d'environnement ANSIBLE_REMOTE_USER."
     fi
-  else
-    echo "Récupération du username depuis l'environnement variable ANSIBLE_REMOTE_USER" 
   fi
 
   # This env-vars is used by CI to decrypt
