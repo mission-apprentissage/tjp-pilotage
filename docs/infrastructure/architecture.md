@@ -213,7 +213,7 @@ Ainsi, avec Fluentd, nous avons la flexibilité d'enrichir, structurer et transf
 
 La recette est similaire à l'environnement de production excepté que l'environnement intègre un serveur SMTP pour la gestion des emails.
 
-Il est possible d'accéder à l'interface via [https://recette-1.orion.inserjeunes.incubateur.net/smtp/](https://recette-1.orion.inserjeunes.incubateur.net//smtp/)
+Il est possible d'accéder à l'interface via [https://qp.orion.education.gouv.fr/smtp/](https://qp.orion.education.gouv.fr//smtp/)
 
 ## Preview
 
