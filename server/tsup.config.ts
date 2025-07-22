@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "tsup";
 
 export default defineConfig((options) => {
-  const isDev = options.env?.NODE_ENV !== "production";
+  const isDev = options.env?.NODE_ENV.includes("production");
   const isWatched = options.env?.TSUP_WATCH === "true";
   const dir = dirname(fileURLToPath(import.meta.url));
   const migrationFiles = fs.readdirSync(join(dir, "src/migrations"));
