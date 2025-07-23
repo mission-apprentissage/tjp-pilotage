@@ -8,7 +8,7 @@ export const getDneClient = async () => {
   const client = new dneIssuer.Client({
     client_id: config.dne.clientId,
     client_secret: config.dne.clientSecret,
-    redirect_uris: [config.dne.redirectUri, config.dne.redirectUriOld],
+    redirect_uris: [config.dne.redirectUri],
     response_types: ["code"],
     token_endpoint_auth_method: "client_secret_post",
   });

@@ -8,7 +8,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: ddc3d3f86eb2b1a9edcf3fb87eb685a2372d06333eca54bfe17a66cfa57fb103
+  checksum: 0d6922d4ea561f3351bc0e69b8d9b72426abb77f5afae72526fe2bde968a8c47
 - filename: .yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
   checksum: a663e9955c2825bee3af55be1ebd6e26cd0a17fe7c614a13d726ddd4c7959b82
 - filename: README.md
