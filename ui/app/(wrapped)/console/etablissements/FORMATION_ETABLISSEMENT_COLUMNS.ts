@@ -47,6 +47,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   premiersVoeux: "Nb de voeux",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: `Tx d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxPoursuite: `Tx de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
@@ -93,6 +94,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   premiersVoeux: "Nb de voeux",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
@@ -121,6 +123,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   premiersVoeux: "Nb de voeux",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
   positionQuadrant: "Position dans le quadrant",
   tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
