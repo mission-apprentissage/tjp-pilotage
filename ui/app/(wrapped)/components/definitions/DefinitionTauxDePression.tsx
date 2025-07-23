@@ -10,7 +10,7 @@ const DefinitionTauxDePression = ({ label, rentreeScolaire }: { label?: string; 
     <Text>
       { label ??
       `
-        Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional (RS ${rentreeScolaire ?? CURRENT_RENTREE}).
+        Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional (RS ${rentreeScolaire ?? CURRENT_RENTREE}), hors BTS.
       ` }
     </Text>
     <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>

@@ -17,6 +17,7 @@ import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
 import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistantIndicateurEntree } from "@/modules/data/utils/notHistorique";
 import { openForRentreeScolaireIndicateurEntree } from "@/modules/data/utils/openForRentreeScolaire";
+import { selectTauxDemandeAgg } from "@/modules/data/utils/tauxDemande";
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
@@ -174,6 +175,7 @@ export const getFormationsQuery = async ({
         annee: sql`'2'`,
       })})`.as("capacite3"),
       selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
+      selectTauxDemandeAgg("indicateurEntree", "formationView").as("tauxDemande"),
       hasContinuum({
         eb,
         millesimeSortie,
