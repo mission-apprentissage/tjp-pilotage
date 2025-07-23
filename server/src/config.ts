@@ -51,7 +51,6 @@ const config = {
     clientId: get("DNE_CLIENT_ID").required().asString(),
     clientSecret: get("DNE_CLIENT_SECRET").required().asString(),
     redirectUri: get("DNE_REDIRECT_URI").required().asString(),
-    redirectUriOld: get("DNE_REDIRECT_URI_OLD").required().asString(),
   },
   smtp: {
     host: get("SMTP_HOST").required().asString(),
