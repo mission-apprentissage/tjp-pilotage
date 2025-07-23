@@ -35,7 +35,7 @@ interface RootLayoutClientProps {
 const useCrisp = () => {
   useEffect(() => {
     const token = publicConfig.crisp.token;
-    if (publicConfig.env.includes("production") && token) {
+    if (publicConfig.env == "productionij" && token) {
       Crisp.configure(token);
     } else {
       console.log("Crisp disabled");
