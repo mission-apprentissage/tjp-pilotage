@@ -1,5 +1,6 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
 
 import type { DB } from "@/db/db";
 import { getDateRentreeScolaire } from "@/modules/data/services/getRentreeScolaire";
@@ -94,7 +95,7 @@ export const notHistoriqueUnlessCoExistantIndicateurEntree = (
 ) => {
   return  eb.or([
     eb("formationView.dateFermeture", "is", null),
-    eb("formationView.dateFermeture", ">", sql<Date>`(${eb.ref("indicateurEntree.rentreeScolaire")} || '-09-01')::Date`),
+    eb("formationView.dateFermeture", ">", sql<Date>`(${CURRENT_RENTREE} || '-09-01')::Date`),
   ]);
 };
 
