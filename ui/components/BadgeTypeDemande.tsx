@@ -29,11 +29,11 @@ const IconTypeDemande = ({typeDemande}:{typeDemande: TypeDemandeType}) => {
 const getTypeDemandeTooltipLabel = ({
   typeDemande,
   dateEffetTransformation,
-  rentreeScolaire
+  anneeCampagne,
 }:{
   typeDemande: TypeDemandeType;
-   dateEffetTransformation: string;
-   rentreeScolaire: string
+  dateEffetTransformation: string;
+  anneeCampagne?: string;
 }): ReactNode => {
   const labelMap: Record<string, ReactNode> = {
     [DemandeTypeEnum["transfert"]]:
@@ -41,7 +41,7 @@ const getTypeDemandeTooltipLabel = ({
         <Flex direction="column" gap={4}>
           <Text>
             {
-              `Cette formation a fait l'objet d'un transfert lors de la campagne de saisie ${rentreeScolaire}.
+              `Cette formation a fait l'objet d'un transfert lors de la campagne de saisie ${anneeCampagne}.
               Le transfert prendra effet à la rentrée scolaire ${dateEffetTransformation}.`
             }
           </Text>
@@ -53,7 +53,7 @@ const getTypeDemandeTooltipLabel = ({
         <Flex direction="column" gap={4}>
           <Text>
             {
-              `Cette formation a été colorée lors de la campagne de saisie ${rentreeScolaire}.
+              `Cette formation a été colorée lors de la campagne de saisie ${anneeCampagne}.
               La coloration prendra effet à la rentrée scolaire ${dateEffetTransformation}.`
             }
           </Text>
@@ -65,7 +65,7 @@ const getTypeDemandeTooltipLabel = ({
         <Flex direction="column" gap={4}>
           <Text>
             {
-              `Cette formation a fait l'objet d'un ajustement lors de la campagne de saisie ${rentreeScolaire}.
+              `Cette formation a fait l'objet d'un ajustement lors de la campagne de saisie ${anneeCampagne}.
               L'ajustement prendra effet à la rentrée scolaire ${dateEffetTransformation}.`
             }
           </Text>
@@ -77,7 +77,7 @@ const getTypeDemandeTooltipLabel = ({
         <Flex direction="column" gap={4}>
           <Text>
             {
-              `La capacité d’accueil de cette formation a été augmentée lors de la campagne de saisie ${rentreeScolaire}.
+              `La capacité d’accueil de cette formation a été augmentée lors de la campagne de saisie ${anneeCampagne}.
               L'augmentation prendra effet à la rentrée scolaire ${dateEffetTransformation}.`
             }
           </Text>
@@ -89,7 +89,7 @@ const getTypeDemandeTooltipLabel = ({
         <Flex direction="column" gap={4}>
           <Text>
             {
-              `La capacité d’accueil de cette formation a été augmentée lors de la campagne de saisie ${rentreeScolaire}.
+              `La capacité d’accueil de cette formation a été augmentée lors de la campagne de saisie ${anneeCampagne}.
               L'augmentation prendra effet à la rentrée scolaire ${dateEffetTransformation}.`
             }
           </Text>
@@ -101,7 +101,7 @@ const getTypeDemandeTooltipLabel = ({
         <Flex direction="column" gap={4}>
           <Text>
             {
-              `Cette formation a été ouverte lors de la campagne de saisie ${rentreeScolaire}.
+              `Cette formation a été ouverte lors de la campagne de saisie ${anneeCampagne}.
               L'ouverture prendra effet à la rentrée scolaire ${dateEffetTransformation}.`
             }
           </Text>
@@ -113,7 +113,7 @@ const getTypeDemandeTooltipLabel = ({
         <Flex direction="column" gap={4}>
           <Text>
             {
-              `Cette formation a été ouverte lors de la campagne de saisie ${rentreeScolaire}.
+              `Cette formation a été ouverte lors de la campagne de saisie ${anneeCampagne}.
               L'ouverture prendra effet à la rentrée scolaire ${dateEffetTransformation}.`
             }
           </Text>
@@ -125,7 +125,7 @@ const getTypeDemandeTooltipLabel = ({
         <Flex direction="column" gap={4}>
           <Text>
             {
-              `Cette formation a été fermée lors de la campagne de saisie ${rentreeScolaire}.
+              `Cette formation a été fermée lors de la campagne de saisie ${anneeCampagne}.
               La fermeture prendra effet à la rentrée scolaire ${dateEffetTransformation}.`
             }
           </Text>
@@ -137,7 +137,7 @@ const getTypeDemandeTooltipLabel = ({
         <Flex direction="column" gap={4}>
           <Text>
             {
-              `La capacité d’accueil de cette formation a été diminuée lors de la campagne de saisie ${rentreeScolaire}.
+              `La capacité d’accueil de cette formation a été diminuée lors de la campagne de saisie ${anneeCampagne}.
               La diminution prendra effet à la rentrée scolaire ${dateEffetTransformation}.`
             }
           </Text>
@@ -154,21 +154,22 @@ export const BadgeTypeDemande = chakra(({
   typeDemande,
   numero,
   dateEffetTransformation,
-  rentreeScolaire,
+  anneeCampagne,
   size = "md",
   ...props
 }: {
   typeDemande?: string;
   numero?: string;
   dateEffetTransformation?: string;
-  rentreeScolaire?: string;
+  anneeCampagne?: string;
   size?: "xs" | "sm" | "md" | "lg";
   props?: BadgeProps;
 }) => {
-  if (!typeDemande || !numero || !dateEffetTransformation || !rentreeScolaire) return null;
+  if (!typeDemande || !numero || !dateEffetTransformation || !anneeCampagne) return null;
 
   const numeroArray = numero.split(", ");
   const dateEffetTransformationArray = dateEffetTransformation.split(", ");
+  const anneeCampagneArray = anneeCampagne.split(", ");
 
   return (
     <Flex direction ={"row"} alignItems={"center"} gap={2}>
@@ -179,7 +180,7 @@ export const BadgeTypeDemande = chakra(({
             label={getTypeDemandeTooltipLabel({
               typeDemande: formatedTypeDemande.value,
               dateEffetTransformation: dateEffetTransformationArray[index],
-              rentreeScolaire
+              anneeCampagne: anneeCampagneArray[index]
             })}>
             <Badge
               as={NextLink}
