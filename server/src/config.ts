@@ -3,7 +3,7 @@ import env from "env-var";
 /* eslint-disable-next-line import/no-named-as-default-member */
 const { get } = env;
 
-const environement = get("ENV").required().asEnum(["local", "recette1", "recette2", "production", "test"]);
+const environement = get("ENV").required().asEnum(["local", "test", "qualification", "diffusion", "preproduction", "production", "productionij",]);
 const publicUrl = get("PUBLIC_URL").required().asString();
 
 // if (process.env.NODE_ENV === "test") {
@@ -61,41 +61,12 @@ const config = {
     },
     email_from: get("EMAIL_FROM").required().asString(),
   },
-  slack: {
-    webhook: get("SLACK_WEBHOOK_URL")
-      .required(environement !== "local" && environement !== "test")
-      .asString(),
-    token: get("SLACK_TOKEN")
-      .required(environement === "production")
-      .asString(),
-    signingSecret: get("SLACK_SIGNING_SECRET")
-      .required(environement === "production")
-      .asString(),
-    channel: get("SLACK_CHANNEL")
-      .required(environement !== "local" && environement !== "test")
-      .asString(),
-  },
-  // gitRevision: get("GIT_REVISION").asString(),
-  notion: {
-    token: get("NOTION_TOKEN").required().asString(),
-    dbChangelogId: get("NOTION_DB_CHANGELOG_ID").required().asString(),
-    dbGlossaireId: get("NOTION_DB_GLOSSAIRE_ID").required().asString(),
-    dbEditoId: get("NOTION_DB_EDITO_ID").required().asString(),
-  },
   s3: {
     region: get("S3_REGION").asString(),
     endpoint: get("S3_ENDPOINT").asString(),
     bucket: get("S3_BUCKET").asString(),
     accessKey: get("S3_ACCESS_KEY").asString(),
     secretKey: get("S3_SECRET_KEY").asString(),
-  },
-  sentry: {
-    dsn: get("SENTRY_DSN")
-      .required(environement !== "local" && environement !== "test")
-      .asString(),
-    token: get("SENTRY_AUTH_TOKEN")
-      .required(environement !== "local" && environement !== "test")
-      .asString(),
   },
   metabase: {
     token: get("METABASE_AUTH_TOKEN")
