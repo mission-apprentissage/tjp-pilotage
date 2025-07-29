@@ -34,6 +34,7 @@ export const FORMATION_COLUMNS = {
   effectifEntree: "Effectif en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
   positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxInsertion: `Tx d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
@@ -66,6 +67,7 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   effectifEntree: "Effectif en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
   positionQuadrant: "Position dans le quadrant",
   tauxInsertion: "Tx d'emploi 6 mois régional",
@@ -86,6 +88,7 @@ export const FORMATION_COLUMNS_DEFAULT = {
   effectif3: "Année 3",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
   positionQuadrant: "Position dans le quadrant",
   tauxInsertion: "Tx d'emploi 6 mois régional",
