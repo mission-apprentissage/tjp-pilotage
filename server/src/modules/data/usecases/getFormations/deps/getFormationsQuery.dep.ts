@@ -142,7 +142,7 @@ export const getFormationsQuery = async ({
       sql<string>`COALESCE("dispositif"."libelleDispositif","niveauDiplome"."libelleNiveauDiplome" || ' SANS DISPOSITIF')`.as("libelleDispositif"),
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
-      sql<string>`${CURRENT_RENTREE}`.as("rentreeScolaire"),
+      sql<string>`COALESCE("indicateurEntree"."rentreeScolaire",${CURRENT_RENTREE})`.as("rentreeScolaire"),
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
