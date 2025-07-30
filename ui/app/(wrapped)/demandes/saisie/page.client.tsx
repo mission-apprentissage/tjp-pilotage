@@ -40,7 +40,8 @@ import type { TypeAvisType } from "shared/enum/typeAvisEnum";
 import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
-import { getRapprochementTooltip,RapprochementTag } from "@/app/(wrapped)/demandes/components/RapprochementTag";
+import type { RapprochementValue  } from "@/app/(wrapped)/demandes/components/RapprochementTag";
+import { getLienRapprochement,getRapprochementTooltip,RapprochementTag  } from "@/app/(wrapped)/demandes/components/RapprochementTag";
 import { StatutTag } from "@/app/(wrapped)/demandes/components/StatutTag";
 import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/demandes/utils/messageAccompagnementUtils";
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/demandes/utils/statutUtils";
@@ -486,13 +487,17 @@ export const PageClient = () => {
                               <Td>
                                 <Link
                                   as={NextLink}
-                                  href={demande.rapprochementOK === 'OK' ? `/console/etablissements?filters[uai][0]=${demande.uai}&filters[cfd][0]=${demande.cfd}`
-                                    : demande.rapprochementOK === 'KO' ? `/demandes/saisie/${demande.numero}?editCfdUai=true`
-                                      : `/demandes/synthese/${demande.numero}`
-                                  }
+                                  href={getLienRapprochement(
+                                    demande.rapprochementOK,
+                                    demande.uai,
+                                    demande.cfd,
+                                    demande.numero
+                                  )}
                                   target="_blank"
                                 >
-                                  <Tooltip label={getRapprochementTooltip(demande.rapprochementOK)}>
+                                  <Tooltip label={getRapprochementTooltip(
+                                    demande.rapprochementOK as RapprochementValue
+                                  )}>
                                     <Text
                                       textOverflow={"ellipsis"}
                                       overflow={"hidden"}
