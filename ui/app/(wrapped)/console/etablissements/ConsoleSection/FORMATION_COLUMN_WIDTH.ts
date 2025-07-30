@@ -1,0 +1,1 @@
+export const FORMATION_COLUMN_WIDTH = 200;

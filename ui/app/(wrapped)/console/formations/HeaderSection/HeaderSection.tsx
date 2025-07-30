@@ -36,7 +36,7 @@ export const HeaderSection = ({
   setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
   return (
-    <Flex direction={"column"} boxShadow={"0px 1px 4px 0px #00000026"} zIndex={1} p={4} gap={6}>
+    <Flex direction={"column"} boxShadow={"0px 1px 4px 0px #00000026"} zIndex={"docked"} p={4} gap={6} bgColor={"white"}>
       <Breadcrumb
         pages={[
           { title: "Accueil", to: "/" },

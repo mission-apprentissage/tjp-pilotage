@@ -16,6 +16,8 @@ import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_
 import type { Filters, Order } from "@/app/(wrapped)/console/formations/types";
 import { OrderIcon } from "@/components/OrderIcon";
 
+import { FORMATION_COLUMN_WIDTH } from "./FORMATION_COLUMN_WIDTH";
+
 const ConditionalTh = chakra(
   ({
     className,
@@ -136,7 +138,7 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           cursor="pointer"
           onClick={handleOrder}
-          minW={450}
+          minW={FORMATION_COLUMN_WIDTH}
           left={0}
           zIndex={1}
           position={{ lg: "relative", xl: "sticky" }}
