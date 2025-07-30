@@ -119,6 +119,8 @@ const DemandeItem = z.object({
   alreadyAccessed: z.boolean(),
   avis: z.array(AvisSchema),
   isOldDemande: z.boolean(),
+  // Lien avec le constat de rentrée
+  rapprochementOK: z.string(),
 });
 
 export const FiltersSchema = z.object({
