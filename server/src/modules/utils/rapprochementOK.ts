@@ -16,7 +16,7 @@ export const rapprochementOK = (
   const etatDemandeOK = sql`${demandeTable}."statut" = 'demande validée' AND ${campagneTable}."statut" = 'terminée'`;
 
   const codeNiveaux = sql`(${sql.join(
-    ['500', '400', '320', '461', '561', '241', '450', '401', '420'].map((v) => sql`${v}`),
+    ['500', '400', '320', '461', '561', '241', '450', '401', '420', '010'].map((v) => sql`${v}`),
     sql`, `
   )})`;
   const isNiveauInList = sql`${formationTable}."codeNiveauDiplome" IN ${codeNiveaux}`;

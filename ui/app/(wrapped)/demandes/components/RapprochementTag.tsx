@@ -23,6 +23,12 @@ const rapprochementList: Record<RapprochementValue, { label: string; color: stri
 export const getRapprochementTooltip = (value: RapprochementValue): string =>
   rapprochementList[value].tooltip;
 
+export const getLienRapprochement = (rapprochementOK: string, uai: string, cfd: string, numero: string) => {
+  return rapprochementOK === 'OK' ? `/console/etablissements?filters[uai][0]=${uai}&filters[cfd][0]=${cfd}`
+    : rapprochementOK === 'KO' ? `/demandes/saisie/${numero}?editCfdUai=true`
+      : `/demandes/synthese/${numero}`;
+};
+
 export const RapprochementTag = ({ value }: { value: string }) => {
   if (!["OK", "KO", "-"].includes(value)) return null;
 
