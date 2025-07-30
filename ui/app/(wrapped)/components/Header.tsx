@@ -4,6 +4,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import {Box, Button, Container, createIcon, Flex, Heading, HStack, Img, Menu, MenuButton, MenuItem, MenuList, Portal, useDisclosure,useToken, VStack} from '@chakra-ui/react';
 import { useQueryClient } from "@tanstack/react-query";
 import NextLink from "next/link";
+import { useSelectedLayoutSegments } from "next/navigation";
 import { useContext } from "react";
 
 import { client } from "@/api.client";
@@ -16,6 +17,10 @@ import { useAuth } from "@/utils/security/useAuth";
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
+const NON_STICKY_HEADER_SEGMENTS = [
+  "console",
+];
+
 export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const { user, setAuth } = useAuth();
   const { setUais } = useContext(UaisContext);
@@ -23,6 +28,9 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const { setCodeRegion } = useContext(CodeRegionContext);
   const { setCampagne } = useContext(CurrentCampagneContext);
   const queryClient = useQueryClient();
+  const segments = useSelectedLayoutSegments();
+  const shouldUseStickyHeader =
+    segments.length != 0 && !segments.some((segment) => NON_STICKY_HEADER_SEGMENTS.includes(segment));
 
   const {
     isOpen: isMenuDeconnexionOpen,
@@ -114,7 +122,13 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
         </Flex>
       </VStack>
       {!isMaintenance && (
-        <Box boxShadow="0 2px 3px rgba(0,0,18,0.16)" position="sticky" top={0} zIndex={100} backgroundColor="white">
+        <Box
+          boxShadow="0 2px 3px rgba(0,0,18,0.16)"
+          backgroundColor="white"
+          position={shouldUseStickyHeader ? "sticky" : undefined}
+          top={shouldUseStickyHeader ? 0 : undefined}
+          zIndex={shouldUseStickyHeader ? 100 : 0}
+        >
           <Container maxWidth={"container.xl"} px={0}>
             <Nav />
           </Container>

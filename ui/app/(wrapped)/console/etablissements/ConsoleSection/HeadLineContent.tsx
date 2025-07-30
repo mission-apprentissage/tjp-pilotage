@@ -16,11 +16,13 @@ import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/def
 import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage";
 import { TooltipDefinitionValeurAjoutee } from "@/app/(wrapped)/components/definitions/DefinitionValeurAjoutee";
-import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
 import { FORMATION_ETABLISSEMENT_COLUMNS, FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type {Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Order} from "@/app/(wrapped)/console/etablissements/types";
 import { OrderIcon } from "@/components/OrderIcon";
 import { feature } from "@/utils/feature";
+
+import { ETABLISSEMENT_COLUMN_WIDTH } from "./ETABLISSEMENT_COLUMN_WIDTH";
+import { FORMATION_COLUMN_WIDTH } from "./FORMATION_COLUMN_WIDTH";
 
 const ConditionalTh = chakra(
   ({
@@ -121,7 +123,7 @@ export const HeadLineContent = ({
     });
   };
   return (
-    <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={"docked"}>
+    <Thead boxShadow="0 0 6px 0 rgb(0,0,0,0.15)">
       <Tr bg={"white"}>
         <Th>
           <VisuallyHidden>Historique</VisuallyHidden>
@@ -221,10 +223,10 @@ export const HeadLineContent = ({
           colonne="libelleFormation"
           cursor="pointer"
           onClick={handleOrder}
-          minW={450}
+          minW={FORMATION_COLUMN_WIDTH}
           zIndex={1}
           position={{ lg: "relative", xl: "sticky" }}
-          left={{ lg: "unset", xl: 300 - 1 }}
+          left={{ lg: "unset", xl: ETABLISSEMENT_COLUMN_WIDTH - 1 }}
           boxShadow={{
             lg: "none",
             xl: isSecondColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",

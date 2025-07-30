@@ -6,7 +6,6 @@ import { CURRENT_IJ_MILLESIME } from "shared";
 import type { UserType } from "shared/schema/userSchema";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
-import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
 import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Line } from "@/app/(wrapped)/console/etablissements/types";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
@@ -21,6 +20,9 @@ import { feature } from "@/utils/feature";
 import { formatCodeDepartement,formatFamilleMetierLibelle , formatMillesime} from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
+
+import { ETABLISSEMENT_COLUMN_WIDTH } from "./ETABLISSEMENT_COLUMN_WIDTH";
+import { FORMATION_COLUMN_WIDTH } from "./FORMATION_COLUMN_WIDTH";
 
 
 const ConditionalTd = chakra(
@@ -157,7 +159,7 @@ export const EtablissementLineContent = ({
       colonne="libelleFormation"
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
-      minW={450}
+      minW={FORMATION_COLUMN_WIDTH}
       whiteSpace="normal"
       zIndex={1}
       position={{ lg: "relative", xl: "sticky" }}

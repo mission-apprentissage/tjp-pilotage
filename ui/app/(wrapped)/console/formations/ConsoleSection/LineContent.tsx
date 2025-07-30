@@ -16,6 +16,8 @@ import { formatFamilleMetierLibelle, formatMillesime } from "@/utils/formatLibel
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
+import { FORMATION_COLUMN_WIDTH } from "./FORMATION_COLUMN_WIDTH";
+
 
 const ConditionalTd = chakra(
   ({
@@ -98,7 +100,7 @@ export const FormationLineContent = ({
       colonne={"libelleFormation"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
-      minW={450}
+      minW={FORMATION_COLUMN_WIDTH}
       whiteSpace={"normal"}
       left={0}
       zIndex={1}

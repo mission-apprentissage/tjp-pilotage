@@ -90,7 +90,7 @@ export const ConsoleSection = ({
   }, []);
 
   return (
-    <TableContainer overflowY="auto" flex={1} position="relative" ref={tableRef}>
+    <TableContainer overflowY="auto" flex={1} position="relative" ref={tableRef} pb={6} m={0}>
       <Table variant="simple" size={"sm"}>
         <HeadLineContent
           isSticky={isSticky}

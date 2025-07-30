@@ -351,60 +351,67 @@ const Page = () => {
         requeteEnregistreeActuelle={requeteEnregistreeActuelle}
         setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
-      <Flex direction={"row"} flex={1} position="relative" minH="0" minW={0}>
-        <SideSection handleFilters={handleFilters} searchParams={searchParams} filtersList={data?.filters} />
-        <Flex direction="column" flex={1} position="relative" minW={0}>
+      <Flex direction={"row"} flex={1} position="relative" minH="100%" minW={0} bgColor={"bluefrance.975"}>
+        <SideSection
+          searchParams={searchParams}
+          handleFilters={handleFilters}
+          filtersList={data?.filters}
+        />
+        <Flex direction="column" flex={1} position="relative" minW="0">
+          <Flex direction="column" position="sticky" top={0} zIndex={"docked"} bgColor={"white"} boxShadow={"0px 1px 4px 0px #00000026"}>
+            <TableHeader
+              p={4}
+              pt={0}
+              SaveFiltersButton={
+                <Flex py="2">
+                  <Button
+                    variant={"externalLink"}
+                    leftIcon={<Icon icon="ri:save-3-line" />}
+                    onClick={() => {
+                      onOpen();
+                    }}
+                  >
+                  Enregistrer la requête
+                  </Button>
+                </Flex>
+              }
+              SearchInput={
+                <ConsoleSearchInput
+                  placeholder="Rechercher dans les résultats"
+                  onChange={(newValue) => {
+                    const oldValue = searchFormation;
+                    setSearchFormation(newValue);
+                    if (newValue.length > 2 || oldValue.length > newValue.length) {
+                      onSearch(newValue);
+                    }
+                  }}
+                  value={searchFormation}
+                  onClick={onSearch}
+                  width={{ base: "15rem", ["2xl"]: "25rem" }}
+                />
+              }
+              ColonneFilter={
+                <ColonneFilterSection
+                  colonneFilters={colonneFilters}
+                  handleColonneFilters={handleColonneFilters}
+                  forcedColonnes={["libelleFormation"]}
+                  trackEvent={trackEvent}
+                  canShowQuadrantPosition={canShowQuadrantPosition}
+                />
+              }
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
+              page={page}
+              pageSize={PAGE_SIZE}
+              count={data?.count}
+              onPageChange={(newPage) => setSearchParams({ page: newPage })}
+            />
+          </Flex>
           {isFetching && (
             <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
               <Spinner />
             </Center>
           )}
-          <TableHeader
-            p={4}
-            SaveFiltersButton={
-              <Flex py="2">
-                <Button
-                  variant={"externalLink"}
-                  leftIcon={<Icon icon="ri:save-3-line" />}
-                  onClick={() => {
-                    onOpen();
-                  }}
-                >
-                  Enregistrer la requête
-                </Button>
-              </Flex>
-            }
-            SearchInput={
-              <ConsoleSearchInput
-                placeholder="Rechercher dans les résultats"
-                onChange={(newValue) => {
-                  const oldValue = searchFormation;
-                  setSearchFormation(newValue);
-                  if (newValue.length > 2 || oldValue.length > newValue.length) {
-                    onSearch(newValue);
-                  }
-                }}
-                value={searchFormation}
-                onClick={onSearch}
-                width={{ base: "15rem", ["2xl"]: "25rem" }}
-              />
-            }
-            ColonneFilter={
-              <ColonneFilterSection
-                colonneFilters={colonneFilters}
-                handleColonneFilters={handleColonneFilters}
-                forcedColonnes={["libelleFormation"]}
-                trackEvent={trackEvent}
-                canShowQuadrantPosition={canShowQuadrantPosition}
-              />
-            }
-            onExportCsv={onExportCsv}
-            onExportExcel={onExportExcel}
-            page={page}
-            pageSize={PAGE_SIZE}
-            count={data?.count}
-            onPageChange={(newPage) => setSearchParams({ page: newPage })}
-          />
           <ConsoleSection
             data={data}
             canShowQuadrantPosition={canShowQuadrantPosition}

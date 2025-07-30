@@ -74,12 +74,12 @@ export const ConsoleSection = ({
   const handleScroll = () => {
     if (tableRef.current) {
       const scrollLeft = tableRef.current.scrollLeft;
-      if (scrollLeft > 90 && scrollLeft <= 470) {
+      if (scrollLeft > 90 && scrollLeft <= 365) {
         setIsFirstColumnSticky(true);
       } else {
         setIsFirstColumnSticky(false);
       }
-      if (scrollLeft > 475) {
+      if (scrollLeft > 365) {
         setIsSecondColumnSticky(true);
       } else {
         setIsSecondColumnSticky(false);
@@ -98,7 +98,7 @@ export const ConsoleSection = ({
   }, []);
 
   return (
-    <TableContainer overflowY="auto" ref={tableRef} minH={"110%"}>
+    <TableContainer overflowY="auto" flex={1} ref={tableRef} pb={6} m={0}>
       <Table variant="simple" size={"sm"}>
         <HeadLineContent
           isFirstColumnSticky={isFirstColumnSticky}
