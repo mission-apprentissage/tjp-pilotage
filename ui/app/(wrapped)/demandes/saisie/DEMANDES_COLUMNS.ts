@@ -65,6 +65,8 @@ export const DEMANDES_COLUMNS = {
   avis8: "Avis 9",
   avis9: "Avis 10",
   lastChangementStatutCommentaire: "Commentaire du dernier changement de statut",
+  rapprochementOK: "Constaté",
+  raisonRapprochementKO: "Raison non rapprochement"
 } satisfies ExportColumns<
   Demandes[number] & {
     [key: `avis${number}`]: string;
