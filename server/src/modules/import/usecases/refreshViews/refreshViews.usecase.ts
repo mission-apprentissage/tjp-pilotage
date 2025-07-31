@@ -22,9 +22,11 @@ export const [refreshViews] = inject(
         console.log("latestDemandeView refreshed");
       });
 
-      await deps.refreshDemandeConstatMaterializedView().then(() => {
-        console.log("demandeConstatView refreshed");
-      });
+      // TODO: problème de seed à régler
+      //
+      // await deps.refreshDemandeConstatMaterializedView().then(() => {
+      //   console.log("demandeConstatView refreshed");
+      // });
     };
   }
 );
