@@ -37,7 +37,7 @@ export const up = async (db: Kysely<unknown>) => {
         .leftJoin("indicateurEntree as ie_rs_apres", (join) =>
           join
             .onRef("ie_rs_apres.formationEtablissementId", "=", "formationEtablissement.id")
-            .on(eb => eb(eb.ref("ie_rs_apres.rentreeScolaire"), "=", "demande.rentreeScolaire"))
+            .on(eb => eb(eb.ref("ie_rs_apres.rentreeScolaire"), "=", sql<string>`"demande"."rentreeScolaire"::varchar`))
         )
         .leftJoin("indicateurEntree as ie_rs_avant", (join) =>
           join
@@ -97,7 +97,7 @@ export const up = async (db: Kysely<unknown>) => {
         .leftJoin("indicateurEntree as ie_rs_apres", (join) =>
           join
             .onRef("ie_rs_apres.formationEtablissementId", "=", "formationEtablissement.id")
-            .on(eb => eb(eb.ref("ie_rs_apres.rentreeScolaire"), "=", "demande.rentreeScolaire"))
+            .on(eb => eb(eb.ref("ie_rs_apres.rentreeScolaire"), "=", sql<string>`"demande"."rentreeScolaire"::varchar`))
         )
         .leftJoin("indicateurEntree as ie_rs_avant", (join) =>
           join
