@@ -10,6 +10,7 @@ import { TooltipDefinitionEffectifEnEntree } from "@/app/(wrapped)/components/de
 import { TooltipDefinitionFormationSpecifique } from "@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique";
 import { TooltipDefinitionNombreEleves } from "@/app/(wrapped)/components/definitions/DefinitionNombreEleves";
 import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
+import { TooltipDefinitionTauxDeDemande } from "@/app/(wrapped)/components/definitions/DefinitionTauxDeDemande";
 import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
@@ -405,6 +406,17 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="tauxPression" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPression}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxDemande"
+          cursor="pointer"
+          onClick={handleOrder}
+          icon={<TooltipDefinitionTauxDeDemande rentreeScolaire={filters?.rentreeScolaire?.[0]} /> }
+        >
+          <OrderIcon {...order} column="tauxDemande" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.tauxDemande}
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}

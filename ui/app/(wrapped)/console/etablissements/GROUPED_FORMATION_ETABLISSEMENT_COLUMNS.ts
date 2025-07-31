@@ -80,6 +80,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
     cellColor: "inherit",
     options: {
       tauxPression: "Taux de pression",
+      tauxDemande: "Taux de demande",
       tauxRemplissage: "Taux de remplissage",
       positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
@@ -164,6 +165,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
     cellColor: "inherit",
     options: {
       tauxPression: "Taux de pression",
+      tauxDemande: "Taux de demande",
       tauxRemplissage: "Taux de remplissage",
       positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
@@ -236,6 +238,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
     cellColor: "inherit",
     options: {
       tauxPression: "Taux de pression",
+      tauxDemande: "Taux de demande",
       tauxRemplissage: "Taux de remplissage",
       positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
