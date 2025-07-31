@@ -38,6 +38,7 @@ export const COLUMNS_WIDTH: Record<keyof typeof FORMATION_ETABLISSEMENT_COLUMNS_
   premiersVoeux: 150,
   // Indicateurs
   tauxPression: 200,
+  tauxDemande: 200,
   tauxRemplissage: 200,
   tauxInsertion: 200,
   tauxPoursuite: 200,
