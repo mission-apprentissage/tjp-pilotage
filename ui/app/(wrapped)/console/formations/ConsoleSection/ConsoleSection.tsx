@@ -1,12 +1,12 @@
 import { Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import { GROUPED_FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/GROUPED_FORMATION_COLUMNS";
-import type { Filters, Formations, LineId, Order } from "@/app/(wrapped)/console/formations/types";
+import type { Filters, FORMATION_COLUMNS_KEYS, Formations, LineId, Order } from "@/app/(wrapped)/console/formations/types";
 
 import { HeadLineContent } from "./HeadLineContent";
 import { FormationLineContent, FormationLineLoader, FormationLinePlaceholder } from "./LineContent";
@@ -65,35 +65,16 @@ export const ConsoleSection = ({
     },
   });
 
-  const [isSticky, setIsSticky] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
+  const [stickyColonnes, setStickyColonnes] = useState<FORMATION_COLUMNS_KEYS[]>(["libelleFormation"]);
 
-  const handleScroll = () => {
-    if (tableRef.current) {
-      const scrollLeft = tableRef.current.scrollLeft;
-      if (scrollLeft > 200) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const box = tableRef.current;
-    if (box) {
-      box.addEventListener("scroll", handleScroll);
-      return () => {
-        box.removeEventListener("scroll", handleScroll);
-      };
-    }
-  }, []);
 
   return (
     <TableContainer overflowY="auto" flex={1} position="relative" ref={tableRef} pb={6} m={0}>
       <Table variant="simple" size={"sm"}>
         <HeadLineContent
-          isSticky={isSticky}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
           order={order}
           setSearchParams={setSearchParams}
           canShowQuadrantPosition={canShowQuadrantPosition}
@@ -105,7 +86,7 @@ export const ConsoleSection = ({
             <Fragment key={`${formation.cfd}_${formation.codeDispositif}`}>
               <Tr h="12" bg={"white"} role="group">
                 <FormationLineContent
-                  isSticky={isSticky}
+                  stickyColonnes={stickyColonnes}
                   formation={formation}
                   filters={filters}
                   expended={(
@@ -132,7 +113,7 @@ export const ConsoleSection = ({
                       bg={"grey.975"}
                     >
                       <FormationLineContent
-                        isSticky={isSticky}
+                        stickyColonnes={stickyColonnes}
                         formation={historiqueLine}
                         canShowQuadrantPosition={canShowQuadrantPosition}
                         colonneFilters={colonneFilters}
@@ -142,7 +123,11 @@ export const ConsoleSection = ({
                     </Tr>
                   ))}
                   {historique && !historique.length && (
-                    <FormationLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+                    <FormationLinePlaceholder
+                      colonneFilters={colonneFilters}
+                      stickyColonnes={stickyColonnes}
+                      getCellBgColor={getCellBgColor}
+                    />
                   )}
 
                   {isFetchingHistorique && <FormationLineLoader />}
