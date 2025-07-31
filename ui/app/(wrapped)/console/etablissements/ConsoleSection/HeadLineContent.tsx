@@ -11,6 +11,7 @@ import { TooltipDefinitionEffectifEnEntree } from "@/app/(wrapped)/components/de
 import { TooltipDefinitionFormationSpecifique } from "@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique";
 import { TooltipDefinitionNombreEleves } from "@/app/(wrapped)/components/definitions/DefinitionNombreEleves";
 import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
+import { TooltipDefinitionTauxDeDemande } from "@/app/(wrapped)/components/definitions/DefinitionTauxDeDemande";
 import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
@@ -488,9 +489,21 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPression}
         </ConditionalTh>
         <ConditionalTh
-          colonne="tauxRemplissage"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          colonne="tauxDemande"
+          onClick={handleOrder}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionTauxDeDemande rentreeScolaire={filters?.rentreeScolaire?.[0]} /> }
+        >
+          <OrderIcon {...order} column="tauxDemande" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.tauxDemande}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxRemplissage"
           onClick={handleOrder}
           stickyColonnes={stickyColonnes}
           setStickyColonnes={setStickyColonnes}

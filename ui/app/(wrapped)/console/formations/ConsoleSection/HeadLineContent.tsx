@@ -8,6 +8,7 @@ import { TooltipDefinitionEffectifEnEntree } from "@/app/(wrapped)/components/de
 import { TooltipDefinitionFormationSpecifique} from '@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique';
 import { TooltipDefinitionNombreEleves} from '@/app/(wrapped)/components/definitions/DefinitionNombreEleves';
 import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
+import { TooltipDefinitionTauxDeDemande } from "@/app/(wrapped)/components/definitions/DefinitionTauxDeDemande";
 import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
@@ -380,6 +381,19 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="tauxPression" />
           {FORMATION_COLUMNS.tauxPression}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"tauxDemande"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          onClick={handleOrder}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          textAlign={"center"}
+          icon={<TooltipDefinitionTauxDeDemande />}
+        >
+          <OrderIcon {...order} column="tauxDemande" />
+          {FORMATION_COLUMNS.tauxDemande}
         </ConditionalTh>
         <ConditionalTh
           colonne={"tauxRemplissage"}

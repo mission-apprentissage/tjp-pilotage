@@ -19,7 +19,7 @@ import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
 import { formatCodeDepartement,formatFamilleMetierLibelle , formatMillesime} from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
-import { getTauxPressionStyle } from "@/utils/getBgScale";
+import { getTauxDemandeStyle,getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { getLeftOffset, isColonneSticky,isColonneVisible   } from "./utils";
 
@@ -423,6 +423,19 @@ export const EtablissementLineContent = ({
         getTauxPressionStyle(line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : undefined)
       }>
         {formatNumberToString(line.tauxPression, 2, "-")}
+      </TableBadge>
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="tauxDemande"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+      textAlign={"center"}
+    >
+      <TableBadge sx={
+        getTauxDemandeStyle(line.tauxDemande !== undefined ? formatNumber(line.tauxDemande, 2) : undefined)
+      }>
+        {formatNumberToString(line.tauxDemande, 2, "-")}
       </TableBadge>
     </ConditionalTd>
     <ConditionalTd

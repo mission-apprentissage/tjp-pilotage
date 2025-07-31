@@ -14,7 +14,7 @@ import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { formatFamilleMetierLibelle, formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
-import { getTauxPressionStyle } from "@/utils/getBgScale";
+import { getTauxDemandeStyle,getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { getLeftOffset, isColonneSticky, isColonneVisible  } from "./utils";
 
@@ -307,6 +307,19 @@ export const FormationLineContent = ({
         getTauxPressionStyle(formation.tauxPression !== undefined ? formatNumber(formation.tauxPression, 2) : undefined)
       }>
         {formatNumberToString(formation.tauxPression, 2, "-")}
+      </TableBadge>
+    </ConditionalTd>
+    <ConditionalTd
+      colonne={"tauxDemande"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+      textAlign={"center"}
+    >
+      <TableBadge sx={
+        getTauxDemandeStyle(formation.tauxDemande !== undefined ? formatNumber(formation.tauxDemande, 2) : undefined)
+      }>
+        {formatNumberToString(formation.tauxDemande, 2, "-")}
       </TableBadge>
     </ConditionalTd>
     <ConditionalTd
