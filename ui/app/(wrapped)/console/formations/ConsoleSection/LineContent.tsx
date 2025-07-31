@@ -4,7 +4,7 @@ import NextLink from "next/link";
 import { CURRENT_IJ_MILLESIME } from "shared";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
-import type { Filters, Formation  } from "@/app/(wrapped)/console/formations/types";
+import type { Filters, Formation, FORMATION_COLUMNS_KEYS } from "@/app/(wrapped)/console/formations/types";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
@@ -16,14 +16,14 @@ import { formatFamilleMetierLibelle, formatMillesime } from "@/utils/formatLibel
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { FORMATION_COLUMN_WIDTH } from "./FORMATION_COLUMN_WIDTH";
-
+import { getLeftOffset, isColonneSticky, isColonneVisible  } from "./utils";
 
 const ConditionalTd = chakra(
   ({
     className,
     colonneFilters,
     colonne,
+    stickyColonnes,
     getCellBgColor,
     children,
     isNumeric = false,
@@ -31,11 +31,14 @@ const ConditionalTd = chakra(
     className?: string;
     colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
     colonne: keyof typeof FORMATION_COLUMNS;
+    stickyColonnes: FORMATION_COLUMNS_KEYS[];
     getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
     children: React.ReactNode;
     isNumeric?: boolean;
   }) => {
-    if (colonneFilters.includes(colonne))
+    const isVisible = isColonneVisible({ colonne, colonneFilters });
+    const isSticky = isColonneSticky({ colonne, stickyColonnes });
+    if (isVisible)
       return (
         <Td
           className={className}
@@ -43,6 +46,16 @@ const ConditionalTd = chakra(
           whiteSpace={"normal"}
           _groupHover={{ bgColor: "blueecume.850 !important" }}
           bgColor={getCellBgColor(colonne)}
+          left={getLeftOffset({ colonne, stickyColonnes, colonneFilters })}
+          zIndex={isSticky ? 2 : undefined}
+          boxShadow={{
+            lg: "none",
+            xl: "inset -1px 0px 0px 0px #f6f6f6",
+          }}
+          position={{
+            lg: "static",
+            xl: isSticky ? "sticky" : "static",
+          }}
         >
           {children}
         </Td>
@@ -57,9 +70,9 @@ export const FormationLineContent = ({
   onClickCollapse,
   expended = false,
   canShowQuadrantPosition,
-  isSticky,
   filters,
   colonneFilters,
+  stickyColonnes,
   getCellBgColor,
 }: {
   formation: Partial<Formation>;
@@ -67,13 +80,25 @@ export const FormationLineContent = ({
   onClickCollapse?: () => void;
   expended?: boolean;
   canShowQuadrantPosition?: boolean;
-  isSticky?: boolean;
   filters?: Partial<Filters>;
   colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
+  stickyColonnes: FORMATION_COLUMNS_KEYS[];
   getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
 }) => (
   <>
-    <Td pr="0" py="1" _groupHover={{ bgColor: "blueecume.850 !important" }}>
+    <Td
+      pr="0"
+      py="1"
+      _groupHover={{ bgColor: "blueecume.850 !important" }}
+      position={"sticky"}
+      left={0}
+      zIndex={2}
+      bg={"inherit"}
+      boxShadow={{
+        lg: "none",
+        xl: "inset -1px 0px 0px 0px #f6f6f6",
+      }}
+    >
       {onClickExpend && (
         <IconButton
           transform={expended ? "rotate(180deg)" : ""}
@@ -90,25 +115,28 @@ export const FormationLineContent = ({
         </Box>
       )}
     </Td>
-    <ConditionalTd colonne={"rentreeScolaire"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"rentreeScolaire"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       {formation.rentreeScolaire ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"libelleDispositif"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"libelleDispositif"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       {formation.libelleDispositif ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne={"libelleFormation"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
-      minW={FORMATION_COLUMN_WIDTH}
+      stickyColonnes={stickyColonnes}
       whiteSpace={"normal"}
-      left={0}
-      zIndex={1}
-      position={{ lg: "relative", xl: "sticky" }}
-      boxShadow={{
-        lg: "none",
-        xl: isSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
-      }}
     >
       <Flex>
         {formatFamilleMetierLibelle({ formation, labelSize: "long", size: "sm", fontSize: "12px", withBadge: false })}
@@ -151,35 +179,71 @@ export const FormationLineContent = ({
         )}
       </Flex>
     </ConditionalTd>
-    <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"formationSpecifique"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       <BadgesFormationSpecifique
         formationSpecifique={formation.formationSpecifique}
         labelSize="long"
         size="sm"
       />
     </ConditionalTd>
-    <ConditionalTd colonne={"libelleNiveauDiplome"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"libelleNiveauDiplome"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       {formation.libelleNiveauDiplome ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"libelleFamille"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"libelleFamille"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       {formation.libelleFamille ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"cfd"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"cfd"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       {formation.cfd ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"cpc"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"cpc"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       {formation.cpc ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"cpcSecteur"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"cpcSecteur"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       {formation.cpcSecteur ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"libelleNsf"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"libelleNsf"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       {formation.libelleNsf ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne={"nbEtablissement"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
       isNumeric
     >
       <Link
@@ -196,22 +260,47 @@ export const FormationLineContent = ({
         {formation.nbEtablissement ?? "-"}
       </Link>
     </ConditionalTd>
-    <ConditionalTd colonne={"effectif1"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+    <ConditionalTd
+      colonne={"effectif1"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+      isNumeric
+    >
       {formation.effectif1 ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"effectif2"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+    <ConditionalTd
+      colonne={"effectif2"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+      isNumeric
+    >
       {formation.effectif2 ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"effectif3"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+    <ConditionalTd
+      colonne={"effectif3"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+      isNumeric
+    >
       {formation.effectif3 ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"effectifEntree"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
+    <ConditionalTd
+      colonne={"effectifEntree"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+      isNumeric
+    >
       {formation.effectifEntree ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxPression"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
       <TableBadge sx={
@@ -224,6 +313,7 @@ export const FormationLineContent = ({
       colonne={"tauxRemplissage"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
       <GraphWrapper value={formation.tauxRemplissage} />
@@ -233,6 +323,7 @@ export const FormationLineContent = ({
         colonne={"positionQuadrant"}
         colonneFilters={colonneFilters}
         getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         textAlign={"center"}
       >
         <Tooltip
@@ -247,6 +338,7 @@ export const FormationLineContent = ({
       colonne={"tauxInsertion"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
       <GraphWrapper continuum={formation.continuum} value={formation.tauxInsertion} millesime={CURRENT_IJ_MILLESIME} />
@@ -255,11 +347,17 @@ export const FormationLineContent = ({
       colonne={"tauxPoursuite"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
       <GraphWrapper continuum={formation.continuum} value={formation.tauxPoursuite} millesime={CURRENT_IJ_MILLESIME} />
     </ConditionalTd>
-    <ConditionalTd colonne={"tauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd
+      colonne={"tauxDevenirFavorable"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+    >
       <GraphWrapper continuum={formation.continuum} value={formation.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} my="auto" />
     </ConditionalTd>
   </>
@@ -280,12 +378,19 @@ export const FormationLineLoader = () => (
 
 export const FormationLinePlaceholder = ({
   colonneFilters,
+  stickyColonnes,
   getCellBgColor,
 }: {
   colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
+  stickyColonnes: FORMATION_COLUMNS_KEYS[];
   getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
 }) => (
   <Tr bg={"grey.975"}>
-    <FormationLineContent formation={{}} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+    <FormationLineContent
+      formation={{}}
+      stickyColonnes={stickyColonnes}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    />
   </Tr>
 );
