@@ -57,7 +57,7 @@
     dest: "/opt/app/docker-compose.production.yml"
   with_fileglob:
     - "{{inventory_dir}}/docker-compose.production.yml"
-  when: env_type != 'preview'
+  when: env_type == 'production'
 
 - name: copy du fichier recette docker compose
   ansible.builtin.template:
@@ -66,6 +66,13 @@
   with_fileglob:
     - "{{inventory_dir}}/docker-compose.recette.yml"
   when: env_type == 'recette'
+
+- name: copy du fichier docker compose générique
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "/opt/app/docker-compose.all.yml"
+  with_fileglob:
+    - "{{inventory_dir}}/docker-compose.all.yml"
 
 - name: creation du fichier docker compose preview system
   ansible.builtin.template:
