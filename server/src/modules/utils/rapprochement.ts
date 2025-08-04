@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 
 
-export const rapprochementOK = (
+export const rapprochement = (
   campagneAlias: string,
   demandeAlias: string,
   demandeConstatViewAlias: string,
@@ -39,7 +39,7 @@ export const rapprochementOK = (
 
   return getRaison ? sql<string>`
     CASE
-      WHEN NOT ${etatDemandeOK} THEN 'statut'
+      WHEN NOT (${etatDemandeOK}) THEN 'statut'
       WHEN ${apprentissageOnly} THEN 'apprentissage'
       WHEN ${isColoration} THEN 'coloration'
       WHEN NOT ${isNiveauInList} THEN 'niveau'
@@ -47,7 +47,7 @@ export const rapprochementOK = (
     END
   `: sql<string>`
     CASE
-      WHEN NOT ${etatDemandeOK} THEN '-'
+      WHEN NOT (${etatDemandeOK}) THEN '-'
       WHEN ${apprentissageOnly} THEN '-'
       WHEN ${isColoration} THEN '-'
       WHEN NOT ${isNiveauInList} THEN '-'

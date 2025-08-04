@@ -120,7 +120,7 @@ const DemandeItem = z.object({
   avis: z.array(AvisSchema),
   isOldDemande: z.boolean(),
   // Lien avec le constat de rentrée
-  rapprochementOK: z.string(),
+  rapprochement: z.string(),
   raisonRapprochementKO: z.string(),
 });
 
