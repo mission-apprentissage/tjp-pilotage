@@ -57,12 +57,12 @@ export const [redirectDne, redirectDneFactory] = inject(
       const params = client.callbackParams(url);
       const tokenSet = await client.callback(config.dne.redirectUri, params, {
         code_verifier,
-      }).catch((err) => {
+      }).catch(async (err) => {
         logger.error({ error: err }, "[SSO] Erreur lors de la récupération du token");
         throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
       });
 
-      if (!tokenSet.access_token) throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
+      if (!tokenSet?.access_token) throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
 
       const userinfo = await client.userinfo<ExtraUserInfo>(tokenSet.access_token).catch((err) => {
         logger.error({ error: err }, "[SSO] Erreur lors de la récupération du userinfo");

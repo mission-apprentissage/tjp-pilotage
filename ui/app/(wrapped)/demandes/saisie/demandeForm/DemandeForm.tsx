@@ -19,8 +19,9 @@ import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
 import { useRouter, useSearchParams} from 'next/navigation';
 import { useEffect, useRef, useState } from "react";
+import type { SubmitErrorHandler, SubmitHandler} from "react-hook-form";
 import { FormProvider, useForm } from "react-hook-form";
-import {hasRole, RoleEnum} from 'shared';
+import { hasRole, isAdmin, RoleEnum} from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
@@ -34,12 +35,12 @@ import { Conseils } from "@/app/(wrapped)/demandes/saisie/components/Conseils";
 import { MenuFormulaire } from "@/app/(wrapped)/demandes/saisie/components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
 import type { Demande, DemandeMetadata } from "@/app/(wrapped)/demandes/types";
-import {canCorrectDemande} from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import type { DetailedApiError } from "@/utils/apiError";
 import { getDetailedErrorMessage } from "@/utils/apiError";
-import {getRoutingAccessSaisieDemande} from '@/utils/getRoutingAccesDemande';
+import { getRoutingAccessSaisieDemande} from "@/utils/getRoutingAccesDemande";
+import { canCorrectDemande, canEditDemandeCfdUai} from "@/utils/permissionsDemandeUtils";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
@@ -107,8 +108,7 @@ export const DemandeForm = ({
       }
 
       await handleFiles(body.numero);
-
-      push(`/demandes/saisie`);
+      push(getRoutingAccessSaisieDemande({user, campagne, suffix: `?filters[campagne]=${campagne.annee}`}));
     },
     onError: (e: unknown) => {
       if(isAxiosError<DetailedApiError>(e)) {
@@ -142,25 +142,33 @@ export const DemandeForm = ({
   }, []);
 
   const submitCFDUAISection = () => {
-    if (step !== 2)
-      setTimeout(() => {
-        step2Ref.current?.scrollIntoView({ behavior: "smooth" });
-      }, 500);
+    if (step !== 2) {
+      if( demande && isEditCfdUai) {
+        setTimeout(() => {
+          submitComponentRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 500);
+      } else {
+        setTimeout(() => {
+          step2Ref.current?.scrollIntoView({ behavior: "smooth" });
+        }, 500);
+      }
+    }
     setStep(2);
   };
 
-  const statutComponentRef = useRef<HTMLDivElement>(null);
-
   const typeDemandeRef = useRef<HTMLDivElement>(null);
+  const capaciteRef = useRef<HTMLDivElement>(null);
   const motifsEtPrecisionsRef = useRef<HTMLDivElement>(null);
   const ressourcesHumainesRef = useRef<HTMLDivElement>(null);
   const travauxEtEquipementsRef = useRef<HTMLDivElement>(null);
   const internatEtRestaurationRef = useRef<HTMLDivElement>(null);
   const commentaireEtPiecesJointesRef = useRef<HTMLDivElement>(null);
   const correctionRef = useRef<HTMLDivElement>(null);
+  const submitComponentRef = useRef<HTMLDivElement>(null);
 
   const anchorsRefs = {
     typeDemande: typeDemandeRef,
+    capacite: capaciteRef,
     motifsEtPrecisions: motifsEtPrecisionsRef,
     ressourcesHumaines: ressourcesHumainesRef,
     travauxEtEquipements: travauxEtEquipementsRef,
@@ -170,8 +178,13 @@ export const DemandeForm = ({
   } as Record<string, React.RefObject<HTMLDivElement>>;
 
   const typeDemande = form.watch("typeDemande");
-  const isTypeDemandeNotFermetureOuDiminution =
-    !!typeDemande && !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
+  const isOldDemande = (demande && !!demande.isOldDemande);
+  const sectionsTravauxInternatEtRestaurationVisible = (
+    !isTypeFermeture(typeDemande) &&
+    !isTypeDiminution(typeDemande) &&
+    !isOldDemande
+  );
+  const sectionStatutVisible = !isTypeAjustement(typeDemande) && isOldDemande;
 
   const getStatutSubmit = (
     statutActuel?: Exclude<DemandeStatutType, "supprimée">
@@ -205,8 +218,54 @@ export const DemandeForm = ({
   };
 
   const queryParams = useSearchParams();
-  const isCorrection = !!queryParams.get("correction");
-  const showCorrection = isCorrection && canCorrectDemande({demande, user});
+  const isCorrection = !!queryParams.get("correction") && canCorrectDemande({ demande, user });
+  const isReport = !!queryParams.get("report") && canCorrectDemande({ demande, user });
+  const isEditCfdUai = !!queryParams.get("editCfdUai") && canEditDemandeCfdUai({ demande, user });
+
+  useEffect(() => {
+    if (isEditCfdUai) {
+      onEditUaiCfdSection();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditCfdUai]);
+
+  const customSubmitForm = () => {
+    const validFormCallback: SubmitHandler<DemandeFormType> = (values) =>
+      submitDemande({
+        body: {
+          demande: {
+            numero: formId,
+            ...values,
+            statut: getStatutSubmit(values.statut),
+            campagneId: values.campagneId ?? campagne?.id,
+            commentaire: escapeString(values.commentaire),
+            autreMotif: escapeString(values.autreMotif),
+            autreMotifRefus: escapeString(values.autreMotifRefus),
+          }
+        },
+      });
+
+    const invalidFormCallback: SubmitErrorHandler<DemandeFormType> = () => {
+      const values = getValues();
+      if (isEditCfdUai) {
+        return submitDemande({
+          body: {
+            demande: {
+              numero: formId,
+              ...values,
+              statut: getStatutSubmit(values.statut),
+              campagneId: values.campagneId ?? campagne?.id,
+              commentaire: escapeString(values.commentaire),
+              autreMotif: escapeString(values.autreMotif),
+              autreMotifRefus: escapeString(values.autreMotifRefus),
+            }
+          },
+        });
+      }
+    };
+
+    return handleSubmit(validFormCallback, invalidFormCallback);
+  };
 
   return (
     <FormProvider {...form}>
@@ -255,25 +314,26 @@ export const DemandeForm = ({
             defaultValues={defaultValues}
             formMetadata={formMetadata}
             onEditUaiCfdSection={onEditUaiCfdSection}
-            active={step === 1}
-            disabled={disabled}
+            active={step === 1 || isEditCfdUai}
+            isEditCfdUai={isEditCfdUai}
+            disabled={disabled && !isEditCfdUai}
             isFCIL={isFCIL}
             setIsFCIL={setIsFCIL}
             setDateFermetureFormation={setDateFermetureFormation}
             isCFDUaiSectionValid={isCFDUaiSectionValid}
             submitCFDUAISection={submitCFDUAISection}
-            statutComponentRef={statutComponentRef}
+            submitComponentRef={submitComponentRef}
             campagne={campagne}
           />
-          {step === 2 && (
+          {(step === 2 || isEditCfdUai) && (
             <Box>
               <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
                 <GridItem>
                   <Box position="sticky" z-index="sticky" top={STICKY_OFFSET} textAlign={"start"}>
                     <MenuFormulaire
                       refs={anchorsRefs}
-                      isTypeDemandeNotFermetureOuDiminution={isTypeDemandeNotFermetureOuDiminution}
-                      showCorrection={showCorrection}
+                      sectionsTravauxInternatEtRestaurationVisible={sectionsTravauxInternatEtRestaurationVisible}
+                      sectionStatutVisible={sectionStatutVisible}
                     />
                     <Box position="relative">
                       <Conseils dateFermetureFormation={dateFermetureFormation} />
@@ -301,18 +361,24 @@ export const DemandeForm = ({
                   <InformationsBlock
                     refs={anchorsRefs}
                     formId={formId}
-                    disabled={disabled}
+                    disabled={disabled || isEditCfdUai}
                     campagne={campagne}
-                    demande={demande}
-                    showCorrection={showCorrection}
+                    isCorrection={isCorrection}
+                    isReport={isReport}
+                    sectionsTravauxInternatEtRestaurationVisible={sectionsTravauxInternatEtRestaurationVisible}
+                    sectionStatutVisible={sectionStatutVisible}
                     footerActions={
-                      <Flex direction="row" gap={4} ref={statutComponentRef}>
+                      <Flex direction="row" gap={4} ref={submitComponentRef}>
                         {canSubmitBrouillon() && (
                           <Button
                             isDisabled={
                               disabled ||
                               isActionsDisabled ||
-                              !isCampagneEnCours(campagne)
+                              (
+                                !isCampagneEnCours(campagne) &&
+                                !isAdmin({ user }) &&
+                                !isEditCfdUai
+                              )
                             }
                             isLoading={isSubmitting}
                             variant="draft"
@@ -340,25 +406,17 @@ export const DemandeForm = ({
                           isDisabled={
                             disabled ||
                             isActionsDisabled ||
-                            !isCampagneEnCours(campagne)
+                            (
+                              !isCampagneEnCours(campagne) &&
+                              !isAdmin({ user }) &&
+                              !isEditCfdUai &&
+                              !isReport &&
+                              !isCorrection
+                            )
                           }
                           isLoading={isSubmitting}
                           variant="primary"
-                          onClick={handleSubmit((values) =>
-                            submitDemande({
-                              body: {
-                                demande: {
-                                  numero: formId,
-                                  ...values,
-                                  statut: getStatutSubmit(values.statut),
-                                  campagneId: values.campagneId ?? campagne?.id,
-                                  commentaire: escapeString(values.commentaire),
-                                  autreMotif: escapeString(values.autreMotif),
-                                  autreMotifRefus: escapeString(values.autreMotifRefus),
-                                },
-                              },
-                            })
-                          )}
+                          onClick={customSubmitForm()}
                           leftIcon={<CheckIcon />}
                         >
                           {getLabelSubmit(getStatutSubmit(defaultValues.statut), defaultValues.statut)}

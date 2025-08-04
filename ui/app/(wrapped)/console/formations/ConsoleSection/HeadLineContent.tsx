@@ -1,12 +1,13 @@
-import { Box, chakra, Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chakra-ui/react";
+import { Box, chakra,Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
 
 import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
 import { TooltipDefinitionEffectifEnEntree } from "@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree";
-import {TooltipDefinitionFormationSpecifique} from '@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique';
-import {TooltipDefinitionNombreEleves} from '@/app/(wrapped)/components/definitions/DefinitionNombreEleves';
+import { TooltipDefinitionFormationSpecifique} from '@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique';
+import { TooltipDefinitionNombreEleves} from '@/app/(wrapped)/components/definitions/DefinitionNombreEleves';
 import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
+import { TooltipDefinitionTauxDeDemande } from "@/app/(wrapped)/components/definitions/DefinitionTauxDeDemande";
 import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
@@ -15,6 +16,7 @@ import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/def
 import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Order } from "@/app/(wrapped)/console/formations/types";
 import { OrderIcon } from "@/components/OrderIcon";
+
 
 const ConditionalTh = chakra(
   ({
@@ -286,6 +288,18 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="tauxPression" />
           {FORMATION_COLUMNS.tauxPression}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"tauxDemande"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          cursor="pointer"
+          onClick={handleOrder}
+          textAlign={"center"}
+          icon={<TooltipDefinitionTauxDeDemande />}
+        >
+          <OrderIcon {...order} column="tauxDemande" />
+          {FORMATION_COLUMNS.tauxDemande}
         </ConditionalTh>
         <ConditionalTh
           colonne={"tauxRemplissage"}

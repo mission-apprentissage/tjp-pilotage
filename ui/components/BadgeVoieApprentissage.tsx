@@ -20,6 +20,7 @@ export const BadgeVoieApprentissage = chakra(({
 
   return (
     <Badge
+      my={"auto"}
       variant={"new"}
       size={size}
       {...props}

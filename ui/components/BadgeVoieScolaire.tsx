@@ -19,7 +19,12 @@ export const BadgeVoieScolaire = ({
   }
 
   return (
-    <Badge variant="info" size={size} {...props}>
+    <Badge
+      my={"auto"}
+      variant="info"
+      size={size}
+      {...props}
+    >
       {labelSize === "short" && "Sco"}
       {labelSize === "long" && "Scolaire"}
     </Badge>

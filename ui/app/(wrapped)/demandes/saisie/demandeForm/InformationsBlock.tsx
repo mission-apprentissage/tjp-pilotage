@@ -18,15 +18,13 @@ import type { ReactNode, RefObject } from "react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import type { CampagneType } from "shared/schema/campagneSchema";
-import {isTypeAjustement,isTypeDiminution, isTypeFermeture} from 'shared/utils/typeDemandeUtils';
+import {isTypeDiminution, isTypeFermeture} from 'shared/utils/typeDemandeUtils';
 
 import { client } from "@/api.client";
 import { SectionBlock } from "@/app/(wrapped)/demandes/saisie/components/SectionBlock";
-import type {Demande} from '@/app/(wrapped)/demandes/types';
 import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
-import { CorrectionSection } from './correctionSection/CorrectionSection';
 import { InternatEtRestaurationSection } from "./internatEtRestaurationSection/InternatEtRestaurationSection";
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
 import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
@@ -42,20 +40,25 @@ export const InformationsBlock = ({
   disabled,
   footerActions,
   campagne,
-  demande,
-  showCorrection
+  isCorrection,
+  isReport,
+  sectionsTravauxInternatEtRestaurationVisible,
+  sectionStatutVisible
 }: {
   refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
   disabled?: boolean;
   footerActions: ReactNode;
   campagne: CampagneType;
-  demande?: Demande;
-  showCorrection?: boolean;
+  isCorrection?: boolean;
+  isReport?: boolean;
+  sectionsTravauxInternatEtRestaurationVisible?: boolean;
+  sectionStatutVisible?: boolean;
+
 }) => {
   const { push } = useRouter();
   const { user } = useAuth();
-  const { setValue, watch } = useFormContext<DemandeFormType>();
+  const { setValue, watch, setFocus } = useFormContext<DemandeFormType>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
     mutationFn: async () => {
@@ -108,33 +111,25 @@ export const InformationsBlock = ({
       }).unsubscribe
   );
 
-  const typeDemande = watch("typeDemande");
+  useEffect(() => {
+    if(isCorrection) refs["capacite"].current?.scrollIntoView({ behavior: "smooth" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCorrection]);
 
   useEffect(() => {
-    refs["correction"].current?.scrollIntoView({ behavior: "smooth" });
+    if(isReport) refs["typeDemande"].current?.scrollIntoView({ behavior: "smooth" });
+
+    setTimeout(() => {
+      setFocus("rentreeScolaire");
+    }, 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showCorrection]);
-
-  const isOldDemande = (demande && !!demande.isOldDemande);
-
-  const sectionsTravauxInternatEtRestaurationVisible = (
-    !isTypeFermeture(typeDemande) &&
-    !isTypeDiminution(typeDemande) &&
-    !isOldDemande
-  );
-
-  const sectionStatutVisible = !isTypeAjustement(typeDemande) && isOldDemande;
+  }, [isReport]);
 
   return (
     <Flex direction="column" gap={6} mt={6}>
       <SectionBlock>
-        <TypeDemandeSection typeDemandeRef={refs["typeDemande"]} disabled={disabled} demande={demande} campagne={campagne} />
+        <TypeDemandeSection typeDemandeRef={refs["typeDemande"]} capaciteRef={refs["capacite"]} disabled={disabled} campagne={campagne} />
       </SectionBlock>
-      {showCorrection && (
-        <SectionBlock borderColor={"red"} borderWidth={"1px"}>
-          <CorrectionSection correctionRef={refs["correction"]} demande={demande!} campagne={campagne} />
-        </SectionBlock>
-      )}
       <SectionBlock>
         <PrecisionsSection motifsEtPrecisionsRef={refs["motifsEtPrecisions"]} disabled={disabled} campagne={campagne} />
       </SectionBlock>

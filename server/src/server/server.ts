@@ -23,7 +23,6 @@ import { MAX_FILE_SIZE } from "shared";
 import config from "@/config";
 import { extractUserInRequest } from "@/modules/core";
 import { userLastSeenAt } from "@/modules/core/utils/lastSeenAt/userLastSeenAt";
-import { initSentryFastify } from "@/services/sentry/sentry.fastify";
 import { getStaticDirPath } from "@/utils/getStaticFilePath";
 
 import { errorMiddleware } from "./middlewares/errorMiddleware";
@@ -39,8 +38,6 @@ export type Server = FastifyInstance<
 >;
 
 export async function bind(app: Server) {
-  initSentryFastify(app);
-
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 

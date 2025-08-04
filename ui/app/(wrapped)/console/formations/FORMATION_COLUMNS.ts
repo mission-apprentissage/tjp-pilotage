@@ -1,5 +1,8 @@
+import {CURRENT_IJ_MILLESIME} from 'shared';
+
 import type { client } from "@/api.client";
 import type { ExportColumns } from "@/utils/downloadExport";
+import {formatMillesime} from '@/utils/formatLibelle';
 
 export const FORMATION_COLUMNS = {
   // Rentrée scolaire
@@ -31,11 +34,12 @@ export const FORMATION_COLUMNS = {
   effectifEntree: "Effectif en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
-  positionQuadrant: "Position dans le quadrant",
-  tauxInsertion: "Tx d'emploi 6 mois régional",
-  tauxPoursuite: "Tx de poursuite d'études régional",
-  tauxDevenirFavorable: "Tx de devenir favorable régional",
+  positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  tauxInsertion: `Tx d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  tauxPoursuite: `Tx de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  tauxDevenirFavorable: `Tx de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
 } satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]> & {
   formationSpecifique: string;
   actionPrioritaire: string;
@@ -63,6 +67,7 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   effectifEntree: "Effectif en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
   positionQuadrant: "Position dans le quadrant",
   tauxInsertion: "Tx d'emploi 6 mois régional",
@@ -83,6 +88,7 @@ export const FORMATION_COLUMNS_DEFAULT = {
   effectif3: "Année 3",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
   positionQuadrant: "Position dans le quadrant",
   tauxInsertion: "Tx d'emploi 6 mois régional",

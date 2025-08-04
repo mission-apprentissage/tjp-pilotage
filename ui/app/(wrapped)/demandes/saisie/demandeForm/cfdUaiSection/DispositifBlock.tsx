@@ -1,4 +1,4 @@
-import { FormControl, FormErrorMessage, FormLabel, LightMode, Select } from "@chakra-ui/react";
+import { Alert, FormControl, FormErrorMessage, FormLabel, LightMode, Select } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -27,8 +27,16 @@ export const DispositifBlock = ({
       }).unsubscribe
   );
 
+  const cfd = watch("cfd");
+
   return (
     <LightMode>
+      {(cfd && (!options || options?.length === 0)) && (
+        <Alert bgColor="orangeTerreBattue.850" color="warning.425" mb="4" maxW="752px">
+          Aucun dispositif n'est disponible pour la formation sélectionnée.
+          Veuillez contacter un administrateur si vous pensez qu'il s'agit d'une erreur.
+        </Alert>
+      )}
       <FormControl mb="4" w="100%" maxW="752px" isInvalid={!!errors.codeDispositif} isRequired>
         <FormLabel>Dispositif</FormLabel>
         <Controller

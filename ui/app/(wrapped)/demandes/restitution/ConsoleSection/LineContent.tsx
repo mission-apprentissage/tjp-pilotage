@@ -1,7 +1,8 @@
-import { chakra, Td } from "@chakra-ui/react";
+import { chakra, Td, Tooltip } from "@chakra-ui/react";
 import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
-import {SecteurEnum} from 'shared/enum/secteurEnum';
-import {unEscapeString} from 'shared/utils/escapeString';
+import { SecteurEnum } from "shared/enum/secteurEnum";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
+import { unEscapeString } from "shared/utils/escapeString";
 
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
 import type { DemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
@@ -14,8 +15,8 @@ import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeU
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
-import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
-import {formatNumber,formatNumberToMonetaryString, formatNumberToString, formatPercentageFixedDigits} from '@/utils/formatUtils';
+import { formatCommuneLibelleWithCodeDepartement, formatLibellesColoration, formatMillesime } from "@/utils/formatLibelle";
+import { formatNumber,formatNumberToMonetaryString, formatNumberToString, formatPercentageFixedDigits } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 const formatBooleanValue = (value?: boolean) => (value ? "Oui" : "Non");
@@ -234,7 +235,7 @@ export const LineContent = ({
         maxW={300}
         bgColor={getCellColor("libelleColoration")}
       >
-        {demande.libelleColoration}
+        {formatLibellesColoration(demande)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -312,7 +313,12 @@ export const LineContent = ({
         colonne={"positionQuadrant"}
         bgColor={getCellColor("positionQuadrant")}
       >
-        {demande.positionQuadrant}
+        <Tooltip
+          label={`Position dans le quadrant (millésimes ${formatMillesime(getMillesimeFromCampagne(demande.campagne.annee))})`}
+          placement="top"
+        >
+          {demande.positionQuadrant}
+        </Tooltip>
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -320,7 +326,10 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxInsertionRegional")}
       >
-        <GraphWrapper value={demande.tauxInsertionRegional} />
+        <GraphWrapper
+          value={demande.tauxInsertionRegional}
+          millesime={getMillesimeFromCampagne(demande.campagne.annee)}
+        />
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -328,7 +337,10 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxPoursuiteRegional")}
       >
-        <GraphWrapper value={demande.tauxPoursuiteRegional} />
+        <GraphWrapper
+          value={demande.tauxPoursuiteRegional}
+          millesime={getMillesimeFromCampagne(demande.campagne.annee)}
+        />
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -336,7 +348,10 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxDevenirFavorableRegional")}
       >
-        <GraphWrapper value={demande.tauxDevenirFavorableRegional} />
+        <GraphWrapper
+          value={demande.tauxDevenirFavorableRegional}
+          millesime={getMillesimeFromCampagne(demande.campagne.annee)}
+        />
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

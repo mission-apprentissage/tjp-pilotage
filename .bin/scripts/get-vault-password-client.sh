@@ -15,7 +15,7 @@ readonly VAULT_FILE="${VAULT_DIR}/vault.yml"
 readonly PRODUCT_NAME="orion"
 readonly OP_ACCOUNT="inserjeunes"
 
-DOCUMENT_CONTENT=$(op --account "${OP_ACCOUNT}" document get ".vault-password-${PRODUCT_NAME}" --vault "vault-passwords-common" || echo "")
+DOCUMENT_CONTENT=""
 vault_password_file="${VAULT_DIR}/.vault-password.gpg"
 previous_vault_password_file="${VAULT_DIR}/.vault-password-previous.gpg"
 

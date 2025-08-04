@@ -1,5 +1,7 @@
 import type { client } from "@/api.client";
 
+import type { FORMATION_ETABLISSEMENT_COLUMNS, FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "./FORMATION_ETABLISSEMENT_COLUMNS";
+
 export type Query = (typeof client.inferArgs)["[GET]/etablissements"]["query"];
 
 export type Line = (typeof client.infer)["[GET]/etablissements"]["etablissements"][number];
@@ -17,6 +19,7 @@ export type LineId = {
   cfd: string;
   uai: string;
 };
+
 export type RequetesEnregistrees = (typeof client.infer)["[GET]/requetes"];
 export type RequetesSuggerees = Array<{
   nom: string;
@@ -25,3 +28,8 @@ export type RequetesSuggerees = Array<{
   active?: boolean;
   conditions: Array<keyof Partial<Filters>>;
 }>;
+
+export type FORMATION_ETABLISSEMENT_COLUMNS_KEYS = (
+  keyof typeof FORMATION_ETABLISSEMENT_COLUMNS |
+  keyof typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED
+);

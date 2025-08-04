@@ -32,10 +32,19 @@ export const generateUserCommunication =
 export const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   const uais: Array<string> = [];
   const perdirOnUais = userInfo.FrEduRne?.map((item) => item.split("$")[0]) ?? [];
+  const perdirRespOnUais = userInfo.FrEduRneResp?.map((item) => item.split("$")[0]) ?? [];
 
   if (userInfo.FrEduFonctAdm === "DIR") {
     if (perdirOnUais.length > 0) {
       uais.push(...perdirOnUais);
+    }
+
+    if (perdirRespOnUais.length > 0) {
+      perdirRespOnUais.forEach((uai) => {
+        if (!uais.includes(uai)) {
+          uais.push(uai);
+        }
+      });
     }
   }
 

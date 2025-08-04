@@ -1,5 +1,6 @@
-import { Box, chakra, Text, Th, Tooltip } from "@chakra-ui/react";
+import { Box, chakra, Flex, Text, Th, Tooltip } from "@chakra-ui/react";
 import type { CSSProperties } from "react";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import { TooltipDefinitionAMICMA } from "@/app/(wrapped)/components/definitions/DefinitionAMICMA";
 import { TooltipDefinitionColoration } from "@/app/(wrapped)/components/definitions/DefinitionColoration";
@@ -10,7 +11,7 @@ import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/component
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
-import type { OrderDemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
+import type { FiltersDemandesRestitution,OrderDemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -76,6 +77,7 @@ const ConditionalTh = chakra(
 export const HeadLineContent = ({
   order,
   handleOrder,
+  activeFilters,
   colonneFilters,
   getCellColor,
   displayPilotageColumns,
@@ -83,6 +85,7 @@ export const HeadLineContent = ({
 }: {
   order: OrderDemandesRestitution;
   handleOrder: (column: OrderDemandesRestitution["orderBy"]) => void;
+  activeFilters: FiltersDemandesRestitution;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
   displayPilotageColumns: boolean;
@@ -365,7 +368,9 @@ export const HeadLineContent = ({
         colonne={"positionQuadrant"}
         isNumeric
         bgColor={getCellColor("positionQuadrant")}
-        icon={<TooltipDefinitionPositionQuadrant />}
+        icon={<TooltipDefinitionPositionQuadrant
+          millesime={getMillesimeFromCampagne(activeFilters.campagne!)}
+        />}
       >
         {STATS_DEMANDES_COLUMNS.positionQuadrant}
       </ConditionalTh>
@@ -377,7 +382,9 @@ export const HeadLineContent = ({
         minW={200}
         maxW={200}
         bgColor={getCellColor("tauxInsertionRegional")}
-        icon={<TooltipDefinitionTauxEmploi6Mois />}
+        icon={<TooltipDefinitionTauxEmploi6Mois
+          millesime={getMillesimeFromCampagne(activeFilters.campagne!)}
+        />}
       >
         <OrderIcon {...order} column="tauxInsertionRegional" />
         {STATS_DEMANDES_COLUMNS.tauxInsertionRegional}
@@ -388,7 +395,9 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxPoursuiteRegional")}
-        icon={<TooltipDefinitionTauxPoursuiteEtudes />}
+        icon={<TooltipDefinitionTauxPoursuiteEtudes
+          millesime={getMillesimeFromCampagne(activeFilters.campagne!)}
+        />}
       >
         <OrderIcon {...order} column="tauxPoursuiteRegional" />
         {STATS_DEMANDES_COLUMNS.tauxPoursuiteRegional}
@@ -399,7 +408,9 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxDevenirFavorableRegional")}
-        icon={<TooltipDefinitionTauxDevenirFavorable />}
+        icon={<TooltipDefinitionTauxDevenirFavorable
+          millesime={getMillesimeFromCampagne(activeFilters.campagne!)}
+        />}
       >
         <OrderIcon {...order} column="tauxDevenirFavorableRegional" />
         {STATS_DEMANDES_COLUMNS.tauxDevenirFavorableRegional}
@@ -592,10 +603,10 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <>
+                <Flex direction="column" gap={2}>
                   <Text>Capacité théorique issue d'Affelnet pour la rentrée 2024, voie scolaire</Text>
-                  <Text>Cliquer pour plus d'infos.</Text>
-                </>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("capacite")}
               placement={"bottom-end"}
@@ -612,13 +623,13 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <>
+                <Flex direction="column" gap={2}>
                   <Text>
                     Effectif en entrée de formation issue du Constat de Rentrée 2024,
                     comptant uniquement les élèves en voie scolaire
                   </Text>
-                  <Text>Cliquer pour plus d'infos.</Text>
-                </>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("effectif-en-entree")}
               placement={"bottom-end"}
@@ -636,13 +647,13 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <>
+                <Flex direction="column" gap={2}>
                   <Text>
                     Taux de remplissage par rapport à la capacité théorique
                     d'Affelnet pour la rentrée 2024, voie scolaire
                   </Text>
-                  <Text>Cliquer pour plus d'infos.</Text>
-                </>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-de-remplissage")}
               placement={"bottom-end"}
@@ -660,13 +671,13 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <>
+                <Flex direction="column" gap={2}>
                   <Text>
                     Taux de pression (ou de demande dans le cas des BTS)
                     issue d'Affelnet pour la rentrée 2024, voie scolaire
                   </Text>
-                  <Text>Cliquer pour plus d'infos.</Text>
-                </>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-de-pression")}
               placement={"bottom-end"}
@@ -684,10 +695,10 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <Box>
+                <Flex direction="column" gap={2}>
                   <Text>Le ratio entre le nombre de voeux et la capacité de la formation dans l'établissement.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-de-demande")}
               placement={"bottom-end"}

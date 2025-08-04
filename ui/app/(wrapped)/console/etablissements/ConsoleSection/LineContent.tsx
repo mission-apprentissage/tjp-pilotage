@@ -1,21 +1,27 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
+import { Box, chakra, Flex, IconButton,Link, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { CURRENT_RENTREE } from "shared";
+import { Fragment } from "react";
+import { CURRENT_IJ_MILLESIME } from "shared";
+import type { UserType } from "shared/schema/userSchema";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
-import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Line } from "@/app/(wrapped)/console/etablissements/types";
-import {BadgeFermeture} from '@/components/BadgeFermeture';
+import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Line } from "@/app/(wrapped)/console/etablissements/types";
+import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
+import { BadgeTypeDemande } from "@/components/BadgeTypeDemande";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
+import { DateEffetTransformationComponent } from "@/components/DateEffetTransformationComponent";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
-import { formatCodeDepartement,formatFamilleMetierLibelle } from "@/utils/formatLibelle";
+import { feature } from "@/utils/feature";
+import { formatCodeDepartement,formatFamilleMetierLibelle , formatMillesime} from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
-import { getTauxPressionStyle } from "@/utils/getBgScale";
+import { getTauxDemandeStyle,getTauxPressionStyle } from "@/utils/getBgScale";
+
 
 const ConditionalTd = chakra(
   ({
@@ -27,9 +33,9 @@ const ConditionalTd = chakra(
     isNumeric = false,
   }: {
     className?: string;
-    colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    colonne: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS;
-    getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+    colonneFilters: (FORMATION_ETABLISSEMENT_COLUMNS_KEYS)[];
+    colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
+    getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
     children: React.ReactNode;
     isNumeric?: boolean;
   }) => {
@@ -50,23 +56,25 @@ const ConditionalTd = chakra(
 );
 
 export const EtablissementLineContent = ({
-  line,
   onClickExpend,
   onClickCollapse,
-  expended = false,
+  expended,
+  line,
   isFirstColumnSticky,
   isSecondColumnSticky,
   colonneFilters,
   getCellBgColor,
+  user,
 }: {
-  line: Partial<Line>;
   onClickExpend?: () => void;
   onClickCollapse?: () => void;
   expended?: boolean;
+  line: Partial<Line>;
   isFirstColumnSticky?: boolean;
   isSecondColumnSticky?: boolean;
-  colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-  getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+  colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+  getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
+  user?: UserType;
 }) => (
   <>
     <Td pr="0" py="1" _groupHover={{ bgColor: "blueecume.850 !important" }}>
@@ -87,7 +95,7 @@ export const EtablissementLineContent = ({
       )}
     </Td>
     <ConditionalTd colonne="rentreeScolaire" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.rentreeScolaire ?? CURRENT_RENTREE}
+      {line.rentreeScolaire ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne="libelleEtablissement"
@@ -129,6 +137,12 @@ export const EtablissementLineContent = ({
     </ConditionalTd>
     <ConditionalTd colonne="libelleDepartement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleDepartement ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="libelleAcademie" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      {line.libelleAcademie ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="libelleRegion" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      {line.libelleRegion ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne="secteur" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.secteur ?? "-"}{" "}
@@ -180,13 +194,16 @@ export const EtablissementLineContent = ({
               as={NextLink}
               href={createParameterizedUrl("/console/etablissements", {
                 filters: {
-                  cfd: [line.formationRenovee],
+                  cfd: line.formationRenovee.split(", "),
+                  rentreeScolaire: line.rentreeScolaire,
                 },
               })}
               color="bluefrance.113"
             >
               <Flex my="auto">
-                <Text fontSize={12}>Voir la formation rénovée</Text>
+                <Text fontSize={12}>
+                  Voir {line.formationRenovee.split(", ").length > 1 ? "les formations rénovées" :"la formation rénovée"}
+                </Text>
                 <ArrowForwardIcon ml={1} boxSize={"14px"} verticalAlign={"baseline"} />
               </Flex>
             </Link>
@@ -219,6 +236,57 @@ export const EtablissementLineContent = ({
     <ConditionalTd colonne="libelleNsf" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNsf ?? "-"}
     </ConditionalTd>
+    {feature.donneesTransfoConsole && user && (
+      <>
+        <ConditionalTd
+          colonne="numero"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          textAlign="center"
+        >
+          {line.numero?.split(", ").map((numero, index, numeros) => (
+            <Fragment key={numero + index}>
+              <Link
+                key={numero + index}
+                as={NextLink}
+                href={`/demandes/synthese/${numero}`}
+                target="_blank"
+                color="bluefrance.113"
+              >
+                {numero}
+              </Link>
+              {index < (numeros.length -1) && <Text as="span">, </Text>}
+            </Fragment>
+          ))}
+        </ConditionalTd>
+        <ConditionalTd
+          colonne="dateEffetTransformation"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          textAlign="center"
+          justifyContent="center"
+        >
+          <DateEffetTransformationComponent
+            dateEffetTransformation={line.dateEffetTransformation}
+            typeDemande={line.typeDemande}
+            rentreeScolaire={line.rentreeScolaire}
+          />
+        </ConditionalTd>
+        <ConditionalTd
+          colonne="typeDemande"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          textAlign="center"
+        >
+          <BadgeTypeDemande
+            typeDemande={line.typeDemande}
+            numero={line.numero}
+            dateEffetTransformation={line.dateEffetTransformation}
+            rentreeScolaire={line.rentreeScolaire}
+          />
+        </ConditionalTd>
+      </>
+    )}
     <ConditionalTd colonne="effectif1" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
       {line.effectif1 ?? "-"}
     </ConditionalTd>
@@ -247,6 +315,18 @@ export const EtablissementLineContent = ({
       </TableBadge>
     </ConditionalTd>
     <ConditionalTd
+      colonne="tauxDemande"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <TableBadge sx={
+        getTauxDemandeStyle(line.tauxDemande !== undefined ? formatNumber(line.tauxDemande, 2) : undefined)
+      }>
+        {formatNumberToString(line.tauxDemande, 2, "-")}
+      </TableBadge>
+    </ConditionalTd>
+    <ConditionalTd
       colonne="tauxRemplissage"
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
@@ -255,23 +335,12 @@ export const EtablissementLineContent = ({
       <GraphWrapper value={line.tauxRemplissage} />
     </ConditionalTd>
     <ConditionalTd colonne="positionQuadrant" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.positionQuadrant ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="tauxInsertion"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      textAlign={"center"}
-    >
-      <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} />
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="tauxPoursuite"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      textAlign={"center"}
-    >
-      <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
+      <Tooltip
+        label={`Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`}
+        placement="top"
+      >
+        {line.positionQuadrant ?? "-"}
+      </Tooltip>
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxDevenirFavorable"
@@ -279,13 +348,47 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign="center"
     >
-      <GraphWrapper continuum={line.continuum} value={line.tauxDevenirFavorable} />
+      <GraphWrapper
+        continuum={line.continuum}
+        value={line.tauxDevenirFavorable}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
     </ConditionalTd>
-    <ConditionalTd colonne="tauxInsertionEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxInsertionEtablissement} />
+    <ConditionalTd
+      colonne="tauxInsertion"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <GraphWrapper
+        continuum={line.continuum}
+        value={line.tauxInsertion}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
     </ConditionalTd>
-    <ConditionalTd colonne="tauxPoursuiteEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxPoursuiteEtablissement} />
+    <ConditionalTd
+      colonne="tauxPoursuite"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <GraphWrapper
+        continuum={line.continuum}
+        value={line.tauxPoursuite}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxDevenirFavorableEtablissement"
@@ -293,7 +396,37 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign="center"
     >
-      <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxDevenirFavorableEtablissement} />
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxDevenirFavorableEtablissement}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
+    </ConditionalTd>
+    <ConditionalTd colonne="tauxInsertionEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxInsertionEtablissement}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
+    </ConditionalTd>
+    <ConditionalTd colonne="tauxPoursuiteEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxPoursuiteEtablissement}
+        millesime={
+          line.rentreeScolaire ?
+            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+            CURRENT_IJ_MILLESIME
+        }
+      />
     </ConditionalTd>
     <ConditionalTd colonne="valeurAjoutee" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
       {line.valeurAjoutee ?? "-"}
@@ -317,11 +450,18 @@ export const EtablissementLineLoader = () => (
 export const EtablissementLinePlaceholder = ({
   colonneFilters,
   getCellBgColor,
+  user,
 }: {
-  colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-  getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+  colonneFilters: (FORMATION_ETABLISSEMENT_COLUMNS_KEYS)[];
+  getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
+  user?: UserType;
 }) => (
   <Tr bg={"grey.975"}>
-    <EtablissementLineContent line={{}} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+    <EtablissementLineContent
+      line={{}}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      user={user}
+    />
   </Tr>
 );

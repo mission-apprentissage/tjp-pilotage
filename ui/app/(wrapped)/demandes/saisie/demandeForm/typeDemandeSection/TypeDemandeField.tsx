@@ -50,7 +50,6 @@ function RadioCard({
     <Box
       display="flex"
       flexDirection="column"
-      onClick={!disabled ? props.onClick : undefined}
       flex={1}
       cursor={disabled ? "not-allowed" : "pointer"}
       borderWidth="1px"
@@ -63,6 +62,7 @@ function RadioCard({
       p={4}
       opacity={disabled ? "0.5" : "1"}
       {...props}
+      onClick={!disabled ? props.onClick : undefined}
     >
       <Flex mb="3">
         <Img
@@ -142,13 +142,13 @@ export const TypeDemandeField = chakra(
                             glossaireEntryKey={"coloration"}
                             color="bluefrance.113"
                             tooltip={
-                              <Box>
+                              <Flex direction="column" gap={2}>
                                 <Text>
                                   Une coloration consiste à adapter le projet pédagogique à un champ professionnel
                                   particulier, en général concentré sur un territoire donné.
                                 </Text>
-                                <Text>Cliquez pour plus d'infos.</Text>
-                              </Box>
+                                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                              </Flex>
                             }
                           />
                         )

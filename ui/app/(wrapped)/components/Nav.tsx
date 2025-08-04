@@ -1,17 +1,7 @@
 "use client";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  chakra,
-  Flex,
-  Link,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Portal,
-  useDisclosure,
-} from "@chakra-ui/react";
+import {ChevronDownIcon} from '@chakra-ui/icons';
+import { Box, Button, chakra, Flex, Link, Menu, MenuButton, MenuItem, MenuList, Portal, Tooltip,useDisclosure } from "@chakra-ui/react";
+import {Icon} from '@iconify/react';
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -22,12 +12,14 @@ import {PermissionEnum} from 'shared/enum/permissionEnum';
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 
+import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/demandes/utils/messageAccompagnementUtils";
 import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisContext } from "@/app/uaiContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
 import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 import { isPerdirPartOfSaisieDemande } from "@/utils/isPartOfSaisieDemande";
+import { canCreateDemande } from "@/utils/permissionsDemandeUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
@@ -378,6 +370,34 @@ export const Nav = () => {
           </Portal>
         </Menu>
       )}
+      {
+        (
+          hasRole({ user, role: RoleEnum["perdir"] }) &&
+          campagne &&
+          canCreateDemande({ user, campagne: campagne!})
+        ) && (
+          <Box display={"flex"} flexGrow={"1"} justifyContent={"end"} zIndex={"tooltip"} me={2}>
+
+            <Tooltip
+              label={getMessageAccompagnementCampagne({ campagne: campagne!, currentCampagne: campagne!, user })}
+              shouldWrapChildren
+              placement="bottom-start"
+            >
+              <Button
+                as={NextLink}
+                href={getRoutingAccessSaisieDemande({user, campagne, suffix: `new?campagneId=${campagne?.id}`})}
+                isDisabled={!canCreateDemande({ user, campagne: campagne! })}
+                variant={"primary"}
+                fontSize={14}
+                color={"white"}
+                leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
+              >
+                Nouvelle demande
+              </Button>
+            </Tooltip>
+          </Box>
+        )
+      }
       <Glossaire />
     </Flex>
   );

@@ -1,4 +1,4 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, Flex, HStack, Text } from "@chakra-ui/react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -38,10 +38,10 @@ export const FormationTooltipContent = ({ formation }: { formation: Formation })
                 ml="1"
                 onClick={() => openGlossaire("effectif-en-entree")}
                 label={
-                  <Box>
+                  <Flex direction="column" gap={2}>
                     <Text>Effectifs en entrée en première année de formation.</Text>
-                    <Text>Cliquez pour plus d'infos.</Text>
-                  </Box>
+                    <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                  </Flex>
                 }
               />
             </span>

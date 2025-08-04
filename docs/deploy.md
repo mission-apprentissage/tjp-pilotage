@@ -16,4 +16,4 @@ yarn deploy <nom-de-lenvironnement> --user <nom_utilisateur> --extra-vars=app_ve
 ```
 
 - `app_image_version`: Optionel, `latest` par défaut
-- `nom_utilisateur`: Optionel si vous avez configuré [1password](./developpement/1password.md#automatisation-de-ansible)
+- `nom_utilisateur`: Le nom d'utilisateur que vous allez utiliser pour le déploiement. Par défaut, ce sera celui de spécifié dans le fichier habilitations.

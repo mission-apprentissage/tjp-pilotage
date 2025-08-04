@@ -3,7 +3,6 @@ import { setMaxListeners } from "node:events";
 import { writeFileSync } from "node:fs";
 import path from "node:path";
 
-import { captureException } from "@sentry/node";
 import { program } from "commander";
 import HttpTerminator from "lil-http-terminator";
 
@@ -13,7 +12,6 @@ import { closePgDbConnection } from "./db/db";
 import { migrateDownDB, migrateToLatest, migrateUp, statusMigration } from "./migrations/migrate";
 import createServer from "./server/server";
 import logger from "./services/logger";
-import { closeSentry } from "./services/sentry/sentry";
 import { __dirname } from "./utils/esmUtils";
 
 program
@@ -28,7 +26,6 @@ program
     }
   })
   .hook("postAction", async () => {
-    await closeSentry();
     await closePgDbConnection();
 
     setTimeout(() => {
@@ -56,7 +53,6 @@ function createProcessExitSignal() {
         logger.info(`Server is shutting down (signal=${signal})`);
         abortController.abort();
       } catch (err) {
-        captureException(err);
         logger.error({ err }, "error during shutdown");
       }
     });
@@ -106,7 +102,6 @@ program
       await Promise.all(tasks);
     } catch (err) {
       logger.error(err);
-      captureException(err);
       throw err;
     }
   });
@@ -154,6 +149,32 @@ export const up = async (db: Kysely<unknown>) => {};
 
 export const down = async (db: Kysely<unknown>) => {};
 `
+    );
+  });
+
+program
+  .command("clean:testdb")
+  .description("Clean all test databases")
+  .action(async () => {
+    exec(
+      `
+      echo "\nCleaning test databases... (orion-test-*)\n"
+      PGPASSWORD=${config.psql.password} psql -h "${config.psql.host}" -U "${config.psql.user}" -d "postgres" -c"
+      SELECT datname FROM pg_database WHERE datname LIKE 'orion-test-%'
+      " | grep -o 'orion-test-[^ ]*' | while read -r dbname; do
+        echo "Dropping database: $dbname"
+
+        PGPASSWORD=${config.psql.password} psql -h "${config.psql.host}" -U "${config.psql.user}" -d "postgres" -c "DROP DATABASE IF EXISTS \\"$dbname\\";"
+      done
+      echo "\nAll test databases cleaned."
+      `, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        if (stdout) console.log(stdout);
+        if (stderr) console.error(`stderr: ${stderr}`);
+      }
     );
   });
 

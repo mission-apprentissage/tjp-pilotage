@@ -1,5 +1,4 @@
 import { badRequest, Boom, internal, isBoom } from "@hapi/boom";
-import { captureException } from "@sentry/node";
 import type { FastifyError } from "fastify";
 import { ResponseValidationError } from "fastify-type-provider-zod";
 import type { IResError } from "shared/models/errors";
@@ -113,7 +112,6 @@ export function errorMiddleware(server: Server) {
 
       if (payload.statusCode >= 500) {
         server.log.error(rawError instanceof ZodError ? rawError.format() : rawError);
-        captureException(rawError);
       }
 
       return reply.status(payload.statusCode).send(payload);
