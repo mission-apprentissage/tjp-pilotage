@@ -13,6 +13,14 @@ fileignoreconfig:
   checksum: a663e9955c2825bee3af55be1ebd6e26cd0a17fe7c614a13d726ddd4c7959b82
 - filename: README.md
   checksum: 00ac991f0b2746c5a5ffa14e2b3c5427b739c0d952aa3730efe1f234ac1fc3ca
+- filename: documentation/lib-md/s_scSearch/scSearch.js
+  checksum: ad4a1ed25926b8faf665d95468f90824b6fd31e51f660ef7fdcd2bf1b3076adb
+- filename: documentation/lib-md/w_scCodeMgr/scCodeMgr.js
+  checksum: de09c2a86bdda83e51bbaa56a0869ba57d18282a470d8d6f30f576b77d6b9958
+- filename: documentation/lib-md/w_scImageMgr/scImageMgr.js
+  checksum: ba3d1ebb3c6292e4d8a53398c8fe95ae8f6a64fedf4d55a21cfc6139001d9ac3
+- filename: documentation/skin/font/fontello.json
+  checksum: e9488434ed4b47d393c52ec88efb62d20c77d7583d7eb2c01d10b21e25ad2cef
 - filename: server/.env.test
   checksum: df4e0dd70085c1ab9d996395796f6b0bd879653f9866c55ff276579aff84a4ba
 - filename: server/seed/seed_data.dump
