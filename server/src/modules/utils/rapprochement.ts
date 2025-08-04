@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
 
 
 export const rapprochement = (
@@ -35,7 +36,9 @@ export const rapprochement = (
     ${constatTable}."voeuEntreeApres" IS NULL
   `;
 
+  const isFermeture = sql`${demandeTable}."typeDemande" = 'fermeture'`;
   const aucunEleveApres = sql`${constatTable}."effectifEntreeApres" IS NULL`;
+  const rentreePlusTard = sql`${CURRENT_RENTREE}::int < (${demandeTable}."rentreeScolaire")::int `;
 
   return getRaison ? sql<string>`
     CASE
@@ -43,7 +46,8 @@ export const rapprochement = (
       WHEN ${apprentissageOnly} THEN 'apprentissage'
       WHEN ${isColoration} THEN 'coloration'
       WHEN NOT ${isNiveauInList} THEN 'niveau'
-      ELSE '?'
+      WHEN NOT ${isFermeture} AND ${aucuneDonneeApres} AND ${rentreePlusTard} THEN 'rentrée future'
+      ELSE '-'
     END
   `: sql<string>`
     CASE
@@ -51,14 +55,17 @@ export const rapprochement = (
       WHEN ${apprentissageOnly} THEN '-'
       WHEN ${isColoration} THEN '-'
       WHEN NOT ${isNiveauInList} THEN '-'
-
-      WHEN ${demandeTable}."typeDemande" = 'fermeture' THEN
+      WHEN ${isFermeture} THEN
         CASE
           WHEN ${aucunEleveApres} THEN 'OK'
           ELSE 'KO'
         END
 
-      WHEN ${aucuneDonneeApres} THEN 'KO'
+      WHEN ${aucuneDonneeApres} THEN
+        CASE 
+          WHEN ${rentreePlusTard} THEN '-'
+          ELSE 'KO'
+        END
       ELSE 'OK'
     END
   `;
