@@ -23,9 +23,9 @@ const rapprochementList: Record<RapprochementValue, { label: string; color: stri
 export const getRapprochementTooltip = (value: RapprochementValue): string =>
   rapprochementList[value].tooltip;
 
-export const getLienRapprochement = (rapprochementOK: string, uai: string, cfd: string, numero: string) => {
-  return rapprochementOK === 'OK' ? `/console/etablissements?filters[uai][0]=${uai}&filters[cfd][0]=${cfd}`
-    : rapprochementOK === 'KO' ? `/demandes/saisie/${numero}?editCfdUai=true`
+export const getLienRapprochement = (rapprochement: string, uai: string, cfd: string, numero: string) => {
+  return rapprochement === 'OK' ? `/console/etablissements?filters[uai][0]=${uai}&filters[cfd][0]=${cfd}`
+    : rapprochement === 'KO' ? `/demandes/saisie/${numero}?editCfdUai=true`
       : `/demandes/synthese/${numero}`;
 };
 

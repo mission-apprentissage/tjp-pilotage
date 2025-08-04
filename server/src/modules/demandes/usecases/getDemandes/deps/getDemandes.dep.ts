@@ -10,7 +10,7 @@ import type { Filters } from "@/modules/demandes/usecases/getDemandes/getDemande
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 import { isDemandeBrouillonVisible, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
-import { rapprochementOK } from "@/modules/utils/rapprochementOK";
+import { rapprochement } from "@/modules/utils/rapprochement";
 import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
@@ -144,8 +144,8 @@ export const getDemandesQuery = async (
         .limit(1)
         .as("correction"),
 
-      rapprochementOK("campagne", "demande","demandeConstatView", "dataFormation", false).as("rapprochementOK"),
-      rapprochementOK("campagne", "demande","demandeConstatView", "dataFormation", true).as("raisonRapprochementKO")
+      rapprochement("campagne", "demande","demandeConstatView", "dataFormation", false).as("rapprochement"),
+      rapprochement("campagne", "demande","demandeConstatView", "dataFormation", true).as("raisonRapprochementKO")
 
     ])
     .$narrowType<{

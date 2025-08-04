@@ -346,9 +346,9 @@ export const PageClient = () => {
                               }
                             </Th>
                           )}
-                          <Th cursor="pointer" onClick={() => handleOrder("rapprochementOK")} fontSize={12}>
-                            <OrderIcon {...order} column="rapprochementOK" />
-                            {DEMANDES_COLUMNS.rapprochementOK}
+                          <Th cursor="pointer" onClick={() => handleOrder("rapprochement")} fontSize={12}>
+                            <OrderIcon {...order} column="rapprochement" />
+                            {DEMANDES_COLUMNS.rapprochement}
                           </Th>
                           <Th cursor="pointer" onClick={() => handleOrder("updatedAt")} fontSize={12}>
                             <OrderIcon {...order} column="updatedAt" />
@@ -488,7 +488,7 @@ export const PageClient = () => {
                                 <Link
                                   as={NextLink}
                                   href={getLienRapprochement(
-                                    demande.rapprochementOK,
+                                    demande.rapprochement,
                                     demande.uai,
                                     demande.cfd,
                                     demande.numero
@@ -496,7 +496,7 @@ export const PageClient = () => {
                                   target="_blank"
                                 >
                                   <Tooltip label={getRapprochementTooltip(
-                                    demande.rapprochementOK as RapprochementValue
+                                    demande.rapprochement as RapprochementValue
                                   )}>
                                     <Text
                                       textOverflow={"ellipsis"}
@@ -504,7 +504,7 @@ export const PageClient = () => {
                                       whiteSpace={"break-spaces"}
                                       noOfLines={2}
                                     >
-                                      {<RapprochementTag value={demande.rapprochementOK} />}
+                                      {<RapprochementTag value={demande.rapprochement} />}
                                     </Text>
                                   </Tooltip>
 
