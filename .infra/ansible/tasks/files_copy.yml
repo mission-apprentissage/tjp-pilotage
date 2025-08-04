@@ -28,6 +28,44 @@
     - item.path | regex_search('^tools/?') == none
     - item.path | regex_search('^system/?') == none
 
+# Documentation
+- name: Vérification de l'existence du dossier de la documentation
+  ansible.builtin.stat:
+    path: /path/to/your/folder
+  register: dir_check
+
+- name: Suppression du contenu du dossier de la documentation s'il existe
+  ansible.builtin.shell: rm -rf /path/to/your/folder/*
+  when: dir_check.stat.exists and folder_stat.stat.isdir
+
+- name: Création du dossier de la documentation s'il n'existe pas
+  ansible.builtin.file:
+    path: /path/to/your/folder
+    state: directory
+  when: not dir_check.stat.exists
+
+- name: Copie de la documentation produit
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "/opt/app/documentation/{{ item.path }}"
+    mode: "{{ item.mode }}"
+  with_filetree: "{{inventory_dir}}/../documentation"
+  when:
+    - item.state == 'file'
+    - item.path | basename != '.gitkeep'
+    - item.path | basename != '.DS_Store'
+
+- name: Assignation des permissions au dossier de la doc pour www-data
+  ansible.builtin.file:
+    path: /opt/app/documentation
+    group: www-data
+    recurse: yes
+    state: directory
+
+- name: Reconcile SSL certificates
+  shell: "bash /opt/app/tools/ssl/reconcile-ssl-certificates.sh"
+  register: reconcile_output
+
 - name: Copie du fichier de seed
   ansible.builtin.copy:
     src: "{{inventory_dir}}/files/configs/mongodb/seed.gpg"
