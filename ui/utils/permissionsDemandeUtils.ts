@@ -1,9 +1,9 @@
 import {hasPermission, hasRole, isUserInRegionsExperimentation2024} from 'shared';
-import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
+import type {DemandeStatutType, DemandeStatutTypeWithoutSupprimee} from 'shared/enum/demandeStatutEnum';
 import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
 import type {TypeDemandeType} from 'shared/enum/demandeTypeEnum';
 import {PermissionEnum} from 'shared/enum/permissionEnum';
-import {RoleEnum} from 'shared/enum/roleEnum';
+import { RoleEnum} from 'shared/enum/roleEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
 import {isAdmin, isUserNational} from 'shared/security/securityUtils';
@@ -11,14 +11,13 @@ import { isCampagneEnCours, isCampagneTerminee } from 'shared/utils/campagneUtil
 import {isStatutDemandeValidee, isStatutRefusee} from 'shared/utils/statutDemandeUtils';
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
 
-import {feature} from '@/utils/feature';
-import { isUserPartOfSaisieDemande } from '@/utils/isPartOfSaisieDemande';
-
+import {feature} from './feature';
+import { isUserPartOfSaisieDemande } from './isPartOfSaisieDemande';
 
 export type Demande = {
   campagne: CampagneType,
-  statut: DemandeStatutType,
-  typeDemande: TypeDemandeType,
+  statut?: DemandeStatutTypeWithoutSupprimee,
+  typeDemande?: TypeDemandeType,
   canEdit: boolean,
   isOldDemande: boolean
 }
@@ -103,10 +102,19 @@ export const canEditDemandeStatut = ({
     DemandeStatutEnum["refusée"],
   ];
 
+  if(!demande?.statut) return false;
   if(hasRole({ user, role: RoleEnum["perdir"] })) return editableStatutsPerdir.includes(demande.statut);
-  if(hasRole({ user, role: RoleEnum["admin"] }) || hasRole({ user, role: RoleEnum["admin_region"] })) return editableStatutsAdmin.includes(demande.statut);
+  if(isAdmin({ user })) return editableStatutsAdmin.includes(demande.statut);
   else return editableStatuts.includes(demande.statut);
 };
+
+export const canEditDemandeCfdUai = ({
+  demande,
+  user
+} : {
+  demande?: Demande,
+  user?: UserType
+}) => isAdmin({ user }) && isCampagneTerminee(demande?.campagne) && isStatutDemandeValidee(demande?.statut);
 
 const canEditOldDemande = ({
   demande,

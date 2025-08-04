@@ -13,12 +13,14 @@ import {
   useToken,
   VStack,
 } from "@chakra-ui/react";
+import { CURRENT_IJ_MILLESIME } from "shared";
 import { OBJECTIF_TAUX_TRANSFO_REFORME } from "shared/objectives/TAUX_TRANSFO";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { IndicateurType, PilotageReformeStats, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
+import { BadgeMillesimes } from "@/components/BadgeMillesimes";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
 import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
@@ -174,7 +176,6 @@ const StatCard = ({
       <CardBody color={color} py="2" px="3" alignItems={"center"} minHeight={40}>
         <HStack
           width="100%"
-          justifyContent={tooltip ? "space-between" : "start"}
           mr="4"
           flex={1}
         >
@@ -189,6 +190,7 @@ const StatCard = ({
           </Heading>
           {tooltip}
         </HStack>
+        <BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} mt={2}/>
         <Box fontWeight="bold" fontSize="40" color={"bluefrance.113"}>
           {getValue(type)}
         </Box>
@@ -298,7 +300,7 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
             label="taux d'emploi à 6 mois"
             data={data}
             tooltip={<TooltipDefinitionTauxEmploi6Mois />}
-          ></StatCard>
+          />
           <StatCard
             label="taux poursuite d'études"
             data={data}
@@ -315,7 +317,7 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
                 onClick={() => openGlossaire("taux-poursuite-etudes")}
               />
             }
-          ></StatCard>
+          />
         </SimpleGrid>
       </VStack>
     </Flex>

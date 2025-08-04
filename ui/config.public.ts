@@ -1,15 +1,11 @@
 export interface PublicConfig {
-  sentry: {
-    dsn: string;
-    enabled: boolean;
-  };
   crisp: {
     token: string;
   };
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" | "recette1" | "recette2" | "production";
+  env: "local" |  "qualification" | "diffusion" | "preproduction" | "production" | "productionij";
   version: string;
   productMeta: {
     brandName: "orion";
@@ -18,14 +14,10 @@ export interface PublicConfig {
   };
 }
 
-function getProductionPublicConfig(): PublicConfig {
+function getProductionIJPublicConfig(): PublicConfig {
   const host = "orion.inserjeunes.beta.gouv.fr";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "cf473a68-afeb-4611-9d38-55ff6144b9b8",
     },
@@ -38,40 +30,64 @@ function getProductionPublicConfig(): PublicConfig {
   };
 }
 
-function getRecette1PublicConfig(): PublicConfig {
-  const host = "recette-1.orion.inserjeunes.incubateur.net";
+function getPreProductionPublicConfig(): PublicConfig {
+  const host = "pp.orion.education.gouv.fr";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "no-token",
     },
     host,
     baseUrl: `https://${host}`,
-    env: "recette1",
+    env: "preproduction",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
     productMeta: getProductMeta(),
   };
 }
 
-function getRecette2PublicConfig(): PublicConfig {
-  const host = "recette-2.orion.inserjeunes.incubateur.net";
+function getDiffusionPublicConfig(): PublicConfig {
+  const host = "qp.orion.education.gouv.fr";
 
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
     crisp: {
       token: "no-token",
     },
     host,
     baseUrl: `https://${host}`,
-    env: "recette2",
+    env: "diffusion",
+    apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
+    productMeta: getProductMeta(),
+  };
+}
+
+function getQualificationPublicConfig(): PublicConfig {
+  const host = "qa.orion.education.gouv.fr";
+
+  return {
+    crisp: {
+      token: "no-token",
+    },
+    host,
+    baseUrl: `https://${host}`,
+    env: "qualification",
+    apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
+    productMeta: getProductMeta(),
+  };
+}
+
+function getProductionPublicConfig(): PublicConfig {
+  const host = "orion.education.gouv.fr";
+
+  return {
+    crisp: {
+      token: "no-token",
+    },
+    host,
+    baseUrl: `https://${host}`,
+    env: "production",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
     productMeta: getProductMeta(),
@@ -81,10 +97,6 @@ function getRecette2PublicConfig(): PublicConfig {
 function getLocalPublicConfig(): PublicConfig {
   const host = "localhost";
   return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: false,
-    },
     crisp: {
       token: "no-token",
     },
@@ -126,10 +138,12 @@ function getProductMeta(): PublicConfig["productMeta"] {
 function getEnv(): PublicConfig["env"] {
   const env = process.env.NEXT_PUBLIC_ENV;
   switch (env) {
+  case "qualification":
+  case "diffusion":
+  case "preproduction":
   case "production":
-  case "recette1":
-  case "recette2":
   case "local":
+  case "productionij":
     return env;
   default:
     throw new Error(`Invalid NEXT_PUBLIC_ENV env-vars ${env}`);
@@ -138,17 +152,22 @@ function getEnv(): PublicConfig["env"] {
 
 function getPublicConfig(): PublicConfig {
   switch (getEnv()) {
+  case "qualification":
+    return getQualificationPublicConfig();
+  case "diffusion":
+    return getDiffusionPublicConfig();
+  case "preproduction":
+    return getPreProductionPublicConfig();
   case "production":
     return getProductionPublicConfig();
-  case "recette1":
-    return getRecette1PublicConfig();
-  case "recette2":
-    return getRecette2PublicConfig();
   case "local":
     return getLocalPublicConfig();
+  case "productionij":
+    return getProductionIJPublicConfig();
   }
 }
 
 export const isProduction = getEnv() === "production";
+export const isOldProduction = getEnv() === "productionij";
 
 export const publicConfig: PublicConfig = getPublicConfig();

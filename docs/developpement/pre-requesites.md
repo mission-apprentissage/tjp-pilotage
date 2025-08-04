@@ -22,10 +22,6 @@ Installez [Ansible 2.7+](https://docs.ansible.com/ansible/latest/installation_gu
 
 > Sur OS X vous pouvez utiliser `brew install ansible`
 
-## 1Password CLI
-
-[Suivre la documentation dédié](./1password.md)
-
 ## Yq
 
 [Installez yq](https://github.com/mikefarah/yq)

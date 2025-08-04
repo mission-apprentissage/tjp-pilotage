@@ -32,10 +32,20 @@ export const AugmentationCapaciteAccueilRestaurationField = chakra(
               onChange={(v) => onChange(toBoolean(v))}
               value={JSON.stringify(value)}
             >
-              <Radio ref={ref} value="true">
+              <Radio
+                ref={ref}
+                value="true"
+                isReadOnly={disabled}
+                isDisabled={disabled}
+              >
                 Oui
               </Radio>
-              <Radio ref={ref} value="false">
+              <Radio
+                ref={ref}
+                value="false"
+                isReadOnly={disabled}
+                isDisabled={disabled}
+              >
                 Non
               </Radio>
             </RadioGroup>

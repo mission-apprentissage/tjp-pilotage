@@ -1,4 +1,5 @@
 import { chakra, Tag, Td } from "@chakra-ui/react";
+import {CURRENT_IJ_MILLESIME} from 'shared';
 import { SecteurEnum } from "shared/enum/secteurEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import { unEscapeString } from "shared/utils/escapeString";
@@ -18,7 +19,7 @@ import { getRaisonCorrectionLabelParAnneeCampagne } from "@/app/(wrapped)/demand
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
-import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
+import {formatCommuneLibelleWithCodeDepartement, formatLibellesColoration} from '@/utils/formatLibelle';
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -174,7 +175,7 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxInsertionRegional")}
       >
-        <GraphWrapper value={correction.tauxInsertionRegional} />
+        <GraphWrapper value={correction.tauxInsertionRegional} millesime={CURRENT_IJ_MILLESIME} />
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -182,7 +183,7 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxPoursuiteRegional")}
       >
-        <GraphWrapper value={correction.tauxPoursuiteRegional} />
+        <GraphWrapper value={correction.tauxPoursuiteRegional} millesime={CURRENT_IJ_MILLESIME} />
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -190,7 +191,7 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxDevenirFavorableRegional")}
       >
-        <GraphWrapper value={correction.tauxDevenirFavorableRegional} />
+        <GraphWrapper value={correction.tauxDevenirFavorableRegional} millesime={CURRENT_IJ_MILLESIME} />
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -288,7 +289,7 @@ export const LineContent = ({
         maxW={300}
         bgColor={getCellColor("libelleColoration")}
       >
-        {correction.libelleColoration}
+        {formatLibellesColoration(correction)}
       </ConditionalTd>
       <ConditionalTd colonneFilters={colonneFilters} colonne={"commentaire"} bgColor={getCellColor("commentaire")}>
         {correction.commentaire}

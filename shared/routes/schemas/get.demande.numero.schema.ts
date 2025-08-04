@@ -44,7 +44,8 @@ const MetadataSchema = z.object({
 
 const CorrectionSchema = z.object({
   demandeNumero: z.string().optional(),
-  libelleColoration: z.string().optional(),
+  libelleColoration1: z.string().optional(),
+  libelleColoration2: z.string().optional(),
   coloration: z.boolean().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),
   capaciteScolaire: z.coerce.number().optional(),
@@ -70,7 +71,8 @@ const DemandeSchema = z.object({
   rentreeScolaire: z.coerce.number(),
   typeDemande: DemandeTypeZodType,
   coloration: z.boolean(),
-  libelleColoration: z.string().optional(),
+  libelleColoration1: z.string().optional(),
+  libelleColoration2: z.string().optional(),
   // Capacité
   mixte: z.boolean().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),
@@ -184,6 +186,7 @@ const DemandeSchema = z.object({
   ),
   suiviId: z.string().optional(),
   isOldDemande: z.boolean(),
+  canEdit: z.boolean(),
 });
 
 export const FiltersSchema = z.object({ numero: z.string() });
@@ -195,7 +198,6 @@ export const getDemandeSchema = {
     200: DemandeSchema.merge(
       z.object({
         metadata: MetadataSchema,
-        canEdit: z.boolean(),
       })
     ),
   },

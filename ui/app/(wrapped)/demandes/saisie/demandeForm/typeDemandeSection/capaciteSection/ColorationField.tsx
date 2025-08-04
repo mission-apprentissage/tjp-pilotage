@@ -1,5 +1,4 @@
 import {
-  Box,
   chakra,
   Flex,
   FormControl,
@@ -18,7 +17,10 @@ import type { DemandeFormType } from "@/app/(wrapped)/demandes/saisie/demandeFor
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { toBoolean } from "@/utils/toBoolean";
 
-export const ColorationField = chakra(({ disabled, className }: { disabled?: boolean; className?: string }) => {
+export const ColorationField = chakra((
+  { disabled, className }:
+  { disabled?: boolean; className?: string }
+) => {
   const {
     formState: { errors },
     control,
@@ -27,21 +29,23 @@ export const ColorationField = chakra(({ disabled, className }: { disabled?: boo
     getValues,
   } = useFormContext<DemandeFormType>();
 
-  useEffect(
-    () =>
-      watch((_, { name }) => {
-        if (name === "typeDemande" && isTypeColoration(getValues("typeDemande"))) setValue("coloration", true);
-        if (name === "libelleFCIL") setValue("coloration", !getValues("libelleFCIL"));
-      }).unsubscribe
-  );
-
-  useEffect(() => {
-    if (getValues("libelleFCIL")) setValue("coloration", false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const libelleFCIL = watch("libelleFCIL");
+  const typeDemande = getValues("typeDemande");
   const isColorationDisabled = !!libelleFCIL || disabled;
+
+
+  useEffect(
+    () => {
+      if (isTypeColoration(typeDemande)) {
+        setValue("coloration", true);
+        return;
+      }
+
+      if (libelleFCIL !== undefined) {
+        setValue("coloration", false);
+      }
+    }, [libelleFCIL, typeDemande, setValue]
+  );
 
   return (
     <FormControl as="fieldset" className={className} isInvalid={!!errors.coloration} isRequired>
@@ -52,24 +56,23 @@ export const ColorationField = chakra(({ disabled, className }: { disabled?: boo
           color="bluefrance.113"
           mb={"6px"}
           tooltip={
-            <Box>
+            <Flex direction="column" gap={2}>
               <Text>
                 Une coloration consiste à adapter le projet pédagogique à un champ professionnel particulier, en général
                 concentré sur un territoire donné.
               </Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
         />
       </Flex>
       <Controller
         name="coloration"
         control={control}
-        disabled={disabled}
         rules={{
           validate: (value) => typeof value === "boolean" || "Le champ est obligatoire",
         }}
-        render={({ field: { onChange, ref, name, onBlur, value, disabled } }) => (
+        render={({ field: { onChange, ref, name, onBlur, value } }) => (
           <RadioGroup
             ms={6}
             as={Stack}
@@ -77,21 +80,20 @@ export const ColorationField = chakra(({ disabled, className }: { disabled?: boo
             onBlur={onBlur}
             onChange={(v) => onChange(toBoolean(v))}
             value={JSON.stringify(value)}
-            isDisabled={disabled}
           >
             <Radio
               ref={ref}
               value="true"
-              isReadOnly={isTypeColoration(getValues("typeDemande")) || isColorationDisabled}
-              _readOnly={{ cursor: "not-allowed", opacity: 0.5 }}
+              isReadOnly={isTypeColoration(getValues("typeDemande")) || isColorationDisabled || disabled}
+              isDisabled={isTypeColoration(getValues("typeDemande")) || isColorationDisabled || disabled}
             >
               Oui
             </Radio>
             <Radio
               ref={ref}
               value="false"
-              isReadOnly={isTypeColoration(getValues("typeDemande")) || isColorationDisabled}
-              _readOnly={{ cursor: "not-allowed", opacity: 0.5 }}
+              isReadOnly={isTypeColoration(getValues("typeDemande")) || isColorationDisabled || disabled}
+              isDisabled={isTypeColoration(getValues("typeDemande")) || isColorationDisabled || disabled}
             >
               Non
             </Radio>

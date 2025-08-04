@@ -231,13 +231,12 @@ export const QuadrantDisplay = ({
           )}
           <Tooltip
             label={
-              <Box>
+              <Flex direction={"column"} gap={2}>
                 <Text>
-                  L'export de données sur les formations est accessible depuis la console Orion uniquement. <br />
-                  <br />
-                  <strong>Cliquer pour exporter depuis la console.</strong>
+                  L'export de données sur les formations est accessible depuis la console Orion uniquement.
                 </Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour exporter depuis la console.</Text>
+              </Flex>
             }
             fontSize="md"
             bg={"grey.50"}

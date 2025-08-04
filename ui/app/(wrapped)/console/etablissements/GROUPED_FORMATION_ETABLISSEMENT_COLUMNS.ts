@@ -2,8 +2,11 @@ import { themeDefinition } from "@/theme/theme";
 
 import type {
   FORMATION_ETABLISSEMENT_COLUMNS,
+  FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED,
   FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
+  FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED,
   FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL,
+  FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED,
 } from "./FORMATION_ETABLISSEMENT_COLUMNS";
 
 export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
@@ -77,6 +80,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
     cellColor: "inherit",
     options: {
       tauxPression: "Taux de pression",
+      tauxDemande: "Taux de demande",
       tauxRemplissage: "Taux de remplissage",
       positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
@@ -161,6 +165,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
     cellColor: "inherit",
     options: {
       tauxPression: "Taux de pression",
+      tauxDemande: "Taux de demande",
       tauxRemplissage: "Taux de remplissage",
       positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
@@ -233,6 +238,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
     cellColor: "inherit",
     options: {
       tauxPression: "Taux de pression",
+      tauxDemande: "Taux de demande",
       tauxRemplissage: "Taux de remplissage",
       positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
@@ -249,5 +255,87 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
   {
     color: string;
     options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT>;
+  }
+>;
+
+export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED: Record<
+  string,
+  {
+    color: string;
+    cellColor: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED>;
+  }
+> = {
+  ...GROUPED_FORMATION_ETABLISSEMENT_COLUMNS,
+  // Caractéristiques de la transformation
+  ["transformation"]: {
+    color: themeDefinition.colors.greenArchipel[950],
+    cellColor: "inherit",
+    options: {
+      numero: "Numéro de la demande",
+      typeDemande: "Type de demande",
+      dateEffetTransformation: "Date d'effet de la transformation",
+    },
+  },
+} as Record<
+  string,
+  {
+    color: string;
+    cellColor: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED>;
+  }
+>;
+
+export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED: Record<
+  string,
+  {
+    color: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED>;
+  }
+> = {
+  ...GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL,
+  // Caractéristiques de la transformation
+  ["transformation"]: {
+    color: themeDefinition.colors.greenArchipel[950],
+    cellColor: "inherit",
+    options: {
+
+      numero: "Numéro de la demande",
+      typeDemande: "Type de demande",
+      dateEffetTransformation: "Date d'effet de la transformation",
+    },
+  },
+} as Record<
+  string,
+  {
+    color: string;
+    cellColor: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED>;
+  }
+>;
+
+export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED: Record<
+  string,
+  {
+    color: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED>;
+  }
+> = {
+  ...GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
+  // Caractéristiques de la transformation
+  ["transformation"]: {
+    color: themeDefinition.colors.greenArchipel[950],
+    cellColor: "inherit",
+    options: {
+      numero: "Numéro de la demande",
+      typeDemande: "Type de demande",
+      dateEffetTransformation: "Date d'effet de la transformation",
+    },
+  },
+} as Record<
+  string,
+  {
+    color: string;
+    options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED>;
   }
 >;

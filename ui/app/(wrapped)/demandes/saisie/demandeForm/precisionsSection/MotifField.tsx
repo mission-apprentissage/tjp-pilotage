@@ -64,17 +64,16 @@ export const MotifField = chakra(
         </FormLabel>
         <Controller
           name="motif"
-          disabled={disabled}
           control={control}
           rules={{ required: "Le motif est obligatoire" }}
-          render={({ field: { onChange, value, onBlur, ref, name, disabled } }) => {
+          render={({ field: { onChange, value, onBlur, ref, name } }) => {
             return (
               <CheckboxGroup onChange={onChange} value={value}>
                 <Stack spacing={[3]} ms={6}>
                   {getMotifOptions(typeDemande, campagne?.annee)?.map(({ value, label }) => (
                     <Checkbox
                       ref={ref}
-                      disabled={disabled}
+                      isDisabled={disabled}
                       name={name}
                       key={`${name}_${label}`}
                       onBlur={onBlur}
@@ -97,7 +96,7 @@ export const MotifField = chakra(
                       {getMotifOptions("coloration", campagne.annee)?.map(({ value, label }) => (
                         <Checkbox
                           ref={ref}
-                          disabled={disabled}
+                          isDisabled={disabled}
                           name={name}
                           key={`${name}_${label}_coloration`}
                           onBlur={onBlur}

@@ -1,7 +1,8 @@
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { SecteurEnum } from "shared/enum/secteurEnum";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
-import { formatLibelleFormationWithoutTags} from '@/utils/formatLibelle';
+import { formatLibelleFormationWithoutTags, formatLibellesColoration, formatMillesime } from "@/utils/formatLibelle";
 
 import { STATS_DEMANDES_COLUMNS } from "./STATS_DEMANDES_COLUMN";
 import type { DemandesRestitution, FiltersDemandesRestitution } from "./types";
@@ -85,6 +86,7 @@ export const getDataForExport = ({
       hour: "2-digit",
       minute: "2-digit",
     }),
+    millesime: formatMillesime(getMillesimeFromCampagne(demande.campagne.annee)),
     disciplinesRecrutementRH:
       demande.discipline1RecrutementRH &&
       `${demande.discipline1RecrutementRH} ${
@@ -111,6 +113,7 @@ export const getDataForExport = ({
     transitionDemographique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
     transitionEcologique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],
     transitionNumerique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition numérique"]],
+    libelleColoration: formatLibellesColoration(demande)
   };
 
   if(addPilotageColumns) {

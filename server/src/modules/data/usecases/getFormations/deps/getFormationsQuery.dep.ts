@@ -1,9 +1,10 @@
 import { sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import type { TypeFamille } from 'shared/enum/typeFamilleEnum';
 import { TypeFamilleEnum } from 'shared/enum/typeFamilleEnum';
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -16,6 +17,7 @@ import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
 import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistantIndicateurEntree } from "@/modules/data/utils/notHistorique";
 import { openForRentreeScolaireIndicateurEntree } from "@/modules/data/utils/openForRentreeScolaire";
+import { selectTauxDemandeAgg } from "@/modules/data/utils/tauxDemande";
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
@@ -31,7 +33,6 @@ export const getFormationsQuery = async ({
   offset = 0,
   limit = MAX_LIMIT,
   rentreeScolaire = [CURRENT_RENTREE],
-  millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -50,6 +51,7 @@ export const getFormationsQuery = async ({
   orderBy,
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
+  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: rentreeScolaire[0], offset: 0 });
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
@@ -138,10 +140,10 @@ export const getFormationsQuery = async ({
       "formationView.cpcSecteur",
       "nsf.libelleNsf",
       "familleMetier.libelleFamille",
-      "dispositif.libelleDispositif",
+      sql<string>`COALESCE("dispositif"."libelleDispositif","niveauDiplome"."libelleNiveauDiplome" || ' SANS DISPOSITIF')`.as("libelleDispositif"),
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
-      "indicateurEntree.rentreeScolaire",
+      sql<string>`COALESCE("indicateurEntree"."rentreeScolaire",${CURRENT_RENTREE})`.as("rentreeScolaire"),
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
@@ -173,6 +175,7 @@ export const getFormationsQuery = async ({
         annee: sql`'2'`,
       })})`.as("capacite3"),
       selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
+      selectTauxDemandeAgg("indicateurEntree", "formationView").as("tauxDemande"),
       hasContinuum({
         eb,
         millesimeSortie,

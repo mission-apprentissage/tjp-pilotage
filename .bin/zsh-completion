@@ -30,7 +30,7 @@ _completion() {
       _describe 'command' commands
       ;;
   esac
-  
+
   # _describe 'command' commands
 }
 

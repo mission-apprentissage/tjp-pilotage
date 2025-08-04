@@ -17,7 +17,6 @@
     "shared"
   ],
   "dependencies": {
-    "@sentry/cli": "^2.37.0",
     "@vitejs/plugin-react": "^4.3.4",
     "dotenv": "^16.4.5",
     "eslint-plugin-react": "^7.37.1",
@@ -55,6 +54,7 @@
     "test:ci": "yarn test --run --silent",
     "test:ci:coverage": "yarn test:ci --coverage.include='ui' --coverage.include='server/src' --coverage.provider='v8' --coverage.enabled --coverage.all --coverage.exclude='**/tests' --coverage.exclude='**/.next'",
     "test:watch": "vitest --watch",
+    "test:clean": "yarn test --run && yarn cli clean:testdb",
     "typecheck": "yarn foreach:parallel run typecheck",
     "typecheck:ci": "yarn foreach:ci run typecheck",
     "vault:edit": ".bin/product vault:edit",
@@ -68,8 +68,9 @@
     "import:formations": "yarn cli importFormations",
     "import:users": "yarn cli importUsers",
     "import:users:dryRun": "yarn cli importUsers --dryRun true",
-    "migrate:up": "yarn cli migrateDB",
-    "migrate:down": "yarn cli migrateDownDB"
+    "migrate:up": "yarn cli migrate:up",
+    "migrate:down": "yarn cli migrate:down",
+    "clean:testdb": "yarn cli clean:testdb"
   },
   "devDependencies": {
     "@commitlint/cli": "18.4.3",

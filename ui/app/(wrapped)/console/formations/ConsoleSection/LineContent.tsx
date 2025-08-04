@@ -1,6 +1,7 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
+import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { CURRENT_IJ_MILLESIME } from "shared";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Formation  } from "@/app/(wrapped)/console/formations/types";
@@ -11,9 +12,9 @@ import {BadgeTypeFamille} from '@/components/BadgeTypeFamille';
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
-import { formatFamilleMetierLibelle } from "@/utils/formatLibelle";
+import { formatFamilleMetierLibelle, formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
-import { getTauxPressionStyle } from "@/utils/getBgScale";
+import { getTauxDemandeStyle,getTauxPressionStyle } from "@/utils/getBgScale";
 
 
 const ConditionalTd = chakra(
@@ -218,6 +219,18 @@ export const FormationLineContent = ({
       </TableBadge>
     </ConditionalTd>
     <ConditionalTd
+      colonne={"tauxDemande"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <TableBadge sx={
+        getTauxDemandeStyle(formation.tauxDemande !== undefined ? formatNumber(formation.tauxDemande, 2) : undefined)
+      }>
+        {formatNumberToString(formation.tauxDemande, 2, "-")}
+      </TableBadge>
+    </ConditionalTd>
+    <ConditionalTd
       colonne={"tauxRemplissage"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
@@ -232,7 +245,12 @@ export const FormationLineContent = ({
         getCellBgColor={getCellBgColor}
         textAlign={"center"}
       >
-        {formation.positionQuadrant ?? "-"}
+        <Tooltip
+          label={`Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`}
+          placement="top"
+        >
+          {formation.positionQuadrant ?? "-"}
+        </Tooltip>
       </ConditionalTd>
     )}
     <ConditionalTd
@@ -241,7 +259,7 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxInsertion} />
+      <GraphWrapper continuum={formation.continuum} value={formation.tauxInsertion} millesime={CURRENT_IJ_MILLESIME} />
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxPoursuite"}
@@ -249,10 +267,10 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxPoursuite} />
+      <GraphWrapper continuum={formation.continuum} value={formation.tauxPoursuite} millesime={CURRENT_IJ_MILLESIME} />
     </ConditionalTd>
     <ConditionalTd colonne={"tauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxDevenirFavorable} my="auto" />
+      <GraphWrapper continuum={formation.continuum} value={formation.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} my="auto" />
     </ConditionalTd>
   </>
 );

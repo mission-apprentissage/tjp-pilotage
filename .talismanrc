@@ -8,7 +8,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: 0577a982f46500c55d62463f34fde72a3e14700b5235f8573cbf870e2452348f
+  checksum: 0d6922d4ea561f3351bc0e69b8d9b72426abb77f5afae72526fe2bde968a8c47
 - filename: .yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
   checksum: a663e9955c2825bee3af55be1ebd6e26cd0a17fe7c614a13d726ddd4c7959b82
 - filename: README.md
@@ -26,7 +26,7 @@ fileignoreconfig:
 - filename: server/src/modules/core/usecases/login/login.test.ts
   checksum: 7ccfc4ed066123e3655f8318830fd72171c689ef172e0f4acfec3ac01a554ccf
 - filename: server/src/modules/core/usecases/redirectDne/redirectDne.test.ts
-  checksum: 419b61d1e765126aeacddea75f35ad6842207db8f97ce50ba2f5edfd524f5e50
+  checksum: 90716b6b65d7ddc88c878ffbf8827715d60476a1f84a6ff4b645b8d32945588a
 - filename: server/src/modules/demandes/usecases/submitDemande/__tests__/submitDemande.test.ts
   checksum: 1f964b6895fa14252a42134523c5ee4f36fef5b1885ab1ea5e809c17dae796c8
 - filename: server/src/modules/demandes/usecases/submitDemande/submitDemande.test.ts
@@ -132,7 +132,7 @@ fileignoreconfig:
 - filename: ui/app/(wrapped)/statistiques/page.tsx
   checksum: 4eff930f0a5a1df09c53d1a2e65c8911b3ae7d0ca8d2393ce371d9773af1e217
 - filename: ui/config.public.ts
-  checksum: 5a6c64c078366fc4c259fcf660abb66e4db3ffbc8365fdad5d3c05cad54d99dc
+  checksum: f87042a78e6486720db05c4bfa540f70eb79b7c1d6151c19dd6aa800061eeaab
 - filename: ui/src/config.public.ts
   checksum: b13b0a1f3d9590d335062a88e76609c40ba790129e481f7e5c25fbdab6840617
 - filename: ui/src/utils/generateUri.ts
@@ -143,6 +143,10 @@ fileignoreconfig:
   checksum: 2c57a4ce66aae5885864beab7369094022c779c45800ef2861bdb1a2830ca38f
 - filename: ui/utils/__tests__/isPartOfSaisieDemande.test.ts
   checksum: a9edcc318486f4d65e1d748e650eb7243f387075f093d9568d6f26d4cc03a5b6
+- filename: ui/utils/__tests__/permissionsDemandeUtils.test.ts
+  checksum: be0fe006a8ba22785eae0b72ad24c396ab61f1621550b515f5137fc2401da1e7
+- filename: ui/utils/__tests__/permissionsOldDemandeUtils.test.ts
+  checksum: 4143cc02a050869ae63aa3c4f787e11e995e219fd910e7112e0db54abfe34839
 - filename: ui/utils/security/__tests__/GuardSaisieDemande.test.tsx
   checksum: 26e715515a91e89432de7a0f83edce0b9765e92e4a15f3e731de1abb56090d9e
 scopeconfig:

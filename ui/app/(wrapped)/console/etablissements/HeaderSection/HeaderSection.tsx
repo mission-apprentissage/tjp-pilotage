@@ -1,7 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 
-import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Filters, FiltersList, Order, RequetesEnregistrees } from "@/app/(wrapped)/console/etablissements/types";
+import type { Filters, FiltersList, FORMATION_ETABLISSEMENT_COLUMNS_KEYS, Order, RequetesEnregistrees } from "@/app/(wrapped)/console/etablissements/types";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
 import { FiltersSection } from "./FiltersSection";
@@ -19,14 +18,14 @@ export const HeaderSection = ({
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+    columns?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     order?: Partial<Order>;
     page?: number;
   }) => void;
   searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+    columns?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     order?: Partial<Order>;
     page?: string;
   };
@@ -36,7 +35,7 @@ export const HeaderSection = ({
   setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
   return (
-    <Flex direction={"column"} boxShadow={"0px 1px 4px 0px #00000026"} zIndex={1} p={4} gap={6}>
+    <Flex direction={"column"} boxShadow={"0px 1px 4px 0px #00000026"} zIndex={1} p={4} gap={6} bgColor={"white"}>
       <Breadcrumb
         pages={[
           { title: "Accueil", to: "/" },
