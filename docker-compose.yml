@@ -39,10 +39,10 @@ services:
     volumes:
       - pilotage_smtp_data:/data
   
-  reverse_proxy_documentation_support:
+  reverse_proxy_documentation:
     image: nginx:alpine
     volumes:
-      - ./documentation_support:/usr/share/nginx/html
+      - ./documentation:/usr/share/nginx/html
     environment:
       - NGINX_HOST=localhost
       - NGINX_PORT=80

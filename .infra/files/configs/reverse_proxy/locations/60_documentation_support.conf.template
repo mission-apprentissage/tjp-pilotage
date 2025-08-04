@@ -1,0 +1,4 @@
+location ~ ^/documentation(?:/(.*))?$ {
+    set $upstream http://reverse_proxy_documentation:3000;
+    include includes/proxy.conf;
+}
