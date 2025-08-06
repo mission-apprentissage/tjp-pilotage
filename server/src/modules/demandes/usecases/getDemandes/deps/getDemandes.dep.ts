@@ -145,7 +145,7 @@ export const getDemandesQuery = async (
         .as("correction"),
 
       rapprochement("campagne", "demande","demandeConstatView", "dataFormation", false).as("rapprochement"),
-      rapprochement("campagne", "demande","demandeConstatView", "dataFormation", true).as("raisonRapprochementKO")
+      rapprochement("campagne", "demande","demandeConstatView", "dataFormation", true).as("motifRapprochement")
 
     ])
     .$narrowType<{
