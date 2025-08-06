@@ -1,27 +1,20 @@
 import { Flex, Text } from "@chakra-ui/react";
 
 export type RapprochementValue = "OK" | "KO" | "-";
-
-const rapprochementList: Record<RapprochementValue, { label: string; color: string; tooltip: string }> = {
+const rapprochementList: Record<RapprochementValue, { label: string; color: string }> = {
   OK: {
     label: "OUI",
-    color: "#6FE49D",
-    tooltip: "Transformation rapprochée avec le constat de rentrée",
+    color: "#6FE49D"
   },
   KO: {
     label: "NON",
-    color: "#FA7659",
-    tooltip: "Le croisement avec le constat de rentrée n'a pas pu se faire. Veuillez vérifier l'établissement (UAI) ou le diplôme (CFD) et apporter les corrections nécessaires pour que le rapprochement s’opère",
+    color: "#FA7659"
   },
   "-": {
     label: "-",
-    color: "#DDDDDD",
-    tooltip: "Données non disponibles pour faire le croisement avec le constat de rentrée",
+    color: "#DDDDDD"
   },
 };
-
-export const getRapprochementTooltip = (value: RapprochementValue): string =>
-  rapprochementList[value].tooltip;
 
 export const getLienRapprochement = (rapprochement: string, uai: string, cfd: string, numero: string) => {
   return rapprochement === 'OK' ? `/console/etablissements?filters[uai][0]=${uai}&filters[cfd][0]=${cfd}`

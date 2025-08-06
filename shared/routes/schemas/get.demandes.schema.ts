@@ -121,7 +121,7 @@ const DemandeItem = z.object({
   isOldDemande: z.boolean(),
   // Lien avec le constat de rentrée
   rapprochement: z.string(),
-  raisonRapprochementKO: z.string(),
+  motifRapprochement: z.string(),
 });
 
 export const FiltersSchema = z.object({
