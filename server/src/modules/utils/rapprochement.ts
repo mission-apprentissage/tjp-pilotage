@@ -90,7 +90,11 @@ export const rapprochement = (
 
 };
 
-export const getRapprochementMotif = (key: string): string => {
+export const getRapprochementMotif = (
+  key: "statut" | "campagne" | "rentrée" | "niveau" |
+       "apprentissageOK" | "apprentissage" | "colorationOK" |
+       "fermeture" | "fermetureOK" | "horsFermetureKO" | "horsFermetureOK"
+): string => {
 
   const motifRapprochementList = {
     "statut": "Cette demande n’est pas validée. Nous n’avons pas fait le rapprochement avec le constat de rentrée",
