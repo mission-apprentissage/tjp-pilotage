@@ -57,7 +57,7 @@ export const rapprochement = (
     CASE
       WHEN NOT ${isDemandeValidee} THEN ${getRapprochementMotif('statut')}
       WHEN NOT ${isCampagneTerminee} THEN ${getRapprochementMotif('campagne')}
-      WHEN ${rentreePlusTard} THEN  ${getRapprochementMotif('campagne')}
+      WHEN ${rentreePlusTard} THEN  ${getRapprochementMotif('rentrée')}
       WHEN NOT ${isNiveauInList} THEN ${getRapprochementMotif('niveau')}
       WHEN ${apprentissageAvecDataScolaire} THEN ${getRapprochementMotif('apprentissageOK')}
       WHEN ${apprentissageSansDataScolaire} THEN ${getRapprochementMotif('apprentissage')}
