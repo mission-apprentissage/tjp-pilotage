@@ -335,6 +335,14 @@ export const HeadLineContent = ({
               <OrderIcon {...order} column="typeDemande" />
               {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.typeDemande}
             </ConditionalTh>
+            <ConditionalTh
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              colonne="previsionnel"
+            >
+              <OrderIcon {...order} column="previsionnel" />
+              {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.previsionnel}
+            </ConditionalTh>
           </>
         )}
         <ConditionalTh
