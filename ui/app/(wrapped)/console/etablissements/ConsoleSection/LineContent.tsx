@@ -11,6 +11,7 @@ import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Line } from "@/app/(wrapped)/
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
+import { BadgesPrevisionnelDemande } from "@/components/BadgesPrevisionnelDemande";
 import { BadgeTypeDemande } from "@/components/BadgeTypeDemande";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { DateEffetTransformationComponent } from "@/components/DateEffetTransformationComponent";
@@ -283,6 +284,16 @@ export const EtablissementLineContent = ({
             numero={line.numero}
             dateEffetTransformation={line.dateEffetTransformation}
             rentreeScolaire={line.rentreeScolaire}
+          />
+        </ConditionalTd>
+        <ConditionalTd
+          colonne="previsionnel"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+        >
+          <BadgesPrevisionnelDemande
+            differenceCapaciteApprentissage={line.differenceCapaciteApprentissage}
+            differenceCapaciteScolaire={line.differenceCapaciteScolaire}
           />
         </ConditionalTd>
       </>
