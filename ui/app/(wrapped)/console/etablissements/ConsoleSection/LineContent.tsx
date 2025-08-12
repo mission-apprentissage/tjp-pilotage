@@ -292,6 +292,7 @@ export const EtablissementLineContent = ({
           getCellBgColor={getCellBgColor}
         >
           <BadgesPrevisionnelDemande
+            typeDemande={line.typeDemande}
             differenceCapaciteApprentissage={line.differenceCapaciteApprentissage}
             differenceCapaciteScolaire={line.differenceCapaciteScolaire}
           />
