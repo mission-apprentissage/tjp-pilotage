@@ -58,7 +58,7 @@ export const getFormationEtablissementsQuery = async ({
   user
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
-  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: rentreeScolaire[0], offset: 0 });
+  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: rentreeScolaire[0] });
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
