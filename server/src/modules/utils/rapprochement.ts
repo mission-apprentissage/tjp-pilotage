@@ -57,8 +57,8 @@ export const rapprochement = (
     CASE
       WHEN NOT ${isDemandeValidee} THEN ${getRapprochementMotif('statut')}
       WHEN NOT ${isCampagneTerminee} THEN ${getRapprochementMotif('campagne')}
-      WHEN ${rentreePlusTard} THEN  ${getRapprochementMotif('rentrée')}
       WHEN NOT ${isNiveauInList} THEN ${getRapprochementMotif('niveau')}
+      WHEN ${rentreePlusTard} THEN  ${getRapprochementMotif('rentrée')}
       WHEN ${apprentissageAvecDataScolaire} THEN ${getRapprochementMotif('apprentissageOK')}
       WHEN ${apprentissageSansDataScolaire} THEN ${getRapprochementMotif('apprentissage')}
       WHEN ${colorationAvecDataScolaire} THEN ${getRapprochementMotif('colorationOK')}
@@ -73,8 +73,8 @@ export const rapprochement = (
     CASE
       WHEN NOT ${isDemandeValidee} THEN '-'
       WHEN NOT ${isCampagneTerminee} THEN '-'
-      WHEN ${rentreePlusTard} THEN '-'
       WHEN NOT ${isNiveauInList} THEN '-'
+      WHEN ${rentreePlusTard} THEN '-'
       WHEN ${apprentissageAvecDataScolaire} THEN 'OK'
       WHEN ${apprentissageSansDataScolaire} THEN '-'
       WHEN ${colorationAvecDataScolaire} THEN 'OK'
@@ -106,7 +106,7 @@ export const getRapprochementMotif = (
     "colorationOK": "Cette demande concerne une coloration de places. La formation est bien présente dans le constat de rentrée mais nous ne pouvons pas vérifier les places colorées réellement occupées",
     "fermeture": "Cette demande concerne une fermeture mais nous avons trouvé des effectifs en entrée",
     "fermetureOK": "Cette demande concerne une fermeture. Nous n’avons pas trouvé d’effectifs en entrée",
-    "horsFermetureKO": "Cette demande n’a pas pu être rapprochée du constat de rentrée, veuillez vérifier l'UAI et/ou le CFD et apporter les corrections nécessaires pour que le rapprochement s’opère",
+    "horsFermetureKO": "Cette demande n’a pas pu être rapprochée du constat de rentrée, veuillez vérifier l'UAI et/ou le Code Diplôme et apporter les corrections nécessaires pour que le rapprochement s’opère",
     "horsFermetureOK": "La formation de cet établissement est bien présente dans le constat de rentrée"
   };
 
