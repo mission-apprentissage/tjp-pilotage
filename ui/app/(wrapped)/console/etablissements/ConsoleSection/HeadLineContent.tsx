@@ -340,7 +340,6 @@ export const HeadLineContent = ({
               getCellBgColor={getCellBgColor}
               colonne="previsionnel"
             >
-              <OrderIcon {...order} column="previsionnel" />
               {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.previsionnel}
             </ConditionalTh>
           </>

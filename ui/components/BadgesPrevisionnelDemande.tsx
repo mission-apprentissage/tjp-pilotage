@@ -1,6 +1,8 @@
 import type { FlexProps } from "@chakra-ui/react";
 import { chakra, Flex, Highlight, Tag, Text,Tooltip } from "@chakra-ui/react";
 import type { ReactElement } from "react";
+import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
+import { isTypeTransfert } from "shared/utils/typeDemandeUtils";
 
 
 const getPrevisionnelArray = (
@@ -11,69 +13,32 @@ const getPrevisionnelArray = (
     differenceCapaciteScolaireArray: number[];
     differenceCapaciteApprentissageArray: number[];
   }): Array<ReactElement> => {
+
   return differenceCapaciteScolaireArray.map((differenceCapaciteScolaire, index) => {
     const differenceCapaciteApprentissage = differenceCapaciteApprentissageArray[index];
-    if (differenceCapaciteScolaire > 0 && differenceCapaciteApprentissage > 0) {
+
+    const formattedDiffScolaire = differenceCapaciteScolaire >= 0 ? `+${differenceCapaciteScolaire}` : differenceCapaciteScolaire;
+    const formattedDiffApprentissage = differenceCapaciteApprentissage >= 0 ? `+${differenceCapaciteApprentissage}` : differenceCapaciteApprentissage;
+
+    if (differenceCapaciteScolaire !== 0 && differenceCapaciteApprentissage !== 0) {
       return (
         <Flex direction={"row"} gap={2} key={index}>
-          <Tag bgColor="grey.975" px={4}>+{differenceCapaciteScolaire}</Tag>
-          <Tag bgColor="grey.975" px={2}>Scolaire</Tag>
-          <Tag bgColor="grey.975" color={"bluefrance.925_hover"} px={4}>+{differenceCapaciteApprentissage}</Tag>
-          <Tag bgColor="grey.975" color={"bluefrance.925_hover"} px={2}>Apprentissage</Tag>
+          <Tag bgColor="grey.975" px={4} borderRadius={"9999px"} whiteSpace="nowrap">{formattedDiffScolaire} Sco.</Tag>
+          <Tag bgColor="grey.975" color={"bluefrance.925_hover"} px={4} borderRadius={"9999px"} whiteSpace="nowrap">{formattedDiffApprentissage} App.</Tag>
         </Flex>
       );
     }
-    if (differenceCapaciteScolaire < 0 && differenceCapaciteApprentissage < 0) {
+    if (differenceCapaciteScolaire !== 0 && differenceCapaciteApprentissage === 0) {
       return (
         <Flex direction={"row"} gap={2} key={index}>
-          <Tag bgColor="grey.975" px={4}>{differenceCapaciteScolaire}</Tag>
-          <Tag bgColor="grey.975" px={2}>Scolaire</Tag>
-          <Tag bgColor="grey.975" color={"bluefrance.925_hover"} px={4}>{differenceCapaciteApprentissage}</Tag>
-          <Tag bgColor="grey.975" color={"bluefrance.925_hover"} px={2}>Apprentissage</Tag>
+          <Tag bgColor="grey.975" px={4} borderRadius={"9999px"} whiteSpace="nowrap">{formattedDiffScolaire} Sco.</Tag>
         </Flex>
       );
     }
-    if (differenceCapaciteScolaire > 0 && differenceCapaciteApprentissage < 0) {
+    if (differenceCapaciteScolaire === 0 && differenceCapaciteApprentissage !== 0) {
       return (
         <Flex direction={"row"} gap={2} key={index}>
-          <Tag bgColor={"grey.975"} borderRadius={"9999px"} px={4}>
-            <Text>{differenceCapaciteScolaire} {`>`} </Text>
-            <Text color={"bluefrance.925_hover"}>{differenceCapaciteApprentissage}</Text>
-          </Tag>
-          <Tag bgColor={"grey.975"} borderRadius={"9999px"} px={2}>
-            <Text>Sco. {`>`} </Text>
-            <Text color={"bluefrance.925_hover"}>App.</Text>
-          </Tag>
-        </Flex>
-      );
-    }
-    if (differenceCapaciteScolaire < 0 && differenceCapaciteApprentissage > 0) {
-      return (
-        <Flex direction={"row"} gap={2} key={index}>
-          <Tag bgColor={"grey.975"} borderRadius={"9999px"} px={4}>
-            <Text color={"bluefrance.925_hover"}>+{differenceCapaciteApprentissage} {`>`} </Text>
-            <Text>{differenceCapaciteScolaire}</Text>
-          </Tag>
-          <Tag bgColor={"grey.975"} borderRadius={"9999px"} px={2}>
-            <Text color={"bluefrance.925_hover"}>App. {`>`} </Text>
-            <Text>Sco.</Text>
-          </Tag>
-        </Flex>
-      );
-    }
-    if (differenceCapaciteScolaire === 0 && differenceCapaciteApprentissageArray[index] !== 0) {
-      return (
-        <Flex direction={"row"} gap={2} key={index}>
-          <Tag bgColor="grey.975" borderRadius={"9999px"} color={"bluefrance.925_hover"} px={4}>{differenceCapaciteApprentissage > 0 ? "+":""}{differenceCapaciteApprentissage}</Tag>
-          <Tag bgColor="grey.975" borderRadius={"9999px"} color={"bluefrance.925_hover"} px={2}>Apprentissage</Tag>
-        </Flex>
-      );
-    }
-    if (differenceCapaciteScolaire !== 0 && differenceCapaciteApprentissageArray[index] === 0) {
-      return (
-        <Flex direction={"row"} gap={2} key={index}>
-          <Tag bgColor="grey.975" borderRadius={"9999px"} px={4}>{differenceCapaciteScolaire > 0 ? "+":""}{differenceCapaciteScolaire}</Tag>
-          <Tag bgColor={"grey.975"} borderRadius={"9999px"} px={2}>Scolaire</Tag>
+          <Tag bgColor="grey.975" px={4} borderRadius={"9999px"} whiteSpace="nowrap">{formattedDiffApprentissage} App.</Tag>
         </Flex>
       );
     }
@@ -103,18 +68,21 @@ export const getTooltipText = (
 
 
 export const BadgesPrevisionnelDemande = chakra(({
+  typeDemande,
   differenceCapaciteScolaire,
   differenceCapaciteApprentissage,
   ...props
 }: {
+  typeDemande?: string;
   differenceCapaciteScolaire?: string;
   differenceCapaciteApprentissage?: string;
   props?: FlexProps;
 }) => {
-  if (!differenceCapaciteScolaire || !differenceCapaciteApprentissage) return null;
+  if (!differenceCapaciteScolaire || !differenceCapaciteApprentissage || !typeDemande) return null;
 
   const differenceCapaciteScolaireArray = differenceCapaciteScolaire.split(", ").map(item => parseInt(item));
   const differenceCapaciteApprentissageArray = differenceCapaciteApprentissage.split(", ").map(item => parseInt(item));
+  const typeDemandeArray = typeDemande.split(", ") as Array<TypeDemandeType>;
   const previsionnelArray = getPrevisionnelArray({
     differenceCapaciteScolaireArray, differenceCapaciteApprentissageArray
   });
@@ -136,7 +104,16 @@ export const BadgesPrevisionnelDemande = chakra(({
                 </Text>
               </Flex>
             }>
-              {previsionnelArray[index]}
+              <Flex direction={"row"} gap={2}>
+                {previsionnelArray[index]}
+                {typeDemandeArray[index] && isTypeTransfert(typeDemandeArray[index]) && (
+                  <Tag bgColor="grey.975" borderRadius={"9999px"} whiteSpace="nowrap">
+                    <Highlight query={[" App."]} styles={{ fontWeight: 700, color: "bluefrance.925_hover" }}>
+                      Sco. &gt;&nbsp; App.
+                    </Highlight>
+                  </Tag>
+                )}
+              </Flex>
             </Tooltip>
           </Flex>
         )
