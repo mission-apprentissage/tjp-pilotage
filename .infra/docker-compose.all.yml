@@ -67,18 +67,15 @@ services:
         tag: docker.txt.{{product_name}}.{{env_name}}.ui
         fluentd-async: "true"
 
-  reverse_proxy_documentation:
+  documentation:
     <<: *default
     deploy:
       <<: *deploy-default
     image: nginx:alpine
     volumes:
-      - ./documentation:/usr/share/nginx/html
+      - /opt/app/data/documentation:/usr/share/nginx/html/documentation
     environment:
       - NGINX_HOST=localhost
       - NGINX_PORT=80
-    expose:
-      - "80"
     ports:
-      - "8080:80"
-
+      - "1472:80"

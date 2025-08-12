@@ -39,7 +39,7 @@ services:
     volumes:
       - pilotage_smtp_data:/data
   
-  reverse_proxy_documentation:
+  documentation:
     image: nginx:alpine
     volumes:
       - ./documentation:/usr/share/nginx/html
