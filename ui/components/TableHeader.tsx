@@ -62,8 +62,6 @@ export const TableHeader = chakra(
           <Flex ms={"auto"}>
             {ColonneFilter}
           </Flex>
-
-
         </Flex>
       </Flex>
     );
