@@ -73,6 +73,10 @@ const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS
   "numero",
   "dateEffetTransformation",
   "typeDemande",
+  "effectif1",
+  "effectif2",
+  "effectif3",
+  "effectifEntree",
   "tauxPression",
   "tauxRemplissage",
   "tauxInsertion",
@@ -615,10 +619,12 @@ const Page = () => {
                 user={user}
                 ms={"auto"}
               />
-              <TabsSection
-                displayType={searchParams.displayType ?? DisplayTypeEnum.global}
-                setDisplayType={setDisplayType}
-              />
+              {feature.donneesTransfoConsole && user && (
+                <TabsSection
+                  displayType={searchParams.displayType ?? DisplayTypeEnum.global}
+                  setDisplayType={setDisplayType}
+                />
+              )}
             </Flex>
           </Flex>
           {isLoading && (
