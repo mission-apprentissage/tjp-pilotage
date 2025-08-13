@@ -43,7 +43,7 @@ export const getLeftOffset = ({
     .forEach((stickyColonne) => {
       if (
         Object.keys(COLUMNS_WIDTH).indexOf(colonne) >
-      Object.keys(COLUMNS_WIDTH).indexOf(stickyColonne)
+        Object.keys(COLUMNS_WIDTH).indexOf(stickyColonne)
       ) leftValue += COLUMNS_WIDTH[stickyColonne as keyof typeof COLUMNS_WIDTH] || 0;
     });
   return leftValue;

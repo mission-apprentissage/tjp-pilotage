@@ -103,8 +103,8 @@ const ConditionalTh = chakra(
                 aria-label={`Figer la colonne ${FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne].toLocaleLowerCase()}`}
                 icon={
                   isSticky ?
-                    <Icon icon={"ri:lock-unlock-line"} /> :
-                    <Icon icon={"ri:lock-line"} />
+                    <Icon icon={"ri:lock-line"} /> :
+                    <Icon icon={"ri:lock-unlock-line"} />
                 }
                 ms={"auto"}
                 size="xs"

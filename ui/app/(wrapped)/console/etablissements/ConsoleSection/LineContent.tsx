@@ -6,7 +6,7 @@ import { CURRENT_IJ_MILLESIME } from "shared";
 import type { UserType } from "shared/schema/userSchema";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
-import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Line } from "@/app/(wrapped)/console/etablissements/types";
+import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS, Line } from "@/app/(wrapped)/console/etablissements/types";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
@@ -17,11 +17,11 @@ import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
-import { formatCodeDepartement,formatFamilleMetierLibelle , formatMillesime} from "@/utils/formatLibelle";
+import { formatCodeDepartement, formatFamilleMetierLibelle, formatMillesime} from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
-import { getTauxDemandeStyle,getTauxPressionStyle } from "@/utils/getBgScale";
+import { getTauxDemandeStyle, getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { getLeftOffset, isColonneSticky,isColonneVisible   } from "./utils";
+import { getLeftOffset, isColonneSticky, isColonneVisible } from "./utils";
 
 
 const ConditionalTd = chakra(
