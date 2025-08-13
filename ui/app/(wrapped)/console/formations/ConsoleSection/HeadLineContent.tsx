@@ -18,7 +18,7 @@ import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_
 import type { Filters, FORMATION_COLUMNS_KEYS, Order } from "@/app/(wrapped)/console/formations/types";
 import { OrderIcon } from "@/components/OrderIcon";
 
-import { CHEVRON_COLUMN_WIDTH , COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
+import { CHEVRON_COLUMN_WIDTH, COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
 import { getLeftOffset, isColonneSticky } from "./utils";
 
 const ConditionalTh = chakra(
@@ -113,7 +113,7 @@ const ConditionalTh = chakra(
                     return ([...prev, colonne] as FORMATION_COLUMNS_KEYS[]).sort((a, b) =>
                       (
                         Object.keys(COLUMNS_WIDTH).indexOf(a) -
-                                      Object.keys(COLUMNS_WIDTH).indexOf(b)
+                        Object.keys(COLUMNS_WIDTH).indexOf(b)
                       )
                     );
                   });
