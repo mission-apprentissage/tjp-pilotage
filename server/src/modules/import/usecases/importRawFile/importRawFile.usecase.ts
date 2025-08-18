@@ -1,6 +1,7 @@
 import { pipeline, Writable } from "node:stream";
 
 import fs from "fs";
+import type z from "zod";
 import { ZodError, ZodIssueCode } from "zod";
 
 import batchCreate from "@/modules/import/utils/batchCreate";
@@ -50,7 +51,7 @@ export const [importRawFile, importRawFileFactory] = inject(
     deleteRawData,
   },
   (deps) =>
-    async ({ type, path, schema }: { type: string; path: string; schema: Zod.Schema<unknown> }) => {
+    async ({ type, path, schema }: { type: string; path: string; schema: z.Schema<unknown> }) => {
       const errors: Array<ImportFileError> = [];
 
       try {
