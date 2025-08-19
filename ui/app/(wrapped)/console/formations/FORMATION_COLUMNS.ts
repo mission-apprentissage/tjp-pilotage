@@ -36,6 +36,8 @@ export const FORMATION_COLUMNS = {
   // Indicateurs
   tauxPression: "Tx de pression",
   evolutionTauxPression: "Évolution du taux de pression",
+  tauxDemande: "Tx de demande",
+  evolutionTauxDemande: "Évolution du taux de demande",
   tauxRemplissage: "Tx de remplissage",
   evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
@@ -50,6 +52,7 @@ export const FORMATION_COLUMNS = {
   actionPrioritaire: string;
   evolutionEffectif: string;
   evolutionTauxPression: string;
+  evolutionTauxDemande: string;
   evolutionTauxRemplissage: string;
   evolutionTauxInsertion: string;
   evolutionTauxPoursuite: string;
@@ -80,6 +83,8 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   // Indicateurs
   tauxPression: "Tx de pression",
   evolutionTauxPression: "Évolution du taux de pression",
+  tauxDemande: "Tx de demande",
+  evolutionTauxDemande: "Évolution du taux de demande",
   tauxRemplissage: "Tx de remplissage",
   evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: "Position dans le quadrant",
@@ -106,6 +111,8 @@ export const FORMATION_COLUMNS_DEFAULT = {
   // Indicateurs
   tauxPression: "Tx de pression",
   evolutionTauxPression: "Évolution du taux de pression",
+  tauxDemande: "Tx de demande",
+  evolutionTauxDemande: "Évolution du taux de demande",
   tauxRemplissage: "Tx de remplissage",
   evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: "Position dans le quadrant",

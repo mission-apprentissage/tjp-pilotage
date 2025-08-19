@@ -18,7 +18,8 @@ import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
 import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistantIndicateurEntree } from "@/modules/data/utils/notHistorique";
 import { openForRentreeScolaireIndicateurEntree } from "@/modules/data/utils/openForRentreeScolaire";
-import {selectTauxDevenirFavorableAgg,withTauxDevenirFavorableReg} from '@/modules/data/utils/tauxDevenirFavorable';
+import { selectTauxDemandeAgg } from "@/modules/data/utils/tauxDemande";
+import {selectTauxDevenirFavorableAgg, withTauxDevenirFavorableReg} from '@/modules/data/utils/tauxDevenirFavorable';
 import { selectTauxInsertion6moisAgg, withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg, withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
@@ -51,7 +52,7 @@ export const getFormationsQuery = async ({
   orderBy,
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
-  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: rentreeScolaire[0], offset: 0 });
+  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: CURRENT_RENTREE });
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
@@ -140,10 +141,10 @@ export const getFormationsQuery = async ({
       "formationView.cpcSecteur",
       "nsf.libelleNsf",
       "familleMetier.libelleFamille",
-      "dispositif.libelleDispositif",
+      sql<string>`COALESCE("dispositif"."libelleDispositif","niveauDiplome"."libelleNiveauDiplome" || ' SANS DISPOSITIF')`.as("libelleDispositif"),
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
-      "indicateurEntree.rentreeScolaire",
+      sql<string>`COALESCE("indicateurEntree"."rentreeScolaire",${CURRENT_RENTREE})`.as("rentreeScolaire"),
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
@@ -175,6 +176,7 @@ export const getFormationsQuery = async ({
         annee: sql`'2'`,
       })})`.as("capacite3"),
       selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
+      selectTauxDemandeAgg("indicateurEntree", "formationView").as("tauxDemande"),
       hasContinuum({
         eb,
         millesimeSortie,
@@ -247,6 +249,7 @@ export const getFormationsQuery = async ({
           .select([
             "indicateurEntree.rentreeScolaire",
             selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
+            selectTauxDemandeAgg("indicateurEntree", "formationView").as("tauxDemande"),
             selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
           ])
           .$narrowType<{

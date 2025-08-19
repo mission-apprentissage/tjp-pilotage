@@ -55,9 +55,9 @@ describe("[GET]/region/:codeRegion", () => {
     fixture.then.verifierEffectifTotal(46);
     fixture.then.verifierEffectifEntree(46);
     fixture.then.verifierTauxRemplissage(undefined);
-    fixture.then.verifierTauxPoursuite(undefined);
-    fixture.then.verifierTauxInsertion(undefined);
-    fixture.then.verifierTauxDevenirFavorable(undefined);
+    fixture.then.verifierTauxPoursuite(0.2553);
+    fixture.then.verifierTauxInsertion(0.6571);
+    fixture.then.verifierTauxDevenirFavorable(0.7447);
   });
 });
 

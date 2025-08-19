@@ -23,7 +23,7 @@ import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
 import { formatCodeDepartement,formatFamilleMetierLibelle , formatMillesime} from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
-import { getTauxPressionStyle } from "@/utils/getBgScale";
+import { getTauxDemandeStyle,getTauxPressionStyle } from "@/utils/getBgScale";
 
 const ConditionalTd = chakra(
   ({
@@ -300,7 +300,7 @@ export const EtablissementLineContent = ({
             typeDemande={line.typeDemande}
             numero={line.numero}
             dateEffetTransformation={line.dateEffetTransformation}
-            rentreeScolaire={line.rentreeScolaire}
+            anneeCampagne={line.anneeCampagne}
           />
         </ConditionalTd>
       </>
@@ -342,6 +342,25 @@ export const EtablissementLineContent = ({
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPression}
         data={getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, taux: "tauxPression"})}
+        isPercentage={false}
+      />
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="tauxDemande"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <TableBadge sx={
+        getTauxDemandeStyle(line.tauxDemande !== undefined ? formatNumber(line.tauxDemande, 2) : undefined)
+      }>
+        {formatNumberToString(line.tauxDemande, 2, "-")}
+      </TableBadge>
+    </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxDemande"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxDemande}
+        data={getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, taux: "tauxDemande"})}
         isPercentage={false}
       />
     </ConditionalTd>

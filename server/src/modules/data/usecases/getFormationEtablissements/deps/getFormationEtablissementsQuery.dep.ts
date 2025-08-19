@@ -19,6 +19,7 @@ import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
 import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
 import { premiersVoeuxAnnee } from "@/modules/data/utils/premiersVoeuxAnnee";
+import { selectTauxDemande, selectTauxDemandeAgg } from "@/modules/data/utils/tauxDemande";
 import { selectTauxDevenirFavorableAgg, withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois, selectTauxInsertion6moisAgg,withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite, selectTauxPoursuiteAgg,withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
@@ -29,6 +30,7 @@ import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionP
 import { isFormationRenovee } from "@/modules/utils/isFormationRenovee";
 import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
+
 
 export const getFormationEtablissementsQuery = async ({
   offset = 0,
@@ -56,7 +58,7 @@ export const getFormationEtablissementsQuery = async ({
   user
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
-  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: rentreeScolaire[0], offset: 0 });
+  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: rentreeScolaire[0] });
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
@@ -223,6 +225,7 @@ export const getFormationEtablissementsQuery = async ({
       capaciteAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as("capacite3"),
       premiersVoeuxAnnee({ alias: "indicateurEntree" }).as("premiersVoeux"),
       selectTauxPression("indicateurEntree", "formationView", false).as("tauxPression"),
+      selectTauxDemande("indicateurEntree", "formationView").as("tauxDemande"),
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
       selectTauxInsertion6mois("indicateurSortie").as("tauxInsertionEtablissement"),
       selectTauxDevenirFavorableAgg("indicateurSortie").as("tauxDevenirFavorableEtablissement"),
@@ -318,6 +321,7 @@ export const getFormationEtablissementsQuery = async ({
           .select([
             "indicateurEntree.rentreeScolaire",
             selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
+            selectTauxDemandeAgg("indicateurEntree", "formationView").as("tauxDemande"),
             selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
           ])
           .$narrowType<{

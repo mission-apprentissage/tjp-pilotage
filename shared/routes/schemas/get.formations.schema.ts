@@ -25,6 +25,7 @@ export const FormationLineSchema = z.object({
   effectif3: z.coerce.number().optional(),
   tauxRemplissage: z.coerce.number().optional(),
   tauxPression: z.coerce.number().optional(),
+  tauxDemande: z.coerce.number().optional(),
   tauxInsertion: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
   tauxDevenirFavorable: z.coerce.number().optional(),

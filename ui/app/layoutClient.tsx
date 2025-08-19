@@ -35,7 +35,7 @@ interface RootLayoutClientProps {
 const useCrisp = () => {
   useEffect(() => {
     const token = publicConfig.crisp.token;
-    if (publicConfig.env == "productionij" && token) {
+    if (publicConfig.env == "production" && token && !publicConfig.host.includes("education.gouv.fr")) {
       Crisp.configure(token);
     } else {
       console.log("Crisp disabled");
