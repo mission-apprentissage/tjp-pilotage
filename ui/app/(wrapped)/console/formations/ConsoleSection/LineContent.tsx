@@ -1,7 +1,8 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { CURRENT_IJ_MILLESIME } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Formation  } from "@/app/(wrapped)/console/formations/types";
@@ -259,7 +260,11 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxInsertion} millesime={CURRENT_IJ_MILLESIME} />
+      <GraphWrapper
+        continuum={formation.continuum}
+        value={formation.tauxInsertion}
+        millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
+      />
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxPoursuite"}
@@ -267,10 +272,19 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxPoursuite} millesime={CURRENT_IJ_MILLESIME} />
+      <GraphWrapper
+        continuum={formation.continuum}
+        value={formation.tauxPoursuite}
+        millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
+      />
     </ConditionalTd>
     <ConditionalTd colonne={"tauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} my="auto" />
+      <GraphWrapper
+        continuum={formation.continuum}
+        value={formation.tauxDevenirFavorable}
+        millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
+        my="auto"
+      />
     </ConditionalTd>
   </>
 );
