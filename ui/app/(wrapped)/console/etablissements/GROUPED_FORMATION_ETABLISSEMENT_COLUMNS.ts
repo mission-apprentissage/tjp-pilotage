@@ -85,6 +85,8 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
     options: {
       tauxPression: "Taux de pression",
       evolutionTauxPression: "Évolution du taux de pression",
+      tauxDemande: "Taux de demande",
+      evolutionTauxDemande: "Évolution du taux de demande",
       tauxRemplissage: "Taux de remplissage",
       evolutionTauxRemplissage: "Évolution du taux de remplissage",
       positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
@@ -178,6 +180,8 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
     options: {
       tauxPression: "Taux de pression",
       evolutionTauxPression: "Évolution du taux de pression",
+      tauxDemande: "Taux de demande",
+      evolutionTauxDemande: "Évolution du taux de demande",
       tauxRemplissage: "Taux de remplissage",
       evolutionTauxRemplissage: "Évolution du taux de remplissage",
       positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
@@ -259,6 +263,8 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
     options: {
       tauxPression: "Taux de pression",
       evolutionTauxPression: "Évolution du taux de pression",
+      tauxDemande: "Taux de demande",
+      evolutionTauxDemande: "Évolution du taux de demande",
       tauxRemplissage: "Taux de remplissage",
       evolutionTauxRemplissage: "Évolution du taux de remplissage",
       positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,

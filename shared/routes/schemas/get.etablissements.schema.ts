@@ -36,6 +36,7 @@ const FormationEtablissementLineSchema = z.object({
   effectif2: z.coerce.number().optional(),
   effectif3: z.coerce.number().optional(),
   tauxPression: z.coerce.number().optional(),
+  tauxDemande: z.coerce.number().optional(),
   tauxRemplissage: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
   tauxInsertion: z.coerce.number().optional(),
@@ -96,6 +97,7 @@ const FormationEtablissementLineSchema = z.object({
   dateEffetTransformation: z.string().optional(),
   differenceCapaciteApprentissage: z.string().optional(),
   differenceCapaciteScolaire: z.string().optional(),
+  anneeCampagne: z.string().optional()
 });
 
 const FiltersSchema = z.object({

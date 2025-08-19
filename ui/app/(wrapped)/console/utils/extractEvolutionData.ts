@@ -46,10 +46,11 @@ export const getEvolutionTauxEntreeData = ({
   taux,
   evolutions
 }: {
-  taux: "tauxPression" | "tauxRemplissage";
+  taux: "tauxPression" | "tauxDemande" | "tauxRemplissage";
   evolutions?: Array<{
     rentreeScolaire: string;
     tauxPression?: number;
+    tauxDemande?: number;
     tauxRemplissage?: number;
   }>
 }) => {

@@ -1,7 +1,8 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { CURRENT_IJ_MILLESIME } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters , Formation  } from "@/app/(wrapped)/console/formations/types";
@@ -16,7 +17,7 @@ import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { formatFamilleMetierLibelle, formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
-import { getTauxPressionStyle } from "@/utils/getBgScale";
+import { getTauxDemandeStyle,getTauxPressionStyle } from "@/utils/getBgScale";
 
 
 const ConditionalTd = chakra(
@@ -234,6 +235,25 @@ export const FormationLineContent = ({
       />
     </ConditionalTd>
     <ConditionalTd
+      colonne={"tauxDemande"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      textAlign={"center"}
+    >
+      <TableBadge sx={
+        getTauxDemandeStyle(formation.tauxDemande !== undefined ? formatNumber(formation.tauxDemande, 2) : undefined)
+      }>
+        {formatNumberToString(formation.tauxDemande, 2, "-")}
+      </TableBadge>
+    </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxDemande"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_COLUMNS.evolutionTauxDemande}
+        data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxDemande"})}
+        isPercentage={false}
+      />
+    </ConditionalTd>
+    <ConditionalTd
       colonne={"tauxRemplissage"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
@@ -279,7 +299,11 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxInsertion} millesime={CURRENT_IJ_MILLESIME} />
+      <GraphWrapper
+        continuum={formation.continuum}
+        value={formation.tauxInsertion}
+        millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
+      />
     </ConditionalTd>
     <ConditionalTd colonne={"evolutionTauxInsertion"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
       <GraphEvolution
@@ -294,7 +318,11 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxPoursuite} millesime={CURRENT_IJ_MILLESIME} />
+      <GraphWrapper
+        continuum={formation.continuum}
+        value={formation.tauxPoursuite}
+        millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
+      />
     </ConditionalTd>
     <ConditionalTd colonne={"evolutionTauxPoursuite"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
       <GraphEvolution
