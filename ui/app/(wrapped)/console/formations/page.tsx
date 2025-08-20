@@ -358,7 +358,7 @@ const Page = () => {
           filtersList={data?.filters}
         />
         <Flex direction="column" flex={1} position="relative" minW="0">
-          <Flex direction="column" position="sticky" top={0} zIndex={"docked"} bgColor={"white"} boxShadow={"0px 1px 4px 0px #00000026"}>
+          <Flex direction="column" bgColor={"white"}>
             <TableHeader
               p={4}
               pt={0}

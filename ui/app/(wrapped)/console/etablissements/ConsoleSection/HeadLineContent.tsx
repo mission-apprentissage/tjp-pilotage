@@ -174,7 +174,7 @@ export const HeadLineContent = ({
   };
 
   return (
-    <Thead boxShadow="0 0 6px 0 rgb(0,0,0,0.15)">
+    <Thead boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" top={0} position={"sticky"} zIndex={"docked"}>
       <Tr bg={"white"}>
         <Th
           boxShadow={{
