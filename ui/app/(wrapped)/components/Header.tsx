@@ -30,7 +30,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const queryClient = useQueryClient();
   const segments = useSelectedLayoutSegments();
   const shouldUseStickyHeader =
-    segments.length != 0 && !segments.some((segment) => NON_STICKY_HEADER_SEGMENTS.includes(segment));
+    segments.length === 0 || (segments.length !== 0 && !segments.some((segment) => NON_STICKY_HEADER_SEGMENTS.includes(segment)));
 
   const {
     isOpen: isMenuDeconnexionOpen,
@@ -127,7 +127,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
           backgroundColor="white"
           position={shouldUseStickyHeader ? "sticky" : undefined}
           top={shouldUseStickyHeader ? 0 : undefined}
-          zIndex={shouldUseStickyHeader ? 100 : 0}
+          zIndex={"docked"}
         >
           <Container maxWidth={"container.xl"} px={0}>
             <Nav />
