@@ -108,9 +108,9 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
             campagne,
             user
           },
-          "[SUBMIT_INTENTION] Demande soumise sur un établissement non autorisée"
+          "[SUBMIT_INTENTION] Demande soumise sur un établissement non autorisé"
         );
-        throw Boom.forbidden("Demande soumise sur un établissement non autorisée");
+        throw Boom.forbidden("Demande soumise sur un établissement non autorisé");
       }
 
       const sameDemande = await deps.findOneSimilarDemandeQuery({
