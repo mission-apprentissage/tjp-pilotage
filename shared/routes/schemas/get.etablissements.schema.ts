@@ -64,6 +64,7 @@ const FormationEtablissementLineSchema = z.object({
   evolutionTauxEntree: z.array(
     z.object({
       rentreeScolaire: z.string(),
+      tauxDemande: z.coerce.number().optional(),
       tauxPression: z.coerce.number().optional(),
       tauxRemplissage: z.coerce.number().optional(),
     })

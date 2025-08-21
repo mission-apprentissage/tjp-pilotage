@@ -6,7 +6,7 @@ import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { parse } from "qs";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect,useState } from "react";
 import { CURRENT_RENTREE } from 'shared';
 import type { TypeDemandeType } from 'shared/enum/demandeTypeEnum';
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
@@ -53,8 +53,11 @@ const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEY
   "rentreeScolaire",
   "libelleEtablissement",
   "libelleFormation",
+  "evolutionEffectif",
   "tauxPression",
   "evolutionTauxPression",
+  "tauxDemande",
+  "evolutionTauxDemande",
   "tauxRemplissage",
   "evolutionTauxRemplissage",
   "positionQuadrant",
@@ -560,7 +563,7 @@ const Page = () => {
   }, [filters.rentreeScolaire]);
 
   return (
-    <Flex direction="column" overflowY="auto" bgColor={"bluefrance.975"}>
+    <>
       <HeaderSection
         setSearchParams={setSearchParams}
         searchParams={searchParams}
@@ -570,17 +573,18 @@ const Page = () => {
         requeteEnregistreeActuelle={requeteEnregistreeActuelle}
         setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
-      <Flex direction={"row"} flex={1} position="relative" minH="0">
+      <Flex direction={"row"} flex={1} position="relative" minH="100%" minW={0} bgColor={"bluefrance.975"}>
         <SideSection
           searchParams={searchParams}
           filtersList={data?.filters}
           handleFilters={handleFilters}
           user={user}
         />
-        <Flex direction="column" flex={1} position="relative" minW={0}>
-          <Flex direction={"column"} bgColor={"white"}>
+        <Flex direction="column" flex={1} position="relative" minW="0">
+          <Flex direction="column" bgColor={"white"} boxShadow={"0px 1px 4px 0px #00000026"}>
             <TableHeader
               p={4}
+              pt={0}
               SaveFiltersButton={
                 <Flex py="2">
                   <Button
@@ -606,7 +610,7 @@ const Page = () => {
                   }}
                   value={searchFormationEtablissement}
                   onClick={onSearch}
-                  width={{ base: "15rem", ["2xl"]: "25rem" }}
+                  width={{ base: "25rem", ["2xl"]: "35rem" }}
                 />
               }
               onExportCsv={onExportCsv}
@@ -657,7 +661,7 @@ const Page = () => {
           page="formationEtablissement"
         />
       )}
-    </Flex>
+    </>
   );
 };
 

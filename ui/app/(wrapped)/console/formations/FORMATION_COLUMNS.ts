@@ -104,22 +104,15 @@ export const FORMATION_COLUMNS_DEFAULT = {
   libelleFormation: "Formation",
   // Effectifs
   nbEtablissement: "Nb Étab",
-  evolutionEffectif: "Évolution des effectifs",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
   // Indicateurs
   tauxPression: "Tx de pression",
-  evolutionTauxPression: "Évolution du taux de pression",
   tauxDemande: "Tx de demande",
-  evolutionTauxDemande: "Évolution du taux de demande",
   tauxRemplissage: "Tx de remplissage",
-  evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: "Position dans le quadrant",
   tauxInsertion: "Tx d'emploi 6 mois régional",
-  evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
-  evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-  evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
 } satisfies Partial<typeof FORMATION_COLUMNS_OPTIONAL>;

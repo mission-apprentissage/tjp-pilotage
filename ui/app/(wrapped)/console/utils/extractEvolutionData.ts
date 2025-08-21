@@ -1,6 +1,16 @@
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from 'shared';
+import { getMillesime } from 'shared/utils/getMillesime';
+
 import { formatMillesime } from '@/utils/formatLibelle';
 import { formatNumber } from '@/utils/formatUtils';
 
+export const getEvolutionEffectifKeys = () => {
+  return [
+    "Effectif 1",
+    "Effectif 2",
+    "Effectif 3"
+  ];
+};
 
 export const getEvolutionEffectifData = ({
   effectif1,
@@ -16,6 +26,14 @@ export const getEvolutionEffectifData = ({
     "Effectif 2": effectif2,
     "Effectif 3": effectif3,
   };
+};
+
+export const getEvolutionTauxSortieKeys = () => {
+  return [
+    formatMillesime(getMillesime({millesimeSortie: CURRENT_IJ_MILLESIME, offset: -2})),
+    formatMillesime(getMillesime({millesimeSortie: CURRENT_IJ_MILLESIME, offset: -1})),
+    formatMillesime(getMillesime({millesimeSortie: CURRENT_IJ_MILLESIME, offset: 0})),
+  ];
 };
 
 export const getEvolutionTauxSortieData = ({
@@ -40,6 +58,14 @@ export const getEvolutionTauxSortieData = ({
     }
     return acc;
   }, {} as Record<string, number>);
+};
+
+export const getEvolutionTauxEntreeKeys = () => {
+  return [
+    `${parseInt(CURRENT_RENTREE) - 2}`,
+    `${parseInt(CURRENT_RENTREE) - 1}`,
+    `${CURRENT_RENTREE}`,
+  ];
 };
 
 export const getEvolutionTauxEntreeData = ({

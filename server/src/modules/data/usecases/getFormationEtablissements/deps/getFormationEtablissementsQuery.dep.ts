@@ -20,7 +20,7 @@ import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
 import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
 import { premiersVoeuxAnnee } from "@/modules/data/utils/premiersVoeuxAnnee";
 import { selectTauxDemande, selectTauxDemandeAgg } from "@/modules/data/utils/tauxDemande";
-import { selectTauxDevenirFavorableAgg, withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
+import { selectTauxDevenirFavorable, selectTauxDevenirFavorableAgg, withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois, selectTauxInsertion6moisAgg,withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite, selectTauxPoursuiteAgg,withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPression, selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
@@ -228,7 +228,7 @@ export const getFormationEtablissementsQuery = async ({
       selectTauxDemande("indicateurEntree", "formationView").as("tauxDemande"),
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
       selectTauxInsertion6mois("indicateurSortie").as("tauxInsertionEtablissement"),
-      selectTauxDevenirFavorableAgg("indicateurSortie").as("tauxDevenirFavorableEtablissement"),
+      selectTauxDevenirFavorable("indicateurSortie").as("tauxDevenirFavorableEtablissement"),
       isHistoriqueCoExistant(eb, rentreeScolaire[0]).as("isHistoriqueCoExistant"),
       eb
         .case()
