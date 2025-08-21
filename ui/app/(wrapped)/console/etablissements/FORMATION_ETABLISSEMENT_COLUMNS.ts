@@ -7,11 +7,8 @@ import { formatMillesime } from "@/utils/formatLibelle";
 export const FORMATION_ETABLISSEMENT_COLUMNS = {
   // Rentrée scolaire
   rentreeScolaire: "RS",
-  // Formation établissement
-  libelleEtablissement: "Nom d'établissement",
-  libelleDispositif: "Dispositif",
-  libelleFormation: "Formation",
   // Établissement
+  libelleEtablissement: "Nom d'établissement",
   commune: "Commune",
   codeDepartement: "Code Département",
   libelleDepartement: "Département",
@@ -22,6 +19,8 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   secteur: "Secteur",
   uai: "UAI",
   // Formation
+  libelleDispositif: "Dispositif",
+  libelleFormation: "Formation",
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
@@ -86,12 +85,8 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   // Rentrée scolaire
   rentreeScolaire: "RS",
-  // Formation établissement
-  libelleEtablissement: "Nom d'établissement",
-  libelleDispositif: "Dispositif",
-  libelleFormation: "Formation",
-  formationSpecifique: "Formation spécifique",
   // Établissement
+  libelleEtablissement: "Nom d'établissement",
   commune: "Commune",
   libelleDepartement: "Département",
   libelleAcademie: "Académie",
@@ -99,6 +94,9 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   secteur: "Secteur",
   uai: "UAI",
   // Formation
+  libelleDispositif: "Dispositif",
+  libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cpc: "CPC",
@@ -139,14 +137,13 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
 export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   // Rentrée scolaire
   rentreeScolaire: "RS",
-  // Formation établissement
-  libelleEtablissement: "Nom d'établissement",
-  libelleDispositif: "Dispositif",
-  libelleFormation: "Formation",
   // Établissement
   commune: "Commune",
+  libelleEtablissement: "Nom d'établissement",
+  // Formation
+  libelleDispositif: "Dispositif",
+  libelleFormation: "Formation",
   // Effectifs
-  evolutionEffectif: "Évolution des effectifs",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
@@ -154,24 +151,15 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   premiersVoeux: "Nb de voeux",
   // Indicateurs
   tauxPression: "Tx de pression",
-  evolutionTauxPression: "Évolution du taux de pression",
   tauxDemande: "Tx de demande",
-  evolutionTauxDemande: "Évolution du taux de demande",
   tauxRemplissage: "Tx de remplissage",
-  evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxDevenirFavorable: `Tx de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
-  evolutionTauxDevenirFavorable: `Évolution du taux de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxInsertion: `Tx d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
-  evolutionTauxInsertion: `Évolution du taux d'emploi à 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxPoursuite: `Tx de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
-  evolutionTauxPoursuite: `Évolution du taux de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxDevenirFavorableEtablissement: `Tx de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
-  evolutionTauxDevenirFavorableEtablissement: `Évolution du taux de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxInsertionEtablissement: `Tx d'emploi 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
-  evolutionTauxInsertionEtablissement: `Évolution du taux d'emploi à 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxPoursuiteEtablissement: `Tx de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
-  evolutionTauxPoursuiteEtablissement: `Évolution du taux de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   valeurAjoutee: "Valeur ajoutée",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL>;
 
@@ -179,21 +167,21 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED = {
   ...FORMATION_ETABLISSEMENT_COLUMNS,
   // Caractéristiques de la transformation
   numero: "Numéro de la demande",
-  typeDemande: "Type de demande",
   dateEffetTransformation: "Date d'effet de la transformation",
+  typeDemande: "Type de demande",
 } satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED = {
   ...FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL,
   // Caractéristiques de la transformation
   numero: "Numéro de la demande",
-  typeDemande: "Type de demande",
   dateEffetTransformation: "Date d'effet de la transformation",
+  typeDemande: "Type de demande",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED>;
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED = {
   ...FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
   // Caractéristiques de la transformation
-  typeDemande: "Type de demande",
   dateEffetTransformation: "Date d'effet de la transformation",
+  typeDemande: "Type de demande",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED>;

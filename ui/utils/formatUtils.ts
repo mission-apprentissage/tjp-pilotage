@@ -48,6 +48,14 @@ export const formatNumber = (
   return Number.parseFloat(value.toFixed(numberOfDigits));
 };
 
+export const formatNumberWithUndefined = (
+  value?: number,
+  numberOfDigits: number = 0,
+): number | undefined => {
+  if (value === undefined || value === null || Number.isNaN(value)) return undefined;
+  return Number.parseFloat(value.toFixed(numberOfDigits));
+};
+
 export const formatNumberToString = (
   value?: number | null,
   numberOfDigits: number = 0,

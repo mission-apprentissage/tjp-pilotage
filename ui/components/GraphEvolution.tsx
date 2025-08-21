@@ -1,4 +1,4 @@
-import { AspectRatio, Box } from "@chakra-ui/react";
+import { AspectRatio, Box, Flex, Table, Tbody, Td, Tooltip, Tr } from "@chakra-ui/react";
 import { init, registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
@@ -7,6 +7,7 @@ import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatNumber, formatNumberToString, formatPercentage, formatPercentageWithoutSign } from "@/utils/formatUtils";
 
 type GraphData = Record<string, number | undefined>;
+type DisplayType = "value" | "graph";
 
 const getEvolutionColor = ({
   data
@@ -29,11 +30,13 @@ const getEvolutionColor = ({
 export const GraphEvolution = ({
   title,
   data,
-  isPercentage = false
+  isPercentage = false,
+  keys
 }: {
   title: string;
   data: GraphData;
   isPercentage?: boolean;
+  keys: string[];
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -142,10 +145,30 @@ export const GraphEvolution = ({
   }, [data]);
 
   return (
-    <AspectRatio ratio={4.5} w={"100%"}>
-      <Box position="relative" overflow="visible !important">
-        <Box ref={containerRef} height={"100%"} w={"100%"} role="figure" />
-      </Box>
-    </AspectRatio>
+    <Flex gap={2} ms={4}>
+      <Table variant="unstyled" size="sm">
+        <Tbody>
+          <Tr>
+            {
+              keys.map((key) => (
+                <Td key={key} textAlign="center" w={10} p={0}>
+                  <Tooltip label={key}>
+                    {
+                      isPercentage ?
+                        formatPercentage(data[key], 1, "-") :
+                        formatNumberToString(data[key], 1, "-")
+                    }
+                  </Tooltip>
+                </Td>
+              ))}
+          </Tr>
+        </Tbody>
+      </Table>
+      <AspectRatio ratio={4.5} w="100%" textAlign={"right"}>
+        <Box position="relative" overflow="visible !important">
+          <Box ref={containerRef} height={"100%"} w={"100%"} role="figure" />
+        </Box>
+      </AspectRatio>
+    </Flex>
   );
 };
