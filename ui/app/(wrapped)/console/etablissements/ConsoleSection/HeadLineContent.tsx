@@ -83,7 +83,10 @@ const ConditionalTh = chakra(
             display: "flex",
             alignItems: "center",
           }}>
-            <Tooltip label={FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne]} placement="top">
+            <Tooltip
+              label={FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne]}
+              placement="top"
+            >
               <Box
                 fontSize={12}
                 fontWeight={700}
@@ -98,7 +101,10 @@ const ConditionalTh = chakra(
               </Box>
             </Tooltip>
             {icon}
-            <Tooltip label={`${isSticky ? "Libérer" : "Figer"} la colonne ${FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne].toLocaleLowerCase()}`} placement="top">
+            <Tooltip
+              label={`${isSticky ? "Libérer" : "Figer"} la colonne ${FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne].toLocaleLowerCase()}`}
+              placement="top"
+            >
               <IconButton
                 aria-label={`Figer la colonne ${FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne].toLocaleLowerCase()}`}
                 icon={
@@ -567,6 +573,15 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="positionQuadrant" />
           {FORMATION_ETABLISSEMENT_COLUMNS.positionQuadrant}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne="evolutionPositionQuadrant"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionPositionQuadrant}
         </ConditionalTh>
         <ConditionalTh
           colonne="tauxDevenirFavorable"

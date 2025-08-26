@@ -6,7 +6,7 @@ import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Formation, FORMATION_COLUMNS_KEYS } from "@/app/(wrapped)/console/formations/types";
-import { getEvolutionEffectifData, getEvolutionEffectifKeys, getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
+import { getEvolutionEffectifData, getEvolutionEffectifKeys, getEvolutionPositionQuadrantData,getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
@@ -14,6 +14,7 @@ import {BadgeTypeFamille} from '@/components/BadgeTypeFamille';
 import { GraphEvolution } from "@/components/GraphEvolution";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
+import { TableEvolution } from "@/components/TableEvolution";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { formatFamilleMetierLibelle, formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
@@ -77,6 +78,7 @@ export const FormationLineContent = ({
   colonneFilters,
   stickyColonnes,
   getCellBgColor,
+  isHistorique = false,
 }: {
   formation: Partial<Formation>;
   onClickExpend?: () => void;
@@ -87,6 +89,7 @@ export const FormationLineContent = ({
   colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
   stickyColonnes: FORMATION_COLUMNS_KEYS[];
   getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
+  isHistorique?: boolean;
 }) => (
   <>
     <Td
@@ -270,11 +273,17 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       p={0}
     >
-      <GraphEvolution
-        title={FORMATION_COLUMNS.evolutionTauxPression}
-        data={getEvolutionEffectifData(formation)}
-        keys={getEvolutionEffectifKeys()}
-      />
+      {
+        isHistorique ? (
+          "-"
+        ) : (
+          <GraphEvolution
+            title={FORMATION_COLUMNS.evolutionTauxPression}
+            data={getEvolutionEffectifData(formation)}
+            keys={getEvolutionEffectifKeys()}
+          />
+        )
+      }
     </ConditionalTd>
     <ConditionalTd
       colonne={"effectif1"}
@@ -332,12 +341,18 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       p={0}
     >
-      <GraphEvolution
-        title={FORMATION_COLUMNS.evolutionTauxPression}
-        data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxPression"})}
-        isPercentage={false}
-        keys={getEvolutionTauxEntreeKeys()}
-      />
+      {
+        isHistorique ? (
+          "-"
+        ) : (
+          <GraphEvolution
+            title={FORMATION_COLUMNS.evolutionTauxPression}
+            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxPression"})}
+            isPercentage={false}
+            keys={getEvolutionTauxEntreeKeys()}
+          />
+        )
+      }
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxDemande"}
@@ -359,12 +374,18 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       p={0}
     >
-      <GraphEvolution
-        title={FORMATION_COLUMNS.evolutionTauxDemande}
-        data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxDemande"})}
-        isPercentage={false}
-        keys={getEvolutionTauxEntreeKeys()}
-      />
+      {
+        isHistorique ? (
+          "-"
+        ) : (
+          <GraphEvolution
+            title={FORMATION_COLUMNS.evolutionTauxDemande}
+            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxDemande"})}
+            isPercentage={false}
+            keys={getEvolutionTauxEntreeKeys()}
+          />
+        )
+      }
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxRemplissage"}
@@ -382,28 +403,55 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       p={0}
     >
-      <GraphEvolution
-        title={FORMATION_COLUMNS.evolutionTauxRemplissage}
-        data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxRemplissage"})}
-        isPercentage={true}
-        keys={getEvolutionTauxEntreeKeys()}
-      />
+      {
+        isHistorique ? (
+          "-"
+        ) : (
+          <GraphEvolution
+            title={FORMATION_COLUMNS.evolutionTauxRemplissage}
+            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxRemplissage"})}
+            isPercentage={true}
+            keys={getEvolutionTauxEntreeKeys()}
+          />
+        )
+      }
     </ConditionalTd>
     {canShowQuadrantPosition && (
-      <ConditionalTd
-        colonne={"positionQuadrant"}
-        colonneFilters={colonneFilters}
-        getCellBgColor={getCellBgColor}
-        stickyColonnes={stickyColonnes}
-        textAlign={"center"}
-      >
-        <Tooltip
-          label={`Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`}
-          placement="top"
+      <>
+        <ConditionalTd
+          colonne={"positionQuadrant"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          textAlign={"center"}
         >
-          {formation.positionQuadrant ?? "-"}
-        </Tooltip>
-      </ConditionalTd>
+          <Tooltip
+            label={`Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`}
+            placement="top"
+          >
+            {formation.positionQuadrant ?? "-"}
+          </Tooltip>
+        </ConditionalTd>
+        <ConditionalTd
+          colonne="evolutionPositionQuadrant"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          textAlign={"center"}
+        >
+          {
+            isHistorique ? (
+              "-"
+            ) : (
+              <TableEvolution
+                data={getEvolutionPositionQuadrantData({ evolutions: formation.evolutionPositionQuadrant })}
+                isPercentage={true}
+                keys={getEvolutionTauxSortieKeys()}
+              />
+            )
+          }
+        </ConditionalTd>
+      </>
     )}
     <ConditionalTd
       colonne={"tauxDevenirFavorable"}
@@ -420,12 +468,18 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       p={0}
     >
-      <GraphEvolution
-        title={FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
-        data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxDevenirFavorable"})}
-        isPercentage={true}
-        keys={getEvolutionTauxSortieKeys()}
-      />
+      {
+        isHistorique ? (
+          "-"
+        ) : (
+          <GraphEvolution
+            title={FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
+            data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxDevenirFavorable"})}
+            isPercentage={true}
+            keys={getEvolutionTauxSortieKeys()}
+          />
+        )
+      }
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxInsertion"}
@@ -447,12 +501,18 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       p={0}
     >
-      <GraphEvolution
-        title={FORMATION_COLUMNS.evolutionTauxInsertion}
-        data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxInsertion"})}
-        isPercentage={true}
-        keys={getEvolutionTauxSortieKeys()}
-      />
+      {
+        isHistorique ? (
+          "-"
+        ) : (
+          <GraphEvolution
+            title={FORMATION_COLUMNS.evolutionTauxInsertion}
+            data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxInsertion"})}
+            isPercentage={true}
+            keys={getEvolutionTauxSortieKeys()}
+          />
+        )
+      }
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxPoursuite"}
@@ -474,25 +534,18 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       p={0}
     >
-      <GraphEvolution
-        title={FORMATION_COLUMNS.evolutionTauxPoursuite}
-        data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxPoursuite"})}
-        isPercentage={true}
-        keys={getEvolutionTauxSortieKeys()}
-      />
-    </ConditionalTd>
-    <ConditionalTd
-      colonne={"tauxDevenirFavorable"}
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      stickyColonnes={stickyColonnes}
-      textAlign={"center"}
-    >
-      <GraphWrapper
-        continuum={formation.continuum}
-        value={formation.tauxDevenirFavorable}
-        millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
-      />
+      {
+        isHistorique ? (
+          "-"
+        ) : (
+          <GraphEvolution
+            title={FORMATION_COLUMNS.evolutionTauxPoursuite}
+            data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxPoursuite"})}
+            isPercentage={true}
+            keys={getEvolutionTauxSortieKeys()}
+          />
+        )
+      }
     </ConditionalTd>
   </>
 );

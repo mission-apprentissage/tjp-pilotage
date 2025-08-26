@@ -45,6 +45,12 @@ export const FormationLineSchema = z.object({
       tauxRemplissage: z.coerce.number().optional(),
     })
   ),
+  evolutionPositionQuadrant: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      positionQuadrant: z.string().optional(),
+    })
+  ).optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
   libelleNsf: z.string().optional(),

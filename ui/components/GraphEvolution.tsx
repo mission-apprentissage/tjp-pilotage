@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Flex, Table, Tbody, Td, Tooltip, Tr } from "@chakra-ui/react";
+import { AspectRatio, Box, Flex } from "@chakra-ui/react";
 import { init, registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
@@ -6,8 +6,9 @@ import { themeDefinition } from "@/theme/theme";
 import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatNumber, formatNumberToString, formatPercentage, formatPercentageWithoutSign } from "@/utils/formatUtils";
 
+import { TableEvolution } from "./TableEvolution";
+
 type GraphData = Record<string, number | undefined>;
-type DisplayType = "value" | "graph";
 
 const getEvolutionColor = ({
   data
@@ -69,7 +70,7 @@ export const GraphEvolution = ({
       },
       xAxis: {
         type: "category",
-        data: data ? Object.keys(data) : [],
+        data: data ? keys : [],
         silent: true,
         show: true,
         axisLine: {
@@ -100,10 +101,12 @@ export const GraphEvolution = ({
       series: [
         {
           type: "line",
-          data: Object.values(data).map((value) => isPercentage ?
-            formatPercentageWithoutSign(value, 2) :
-            formatNumber(value,2)
-          ),
+          data: keys.map((key) => {
+            if(data[key] === undefined) return undefined;
+            return isPercentage ?
+              formatPercentageWithoutSign(data[key], 2) :
+              formatNumber(data[key],2);
+          }),
           lineStyle: {
             width: 2
           },
@@ -146,24 +149,11 @@ export const GraphEvolution = ({
 
   return (
     <Flex gap={2} ms={4}>
-      <Table variant="unstyled" size="sm">
-        <Tbody>
-          <Tr>
-            {
-              keys.map((key) => (
-                <Td key={key} textAlign="center" w={10} p={0}>
-                  <Tooltip label={key}>
-                    {
-                      isPercentage ?
-                        formatPercentage(data[key], 1, "-") :
-                        formatNumberToString(data[key], 1, "-")
-                    }
-                  </Tooltip>
-                </Td>
-              ))}
-          </Tr>
-        </Tbody>
-      </Table>
+      <TableEvolution
+        data={data}
+        isPercentage={isPercentage}
+        keys={keys}
+      />
       <AspectRatio ratio={4.5} w="100%" textAlign={"right"}>
         <Box position="relative" overflow="visible !important">
           <Box ref={containerRef} height={"100%"} w={"100%"} role="figure" />

@@ -77,7 +77,11 @@ const ConditionalTh = chakra(
             display: "flex",
             alignItems: "center",
           }}>
-            <Tooltip label={FORMATION_COLUMNS[colonne]} placement="top">
+            <Tooltip
+              label={FORMATION_COLUMNS[colonne]}
+              placement="top"
+              shouldWrapChildren
+            >
               <Box
                 fontSize={12}
                 fontWeight={700}
@@ -92,7 +96,11 @@ const ConditionalTh = chakra(
               </Box>
             </Tooltip>
             {icon}
-            <Tooltip label={`${isSticky ? "Libérer" : "Figer"} la colonne ${FORMATION_COLUMNS[colonne].toLocaleLowerCase()}`} placement="top">
+            <Tooltip
+              label={`${isSticky ? "Libérer" : "Figer"} la colonne ${FORMATION_COLUMNS[colonne].toLocaleLowerCase()}`}
+              placement="top"
+              shouldWrapChildren
+            >
               <IconButton
                 aria-label={`Figer la colonne ${FORMATION_COLUMNS[colonne].toLocaleLowerCase()}`}
                 icon={
@@ -312,7 +320,6 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           stickyColonnes={stickyColonnes}
           setStickyColonnes={setStickyColonnes}
-          maxWidth={36}
           icon={<TooltipDefinitionNombreEleves />}
         >
           {FORMATION_COLUMNS.evolutionEffectif}
@@ -387,7 +394,6 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           stickyColonnes={stickyColonnes}
           setStickyColonnes={setStickyColonnes}
-          maxWidth={36}
           icon={<TooltipDefinitionTauxDePression />}
         >
           {FORMATION_COLUMNS.evolutionTauxPression}
@@ -411,7 +417,6 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           stickyColonnes={stickyColonnes}
           setStickyColonnes={setStickyColonnes}
-          maxWidth={36}
           icon={<TooltipDefinitionTauxDeDemande />}
         >
           {FORMATION_COLUMNS.evolutionTauxDemande}
@@ -435,24 +440,34 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           stickyColonnes={stickyColonnes}
           setStickyColonnes={setStickyColonnes}
-          maxWidth={36}
           icon={<TooltipDefinitionTauxRemplissage />}
         >
           {FORMATION_COLUMNS.evolutionTauxRemplissage}
         </ConditionalTh>
         {canShowQuadrantPosition && (
-          <ConditionalTh
-            colonne={"positionQuadrant"}
-            colonneFilters={colonneFilters}
-            getCellBgColor={getCellBgColor}
-            onClick={handleOrder}
-            stickyColonnes={stickyColonnes}
-            setStickyColonnes={setStickyColonnes}
-            icon={<TooltipDefinitionPositionQuadrant />}
-          >
-            <OrderIcon {...order} column="positionQuadrant" />
-            {FORMATION_COLUMNS.positionQuadrant}
-          </ConditionalTh>
+          <>
+            <ConditionalTh
+              colonne={"positionQuadrant"}
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              onClick={handleOrder}
+              stickyColonnes={stickyColonnes}
+              setStickyColonnes={setStickyColonnes}
+              icon={<TooltipDefinitionPositionQuadrant />}
+            >
+              <OrderIcon {...order} column="positionQuadrant" />
+              {FORMATION_COLUMNS.positionQuadrant}
+            </ConditionalTh>
+            <ConditionalTh
+              colonne={"evolutionPositionQuadrant"}
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              stickyColonnes={stickyColonnes}
+              setStickyColonnes={setStickyColonnes}
+            >
+              {FORMATION_COLUMNS.evolutionPositionQuadrant}
+            </ConditionalTh>
+          </>
         )}
         <ConditionalTh
           colonne={"tauxDevenirFavorable"}
@@ -473,7 +488,6 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           stickyColonnes={stickyColonnes}
           setStickyColonnes={setStickyColonnes}
-          maxWidth={36}
           icon={<TooltipDefinitionTauxDevenirFavorable />}
         >
           {FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
@@ -497,7 +511,6 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           stickyColonnes={stickyColonnes}
           setStickyColonnes={setStickyColonnes}
-          maxWidth={36}
           icon={<TooltipDefinitionTauxEmploi6Mois />}
         >
           {FORMATION_COLUMNS.evolutionTauxInsertion}
@@ -519,7 +532,6 @@ export const HeadLineContent = ({
           colonne={"evolutionTauxPoursuite"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          maxWidth={36}
           icon={<TooltipDefinitionTauxPoursuiteEtudes />}
           onClick={handleOrder}
           stickyColonnes={stickyColonnes}

@@ -69,6 +69,12 @@ const FormationEtablissementLineSchema = z.object({
       tauxRemplissage: z.coerce.number().optional(),
     })
   ),
+  evolutionPositionQuadrant: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      positionQuadrant: z.string().optional(),
+    })
+  ),
   valeurAjoutee: z.coerce.number().optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
