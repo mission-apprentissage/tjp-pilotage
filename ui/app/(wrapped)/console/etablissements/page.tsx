@@ -40,10 +40,14 @@ import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL, GROUPED_FORMATION_ETA
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { SideSection } from "./SideSection/SideSection";
 import type { Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS, Order } from "./types";
+import { DisplayTypeEnum } from "./types";
 
 const PAGE_SIZE = 30;
 
 type QueryResult = (typeof client.infer)["[GET]/etablissements"];
+
+const COLONNES_GLOBAL: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> =
+  Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
 
 const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
   "rentreeScolaire",
@@ -70,6 +74,10 @@ const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS
   "dateEffetTransformation",
   "previsionnel",
   "typeDemande",
+  "effectif1",
+  "effectif2",
+  "effectif3",
+  "effectifEntree",
   "tauxPression",
   "tauxRemplissage",
   "tauxInsertion",
@@ -85,65 +93,75 @@ const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS
 
 const TabsSection = chakra((
   {
-    handleColonneFilters,
-  }:
+    displayType,
+    setDisplayType,
+  } :
   {
-    handleColonneFilters: (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => void;
+    displayType: DisplayTypeEnum;
+    setDisplayType: (value: DisplayTypeEnum) => void;
   }
 ) => {
-  return (<Tabs
-    isLazy={true}
-    // index={getTabIndex()}
-    display="flex"
-    flex="1"
-    flexDirection="column"
-    variant="blue-border"
-    minHeight="0"
-    width={"100%"}
-  >
-    <TabList>
-      <Tab
-        as={Button}
-        onClick={() => {
-          handleColonneFilters(
-            Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]
-          );
-        }}
-        p={2}
-      >
-        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
-          <Icon icon="ri:slideshow-line" />
-          <Text>Vue globale</Text>
-        </Flex>
-      </Tab>
-      {feature.donneesEvolutionTauxConsole && (
+  const getTabIndex = () => {
+    if (displayType === DisplayTypeEnum.global)
+      return 0;
+    if (displayType === DisplayTypeEnum.donneesEvolutionTaux)
+      return feature.donneesEvolutionTauxConsole ? 1 : undefined;
+    if (displayType === DisplayTypeEnum.suiviTransformation)
+      return feature.donneesEvolutionTauxConsole ? 2 : 1;
+  };
+
+  return (
+    <Tabs
+      isLazy={true}
+      index={getTabIndex()}
+      display="flex"
+      flex="1"
+      flexDirection="column"
+      variant="blue-border"
+      minHeight="0"
+      width={"100%"}
+    >
+      <TabList>
         <Tab
           as={Button}
           onClick={() => {
-            handleColonneFilters(COLONNES_EVOLUTION_TAUX);
+            setDisplayType(DisplayTypeEnum.global);
           }}
           p={2}
         >
           <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
-            <Icon icon="ri:line-chart-line" />
-            <Text>Évolution des taux</Text>
+            <Icon icon="ri:slideshow-line" />
+            <Text>Vue globale</Text>
           </Flex>
         </Tab>
-      )}
-      <Tab
-        as={Button}
-        onClick={() => {
-          handleColonneFilters(COLONNES_SUIVI_TRANSFO);
-        }}
-        p={2}
-      >
-        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
-          <Icon icon="ri:seedling-line" />
-          <Text>Suivi de la transformation</Text>
-        </Flex>
-      </Tab>
-    </TabList>
-  </Tabs>
+        {feature.donneesEvolutionTauxConsole && (
+          <Tab
+            as={Button}
+            onClick={() => {
+              setDisplayType(DisplayTypeEnum.donneesEvolutionTaux);
+            }}
+            p={2}
+          >
+            <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+              <Icon icon="ri:line-chart-line" />
+              <Text>Évolution des taux</Text>
+            </Flex>
+          </Tab>
+        )}
+        <Tab
+          as={Button}
+          onClick={() => {
+            setDisplayType(DisplayTypeEnum.suiviTransformation);
+          }}
+          p={2}
+        >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+            <Icon icon="ri:seedling-line" />
+            <Text>Suivi de la transformation</Text>
+          </Flex>
+        </Tab>
+      </TabList>
+    </Tabs>
   );
 });
 
@@ -235,7 +253,14 @@ const Page = () => {
     columns?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     order?: Partial<Order>;
     page?: string;
+    displayType?: DisplayTypeEnum;
   } = parse(queryParams.toString(), { arrayLimit: Infinity });
+
+  const filters = searchParams.filters ?? {};
+  const columns = searchParams.columns ?? [];
+  const order = searchParams.order ?? { order: "asc" };
+  const page = searchParams.page ? parseInt(searchParams.page) : 0;
+  const search = searchParams.search ?? "";
 
   const setSearchParams = (params: {
     filters?: typeof filters;
@@ -243,15 +268,30 @@ const Page = () => {
     columns?: typeof columns;
     order?: typeof order;
     page?: typeof page;
+    displayType?: DisplayTypeEnum;
   }) => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
-  const filters = searchParams.filters ?? {};
-  const columns = searchParams.columns ?? [];
-  const order = searchParams.order ?? { order: "asc" };
-  const page = searchParams.page ? parseInt(searchParams.page) : 0;
-  const search = searchParams.search ?? "";
+  const setDisplayType = (
+    displayType: DisplayTypeEnum
+  ) => {
+    trackEvent("etablissements:vue-tabs", {
+      props: { type: displayType },
+    });
+    const columns = displayType === DisplayTypeEnum.global ?
+      COLONNES_GLOBAL :
+      displayType === DisplayTypeEnum.donneesEvolutionTaux ?
+        COLONNES_EVOLUTION_TAUX :
+        COLONNES_SUIVI_TRANSFO;
+
+    handleColonneFilters(columns);
+    setSearchParams({
+      ...searchParams,
+      page: page,
+      displayType,
+    });
+  };
 
   const [searchFormationEtablissement, setSearchFormationEtablissement] = useState<string>(search);
 
@@ -580,9 +620,12 @@ const Page = () => {
                 user={user}
                 ms={"auto"}
               />
-              <TabsSection
-                handleColonneFilters={handleColonneFilters}
-              />
+              {feature.donneesTransfoConsole && user && (
+                <TabsSection
+                  displayType={searchParams.displayType ?? DisplayTypeEnum.global}
+                  setDisplayType={setDisplayType}
+                />
+              )}
             </Flex>
           </Flex>
           {isLoading && (

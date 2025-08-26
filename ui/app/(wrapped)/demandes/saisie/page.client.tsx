@@ -10,6 +10,7 @@ import {
   Flex,
   HStack,
   IconButton,
+  Link,
   Table,
   TableContainer,
   Tag,
@@ -39,6 +40,7 @@ import type { TypeAvisType } from "shared/enum/typeAvisEnum";
 import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
+import { getLienRapprochement,RapprochementTag  } from "@/app/(wrapped)/demandes/components/RapprochementTag";
 import { StatutTag } from "@/app/(wrapped)/demandes/components/StatutTag";
 import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/demandes/utils/messageAccompagnementUtils";
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/demandes/utils/statutUtils";
@@ -343,6 +345,11 @@ export const PageClient = () => {
                               }
                             </Th>
                           )}
+                          {isCampagneTerminee(data?.campagne) && <Th cursor="pointer" onClick={() => handleOrder("rapprochement")} fontSize={12}>
+                            <OrderIcon {...order} column="rapprochement" />
+                            {DEMANDES_COLUMNS.rapprochement}
+                          </Th>}
+
                           <Th cursor="pointer" onClick={() => handleOrder("updatedAt")} fontSize={12}>
                             <OrderIcon {...order} column="updatedAt" />
                             {DEMANDES_COLUMNS.updatedAt}
@@ -477,6 +484,30 @@ export const PageClient = () => {
                                   </Tooltip>
                                 </Td>
                               )}
+                              {isCampagneTerminee(data?.campagne) && <Td>
+                                <Link
+                                  as={NextLink}
+                                  href={getLienRapprochement(
+                                    demande.rapprochement,
+                                    demande.uai,
+                                    demande.cfd,
+                                    demande.numero
+                                  )}
+                                  target="_blank"
+                                >
+                                  <Tooltip label={demande.motifRapprochement}>
+                                    <Text
+                                      textOverflow={"ellipsis"}
+                                      overflow={"hidden"}
+                                      whiteSpace={"break-spaces"}
+                                      noOfLines={2}
+                                    >
+                                      {<RapprochementTag value={demande.rapprochement} />}
+                                    </Text>
+                                  </Tooltip>
+
+                                </Link>
+                              </Td>}
                               <Td textAlign={"center"}>
                                 <Tooltip label={`Le ${format(demande.updatedAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
                                   {format(demande.updatedAt, "d MMM HH:mm", {
