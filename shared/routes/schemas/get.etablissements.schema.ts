@@ -74,6 +74,7 @@ const FormationEtablissementLineSchema = z.object({
   dateEffetTransformation: z.string().optional(),
   differenceCapaciteApprentissage: z.string().optional(),
   differenceCapaciteScolaire: z.string().optional(),
+  anneeCampagne: z.string().optional()
 });
 
 const FiltersSchema = z.object({

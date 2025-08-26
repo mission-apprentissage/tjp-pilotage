@@ -283,7 +283,7 @@ export const EtablissementLineContent = ({
             typeDemande={line.typeDemande}
             numero={line.numero}
             dateEffetTransformation={line.dateEffetTransformation}
-            rentreeScolaire={line.rentreeScolaire}
+            anneeCampagne={line.anneeCampagne}
           />
         </ConditionalTd>
         <ConditionalTd
