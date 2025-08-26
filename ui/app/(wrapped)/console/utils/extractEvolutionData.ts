@@ -4,30 +4,6 @@ import { getMillesime } from 'shared/utils/getMillesime';
 import { formatMillesime } from '@/utils/formatLibelle';
 import { formatNumber } from '@/utils/formatUtils';
 
-export const getEvolutionEffectifKeys = () => {
-  return [
-    "Effectif 1",
-    "Effectif 2",
-    "Effectif 3"
-  ];
-};
-
-export const getEvolutionEffectifData = ({
-  effectif1,
-  effectif2,
-  effectif3,
-}: {
-  effectif1?: number;
-  effectif2?: number;
-  effectif3?: number;
-}) => {
-  return {
-    "Effectif 1": effectif1,
-    "Effectif 2": effectif2,
-    "Effectif 3": effectif3,
-  };
-};
-
 export const getEvolutionTauxSortieKeys = () => {
   return [
     formatMillesime(getMillesime({millesimeSortie: CURRENT_IJ_MILLESIME, offset: -2})),
@@ -57,10 +33,10 @@ export const getEvolutionPositionQuadrantData = ({
 };
 
 export const getEvolutionTauxSortieData = ({
-  taux,
+  key,
   evolutions
 }: {
-  taux: "tauxInsertion" | "tauxPoursuite" | "tauxDevenirFavorable";
+  key: "tauxInsertion" | "tauxPoursuite" | "tauxDevenirFavorable";
   evolutions?: Array<{
     millesimeSortie: string;
     tauxInsertion?: number;
@@ -72,7 +48,7 @@ export const getEvolutionTauxSortieData = ({
 
   return evolutions.reduce((acc, evolution) => {
     const millesime = formatMillesime(evolution.millesimeSortie);
-    const tauxValue = evolution[taux];
+    const tauxValue = evolution[key];
     if (tauxValue !== undefined) {
       acc[millesime] = formatNumber(tauxValue, 4);
     }
@@ -89,22 +65,24 @@ export const getEvolutionTauxEntreeKeys = () => {
 };
 
 export const getEvolutionTauxEntreeData = ({
-  taux,
+  key,
   evolutions
 }: {
-  taux: "tauxPression" | "tauxDemande" | "tauxRemplissage";
+  key: "tauxPression" | "tauxDemande" | "tauxRemplissage" | "capacite" | "effectif";
   evolutions?: Array<{
     rentreeScolaire: string;
     tauxPression?: number;
     tauxDemande?: number;
     tauxRemplissage?: number;
+    capacite?: number;
+    effectif?: number;
   }>
 }) => {
   if (!evolutions) return {};
 
   return evolutions.reduce((acc, evolution) => {
     const rentreeScolaire = evolution.rentreeScolaire;
-    const tauxValue = evolution[taux];
+    const tauxValue = evolution[key];
     if (tauxValue !== undefined) {
       acc[rentreeScolaire] = formatNumber(tauxValue, 4);
     }

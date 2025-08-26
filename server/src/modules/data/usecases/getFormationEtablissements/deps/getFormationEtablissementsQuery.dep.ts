@@ -345,12 +345,17 @@ export const getFormationEtablissementsQuery = async ({
             selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
             selectTauxDemandeAgg("indicateurEntree", "formationView").as("tauxDemande"),
             selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
+            capaciteAnnee({ alias: "indicateurEntree" }).as("capacite"),
+            effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
           ])
           .$narrowType<{
             rentreeScolaire: string;
           }>()
           .groupBy([
             "indicateurEntree.rentreeScolaire",
+            "indicateurEntree.effectifs",
+            "indicateurEntree.capacites",
+            "indicateurEntree.anneeDebut"
           ])
           .orderBy("indicateurEntree.rentreeScolaire", "asc")
       ).as("evolutionTauxEntree"),

@@ -80,7 +80,6 @@ const ConditionalTh = chakra(
             <Tooltip
               label={FORMATION_COLUMNS[colonne]}
               placement="top"
-              shouldWrapChildren
             >
               <Box
                 fontSize={12}
@@ -99,7 +98,6 @@ const ConditionalTh = chakra(
             <Tooltip
               label={`${isSticky ? "Libérer" : "Figer"} la colonne ${FORMATION_COLUMNS[colonne].toLocaleLowerCase()}`}
               placement="top"
-              shouldWrapChildren
             >
               <IconButton
                 aria-label={`Figer la colonne ${FORMATION_COLUMNS[colonne].toLocaleLowerCase()}`}

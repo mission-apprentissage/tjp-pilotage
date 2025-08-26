@@ -480,6 +480,15 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
         </ConditionalTh>
         <ConditionalTh
+          colonne="evolutionCapacite"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionCapacite}
+        </ConditionalTh>
+        <ConditionalTh
           colonne="capacite"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
