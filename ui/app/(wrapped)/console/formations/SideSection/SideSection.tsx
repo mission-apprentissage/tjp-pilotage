@@ -19,7 +19,17 @@ export const SideSection = ({
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
 
   return (
-    <Flex flex={"shrink"} direction={"column"} bgColor={"bluefrance.975"} p={2} gap={5}>
+    <Flex
+      direction={"column"}
+      p={2}
+      pb={4}
+      gap={5}
+      h={"fit-content"}
+      position={"sticky"}
+      top={0}
+      zIndex={"docked"}
+      flex={"shrink"}
+    >
       {isOpen ? (
         <Button
           variant="externalLink"

@@ -72,6 +72,7 @@ const FormationEtablissementLineSchema = z.object({
   numero: z.string().optional(),
   typeDemande: z.string().optional(),
   dateEffetTransformation: z.string().optional(),
+  previsionnel: z.string().optional(),
   differenceCapaciteApprentissage: z.string().optional(),
   differenceCapaciteScolaire: z.string().optional(),
   anneeCampagne: z.string().optional()
