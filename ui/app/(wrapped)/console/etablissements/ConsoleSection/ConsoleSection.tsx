@@ -120,6 +120,7 @@ export const ConsoleSection = ({
                         colonneFilters={colonneFilters}
                         getCellBgColor={getCellBgColor}
                         user={user}
+                        isHistorique={true}
                       />
                     </Tr>
                   ))}

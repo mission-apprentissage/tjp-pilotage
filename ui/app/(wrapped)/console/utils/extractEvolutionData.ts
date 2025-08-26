@@ -36,6 +36,26 @@ export const getEvolutionTauxSortieKeys = () => {
   ];
 };
 
+export const getEvolutionPositionQuadrantData = ({
+  evolutions
+}: {
+  evolutions?: Array<{
+    millesimeSortie: string;
+    positionQuadrant?: string;
+  }>
+}) => {
+  if (!evolutions) return {};
+
+  return evolutions.reduce((acc, evolution) => {
+    const millesime = formatMillesime(evolution.millesimeSortie);
+    const value = evolution.positionQuadrant;
+    if (value !== undefined) {
+      acc[millesime] = value;
+    }
+    return acc;
+  }, {} as Record<string, string>);
+};
+
 export const getEvolutionTauxSortieData = ({
   taux,
   evolutions

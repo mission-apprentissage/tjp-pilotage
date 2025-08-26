@@ -12,6 +12,7 @@ import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
+import { getEvolutionEffectifKeys, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieKeys } from '@/app/(wrapped)/console/utils/extractEvolutionData';
 import { CodeDepartementContext } from '@/app/codeDepartementContext';
 import { CodeRegionContext } from '@/app/codeRegionContext';
 import {formatTypeFamilleLong} from '@/components/BadgeTypeFamille';
@@ -179,11 +180,43 @@ const Page = () => {
       selectedDepartement: "Departement sélectionnée",
     };
 
+    const evolutionEffectifColumns = getEvolutionEffectifKeys().map((key) => ({
+      [key]: key,
+    }));
+
+    const evolutionTauxEntreeColumns = {
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Taux de demande ${key}`]: `Taux de demande ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Taux de pression ${key}`]: `Taux de pression ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Taux de remplissage ${key}`]: `Taux de remplissage ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
+    const evolutionTauxSortieColumns = {
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux d'insertion ${key}`]: `Taux d'insertion ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux de poursuite d'étude ${key}`]: `Taux de poursuite d'étude ${key}`,
+      }))
+        .reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux de devenir favorable ${key}`]: `Taux de devenir favorable ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
     const columns = {
       ..._.omit(FORMATION_COLUMNS, "formationSpecifique"),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
+      // ...evolutionEffectifColumns,
+      // ...evolutionTauxEntreeColumns,
+      // ...evolutionTauxSortieColumns,
     };
 
     let formations = [];
@@ -217,6 +250,27 @@ const Page = () => {
       isFormationRenovee: formation.isFormationRenovee,
       isHistorique: !!formation.formationRenovee,
       isHistoriqueCoExistant: formation.isHistoriqueCoExistant,
+      // ...getEvolutionEffectifKeys().map((key) => ({
+      //   [key]: getEvolutionEffectifData(formation)[key as keyof typeof getEvolutionEffectifData(formation)],
+      // })),
+      // ...getEvolutionTauxSortieKeys().map((key) => ({
+      //   [`Taux d'insertion ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxInsertion"})[key],
+      // })),
+      // ...getEvolutionTauxSortieKeys().map((key) => ({
+      //   [`Taux de poursuite d'étude ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxPoursuite"})[key],
+      // })),
+      // ...getEvolutionTauxSortieKeys().map((key) => ({
+      //   [`Taux de devenir favorable ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxDevenirFavorable"})[key],
+      // })),
+      // ...getEvolutionTauxEntreeKeys().map((key) => ({
+      //   [`Taux de remplissage ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxRemplissage"})[key],
+      // })),
+      // ...getEvolutionTauxEntreeKeys().map((key) => ({
+      //   [`Taux de pression ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxPression"})[key],
+      // })),
+      // ...getEvolutionTauxEntreeKeys().map((key) => ({
+      //   [`Taux de demande ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxDemande"})[key],
+      // })),
     }));
 
     return {

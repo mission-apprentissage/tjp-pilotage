@@ -257,18 +257,10 @@ export const getFormationEtablissementsQuery = async ({
         .case()
         .when(eb("formationView.typeFamille", "in", [TypeFamilleEnum["1ere_commune"], TypeFamilleEnum["2nde_commune"]]))
         .then(
-          sql<string>`
-            COALESCE(
-              ${eb.ref("positionQuadrant")},
-              '-'
-            )`
+          sql<string>`COALESCE(${eb.ref("positionQuadrant")}, '-')`
         )
         .else(
-          sql<string>`
-            COALESCE(
-              ${eb.ref("positionQuadrant")},
-              ${PositionQuadrantEnum["Hors quadrant"]}
-            )`
+          sql<string>`COALESCE(${eb.ref("positionQuadrant")}, ${PositionQuadrantEnum["Hors quadrant"]})`
         )
         .end()
         .as("positionQuadrant"),
@@ -314,6 +306,36 @@ export const getFormationEtablissementsQuery = async ({
           ])
           .orderBy("indicateurSortie.millesimeSortie", "asc")
       ).as("evolutionTauxSortieEtablissement"),
+      jsonArrayFrom(
+        eb
+          .selectFrom("positionFormationRegionaleQuadrant")
+          .whereRef("positionFormationRegionaleQuadrant.cfd", "=", "formationEtablissement.cfd")
+          .whereRef("positionFormationRegionaleQuadrant.codeDispositif", "=", "formationEtablissement.codeDispositif")
+          .whereRef("positionFormationRegionaleQuadrant.codeNiveauDiplome", "=", "formationView.codeNiveauDiplome")
+          .whereRef("positionFormationRegionaleQuadrant.codeRegion", "=", "etablissement.codeRegion")
+          .select((eb) =>[
+            "positionFormationRegionaleQuadrant.millesimeSortie",
+            eb
+              .case()
+              .when(eb("formationView.typeFamille", "in", [TypeFamilleEnum["1ere_commune"], TypeFamilleEnum["2nde_commune"]]))
+              .then(
+                sql<string>`COALESCE(${eb.ref("positionQuadrant")}, '-')`
+              )
+              .else(
+                sql<string>`COALESCE(${eb.ref("positionQuadrant")}, ${PositionQuadrantEnum["Hors quadrant"]})`
+              )
+              .end()
+              .as("positionQuadrant")
+          ])
+          .$narrowType<{
+            millesimeSortie: string;
+          }>()
+          .groupBy([
+            "positionFormationRegionaleQuadrant.millesimeSortie",
+            "positionFormationRegionaleQuadrant.positionQuadrant",
+          ])
+          .orderBy("positionFormationRegionaleQuadrant.millesimeSortie", "asc")
+      ).as("evolutionPositionQuadrant"),
       jsonArrayFrom(
         eb
           .selectFrom("indicateurEntree")
