@@ -38,12 +38,13 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   isHistorique: "Historique ?",
   isHistoriqueCoExistant: "Historique co-existant ?",
   // Effectifs
-  evolutionEffectif: "Évolution des effectifs",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
   capacite: "Capacité",
+  evolutionCapacite: "Évolution de la capacité d'accueil",
   premiersVoeux: "Nb de voeux",
   // Indicateurs
   tauxPression: "Tx de pression",
@@ -71,6 +72,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   formationSpecifique: string;
   actionPrioritaire: string;
   evolutionEffectif: string;
+  evolutionCapacite: string;
   evolutionTauxPression: string;
   evolutionTauxDemande: string;
   evolutionTauxRemplissage: string;
@@ -106,12 +108,13 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   libelleNsf: "Domaine de formation (NSF)",
   "continuum.libelleFormation": "Diplôme historique",
   // Effectifs
-  evolutionEffectif: "Évolution des effectifs",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
   capacite: "Capacité",
+  evolutionCapacite: "Évolution de la capacité d'accueil",
   premiersVoeux: "Nb de voeux",
   // Indicateurs
   tauxPression: "Tx de pression",
@@ -146,6 +149,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
+  libelleNiveauDiplome: "Niveau de diplôme",
   // Effectifs
   effectif1: "Année 1",
   effectif2: "Année 2",

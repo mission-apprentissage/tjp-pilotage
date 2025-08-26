@@ -6,7 +6,7 @@ import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Formation, FORMATION_COLUMNS_KEYS } from "@/app/(wrapped)/console/formations/types";
-import { getEvolutionEffectifData, getEvolutionEffectifKeys, getEvolutionPositionQuadrantData,getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
+import { getEvolutionPositionQuadrantData,getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
@@ -279,8 +279,8 @@ export const FormationLineContent = ({
         ) : (
           <GraphEvolution
             title={FORMATION_COLUMNS.evolutionTauxPression}
-            data={getEvolutionEffectifData(formation)}
-            keys={getEvolutionEffectifKeys()}
+            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "effectif"})}
+            keys={getEvolutionTauxEntreeKeys()}
           />
         )
       }
@@ -347,7 +347,7 @@ export const FormationLineContent = ({
         ) : (
           <GraphEvolution
             title={FORMATION_COLUMNS.evolutionTauxPression}
-            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxPression"})}
+            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxPression"})}
             isPercentage={false}
             keys={getEvolutionTauxEntreeKeys()}
           />
@@ -380,7 +380,7 @@ export const FormationLineContent = ({
         ) : (
           <GraphEvolution
             title={FORMATION_COLUMNS.evolutionTauxDemande}
-            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxDemande"})}
+            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxDemande"})}
             isPercentage={false}
             keys={getEvolutionTauxEntreeKeys()}
           />
@@ -409,7 +409,7 @@ export const FormationLineContent = ({
         ) : (
           <GraphEvolution
             title={FORMATION_COLUMNS.evolutionTauxRemplissage}
-            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxRemplissage"})}
+            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxRemplissage"})}
             isPercentage={true}
             keys={getEvolutionTauxEntreeKeys()}
           />
@@ -474,7 +474,7 @@ export const FormationLineContent = ({
         ) : (
           <GraphEvolution
             title={FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
-            data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxDevenirFavorable"})}
+            data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxDevenirFavorable"})}
             isPercentage={true}
             keys={getEvolutionTauxSortieKeys()}
           />
@@ -507,7 +507,7 @@ export const FormationLineContent = ({
         ) : (
           <GraphEvolution
             title={FORMATION_COLUMNS.evolutionTauxInsertion}
-            data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxInsertion"})}
+            data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxInsertion"})}
             isPercentage={true}
             keys={getEvolutionTauxSortieKeys()}
           />
@@ -540,7 +540,7 @@ export const FormationLineContent = ({
         ) : (
           <GraphEvolution
             title={FORMATION_COLUMNS.evolutionTauxPoursuite}
-            data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, taux: "tauxPoursuite"})}
+            data={getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxPoursuite"})}
             isPercentage={true}
             keys={getEvolutionTauxSortieKeys()}
           />

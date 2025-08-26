@@ -28,7 +28,7 @@ export const FORMATION_COLUMNS = {
   isHistoriqueCoExistant: "Historique co-existant ?",
   // Effectifs
   nbEtablissement: "Nb Étab",
-  evolutionEffectif: "Évolution des effectifs",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
@@ -77,7 +77,7 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   libelleNsf: "Domaine de formation (NSF)",
   // Effectifs
   nbEtablissement: "Nb Étab",
-  evolutionEffectif: "Évolution des effectifs",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",

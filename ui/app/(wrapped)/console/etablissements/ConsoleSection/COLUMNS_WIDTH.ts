@@ -35,6 +35,7 @@ export const COLUMNS_WIDTH: Record<keyof typeof FORMATION_ETABLISSEMENT_COLUMNS_
   effectif2: 150,
   effectif3: 150,
   effectifEntree: 150,
+  evolutionCapacite: 250,
   capacite: 150,
   premiersVoeux: 150,
   // Indicateurs

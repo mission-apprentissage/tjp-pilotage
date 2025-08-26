@@ -67,6 +67,8 @@ const FormationEtablissementLineSchema = z.object({
       tauxDemande: z.coerce.number().optional(),
       tauxPression: z.coerce.number().optional(),
       tauxRemplissage: z.coerce.number().optional(),
+      capacite: z.coerce.number().optional(),
+      effectif: z.coerce.number().optional()
     })
   ),
   evolutionPositionQuadrant: z.array(
