@@ -10,24 +10,6 @@ import { TableEvolution } from "./TableEvolution";
 
 type GraphData = Record<string, number | undefined>;
 
-const getEvolutionColor = ({
-  data
-} : {
-  data: GraphData;
-}) => {
-  const values = Object.values(data).filter((value) => value !== undefined);
-  const firstValue = values[0];
-  const lastValue = values[values.length - 1];
-
-  if (firstValue > lastValue) {
-    return themeDefinition.colors.redmarianne[625];
-  }
-  if (firstValue < lastValue) {
-    return themeDefinition.colors.greenArchipel[557];
-  }
-  return themeDefinition.colors.bluefrance[625];
-};
-
 export const GraphEvolution = ({
   title,
   data,
@@ -112,7 +94,7 @@ export const GraphEvolution = ({
           },
           animation: false,
           showSymbol: false,
-          color: getEvolutionColor({ data }),
+          color: themeDefinition.colors.bluefrance[925],
           connectNulls: true,
           label: {
             position: "top",

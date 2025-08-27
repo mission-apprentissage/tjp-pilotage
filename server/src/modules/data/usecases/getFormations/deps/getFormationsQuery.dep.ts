@@ -127,19 +127,9 @@ export const getFormationsQuery = async ({
               .whereRef("positionFormationRegionaleQuadrant.cfd", "=", "formationView.cfd")
               .whereRef("positionFormationRegionaleQuadrant.codeDispositif", "=", "formationEtablissement.codeDispositif")
               .whereRef("positionFormationRegionaleQuadrant.codeRegion", "=", "etablissement.codeRegion")
-              .select((eb) =>[
+              .select([
                 "positionFormationRegionaleQuadrant.millesimeSortie",
-                eb
-                  .case()
-                  .when(eb("formationView.typeFamille", "in", [TypeFamilleEnum["1ere_commune"], TypeFamilleEnum["2nde_commune"]]))
-                  .then(
-                    sql<string>`COALESCE(${eb.ref("positionQuadrant")}, '-')`
-                  )
-                  .else(
-                    sql<string>`COALESCE(${eb.ref("positionQuadrant")}, ${PositionQuadrantEnum["Hors quadrant"]})`
-                  )
-                  .end()
-                  .as("positionQuadrant")
+                "positionFormationRegionaleQuadrant.positionQuadrant"
               ])
               .$narrowType<{
               millesimeSortie: string;
