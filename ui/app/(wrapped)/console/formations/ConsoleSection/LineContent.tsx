@@ -6,7 +6,7 @@ import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Formation, FORMATION_COLUMNS_KEYS } from "@/app/(wrapped)/console/formations/types";
-import { getEvolutionPositionQuadrantData,getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
+import { getEvolutionIcon,getEvolutionPositionQuadrantData, getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
@@ -18,7 +18,7 @@ import { TableEvolution } from "@/components/TableEvolution";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { formatFamilleMetierLibelle, formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
-import { getTauxDemandeStyle,getTauxPressionStyle } from "@/utils/getBgScale";
+import {getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { getLeftOffset, isColonneSticky, isColonneVisible  } from "./utils";
 
@@ -267,25 +267,6 @@ export const FormationLineContent = ({
       </Link>
     </ConditionalTd>
     <ConditionalTd
-      colonne={"evolutionEffectif"}
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      stickyColonnes={stickyColonnes}
-      p={0}
-    >
-      {
-        isHistorique ? (
-          "-"
-        ) : (
-          <GraphEvolution
-            title={FORMATION_COLUMNS.evolutionTauxPression}
-            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "effectif"})}
-            keys={getEvolutionTauxEntreeKeys()}
-          />
-        )
-      }
-    </ConditionalTd>
-    <ConditionalTd
       colonne={"effectif1"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
@@ -319,7 +300,29 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       isNumeric
     >
-      {formation.effectifEntree ?? "-"}
+      <Flex gap={1} justify={"end"}>
+        {formation.effectifEntree ?? "-"}
+        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "effectif"}) })}
+      </Flex>
+    </ConditionalTd>
+    <ConditionalTd
+      colonne={"evolutionEffectif"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+      p={0}
+    >
+      {
+        isHistorique ? (
+          "-"
+        ) : (
+          <GraphEvolution
+            title={FORMATION_COLUMNS.evolutionTauxPression}
+            data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "effectif"})}
+            keys={getEvolutionTauxEntreeKeys()}
+          />
+        )
+      }
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxPression"}
@@ -328,11 +331,14 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <TableBadge sx={
-        getTauxPressionStyle(formation.tauxPression !== undefined ? formatNumber(formation.tauxPression, 2) : undefined)
-      }>
-        {formatNumberToString(formation.tauxPression, 2, "-")}
-      </TableBadge>
+      <Flex gap={1} justify={"end"}>
+        <TableBadge sx={
+          getTauxPressionStyle(formation.tauxPression !== undefined ? formatNumber(formation.tauxPression, 2) : undefined)
+        }>
+          {formatNumberToString(formation.tauxPression, 2, "-")}
+        </TableBadge>
+        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxPression"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxPression"}
@@ -361,11 +367,14 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <TableBadge sx={
-        getTauxDemandeStyle(formation.tauxDemande !== undefined ? formatNumber(formation.tauxDemande, 2) : undefined)
-      }>
-        {formatNumberToString(formation.tauxDemande, 2, "-")}
-      </TableBadge>
+      <Flex gap={1} justify={"end"}>
+        <TableBadge sx={
+          getTauxPressionStyle(formation.tauxDemande !== undefined ? formatNumber(formation.tauxDemande, 2) : undefined)
+        }>
+          {formatNumberToString(formation.tauxDemande, 2, "-")}
+        </TableBadge>
+        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxDemande"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxDemande"}
@@ -394,7 +403,10 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <GraphWrapper value={formation.tauxRemplissage} />
+      <Flex gap={1} justify={"end"}>
+        <GraphWrapper value={formation.tauxRemplissage} />
+        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxRemplissage"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxRemplissage"}
@@ -459,7 +471,14 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
     >
-      <GraphWrapper continuum={formation.continuum} value={formation.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} my="auto" />
+      <Flex gap={1} justify={"end"}>
+        <GraphWrapper
+          continuum={formation.continuum}
+          value={formation.tauxDevenirFavorable}
+          millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
+        />
+        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxDevenirFavorable"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxDevenirFavorable"}
@@ -488,11 +507,14 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <GraphWrapper
-        continuum={formation.continuum}
-        value={formation.tauxInsertion}
-        millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
-      />
+      <Flex gap={1} justify={"end"}>
+        <GraphWrapper
+          continuum={formation.continuum}
+          value={formation.tauxInsertion}
+          millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
+        />
+        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxInsertion"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxInsertion"}
@@ -521,11 +543,14 @@ export const FormationLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <GraphWrapper
-        continuum={formation.continuum}
-        value={formation.tauxPoursuite}
-        millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
-      />
+      <Flex gap={1} justify={"end"}>
+        <GraphWrapper
+          continuum={formation.continuum}
+          value={formation.tauxPoursuite}
+          millesime={getMillesimeFromRentreeScolaire({ rentreeScolaire: formation.rentreeScolaire ?? CURRENT_RENTREE })}
+        />
+        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxPoursuite"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxPoursuite"}

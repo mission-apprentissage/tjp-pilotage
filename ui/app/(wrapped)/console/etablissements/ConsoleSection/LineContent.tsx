@@ -1,5 +1,5 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton,Link, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
+import { Box, chakra, Flex, IconButton,Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { Fragment } from "react";
 import { CURRENT_IJ_MILLESIME } from "shared";
@@ -8,7 +8,7 @@ import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS, Line } from "@/app/(wrapped)/console/etablissements/types";
-import { getEvolutionPositionQuadrantData, getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
+import { getEvolutionIcon,getEvolutionPositionQuadrantData, getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
@@ -21,7 +21,7 @@ import { TableBadge } from "@/components/TableBadge";
 import { TableEvolution } from "@/components/TableEvolution";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
-import { formatCodeDepartement, formatFamilleMetierLibelle, formatMillesime} from "@/utils/formatLibelle";
+import { formatCodeDepartement, formatFamilleMetierLibelle} from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxDemandeStyle, getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -373,25 +373,6 @@ export const EtablissementLineContent = ({
       </>
     )}
     <ConditionalTd
-      colonne={"evolutionEffectif"}
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      stickyColonnes={stickyColonnes}
-      p={0}
-    >
-      {
-        isHistorique ? (
-          "-"
-        ) : (
-          <GraphEvolution
-            title="Évolution des effectifs"
-            data={getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "effectif"})}
-            keys={getEvolutionTauxEntreeKeys()}
-          />
-        )
-      }
-    </ConditionalTd>
-    <ConditionalTd
       colonne="effectif1"
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
@@ -425,7 +406,41 @@ export const EtablissementLineContent = ({
       stickyColonnes={stickyColonnes}
       isNumeric
     >
-      {line.effectifEntree ?? "-"}
+      <Flex gap={1} justify={"end"}>
+        {line.effectifEntree ?? "-"}
+        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "effectif"}) })}
+      </Flex>
+    </ConditionalTd>
+    <ConditionalTd
+      colonne={"evolutionEffectif"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+      p={0}
+    >
+      {
+        isHistorique ? (
+          "-"
+        ) : (
+          <GraphEvolution
+            title="Évolution des effectifs"
+            data={getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "effectif"})}
+            keys={getEvolutionTauxEntreeKeys()}
+          />
+        )
+      }
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="capacite"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      stickyColonnes={stickyColonnes}
+      isNumeric
+    >
+      <Flex gap={1} justify={"end"}>
+        {line.capacite ?? "-"}
+        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "capacite"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne="evolutionCapacite"
@@ -447,26 +462,20 @@ export const EtablissementLineContent = ({
       }
     </ConditionalTd>
     <ConditionalTd
-      colonne="capacite"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-      stickyColonnes={stickyColonnes}
-      isNumeric
-    >
-      {line.capacite ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
       colonne="tauxPression"
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <TableBadge sx={
-        getTauxPressionStyle(line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : undefined)
-      }>
-        {formatNumberToString(line.tauxPression, 2, "-")}
-      </TableBadge>
+      <Flex gap={1} justify={"center"}>
+        <TableBadge sx={
+          getTauxPressionStyle(line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : undefined)
+        }>
+          {formatNumberToString(line.tauxPression, 2, "-")}
+        </TableBadge>
+        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "tauxPression"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxPression"}
@@ -495,11 +504,14 @@ export const EtablissementLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <TableBadge sx={
-        getTauxDemandeStyle(line.tauxDemande !== undefined ? formatNumber(line.tauxDemande, 2) : undefined)
-      }>
-        {formatNumberToString(line.tauxDemande, 2, "-")}
-      </TableBadge>
+      <Flex gap={1} justify={"center"}>
+        <TableBadge sx={
+          getTauxDemandeStyle(line.tauxDemande !== undefined ? formatNumber(line.tauxDemande, 2) : undefined)
+        }>
+          {formatNumberToString(line.tauxDemande, 2, "-")}
+        </TableBadge>
+        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "tauxDemande"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxDemande"}
@@ -528,7 +540,10 @@ export const EtablissementLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <GraphWrapper value={line.tauxRemplissage} />
+      <Flex gap={1} justify={"center"}>
+        <GraphWrapper value={line.tauxRemplissage} />
+        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "tauxRemplissage"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxRemplissage"}
@@ -557,12 +572,7 @@ export const EtablissementLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <Tooltip
-        label={`Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`}
-        placement="top"
-      >
-        {line.positionQuadrant ?? "-"}
-      </Tooltip>
+      {line.positionQuadrant}
     </ConditionalTd>
     <ConditionalTd
       colonne="evolutionPositionQuadrant"
@@ -590,15 +600,18 @@ export const EtablissementLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign="center"
     >
-      <GraphWrapper
-        continuum={line.continuum}
-        value={line.tauxDevenirFavorable}
-        millesime={
-          line.rentreeScolaire ?
-            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
-            CURRENT_IJ_MILLESIME
-        }
-      />
+      <Flex gap={1} justify={"center"}>
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxDevenirFavorable}
+          millesime={
+            line.rentreeScolaire ?
+              getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+              CURRENT_IJ_MILLESIME
+          }
+        />
+        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, key: "tauxDevenirFavorable"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxDevenirFavorable"}
@@ -627,15 +640,18 @@ export const EtablissementLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <GraphWrapper
-        continuum={line.continuum}
-        value={line.tauxInsertion}
-        millesime={
-          line.rentreeScolaire ?
-            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
-            CURRENT_IJ_MILLESIME
-        }
-      />
+      <Flex gap={1} justify={"center"}>
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxInsertion}
+          millesime={
+            line.rentreeScolaire ?
+              getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+              CURRENT_IJ_MILLESIME
+          }
+        />
+        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, key: "tauxInsertion"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxInsertion"}
@@ -664,15 +680,18 @@ export const EtablissementLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign={"center"}
     >
-      <GraphWrapper
-        continuum={line.continuum}
-        value={line.tauxPoursuite}
-        millesime={
-          line.rentreeScolaire ?
-            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
-            CURRENT_IJ_MILLESIME
-        }
-      />
+      <Flex gap={1} justify={"center"}>
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxPoursuite}
+          millesime={
+            line.rentreeScolaire ?
+              getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+              CURRENT_IJ_MILLESIME
+          }
+        />
+        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, key: "tauxPoursuite"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxPoursuite"}
@@ -701,15 +720,18 @@ export const EtablissementLineContent = ({
       stickyColonnes={stickyColonnes}
       textAlign="center"
     >
-      <GraphWrapper
-        continuum={line.continuumEtablissement}
-        value={line.tauxDevenirFavorableEtablissement}
-        millesime={
-          line.rentreeScolaire ?
-            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
-            CURRENT_IJ_MILLESIME
-        }
-      />
+      <Flex gap={1} justify={"center"}>
+        <GraphWrapper
+          continuum={line.continuumEtablissement}
+          value={line.tauxDevenirFavorableEtablissement}
+          millesime={
+            line.rentreeScolaire ?
+              getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+              CURRENT_IJ_MILLESIME
+          }
+        />
+        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, key: "tauxDevenirFavorable"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxDevenirFavorableEtablissement"}
@@ -737,15 +759,18 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
     >
-      <GraphWrapper
-        continuum={line.continuumEtablissement}
-        value={line.tauxInsertionEtablissement}
-        millesime={
-          line.rentreeScolaire ?
-            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
-            CURRENT_IJ_MILLESIME
-        }
-      />
+      <Flex gap={1} justify={"center"}>
+        <GraphWrapper
+          continuum={line.continuumEtablissement}
+          value={line.tauxInsertionEtablissement}
+          millesime={
+            line.rentreeScolaire ?
+              getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+              CURRENT_IJ_MILLESIME
+          }
+        />
+        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, key: "tauxInsertion"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxInsertionEtablissement"}
@@ -773,15 +798,18 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
     >
-      <GraphWrapper
-        continuum={line.continuumEtablissement}
-        value={line.tauxPoursuiteEtablissement}
-        millesime={
-          line.rentreeScolaire ?
-            getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
-            CURRENT_IJ_MILLESIME
-        }
-      />
+      <Flex gap={1} justify={"center"}>
+        <GraphWrapper
+          continuum={line.continuumEtablissement}
+          value={line.tauxPoursuiteEtablissement}
+          millesime={
+            line.rentreeScolaire ?
+              getMillesimeFromRentreeScolaire({rentreeScolaire: line.rentreeScolaire, offset: 0}) :
+              CURRENT_IJ_MILLESIME
+          }
+        />
+        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, key: "tauxPoursuite"}) })}
+      </Flex>
     </ConditionalTd>
     <ConditionalTd
       colonne={"evolutionTauxPoursuiteEtablissement"}

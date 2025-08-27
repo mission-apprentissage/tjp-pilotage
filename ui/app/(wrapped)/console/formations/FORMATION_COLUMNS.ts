@@ -28,11 +28,11 @@ export const FORMATION_COLUMNS = {
   isHistoriqueCoExistant: "Historique co-existant ?",
   // Effectifs
   nbEtablissement: "Nb Étab",
-  evolutionEffectif: "Évolution des effectifs en entrée",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
   evolutionTauxPression: "Évolution du taux de pression",
@@ -77,11 +77,11 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   libelleNsf: "Domaine de formation (NSF)",
   // Effectifs
   nbEtablissement: "Nb Étab",
-  evolutionEffectif: "Évolution des effectifs en entrée",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
   evolutionTauxPression: "Évolution du taux de pression",

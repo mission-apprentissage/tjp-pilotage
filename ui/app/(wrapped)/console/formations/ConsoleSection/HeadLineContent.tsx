@@ -313,16 +313,6 @@ export const HeadLineContent = ({
           {FORMATION_COLUMNS.nbEtablissement}
         </ConditionalTh>
         <ConditionalTh
-          colonne={"evolutionEffectif"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-          icon={<TooltipDefinitionNombreEleves />}
-        >
-          {FORMATION_COLUMNS.evolutionEffectif}
-        </ConditionalTh>
-        <ConditionalTh
           colonne={"effectif1"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -372,6 +362,16 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="effectifEntree" />
           {FORMATION_COLUMNS.effectifEntree}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"evolutionEffectif"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionNombreEleves />}
+        >
+          {FORMATION_COLUMNS.evolutionEffectif}
         </ConditionalTh>
         <ConditionalTh
           colonne={"tauxPression"}

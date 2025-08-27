@@ -419,15 +419,6 @@ export const HeadLineContent = ({
           </>
         )}
         <ConditionalTh
-          colonne={"evolutionEffectif"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        >
-          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionEffectif}
-        </ConditionalTh>
-        <ConditionalTh
           colonne={"effectif1"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -480,13 +471,13 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
         </ConditionalTh>
         <ConditionalTh
-          colonne="evolutionCapacite"
+          colonne={"evolutionEffectif"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           stickyColonnes={stickyColonnes}
           setStickyColonnes={setStickyColonnes}
         >
-          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionCapacite}
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionEffectif}
         </ConditionalTh>
         <ConditionalTh
           colonne="capacite"
@@ -499,6 +490,15 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="capacite" />
           {FORMATION_ETABLISSEMENT_COLUMNS.capacite}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne="evolutionCapacite"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionCapacite}
         </ConditionalTh>
         <ConditionalTh
           colonne="tauxPression"
