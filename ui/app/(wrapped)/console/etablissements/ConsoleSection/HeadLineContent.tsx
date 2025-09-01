@@ -583,7 +583,7 @@ export const HeadLineContent = ({
           <OrderIcon {...order} column="positionQuadrant" />
           {FORMATION_ETABLISSEMENT_COLUMNS.positionQuadrant}
         </ConditionalTh>
-        <ConditionalTh
+        {/* <ConditionalTh
           colonne="evolutionPositionQuadrant"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -591,7 +591,7 @@ export const HeadLineContent = ({
           setStickyColonnes={setStickyColonnes}
         >
           {FORMATION_ETABLISSEMENT_COLUMNS.evolutionPositionQuadrant}
-        </ConditionalTh>
+        </ConditionalTh> */}
         <ConditionalTh
           colonne="tauxDevenirFavorable"
           colonneFilters={colonneFilters}

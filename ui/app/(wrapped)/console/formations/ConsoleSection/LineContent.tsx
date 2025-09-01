@@ -6,7 +6,7 @@ import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Formation, FORMATION_COLUMNS_KEYS } from "@/app/(wrapped)/console/formations/types";
-import { getEvolutionIcon,getEvolutionPositionQuadrantData, getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
+import { getEvolutionIcon, getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
@@ -14,7 +14,6 @@ import {BadgeTypeFamille} from '@/components/BadgeTypeFamille';
 import { GraphEvolution } from "@/components/GraphEvolution";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
-import { TableEvolution } from "@/components/TableEvolution";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { formatFamilleMetierLibelle, formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
@@ -444,7 +443,7 @@ export const FormationLineContent = ({
             {formation.positionQuadrant ?? "-"}
           </Tooltip>
         </ConditionalTd>
-        <ConditionalTd
+        {/* <ConditionalTd
           colonne="evolutionPositionQuadrant"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -462,7 +461,7 @@ export const FormationLineContent = ({
               />
             )
           }
-        </ConditionalTd>
+        </ConditionalTd> */}
       </>
     )}
     <ConditionalTd
