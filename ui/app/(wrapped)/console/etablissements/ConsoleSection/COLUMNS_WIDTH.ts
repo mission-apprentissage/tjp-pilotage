@@ -50,7 +50,7 @@ export const COLUMNS_WIDTH: Record<keyof typeof FORMATION_ETABLISSEMENT_COLUMNS_
   tauxPoursuite: 200,
   evolutionTauxPoursuite: 320,
   positionQuadrant: 150,
-  evolutionPositionQuadrant: 320,
+  // evolutionPositionQuadrant: 320,
   tauxDevenirFavorable: 200,
   evolutionTauxDevenirFavorable: 320,
   tauxInsertionEtablissement: 200,

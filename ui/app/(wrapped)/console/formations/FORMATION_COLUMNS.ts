@@ -41,7 +41,7 @@ export const FORMATION_COLUMNS = {
   tauxRemplissage: "Tx de remplissage",
   evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
-  evolutionPositionQuadrant: "Évolution de la position dans le quadrant",
+  // evolutionPositionQuadrant: "Évolution de la position dans le quadrant",
   tauxInsertion: `Tx d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
   tauxPoursuite: `Tx de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
@@ -55,7 +55,7 @@ export const FORMATION_COLUMNS = {
   evolutionTauxPression: string;
   evolutionTauxDemande: string;
   evolutionTauxRemplissage: string;
-  evolutionPositionQuadrant: string;
+  // evolutionPositionQuadrant: string;
   evolutionTauxInsertion: string;
   evolutionTauxPoursuite: string;
   evolutionTauxDevenirFavorable: string;
@@ -90,7 +90,7 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   tauxRemplissage: "Tx de remplissage",
   evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: "Position dans le quadrant",
-  evolutionPositionQuadrant: "Évolution de la position dans le quadrant",
+  // evolutionPositionQuadrant: "Évolution de la position dans le quadrant",
   tauxInsertion: "Tx d'emploi 6 mois régional",
   evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",

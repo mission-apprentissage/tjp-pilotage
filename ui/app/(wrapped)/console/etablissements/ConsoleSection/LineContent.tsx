@@ -8,7 +8,7 @@ import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS, Line } from "@/app/(wrapped)/console/etablissements/types";
-import { getEvolutionIcon,getEvolutionPositionQuadrantData, getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
+import { getEvolutionIcon, getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
@@ -18,7 +18,6 @@ import { DateEffetTransformationComponent } from "@/components/DateEffetTransfor
 import { GraphEvolution } from "@/components/GraphEvolution";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
-import { TableEvolution } from "@/components/TableEvolution";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
 import { formatCodeDepartement, formatFamilleMetierLibelle} from "@/utils/formatLibelle";
@@ -574,7 +573,7 @@ export const EtablissementLineContent = ({
     >
       {line.positionQuadrant}
     </ConditionalTd>
-    <ConditionalTd
+    {/* <ConditionalTd
       colonne="evolutionPositionQuadrant"
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
@@ -592,7 +591,7 @@ export const EtablissementLineContent = ({
           />
         )
       }
-    </ConditionalTd>
+    </ConditionalTd> */}
     <ConditionalTd
       colonne="tauxDevenirFavorable"
       colonneFilters={colonneFilters}

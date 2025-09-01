@@ -69,7 +69,7 @@ const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEY
   "tauxDemande",
   "evolutionTauxDemande",
   "positionQuadrant",
-  "evolutionPositionQuadrant",
+  // "evolutionPositionQuadrant",
   "tauxDevenirFavorable",
   "evolutionTauxDevenirFavorable",
   "tauxInsertion",
@@ -105,7 +105,7 @@ const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS
   "tauxDemande",
   "evolutionTauxDemande",
   "positionQuadrant",
-  "evolutionPositionQuadrant",
+  // "evolutionPositionQuadrant",
   "tauxDevenirFavorable",
   "evolutionTauxDevenirFavorable",
   "tauxInsertion",
@@ -271,6 +271,18 @@ const ColonneFilterSection = chakra(
   }
 );
 
+const getColonnesFromDisplayType = (displayType?: DisplayTypeEnum): FORMATION_ETABLISSEMENT_COLUMNS_KEYS[] => {
+  switch (displayType) {
+  case DisplayTypeEnum.donneesEvolutionTaux:
+    return COLONNES_EVOLUTION_TAUX;
+  case DisplayTypeEnum.suiviTransformation:
+    return COLONNES_SUIVI_TRANSFO;
+  case DisplayTypeEnum.global:
+  default:
+    return COLONNES_GLOBAL;
+  }
+};
+
 const Page = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const trackEvent = usePlausible();
@@ -309,11 +321,7 @@ const Page = () => {
     trackEvent("etablissements:vue-tabs", {
       props: { type: displayType },
     });
-    const columns = displayType === DisplayTypeEnum.global ?
-      COLONNES_GLOBAL :
-      displayType === DisplayTypeEnum.donneesEvolutionTaux ?
-        COLONNES_EVOLUTION_TAUX :
-        COLONNES_SUIVI_TRANSFO;
+    const columns = getColonnesFromDisplayType(displayType);
 
     handleColonneFilters(columns);
     setSearchParams({
@@ -510,7 +518,7 @@ const Page = () => {
     setColonneFilters(value);
   };
 
-  const onSearch = (searchValue?: string) => {
+  const onSearch = () => {
     setSearchParams({
       filters: filters,
       order: order,
@@ -668,7 +676,7 @@ const Page = () => {
                     const oldValue = searchFormationEtablissement;
                     setSearchFormationEtablissement(newValue);
                     if (newValue.length > 2 || oldValue.length > newValue.length) {
-                      onSearch(newValue);
+                      onSearch();
                     }
                   }}
                   value={searchFormationEtablissement}
