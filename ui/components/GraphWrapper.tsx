@@ -28,7 +28,7 @@ export const GraphWrapper = chakra(
     className?: string;
     outlined?: boolean;
   }) => (
-    <Flex w="160px" className={className} display="flex" alignItems="center" justifyContent={"center"}>
+    <Flex w="160px" display="flex" alignItems="center" justifyContent={"center"} mx={"auto"} className={className} >
       {value !== undefined && !Number.isNaN(value) ? (
         <>
           <Graph flex={1} continuum={continuum} outlined={outlined} value={value * 100} display="inline-block" mr="1" />

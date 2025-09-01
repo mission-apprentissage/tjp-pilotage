@@ -119,9 +119,6 @@ export const LandingFooter = () => {
             </Link>
           </Box>
           <Box>
-            <Link href="mailto:orion@inserjeunes.beta.gouv.fr">Nous contacter : orion@inserjeunes.beta.gouv.fr</Link>
-          </Box>
-          <Box>
             <Link as={NextLink} href="/statistiques" onClick={() => trackEvent("footer:statistiques")}>
               Statistiques
             </Link>

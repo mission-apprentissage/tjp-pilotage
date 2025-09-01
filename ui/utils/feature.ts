@@ -8,5 +8,5 @@ export const feature = {
   requetesSuggerees: true,
   formationsSpecifiqueConsole: false,
   donneesTransfoConsole: true,
-  donneesEvolutionTauxConsole: false
+  donneesEvolutionTauxConsole: true
 };

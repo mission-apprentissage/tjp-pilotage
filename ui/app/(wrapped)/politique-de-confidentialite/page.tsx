@@ -98,12 +98,6 @@ const Page = () =>
           <DSFRParagraph as="li">D'un droit à la limitation du traitement</DSFRParagraph>
         </Box>
         <DSFRParagraph mb={4}>
-          Pour les exercer, contactez-nous par voie électronique :{' '}
-          <Link href="mailto:orion@inserjeunes.beta.gouv.fr" color="blue.500">
-            orion@inserjeunes.beta.gouv.fr
-          </Link>
-        </DSFRParagraph>
-        <DSFRParagraph mb={4}>
           Par voie postale :
         </DSFRParagraph>
         <Box as="blockquote" pl={4} borderLeft="4px" borderColor="blue.500" mb={4}>
