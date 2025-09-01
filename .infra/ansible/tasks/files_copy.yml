@@ -54,6 +54,11 @@
   ansible.builtin.shell: rm -rf /opt/app/data/documentation/*
   when: dir_check.stat.exists and dir_check.stat.isdir
 
+- name: Création du dossier de la documentation s'il n'existe pas
+  ansible.builtin.file:
+    path: /opt/app/data/documentation
+    state: directory
+
 - name: Copie du contenu de la documentation vers le reverse proxy
   shell: "cp -r /tmp/documentation/* /opt/app/data/documentation/"
 
