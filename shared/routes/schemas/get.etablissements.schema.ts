@@ -45,6 +45,38 @@ const FormationEtablissementLineSchema = z.object({
   tauxPoursuiteEtablissement: z.number().optional(),
   tauxInsertionEtablissement: z.number().optional(),
   tauxDevenirFavorableEtablissement: z.number().optional(),
+  evolutionTauxSortie: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      tauxInsertion: z.coerce.number().optional(),
+      tauxPoursuite: z.coerce.number().optional(),
+      tauxDevenirFavorable: z.coerce.number().optional(),
+    })
+  ),
+  evolutionTauxSortieEtablissement: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      tauxInsertion: z.coerce.number().optional(),
+      tauxPoursuite: z.coerce.number().optional(),
+      tauxDevenirFavorable: z.coerce.number().optional(),
+    })
+  ),
+  evolutionTauxEntree: z.array(
+    z.object({
+      rentreeScolaire: z.string(),
+      tauxDemande: z.coerce.number().optional(),
+      tauxPression: z.coerce.number().optional(),
+      tauxRemplissage: z.coerce.number().optional(),
+      capacite: z.coerce.number().optional(),
+      effectif: z.coerce.number().optional()
+    })
+  ),
+  evolutionPositionQuadrant: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      positionQuadrant: z.string().optional(),
+    })
+  ),
   valeurAjoutee: z.coerce.number().optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),

@@ -3,6 +3,7 @@ import { init, registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { frenchLocale } from "@/utils/echarts/frenchLocale";
+
 export const LineChart = ({
   title,
   data,

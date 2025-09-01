@@ -14,6 +14,7 @@ import type { UserType } from 'shared/schema/userSchema';
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
+import { getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData,getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
 import { CodeDepartementContext } from '@/app/codeDepartementContext';
 import { CodeRegionContext } from '@/app/codeRegionContext';
 import { UaisContext } from '@/app/uaiContext';
@@ -52,42 +53,72 @@ const COLONNES_GLOBAL: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> =
 const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
   "rentreeScolaire",
   "libelleEtablissement",
+  "commune",
+  "libelleDispositif",
   "libelleFormation",
-  "tauxPression",
+  "capacite",
+  "evolutionCapacite",
+  "effectif1",
+  "effectif2",
+  "effectif3",
+  "evolutionEffectif",
   "tauxRemplissage",
-  "tauxInsertion",
-  "tauxPoursuite",
+  "evolutionTauxRemplissage",
+  "tauxPression",
+  "evolutionTauxPression",
+  "tauxDemande",
+  "evolutionTauxDemande",
   "positionQuadrant",
+  // "evolutionPositionQuadrant",
   "tauxDevenirFavorable",
+  "evolutionTauxDevenirFavorable",
   "tauxInsertion",
+  "evolutionTauxInsertion",
   "tauxPoursuite",
+  "evolutionTauxPoursuite",
   "tauxDevenirFavorableEtablissement",
+  "evolutionTauxDevenirFavorableEtablissement",
   "tauxInsertionEtablissement",
+  "evolutionTauxInsertionEtablissement",
   "tauxPoursuiteEtablissement",
+  "evolutionTauxPoursuiteEtablissement",
+  "valeurAjoutee"
 ];
 
 const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
   "rentreeScolaire",
   "libelleEtablissement",
+  "commune",
+  "libelleDispositif",
   "libelleFormation",
   "numero",
   "dateEffetTransformation",
   "typeDemande",
+  "capacite",
   "effectif1",
   "effectif2",
   "effectif3",
-  "effectifEntree",
-  "tauxPression",
   "tauxRemplissage",
-  "tauxInsertion",
-  "tauxPoursuite",
+  "evolutionTauxRemplissage",
+  "tauxPression",
+  "evolutionTauxPression",
+  "tauxDemande",
+  "evolutionTauxDemande",
   "positionQuadrant",
+  // "evolutionPositionQuadrant",
   "tauxDevenirFavorable",
+  "evolutionTauxDevenirFavorable",
   "tauxInsertion",
+  "evolutionTauxInsertion",
   "tauxPoursuite",
+  "evolutionTauxPoursuite",
   "tauxDevenirFavorableEtablissement",
+  "evolutionTauxDevenirFavorableEtablissement",
   "tauxInsertionEtablissement",
+  "evolutionTauxInsertionEtablissement",
   "tauxPoursuiteEtablissement",
+  "evolutionTauxPoursuiteEtablissement",
+  "valeurAjoutee"
 ];
 
 const TabsSection = chakra((
@@ -240,6 +271,18 @@ const ColonneFilterSection = chakra(
   }
 );
 
+const getColonnesFromDisplayType = (displayType?: DisplayTypeEnum): FORMATION_ETABLISSEMENT_COLUMNS_KEYS[] => {
+  switch (displayType) {
+  case DisplayTypeEnum.donneesEvolutionTaux:
+    return COLONNES_EVOLUTION_TAUX;
+  case DisplayTypeEnum.suiviTransformation:
+    return COLONNES_SUIVI_TRANSFO;
+  case DisplayTypeEnum.global:
+  default:
+    return COLONNES_GLOBAL;
+  }
+};
+
 const Page = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const trackEvent = usePlausible();
@@ -278,11 +321,7 @@ const Page = () => {
     trackEvent("etablissements:vue-tabs", {
       props: { type: displayType },
     });
-    const columns = displayType === DisplayTypeEnum.global ?
-      COLONNES_GLOBAL :
-      displayType === DisplayTypeEnum.donneesEvolutionTaux ?
-        COLONNES_EVOLUTION_TAUX :
-        COLONNES_SUIVI_TRANSFO;
+    const columns = getColonnesFromDisplayType(displayType);
 
     handleColonneFilters(columns);
     setSearchParams({
@@ -343,11 +382,41 @@ const Page = () => {
       selectedDepartement: "Departement sélectionnée",
     };
 
+    const evolutionTauxEntreeColumns = {
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Effectif en entrée ${key}`]: `Effectif en entrée ${key}`,
+        [`Capacité d'accueil ${key}`]: `Capacité d'accueil ${key}`,
+        [`Taux de pression ${key}`]: `Taux de pression ${key}`,
+        [`Taux de demande ${key}`]: `Taux de demande ${key}`,
+        [`Taux de remplissage ${key}`]: `Taux de remplissage ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
+    const evolutionTauxSortieColumns = {
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux d'insertion ${key}`]: `Taux d'insertion ${key}`,
+        [`Taux de poursuite d'étude ${key}`]: `Taux de poursuite d'étude ${key}`,
+        [`Taux de devenir favorable ${key}`]: `Taux de devenir favorable ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
     const columns = {
-      ..._.omit(user ? FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED : FORMATION_ETABLISSEMENT_COLUMNS, "formationSpecifique"),
+      ..._.omit(user ? FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED : FORMATION_ETABLISSEMENT_COLUMNS, [
+        "formationSpecifique",
+        "evolutionEffectif",
+        "evolutionCapacite",
+        "evolutionTauxPression",
+        "evolutionTauxDemande",
+        "evolutionTauxRemplissage",
+        "evolutionTauxInsertion",
+        "evolutionTauxPoursuite",
+        "evolutionTauxDevenirFavorable"
+      ]),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
+      ...evolutionTauxEntreeColumns,
+      ...evolutionTauxSortieColumns
     };
 
     let etablissements = [];
@@ -388,7 +457,21 @@ const Page = () => {
             .map((typeDemande) => formatTypeDemande(typeDemande as TypeDemandeType))
             .join(", ")
           : undefined
-      }
+      },
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Effectif en entrée ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "effectif"})[key],
+        [`Capacité d'accueil ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "capacite"})[key],
+        [`Taux de remplissage ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxRemplissage"})[key],
+        [`Taux de pression ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxPression"})[key],
+        [`Taux de demande ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxDemande"})[key],
+      })
+      ).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux d'insertion ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxInsertion"})[key],
+        [`Taux de poursuite d'étude ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxPoursuite"})[key],
+        [`Taux de devenir favorable ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxDevenirFavorable"})[key],
+      })
+      ).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
     }));
 
     return {
@@ -574,20 +657,17 @@ const Page = () => {
         <Flex direction="column" flex={1} position="relative" minW="0">
           <Flex direction="column" bgColor={"white"} boxShadow={"0px 1px 4px 0px #00000026"}>
             <TableHeader
-              p={4}
-              pt={0}
+              m={4}
               SaveFiltersButton={
-                <Flex py="2">
-                  <Button
-                    variant={"externalLink"}
-                    leftIcon={<Icon icon="ri:save-3-line" />}
-                    onClick={() => {
-                      onOpen();
-                    }}
-                  >
-                    Enregistrer la requête
-                  </Button>
-                </Flex>
+                <Button
+                  variant={"externalLink"}
+                  leftIcon={<Icon icon="ri:save-3-line" />}
+                  onClick={() => {
+                    onOpen();
+                  }}
+                >
+                  Enregistrer la requête
+                </Button>
               }
               SearchInput={
                 <ConsoleSearchInput
@@ -604,6 +684,23 @@ const Page = () => {
                   width={{ base: "25rem", ["2xl"]: "35rem" }}
                 />
               }
+              ColonneFilter={
+                <ColonneFilterSection
+                  colonneFilters={colonneFilters}
+                  handleColonneFilters={handleColonneFilters}
+                  forcedColonnes={["libelleEtablissement", "libelleFormation"]}
+                  trackEvent={trackEvent}
+                  user={user}
+                />
+              }
+              TabsSection={
+                feature.donneesTransfoConsole && user && (
+                  <TabsSection
+                    displayType={searchParams.displayType ?? DisplayTypeEnum.global}
+                    setDisplayType={setDisplayType}
+                  />
+                )
+              }
               onExportCsv={onExportCsv}
               onExportExcel={onExportExcel}
               page={page}
@@ -611,22 +708,6 @@ const Page = () => {
               count={data?.count}
               onPageChange={(newPage) => setSearchParams({ page: newPage })}
             />
-            <Flex ms={"auto"} p={4} gap={2} flexWrap="wrap" alignItems="center">
-              <ColonneFilterSection
-                colonneFilters={colonneFilters}
-                handleColonneFilters={handleColonneFilters}
-                forcedColonnes={["libelleEtablissement", "libelleFormation"]}
-                trackEvent={trackEvent}
-                user={user}
-                ms={"auto"}
-              />
-              {feature.donneesTransfoConsole && user && (
-                <TabsSection
-                  displayType={searchParams.displayType ?? DisplayTypeEnum.global}
-                  setDisplayType={setDisplayType}
-                />
-              )}
-            </Flex>
           </Flex>
           {isLoading && (
             <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
