@@ -1,5 +1,5 @@
 import { sql } from "kysely";
-import { jsonBuildObject } from "kysely/helpers/postgres";
+import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_RENTREE, VoieEnum } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
@@ -127,6 +127,25 @@ export const getFormationsQuery = async ({
             codeDispositifRef: "formationEtablissement.codeDispositif",
             codeRegionRef: "etablissement.codeRegion",
           }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+          jsonArrayFrom(
+            eb
+              .selectFrom("positionFormationRegionaleQuadrant")
+              .whereRef("positionFormationRegionaleQuadrant.cfd", "=", "formationView.cfd")
+              .whereRef("positionFormationRegionaleQuadrant.codeDispositif", "=", "formationEtablissement.codeDispositif")
+              .whereRef("positionFormationRegionaleQuadrant.codeRegion", "=", "etablissement.codeRegion")
+              .select([
+                "positionFormationRegionaleQuadrant.millesimeSortie",
+                "positionFormationRegionaleQuadrant.positionQuadrant"
+              ])
+              .$narrowType<{
+              millesimeSortie: string;
+            }>()
+              .groupBy([
+                "positionFormationRegionaleQuadrant.millesimeSortie",
+                "positionFormationRegionaleQuadrant.positionQuadrant",
+              ])
+              .orderBy("positionFormationRegionaleQuadrant.millesimeSortie", "asc")
+          ).as("evolutionPositionQuadrant"),
         ])
         .$call((eb) => {
           if (!positionQuadrant) return eb;
@@ -210,6 +229,48 @@ export const getFormationsQuery = async ({
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
+      jsonArrayFrom(
+        eb
+          .selectFrom("indicateurRegionSortie")
+          .whereRef("indicateurRegionSortie.cfd", "=", "formationView.cfd")
+          .whereRef("indicateurRegionSortie.voie", "=", "formationView.voie")
+          .whereRef("indicateurRegionSortie.codeDispositif", "=", "formationEtablissement.codeDispositif")
+          .select([
+            "indicateurRegionSortie.millesimeSortie",
+            selectTauxDevenirFavorableAgg("indicateurRegionSortie").as("tauxDevenirFavorable"),
+            selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
+            selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
+          ])
+          .$narrowType<{
+            millesimeSortie: string;
+          }>()
+          .groupBy([
+            "indicateurRegionSortie.millesimeSortie",
+          ])
+          .orderBy("indicateurRegionSortie.millesimeSortie", "asc")
+      ).as("evolutionTauxSortie"),
+      jsonArrayFrom(
+        eb
+          .selectFrom("indicateurEntree")
+          .leftJoin("formationEtablissement as fe", "fe.id", "indicateurEntree.formationEtablissementId")
+          .whereRef("fe.cfd", "=", "formationView.cfd")
+          .whereRef("fe.voie", "=", "formationView.voie")
+          .whereRef("fe.codeDispositif", "=", "fe.codeDispositif")
+          .whereRef("indicateurEntree.formationEtablissementId", "=", "fe.id")
+          .select([
+            "indicateurEntree.rentreeScolaire",
+            selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
+            selectTauxDemandeAgg("indicateurEntree", "formationView").as("tauxDemande"),
+            selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
+          ])
+          .$narrowType<{
+            rentreeScolaire: string;
+          }>()
+          .groupBy([
+            "indicateurEntree.rentreeScolaire",
+          ])
+          .orderBy("indicateurEntree.rentreeScolaire", "asc")
+      ).as("evolutionTauxEntree"),
     ])
     .where(isInPerimetreIJEtablissement)
     .where(notHistoriqueUnlessCoExistantIndicateurEntree)
@@ -237,6 +298,7 @@ export const getFormationsQuery = async ({
       "formationEtablissement.cfd",
       "formationView.id",
       "formationView.cfd",
+      "formationView.voie",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
