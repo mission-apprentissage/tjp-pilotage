@@ -87,5 +87,5 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": ["release.config.js"]
+  "ignorePatterns": ["release.config.js", "documentation/**"]
 }
