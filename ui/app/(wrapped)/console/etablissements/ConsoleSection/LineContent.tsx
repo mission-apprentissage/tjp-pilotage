@@ -326,20 +326,23 @@ export const EtablissementLineContent = ({
           stickyColonnes={stickyColonnes}
           textAlign="center"
         >
-          {line.numero?.split(", ").map((numero, index, numeros) => (
-            <Fragment key={numero + index}>
-              <Link
-                key={numero + index}
-                as={NextLink}
-                href={`/demandes/synthese/${numero}`}
-                target="_blank"
-                color="bluefrance.113"
-              >
-                {numero}
-              </Link>
-              {index < (numeros.length -1) && <Text as="span">, </Text>}
-            </Fragment>
-          ))}
+          {
+            isHistorique ? "-" :
+              line.numero?.split(", ").map((numero, index, numeros) => (
+                <Fragment key={numero + index}>
+                  <Link
+                    key={numero + index}
+                    as={NextLink}
+                    href={`/demandes/synthese/${numero}`}
+                    target="_blank"
+                    color="bluefrance.113"
+                  >
+                    {numero}
+                  </Link>
+                  {index < (numeros.length -1) && <Text as="span">, </Text>}
+                </Fragment>
+              ))
+          }
         </ConditionalTd>
         <ConditionalTd
           colonne="dateEffetTransformation"
@@ -349,11 +352,15 @@ export const EtablissementLineContent = ({
           textAlign="center"
           justifyContent="center"
         >
-          <DateEffetTransformationComponent
-            dateEffetTransformation={line.dateEffetTransformation}
-            typeDemande={line.typeDemande}
-            rentreeScolaire={line.rentreeScolaire}
-          />
+          {
+            isHistorique ? "-" : (
+              <DateEffetTransformationComponent
+                dateEffetTransformation={line.dateEffetTransformation}
+                typeDemande={line.typeDemande}
+                rentreeScolaire={line.rentreeScolaire}
+              />
+            )
+          }
         </ConditionalTd>
         <ConditionalTd
           colonne="typeDemande"
@@ -362,12 +369,16 @@ export const EtablissementLineContent = ({
           stickyColonnes={stickyColonnes}
           textAlign="center"
         >
-          <BadgeTypeDemande
-            typeDemande={line.typeDemande}
-            numero={line.numero}
-            dateEffetTransformation={line.dateEffetTransformation}
-            anneeCampagne={line.anneeCampagne}
-          />
+          {
+            isHistorique ? "-" : (
+              <BadgeTypeDemande
+                typeDemande={line.typeDemande}
+                numero={line.numero}
+                dateEffetTransformation={line.dateEffetTransformation}
+                anneeCampagne={line.anneeCampagne}
+              />
+            )
+          }
         </ConditionalTd>
       </>
     )}
