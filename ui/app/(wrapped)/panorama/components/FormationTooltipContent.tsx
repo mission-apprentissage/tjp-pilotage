@@ -2,7 +2,7 @@ import { Box, Flex, HStack, Text } from "@chakra-ui/react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import type { PanoramaFormation, PanoramaTopFlop } from "@/app/(wrapped)/panorama/types";
+import type { PanoramaFormation } from "@/app/(wrapped)/panorama/types";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
@@ -12,7 +12,7 @@ import { feature } from "@/utils/feature";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-type Formation = PanoramaFormation | PanoramaTopFlop;
+type Formation = PanoramaFormation;
 
 export const FormationTooltipContent = ({ formation }: { formation: Formation }) => {
   const { openGlossaire } = useGlossaireContext();
