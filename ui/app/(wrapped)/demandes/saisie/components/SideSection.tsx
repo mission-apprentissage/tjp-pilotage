@@ -1,34 +1,37 @@
-import { Button, Divider, Flex, Text, Tooltip,useDisclosure, useToken, VStack } from "@chakra-ui/react";
+import { Button, Divider, Flex, Text, useDisclosure, useToken, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import NextLink from "next/link";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import type { CampagneType } from "shared/schema/campagneSchema";
-import type { UserType } from "shared/schema/userSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import type { Filters } from "@/app/(wrapped)/demandes/saisie/types";
-import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/demandes/utils/messageAccompagnementUtils";
 import { DoubleArrowLeft } from "@/components/icons/DoubleArrowLeft";
 import { DoubleArrowRight } from "@/components/icons/DoubleArrowRight";
-import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
-import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
+import { Multiselect } from "@/components/Multiselect";
 
 export const SideSection = ({
   isRecapView = false,
   isNouvelleDemandeDisabled,
+  filterTracker,
   handleFilters,
   activeFilters,
-  campagne,
-  user,
+  domaines,
+  diplomes,
+  formations,
+  nomsCmq,
+  filieresCmq,
 }: {
   isRecapView?: boolean;
   isNouvelleDemandeDisabled: boolean;
+  filterTracker: (filterName: keyof Filters) => () => void;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  activeFilters: Partial<Filters>;
-  campagne: CampagneType;
-  user?: UserType;
+  activeFilters: Filters;
+  diplomes: OptionType[];
+  domaines: OptionType[];
+  formations: OptionType[];
+  nomsCmq: OptionType[];
+  filieresCmq: OptionType[];
 }) => {
-  const { campagne: currentCampagne } = useCurrentCampagne();
   const statut = activeFilters.statut === undefined ? "none" : activeFilters.statut;
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery({
@@ -42,36 +45,12 @@ export const SideSection = ({
 
   return (
     <Flex direction={"column"}>
-      <Flex p={4} px={6} bgColor={"white"} boxShadow={"0px 1px 4px 0px #00000026"} >
-        <Tooltip
-          label={getMessageAccompagnementCampagne({ campagne, currentCampagne: currentCampagne!, user })}
-          shouldWrapChildren
-          placement="bottom-start"
-        >
-          <Flex>
-            <Button
-              mb={1.5}
-              variant="primary"
-              isDisabled={isNouvelleDemandeDisabled}
-              leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
-              as={isNouvelleDemandeDisabled ? undefined : NextLink}
-              href={isNouvelleDemandeDisabled ? undefined : getRoutingAccessSaisieDemande({user, campagne, suffix: `new?campagneId=${campagne?.id}`})}
-              minHeight={"35px"}
-              w={"100%"}
-              px={8}
-            >
-              Nouvelle demande
-            </Button>
-          </Flex>
-        </Tooltip>
-      </Flex>
       <Flex
         direction={"column"}
-        p={4}
-        px={6}
         gap={5}
         h={"fit-content"}
         flex={"shrink"}
+        mt={5}
       >
         {isOpen ? (
           <Button
@@ -79,7 +58,7 @@ export const SideSection = ({
             leftIcon={<DoubleArrowLeft />}
             onClick={() => onToggle()}
             cursor="pointer"
-            px={3}
+            px={5}
           >
             Masquer les filtres
           </Button>
@@ -89,6 +68,7 @@ export const SideSection = ({
             rightIcon={<DoubleArrowRight />}
             onClick={() => onToggle()}
             cursor="pointer"
+            px={5}
           />
         )
         }
@@ -338,10 +318,9 @@ export const SideSection = ({
               </Text>
             </Button>
             <Divider my={2} />
-            <Text fontSize={12} color="grey.425" mb={1}>
+            <Text fontSize={12} color="grey.425" mb={1} ms={2}>
               Visible par vous uniquement
             </Text>
-
             <Button
               bgColor={"unset"}
               size="sm"
@@ -399,6 +378,74 @@ export const SideSection = ({
                 </Text>
               </Button>
             )}
+            <Divider my={2} />
+            <Flex direction={"column"} px={2} gap={2}>
+              <Multiselect
+                onClose={filterTracker("codeNiveauDiplome")}
+                width={"64"}
+                size="md"
+                variant={"newInput"}
+                onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
+                options={diplomes}
+                value={activeFilters.codeNiveauDiplome ?? []}
+                disabled={diplomes.length === 0}
+                hasDefaultValue={false}
+              >
+                Diplôme
+              </Multiselect>
+              <Multiselect
+                onClose={filterTracker("codeNsf")}
+                width={"64"}
+                size="md"
+                variant={"newInput"}
+                onChange={(selected) => handleFilters("codeNsf", selected)}
+                options={domaines}
+                value={activeFilters.codeNsf ?? []}
+                disabled={domaines.length === 0}
+                hasDefaultValue={false}
+              >
+                Domaine de formation
+              </Multiselect>
+              <Multiselect
+                onClose={filterTracker("cfd")}
+                width={"64"}
+                size="md"
+                variant={"newInput"}
+                onChange={(selected) => handleFilters("cfd", selected)}
+                options={formations}
+                value={activeFilters.cfd ?? []}
+                disabled={formations.length === 0}
+                hasDefaultValue={false}
+              >
+                Formation
+              </Multiselect>
+              <Multiselect
+                onClose={filterTracker("nomCmq")}
+                width={"64"}
+                size="md"
+                variant={"newInput"}
+                onChange={(selected) => handleFilters("nomCmq", selected)}
+                options={formations}
+                value={activeFilters.nomCmq ?? []}
+                disabled={nomsCmq.length === 0}
+                hasDefaultValue={false}
+              >
+                CMQ
+              </Multiselect>
+              <Multiselect
+                onClose={filterTracker("filiereCmq")}
+                width={"64"}
+                size="md"
+                variant={"newInput"}
+                onChange={(selected) => handleFilters("filiereCmq", selected)}
+                options={filieresCmq}
+                value={activeFilters.filiereCmq ?? []}
+                disabled={filieresCmq.length === 0}
+                hasDefaultValue={false}
+              >
+                Filière CMQ
+              </Multiselect>
+            </Flex>
           </VStack>
         )}
       </Flex>

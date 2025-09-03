@@ -28,7 +28,6 @@ import { DemandeSpinner } from "./components/DemandeSpinner";
 import { FiltersSection } from "./components/FiltersSection";
 import { SideSection } from "./components/SideSection";
 import { ConsoleSection } from "./consoleSection/ConsoleSection";
-import type { DEMANDES_COLUMNS_OPTIONAL } from "./DEMANDES_COLUMNS";
 import { DEMANDES_COLUMNS, DEMANDES_COLUMNS_DEFAULT } from "./DEMANDES_COLUMNS";
 import { GROUPED_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_DEMANDES_COLUMNS";
 import type { DEMANDES_COLUMNS_KEYS, Filters, Order } from "./types";
@@ -254,11 +253,11 @@ export const PageClient = () => {
     );
   };
 
-  const [colonneFilters, setColonneFilters] = useState<(keyof typeof DEMANDES_COLUMNS_OPTIONAL)[]>(
-    (columns.length ? columns : Object.keys(DEMANDES_COLUMNS_DEFAULT)) as (keyof typeof DEMANDES_COLUMNS_OPTIONAL)[]
+  const [colonneFilters, setColonneFilters] = useState<Array<DEMANDES_COLUMNS_KEYS>>(
+    (columns.length ? columns : Object.keys(DEMANDES_COLUMNS_DEFAULT)) as Array<DEMANDES_COLUMNS_KEYS>
   );
 
-  const handleColonneFilters = (value: (keyof typeof DEMANDES_COLUMNS_OPTIONAL)[]) => {
+  const handleColonneFilters = (value: Array<DEMANDES_COLUMNS_KEYS>) => {
     setSearchParams({ columns: value });
     setColonneFilters(value);
   };
@@ -273,113 +272,124 @@ export const PageClient = () => {
   const canCheckDemandes = hasPermission(user?.role, PermissionEnum["demande-statut/ecriture"]);
 
   return (
-    <Flex direction={"row"} flex={1} position="relative" minH="100%" minW={0} bgColor={"bluefrance.975"}>
-      <SideSection
+    <Flex direction={"column"} flex={1} position="relative" minH="100%" minW={0} bgColor={"bluefrance.975"}>
+      <FiltersSection
+        user={user}
         isNouvelleDemandeDisabled={isNouvelleDemandeDisabled}
-        isRecapView
-        handleFilters={handleFilters}
         activeFilters={filters}
+        setSearchParams={setSearchParams}
         campagne={data?.campagne}
+        filterTracker={filterTracker}
+        academies={data?.filters.academies ?? []}
+        departements={data?.filters.departements ?? []}
+        communes={data?.filters.communes ?? []}
+        etablissements={data?.filters.etablissements ?? []}
+        campagnes={data?.filters.campagnes}
+        handleFilters={handleFilters}
       />
-      <Flex flex={1} flexDirection="column" overflow="visible" minHeight={0} minW={0}>
-        <FiltersSection
-          activeFilters={filters}
-          setSearchParams={setSearchParams}
-          campagne={data?.campagne}
+      <Flex flex={1} direction="row" overflow="visible" minHeight={0} minW={0}>
+        <SideSection
+          isNouvelleDemandeDisabled={isNouvelleDemandeDisabled}
+          isRecapView
           filterTracker={filterTracker}
-          academies={data?.filters.academies ?? []}
           diplomes={data?.filters.diplomes ?? []}
-          campagnes={data?.filters.campagnes}
+          domaines={data?.filters.domaines ?? []}
+          formations={data?.filters.formations ?? []}
+          filieresCmq={data?.filters.filieresCmq ?? []}
+          nomsCmq={data?.filters.nomsCmq ?? []}
           handleFilters={handleFilters}
+          activeFilters={filters}
         />
-        {(isLoading) ? (
-          <DemandeSpinner />
-        ) : (
-          <>
-            {isModifyingGroup ? (
-              <DemandeSpinner mt={6}/>
-            ) : <> {
-              data?.demandes.length ? (
-                <>
-                  <TableHeader
-                    p={4}
-                    pt={0}
-                    bgColor={"white"}
-                    SearchInput={
-                      <ConsoleSearchInput
-                        placeholder="Rechercher dans les résultats"
-                        onChange={(newValue) => {
-                          const oldValue = searchFormation;
-                          setSearchFormation(newValue);
-                          if (newValue.length > 2 || oldValue.length > newValue.length) {
-                            onSearch(newValue);
-                          }
-                        }}
-                        value={searchFormation}
-                        onClick={onSearch}
-                        width={{ base: "15rem", ["2xl"]: "25rem" }}
-                      />
-                    }
-                    ColonneFilter={
-                      <ColonneFilterSection
-                        colonneFilters={colonneFilters}
-                        handleColonneFilters={handleColonneFilters}
-                        forcedColonnes={["libelleFormation"]}
-                        trackEvent={trackEvent}
-                      />
-                    }
-                    onExportCsv={onExportCsv}
-                    onExportExcel={onExportExcel}
-                    page={page}
-                    pageSize={PAGE_SIZE}
-                    count={data?.count}
-                    onPageChange={(newPage) => setSearchParams({ ...searchParams, page: `${newPage}` })}
-                  />
-                  <ConsoleSection
-                    user={user}
-                    data={data}
-                    handleOrder={handleOrder}
-                    order={order}
-                    isLoading={isLoading}
-                    canCheckDemandes={canCheckDemandes}
-                    setIsModifyingGroup={setIsModifyingGroup}
-                    colonneFilters={colonneFilters}
-                  />
-                </>
-              ) : (
-                <Center mt={12}>
-                  <Flex direction={"column"}>
-                    <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-                    <Tooltip
-                      label={getMessageAccompagnementCampagne({
-                        campagne: data?.campagne,
-                        currentCampagne: currentCampagne!,
-                        user
-                      })}
-                      shouldWrapChildren
-                    >
-                      <Flex>
-                        <Button
-                          isDisabled={isNouvelleDemandeDisabled}
-                          variant="createButton"
-                          size={"lg"}
-                          as={!isNouvelleDemandeDisabled ? undefined : NextLink}
-                          href={getRoutingAccessSaisieDemande({ user, suffix: `new?campagneId=${data?.campagne.id}`})}
-                          px={3}
-                          mt={12}
-                          mx={"auto"}
-                        >
-                          Nouvelle demande
-                        </Button>
-                      </Flex>
-                    </Tooltip>
-                  </Flex>
-                </Center>
-              )}
+        <Flex flex={1} direction="column" overflow="visible" minHeight={0} minW={0}>
+          {(isLoading) ? (
+            <DemandeSpinner />
+          ) : (
+            <>
+              {isModifyingGroup ? (
+                <DemandeSpinner mt={6}/>
+              ) : <> {
+                data?.demandes.length ? (
+                  <>
+                    <TableHeader
+                      p={4}
+                      pt={0}
+                      bgColor={"white"}
+                      SearchInput={
+                        <ConsoleSearchInput
+                          placeholder="Rechercher dans les résultats"
+                          onChange={(newValue) => {
+                            const oldValue = searchFormation;
+                            setSearchFormation(newValue);
+                            if (newValue.length > 2 || oldValue.length > newValue.length) {
+                              onSearch(newValue);
+                            }
+                          }}
+                          value={searchFormation}
+                          onClick={onSearch}
+                          width={{ base: "25rem", ["2xl"]: "35rem" }}
+                        />
+                      }
+                      ColonneFilter={
+                        <ColonneFilterSection
+                          colonneFilters={colonneFilters}
+                          handleColonneFilters={handleColonneFilters}
+                          forcedColonnes={["libelleFormation"]}
+                          trackEvent={trackEvent}
+                        />
+                      }
+                      onExportCsv={onExportCsv}
+                      onExportExcel={onExportExcel}
+                      page={page}
+                      pageSize={PAGE_SIZE}
+                      count={data?.count}
+                      onPageChange={(newPage) => setSearchParams({ ...searchParams, page: `${newPage}` })}
+                    />
+                    <ConsoleSection
+                      user={user}
+                      data={data}
+                      handleOrder={handleOrder}
+                      order={order}
+                      isLoading={isLoading}
+                      canCheckDemandes={canCheckDemandes}
+                      setIsModifyingGroup={setIsModifyingGroup}
+                      colonneFilters={colonneFilters}
+                    />
+                  </>
+                ) : (
+                  <Center mt={12}>
+                    <Flex direction={"column"}>
+                      <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
+                      <Tooltip
+                        label={getMessageAccompagnementCampagne({
+                          campagne: data?.campagne,
+                          currentCampagne: currentCampagne!,
+                          user
+                        })}
+                        shouldWrapChildren
+                      >
+                        <Flex>
+                          <Button
+                            isDisabled={isNouvelleDemandeDisabled}
+                            variant="createButton"
+                            size={"lg"}
+                            as={!isNouvelleDemandeDisabled ? undefined : NextLink}
+                            href={getRoutingAccessSaisieDemande({ user, suffix: `new?campagneId=${data?.campagne.id}`})}
+                            px={3}
+                            mt={12}
+                            mx={"auto"}
+                          >
+                            Nouvelle demande
+                          </Button>
+                        </Flex>
+                      </Tooltip>
+                    </Flex>
+                  </Center>
+                )}
+              </>
+              }
             </>
-            }
-          </>
-        )}
+          )}
+        </Flex>
       </Flex>
     </Flex>
   );

@@ -83,7 +83,10 @@ const ConditionalTh = chakra(
             display: "flex",
             alignItems: "center",
           }}>
-            <Tooltip label={FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne]} placement="top">
+            <Tooltip
+              label={FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne]}
+              placement="top"
+            >
               <Box
                 fontSize={12}
                 fontWeight={700}
@@ -98,7 +101,10 @@ const ConditionalTh = chakra(
               </Box>
             </Tooltip>
             {icon}
-            <Tooltip label={`${isSticky ? "Libérer" : "Figer"} la colonne ${FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne].toLocaleLowerCase()}`} placement="top">
+            <Tooltip
+              label={`${isSticky ? "Libérer" : "Figer"} la colonne ${FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne].toLocaleLowerCase()}`}
+              placement="top"
+            >
               <IconButton
                 aria-label={`Figer la colonne ${FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne].toLocaleLowerCase()}`}
                 icon={
@@ -413,7 +419,7 @@ export const HeadLineContent = ({
           </>
         )}
         <ConditionalTh
-          colonne="effectif1"
+          colonne={"effectif1"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           onClick={handleOrder}
@@ -465,6 +471,15 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
         </ConditionalTh>
         <ConditionalTh
+          colonne={"evolutionEffectif"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionEffectif}
+        </ConditionalTh>
+        <ConditionalTh
           colonne="capacite"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -475,6 +490,15 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="capacite" />
           {FORMATION_ETABLISSEMENT_COLUMNS.capacite}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne="evolutionCapacite"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionCapacite}
         </ConditionalTh>
         <ConditionalTh
           colonne="tauxPression"
@@ -489,6 +513,15 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPression}
         </ConditionalTh>
         <ConditionalTh
+          colonne={"evolutionTauxPression"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPression}
+        </ConditionalTh>
+        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           colonne="tauxDemande"
@@ -501,6 +534,15 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxDemande}
         </ConditionalTh>
         <ConditionalTh
+          colonne={"evolutionTauxDemande"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxDemande}
+        </ConditionalTh>
+        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           colonne="tauxRemplissage"
@@ -511,6 +553,15 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="tauxRemplissage" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxRemplissage}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"evolutionTauxRemplissage"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxRemplissage}
         </ConditionalTh>
         <ConditionalTh
           colonne="positionQuadrant"
@@ -532,6 +583,15 @@ export const HeadLineContent = ({
           <OrderIcon {...order} column="positionQuadrant" />
           {FORMATION_ETABLISSEMENT_COLUMNS.positionQuadrant}
         </ConditionalTh>
+        {/* <ConditionalTh
+          colonne="evolutionPositionQuadrant"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionPositionQuadrant}
+        </ConditionalTh> */}
         <ConditionalTh
           colonne="tauxDevenirFavorable"
           colonneFilters={colonneFilters}
@@ -551,6 +611,15 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="tauxDevenirFavorable" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorable}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"evolutionTauxDevenirFavorable"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxDevenirFavorable}
         </ConditionalTh>
         <ConditionalTh
           colonne="tauxInsertion"
@@ -573,6 +642,15 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxInsertion}
         </ConditionalTh>
         <ConditionalTh
+          colonne={"evolutionTauxInsertion"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxInsertion}
+        </ConditionalTh>
+        <ConditionalTh
           colonne="tauxPoursuite"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -591,6 +669,15 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="tauxPoursuite" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuite}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"evolutionTauxPoursuite"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPoursuite}
         </ConditionalTh>
         <ConditionalTh
           colonne="tauxDevenirFavorableEtablissement"
@@ -613,6 +700,24 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorableEtablissement}
         </ConditionalTh>
         <ConditionalTh
+          colonne={"evolutionTauxDevenirFavorable"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxDevenirFavorable
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxDevenirFavorable}
+        </ConditionalTh>
+        <ConditionalTh
           colonne="tauxInsertionEtablissement"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -633,6 +738,24 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxInsertionEtablissement}
         </ConditionalTh>
         <ConditionalTh
+          colonne={"evolutionTauxInsertionEtablissement"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxEmploi6Mois
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxInsertionEtablissement}
+        </ConditionalTh>
+        <ConditionalTh
           colonne="tauxPoursuiteEtablissement"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -651,6 +774,24 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="tauxPoursuiteEtablissement" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuiteEtablissement}
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"evolutionTauxPoursuiteEtablissement"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxPoursuiteEtudes
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPoursuiteEtablissement}
         </ConditionalTh>
         <ConditionalTh
           colonne="valeurAjoutee"

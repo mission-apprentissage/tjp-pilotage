@@ -12,6 +12,7 @@ import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
+import { getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from '@/app/(wrapped)/console/utils/extractEvolutionData';
 import { CodeDepartementContext } from '@/app/codeDepartementContext';
 import { CodeRegionContext } from '@/app/codeRegionContext';
 import {formatTypeFamilleLong} from '@/components/BadgeTypeFamille';
@@ -179,11 +180,41 @@ const Page = () => {
       selectedDepartement: "Departement sélectionnée",
     };
 
+    const evolutionTauxEntreeColumns = {
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Effectif en entrée ${key}`]: `Effectif en entrée ${key}`,
+        [`Capacité d'accueil ${key}`]: `Capacité d'accueil ${key}`,
+        [`Taux de pression ${key}`]: `Taux de pression ${key}`,
+        [`Taux de demande ${key}`]: `Taux de demande ${key}`,
+        [`Taux de remplissage ${key}`]: `Taux de remplissage ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
+    const evolutionTauxSortieColumns = {
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux d'insertion ${key}`]: `Taux d'insertion ${key}`,
+        [`Taux de poursuite d'étude ${key}`]: `Taux de poursuite d'étude ${key}`,
+        [`Taux de devenir favorable ${key}`]: `Taux de devenir favorable ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
     const columns = {
-      ..._.omit(FORMATION_COLUMNS, "formationSpecifique"),
+      ..._.omit(FORMATION_COLUMNS, [
+        "formationSpecifique",
+        "evolutionEffectif",
+        "evolutionCapacite",
+        "evolutionTauxPression",
+        "evolutionTauxDemande",
+        "evolutionTauxRemplissage",
+        "evolutionTauxInsertion",
+        "evolutionTauxPoursuite",
+        "evolutionTauxDevenirFavorable"
+      ]),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
+      ...evolutionTauxEntreeColumns,
+      ...evolutionTauxSortieColumns,
     };
 
     let formations = [];
@@ -217,6 +248,18 @@ const Page = () => {
       isFormationRenovee: formation.isFormationRenovee,
       isHistorique: !!formation.formationRenovee,
       isHistoriqueCoExistant: formation.isHistoriqueCoExistant,
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Effectif en entrée ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "effectif"})[key],
+        [`Capacité d'accueil ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "capacite"})[key],
+        [`Taux de remplissage ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxRemplissage"})[key],
+        [`Taux de pression ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxPression"})[key],
+        [`Taux de demande ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxDemande"})[key],
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux d'insertion ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxInsertion"})[key],
+        [`Taux de poursuite d'étude ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxPoursuite"})[key],
+        [`Taux de devenir favorable ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxDevenirFavorable"})[key],
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
     }));
 
     return {
@@ -360,20 +403,17 @@ const Page = () => {
         <Flex direction="column" flex={1} position="relative" minW="0">
           <Flex direction="column" bgColor={"white"}>
             <TableHeader
-              p={4}
-              pt={0}
+              m={4}
               SaveFiltersButton={
-                <Flex py="2">
-                  <Button
-                    variant={"externalLink"}
-                    leftIcon={<Icon icon="ri:save-3-line" />}
-                    onClick={() => {
-                      onOpen();
-                    }}
-                  >
+                <Button
+                  variant={"externalLink"}
+                  leftIcon={<Icon icon="ri:save-3-line" />}
+                  onClick={() => {
+                    onOpen();
+                  }}
+                >
                   Enregistrer la requête
-                  </Button>
-                </Flex>
+                </Button>
               }
               SearchInput={
                 <ConsoleSearchInput
@@ -387,7 +427,7 @@ const Page = () => {
                   }}
                   value={searchFormation}
                   onClick={onSearch}
-                  width={{ base: "15rem", ["2xl"]: "25rem" }}
+                  width={{ base: "25rem", ["2xl"]: "35rem" }}
                 />
               }
               ColonneFilter={
