@@ -2,12 +2,12 @@ import { Box, chakra, Checkbox, IconButton, Th, Thead, Tooltip,Tr } from "@chakr
 import { Icon } from "@iconify/react";
 import type { CSSProperties } from "react";
 
-import { COLUMNS_WIDTH } from "@/app/(wrapped)/console/formations/ConsoleSection/COLUMNS_WIDTH";
 import { DEMANDES_COLUMNS_OPTIONAL } from "@/app/(wrapped)/demandes/saisie/DEMANDES_COLUMNS";
 import type { CheckedDemandesType } from "@/app/(wrapped)/demandes/saisie/page.client";
 import type { DEMANDES_COLUMNS_KEYS,Order  } from "@/app/(wrapped)/demandes/saisie/types";
 import { OrderIcon } from "@/components/OrderIcon";
 
+import { COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
 import { getLeftOffset, isColonneSticky } from "./utils";
 
 const ConditionalTh = chakra(
@@ -52,7 +52,7 @@ const ConditionalTh = chakra(
           minW={COLUMNS_WIDTH[colonne as keyof typeof COLUMNS_WIDTH]}
           maxW={COLUMNS_WIDTH[colonne as keyof typeof COLUMNS_WIDTH]}
           left={getLeftOffset({ colonne, stickyColonnes, colonneFilters })}
-          zIndex={isSticky ? 2 : undefined}
+          zIndex={isSticky ? 3 : undefined}
           boxShadow={{
             lg: "none",
             xl: "inset -1px 0px 0px 0px #f6f6f6",
@@ -141,7 +141,7 @@ export const HeadLineContent = ({
 }) => {
 
   return (
-    <Thead position="sticky" top="0" borderBottom={"2px solid"} borderColor={"grey.925"} bg="white" zIndex={"1"}>
+    <Thead boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" top={0} position={"sticky"} zIndex={"docked"}>
       <Tr bg={"white"}>
         {canCheckDemandes && (
           <Th textAlign={"center"}>
@@ -213,7 +213,7 @@ export const HeadLineContent = ({
           setStickyColonnes={setStickyColonnes}
         />
         <ConditionalTh
-          colonne={"numero"}
+          colonne={"actions"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           stickyColonnes={stickyColonnes}
@@ -256,7 +256,7 @@ export const HeadLineContent = ({
           setStickyColonnes={setStickyColonnes}
         />
         <ConditionalTh
-          colonne={"typeDemande"}
+          colonne={"inspecteurReferent"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           handleOrder={handleOrder}

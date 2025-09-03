@@ -1,0 +1,711 @@
+.tepVisuallyHidden {
+	display: block !important;
+	width: 0 !important;
+	height: 0 !important;
+	padding: 0 !important;
+	border: none !important;
+	overflow: hidden !important;
+	outline: none !important;
+}
+
+.tePlayer {
+	position: relative;
+	text-align: left;
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+.tepMainArea, .tepMainArea * {
+	all: revert;
+	color: inherit;
+	margin: initial;
+	padding: initial;
+	background-color: initial;
+}
+
+.tePlayer.teVideoType {
+	width: 45em;
+}
+
+.tePlayer.teAudioType {
+	width: 30em;
+}
+
+.tepMainArea {
+	position: relative;
+}
+
+.tePlayer.teVideoType > .tepMainArea {
+	aspect-ratio: 16/9;
+	background-color: black;
+}
+
+.tePlayer.teVideoType.tePortrait > .tepMainArea {
+	aspect-ratio: 9/16;
+	max-height: 45em;
+	margin: auto;
+	max-width: 100%;
+}
+
+.tePlayer video[hidden],
+.tePlayer audio[hidden],
+.tePlayer mediaelementwrapper[hidden] {
+	display: none !important;
+}
+
+.tePlayer.teVideoType video,
+.tePlayer.teVideoType mediaelementwrapper {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.tePlayer.teVideoType mediaelementwrapper.teNotNative::before {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 0;
+	padding-bottom: 56.25%;
+	position: relative;
+	z-index: 1;
+}
+
+.tePlayer.teVideoType.tePaused mediaelementwrapper.teNotNative::before {
+	z-index: unset;
+}
+
+.tePlayer.teVideoType mediaelementwrapper.teNotNative > * {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: auto;
+	border: none;
+}
+
+.tePlayer.teAudioType video,
+.tePlayer.teAudioType mediaelementwrapper {
+	display: none;
+}
+
+.tePlayer.teError video,
+.tePlayer.teError audio,
+.tePlayer.teError mediaelementwrapper,
+.tePlayer.teError .tepController {
+	display: none;
+}
+
+/* Erreur */
+.tepErrorArea {
+	text-align: center;
+	font-weight: bold;
+	margin: 0.5em 0;
+}
+
+.tepErrorArea[hidden] {
+	display: none !important;
+}
+
+.tepErrorArea > p {
+	text-align: inherit;
+	margin: 0.3em 0;
+}
+
+.tepErrorArea a {
+	text-decoration: underline;
+	overflow-wrap: break-word;
+}
+
+/* Controlleur */
+.tepController {
+	display: flex;
+	align-items: center;
+}
+
+.tePlayer.teVideoType .tepController {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	opacity: 0;
+	padding: 3em 0.5em 0.5em;
+	height: 5em;
+	transition: opacity 0.4s ease-in;
+	background: linear-gradient(transparent 0, rgba(0, 0, 0, .1) 30%, rgba(0, 0, 0, .7));
+	color: white;
+	box-sizing: border-box;
+	pointer-events: none;
+	z-index: 2;
+}
+
+.tePlayer.teActiveMouse .tepController {
+	opacity: 1;
+	pointer-events: visible;
+}
+
+.tePlayer.teAudioType .tepController {
+	width: 30em;
+	max-width: 100%;
+	background-color: #666;
+	color: white;
+	border-radius: 4px;
+	box-sizing: border-box;
+	padding: 0.3em 0.2em;
+}
+
+/* Boutons */
+.tepController > button {
+	border: none;
+	background: none;
+	color: inherit;
+	-webkit-appearance: none;
+	padding: 0;
+	font-size: inherit;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 3px;
+	width: 2em;
+	height: 2em;
+	margin: 0 0.1em;
+}
+
+.tepController > button[hidden] {
+	display: none;
+}
+
+.tepController > button:focus {
+	outline-color: rgba(255, 255, 255, 0.5);
+}
+
+.tepController > button:hover,
+.tepController > button:focus {
+	background: rgba(255, 255, 255, 0.3);
+}
+
+.tepController > button::before {
+	content: '';
+	display: block;
+	width: 18px;
+	height: 18px;
+	background: transparent url("icons.svg") no-repeat;
+}
+
+.tepController .tepPlayPause::before {
+	background-position: 0 0;
+}
+
+.tepController .tepPlayPause[aria-pressed=true]::before {
+	background-position: 0 -18px;
+}
+
+.teSeeking .tepController .tepPlayPause::before {
+	background-position: 0 -36px;
+	animation: tepSpin 0.8s linear infinite;
+}
+
+.tepController .tepMute::before {
+	background-position: 0 -54px;
+}
+
+.tepController .tepMute[aria-pressed=true]::before {
+	background-position: 0 -72px;
+}
+
+.tepController .tepMute {
+	margin-right: 0;
+}
+
+.tepController .tepSettingsBtn::before {
+	background-position: 0 -90px;
+}
+
+.tepController .tepFullscreen::before {
+	background-position: 0 -108px;
+}
+
+.tepController .tepFullscreen[aria-pressed=true]::before {
+	background-position: 0 -126px;
+}
+
+/* Position et durée */
+.tepCurrentTime,
+.tepDuration {
+	margin: 0 0.4em;
+}
+
+/* Fullscreen */
+.tePlayer.teAudioType .tepFullscreen {
+	display: none;
+}
+
+.tePlayer.teVideoType:-webkit-full-screen {
+	display: flex;
+	flex-direction: column;
+	width: 100% !important;
+	height: 100% !important;
+	background-color: black;
+}
+
+.tePlayer.teVideoType:-moz-full-screen {
+	display: flex;
+	flex-direction: column;
+	width: 100% !important;
+	height: 100% !important;
+	background-color: black;
+}
+
+.tePlayer.teVideoType:-ms-fullscreen {
+	display: flex;
+	flex-direction: column;
+	width: 100% !important;
+	height: 100% !important;
+	background-color: black;
+}
+
+.tePlayer.teVideoType:fullscreen {
+	display: flex;
+	flex-direction: column;
+	width: 100% !important;
+	height: 100% !important;
+	background-color: black;
+}
+
+.tePlayer.teVideoType:fullscreen > .tepMainArea {
+	max-height: none;
+}
+
+.tePlayer.teVideoType:-webkit-full-screen > .tepMainArea {
+	flex: 1;
+	min-height: 0;
+}
+
+.tePlayer.teVideoType:-moz-full-screen > .tepMainArea {
+	flex: 1;
+	min-height: 0;
+}
+
+.tePlayer.teVideoType:-ms-fullscreen > .tepMainArea {
+	flex: 1;
+	min-height: 0;
+}
+
+.tePlayer.teVideoType:fullscreen > .tepMainArea {
+	flex: 1;
+	min-height: 0;
+}
+
+.tePlayer.teVideoType:-webkit-full-screen video,
+.tePlayer.teVideoType:-webkit-full-screen mediaelementwrapper {
+	width: 100% !important;
+	height: 100% !important;
+	max-width: none;
+	max-height: none;
+}
+
+.tePlayer.teVideoType:-moz-full-screen video,
+.tePlayer.teVideoType:-moz-full-screen mediaelementwrapper {
+	width: 100% !important;
+	height: 100% !important;
+	max-width: none;
+	max-height: none;
+}
+
+.tePlayer.teVideoType:-ms-fullscreen video,
+.tePlayer.teVideoType:-moz-full-screen mediaelementwrapper {
+	width: 100% !important;
+	height: 100% !important;
+	max-width: none;
+	max-height: none;
+}
+
+.tePlayer.teVideoType:-ms-fullscreen video,
+.tePlayer.teVideoType:fullscreen mediaelementwrapper {
+	width: 100% !important;
+	height: 100% !important;
+	max-width: none;
+	max-height: none;
+}
+
+/* Range */
+.tepVolume, .tepSeek {
+	-webkit-appearance: none;
+	background: 0 0;
+	border: 0;
+	border-radius: 2em;
+	display: block;
+	margin: 0;
+	padding: 0;
+	cursor: pointer;
+	min-width: 0;
+}
+
+.tepController input[type=range]::-webkit-slider-runnable-track {
+	border: 0;
+	border-radius: 3px;
+	height: 6px;
+	transition: all .3s ease;
+	-webkit-user-select: none;
+	user-select: none;
+	background-image: linear-gradient(to right, currentColor var(--value, 0), transparent var(--value, 0))
+}
+
+.tepController input[type=range]::-moz-range-track {
+	background: 0 0;
+	border: 0;
+	border-radius: 3px;
+	height: 6px;
+	transition: all .3s ease;
+	-moz-user-select: none;
+	user-select: none
+}
+
+.tepController input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 0;
+}
+
+.tepController input[type=range]::-moz-range-thumb {
+	width: 0;
+	border: none;
+}
+
+.tepController input[type=range]::-ms-thumb {
+	display: none;
+}
+
+.tepController input[type=range]::-moz-range-progress {
+	background: currentColor;
+	border-radius: 3px;
+	height: 6px
+}
+
+.tepController input[type=range]::-ms-track {
+	background: 0 0;
+	border: 0;
+	border-radius: 3px;
+	height: 6px;
+	transition: all .3s ease;
+	-ms-user-select: none;
+	user-select: none;
+	color: transparent
+}
+
+.tepController input[type=range]::-ms-fill-upper {
+	background: 0 0;
+	border: 0;
+	border-radius: 3px;
+	height: 6px;
+	transition: all .3s ease;
+	-ms-user-select: none;
+	user-select: none
+}
+
+.tepController input[type=range]::-ms-fill-lower {
+	background: 0 0;
+	border: 0;
+	border-radius: 3px;
+	height: 6px;
+	transition: all .3s ease;
+	-ms-user-select: none;
+	user-select: none;
+	background: currentColor
+}
+
+.tepController input[type=range]::-ms-tooltip {
+	display: none
+}
+
+.tepController input[type=range]:focus {
+	outline: 0
+}
+
+.tepController input[type=range]::-moz-focus-outer {
+	border: 0
+}
+
+.tepController input[type=range]::-webkit-slider-runnable-track {
+	background-color: rgba(255, 255, 255, .25)
+}
+
+.tepController input[type=range]::-moz-range-track {
+	background-color: rgba(255, 255, 255, .25)
+}
+
+.tepController input[type=range]::-ms-track {
+	background-color: rgba(255, 255, 255, .25)
+}
+
+.tepController input[type=range]:focus::-webkit-slider-runnable-track {
+	box-shadow: 0 0 0 2px rgba(255, 255, 255, .50);
+}
+
+.tepController input[type=range]:focus::-moz-range-track {
+	box-shadow: 0 0 0 2px rgba(255, 255, 255, .50);
+	outline: 0
+}
+
+.tepController input[type=range]:focus::-ms-track {
+	box-shadow: 0 0 0 2px rgba(255, 255, 255, .50);
+	outline: 0
+}
+
+.tepSeek {
+	flex: 1;
+	margin: 0 0.4em;
+}
+
+.tepVolume {
+	width: 0;
+	visibility: collapse;
+	transition: padding-left 0.2s linear, width 0.2s linear, visibility 0s linear 0.2s;
+}
+
+.tepMute:hover + .tepVolume,
+.tepMute:focus + .tepVolume,
+.tepVolume:hover,
+.tepVolume:focus {
+	width: 7em;
+	visibility: visible;
+	padding-left: 0.4em;
+	transition: padding-left 0.2s linear, width 0.2s linear;
+}
+
+/* Settings */
+.tepPanel {
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 0.2em 1em;
+	white-space: nowrap;
+	transition: opacity 0.2s ease-in;
+	z-index: 3;
+	border-radius: 4px;
+}
+
+.tePlayer.teAudioType .tepPanel {
+	background-color: #666;
+}
+
+.tepPanel[hidden] {
+	display: block;
+	visibility: collapse;
+	opacity: 0;
+	transition: opacity 0.2s ease-in, visibility 0s linear 0.2s;
+}
+
+.tepSettingsPanel {
+	bottom: 2.7em;
+	right: 0;
+}
+
+.tePlayer.teVideoType .tepSettingsPanel {
+	right: 0.5em;
+}
+
+.tepSettingsPanel :focus {
+	outline: none;
+}
+
+.tepSettingsList, .tepSubtitlesList, .tepQualitiesList, .tepPlaybackRatesList {
+	list-style: none;
+	padding: 0;
+}
+
+.tepSettingsList > li, .tepSubtitlesList > li {
+	margin: 0.2em 0;
+}
+
+.tepSettingsPanel button, .tepSettingsPanel a {
+	-webkit-appearance: none;
+	border: none;
+	background: none;
+	color: inherit;
+	font-size: inherit;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+}
+
+.tepSettingsPanel a {
+	margin-left: 1.1em;
+}
+
+.tepSettingsPanel :focus {
+	text-decoration: underline;
+}
+
+.tepSettingsPanel input {
+	display: none;
+}
+
+.tepSettingsPanel input + label::before {
+	content: '';
+	width: 9px;
+	height: 9px;
+	display: inline-block;
+	background-color: white;
+	opacity: 0.33;
+	margin-right: 0.5em;
+	transition: opacity 0.2s ease-in;
+}
+
+.tepSettingsPanel input[type=radio] + label::before {
+	border-radius: 100%;
+}
+
+.tepSettingsPanel input:checked + label::before {
+	opacity: 1;
+}
+
+.tepSubtitlesBtn[aria-pressed=true], .tepQualitiesBtn[aria-pressed=true], .tepPlaybackRatesBtn[aria-pressed=true] {
+	text-decoration: underline;
+}
+
+.tepSubtitlesBtn::before, .tepQualitiesBtn::before, .tepPlaybackRatesBtn::before {
+	content: '';
+	display: inline-block;
+	opacity: 0.33;
+	margin-left: 0.2em;
+	margin-right: 0.5em;
+	padding: 2px;
+	border-style: solid;
+	border-width: 0 0 2px 2px;
+	transform: rotate(45deg);
+}
+
+.tepSubtitlesBtn[aria-pressed=true]::before, .tepQualitiesBtn[aria-pressed=true]::before, .tepPlaybackRatesBtn[aria-pressed=true]::before {
+	opacity: 1;
+}
+
+.tepSubtitlesPanel {
+	right: calc(100% + 0.2em);
+	top: 0;
+}
+
+.tepQualitiesPanel, .tepPlaybackRatesPanel {
+	right: calc(100% + 0.2em);
+	bottom: 0;
+}
+
+.tepPanel label {
+	cursor: pointer;
+}
+
+/* Subtitles */
+.tepSubtitlesArea {
+	text-align: center;
+	box-sizing: border-box;
+	position: relative;
+	pointer-events: none;
+}
+
+.tepSubtitlesArea[hidden] {
+	display: none !important;
+}
+
+.tepSubtitlesArea > div {
+	display: inline-block;
+	color: #fff;
+	text-shadow: -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;
+	margin: 0 auto;
+	white-space: pre-line;
+}
+
+.tePlayer.teAudioType .tepSubtitlesArea {
+	width: 30em;
+	max-width: 100%;
+	min-height: 4em;
+	margin-bottom: 0.5em;
+	display: flex;
+	/* justify-content: center; */
+	align-items: center;
+}
+
+
+.tePlayer.teVideoType .tepSubtitlesArea {
+	position: absolute;
+	bottom: 0.3em;
+	left: 0.3em;
+	right: 0.3em;
+	transition: bottom 0.5s linear;
+	font-size: 1.5em;
+}
+
+.tePlayer.teVideoType.teActiveMouse .tepSubtitlesArea {
+	bottom: 2em;
+}
+
+.tePlayer.teAudioType .tepSubtitlesArea > div {
+	background: inherit;
+	padding: 0;
+	color: inherit;
+	text-shadow: none;
+}
+
+/* Transcription */
+.tepTranscriptArea {
+	position: relative;
+	background-color: rgba(0, 0, 0, 0.6);
+	margin: 0.3em auto 0;
+	color: white;
+	max-width: 100%;
+	overflow: auto;
+	transition: height 0.2s ease-in;
+	padding: 0.5em 1em;
+	height: fit-content;
+}
+
+.tePlayer.teVideoType .tepTranscriptArea {
+	width: 40em;
+}
+
+.tepTranscriptArea[hidden] {
+	display: block;
+	visibility: collapse;
+	height: 0;
+	width: 0;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.tePlayer p.voice {
+	font-style: italic;
+	margin-top: .5em;
+}
+
+.tePlayer .txt_tcLink {
+	text-decoration: none;
+	color: white;
+}
+
+.tePlayer .txt_tcLink:hover {
+	color: inherit;
+	text-decoration: underline;
+}
+
+/* Animations */
+@keyframes tepSpin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes tepBezelFadeout {
+	0% {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+		transform: scale(2)
+	}
+}

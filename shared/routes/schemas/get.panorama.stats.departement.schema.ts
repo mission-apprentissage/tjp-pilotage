@@ -31,10 +31,6 @@ const FormationSchema = z.object({
     .optional(),
 });
 
-const TopFlopSchema = FormationSchema.extend({
-  tauxInsertion: z.coerce.number().optional(),
-});
-
 export const getDataForPanoramaDepartementSchema = {
   querystring: z.object({
     codeDepartement: z.string(),
@@ -45,7 +41,6 @@ export const getDataForPanoramaDepartementSchema = {
   }),
   response: {
     200: z.object({
-      topFlops: z.array(TopFlopSchema),
       formations: z.array(FormationSchema),
       filters: z.object({
         diplomes: z.array(OptionSchema),

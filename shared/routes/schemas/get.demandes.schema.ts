@@ -131,7 +131,14 @@ export const FiltersSchema = z.object({
   limit: z.coerce.number().optional(),
   campagne: z.string().optional(),
   codeAcademie: z.array(z.string()).optional(),
+  codeDepartement: z.array(z.string()).optional(),
+  commune: z.array(z.string()).optional(),
+  uai: z.array(z.string()).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
+  codeNsf: z.array(z.string()).optional(),
+  cfd: z.array(z.string()).optional(),
+  nomCmq: z.array(z.string()).optional(),
+  filiereCmq: z.array(z.string()).optional(),
 });
 
 export const getDemandesSchema = {
@@ -143,8 +150,15 @@ export const getDemandesSchema = {
       campagne: CampagneSchema,
       filters: z.object({
         academies: z.array(OptionSchema),
+        departements: z.array(OptionSchema),
+        communes: z.array(OptionSchema),
+        etablissements: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
         campagnes: z.array(CampagneSchema),
+        domaines: z.array(OptionSchema),
+        formations: z.array(OptionSchema),
+        nomsCmq: z.array(OptionSchema),
+        filieresCmq: z.array(OptionSchema),
       }),
     }),
   },

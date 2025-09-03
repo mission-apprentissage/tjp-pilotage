@@ -29,6 +29,28 @@ export const FormationLineSchema = z.object({
   tauxInsertion: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
   tauxDevenirFavorable: z.coerce.number().optional(),
+  evolutionTauxSortie: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      tauxInsertion: z.coerce.number().optional(),
+      tauxPoursuite: z.coerce.number().optional(),
+      tauxDevenirFavorable: z.coerce.number().optional(),
+    })
+  ),
+  evolutionTauxEntree: z.array(
+    z.object({
+      rentreeScolaire: z.string(),
+      tauxDemande: z.coerce.number().optional(),
+      tauxPression: z.coerce.number().optional(),
+      tauxRemplissage: z.coerce.number().optional(),
+    })
+  ),
+  evolutionPositionQuadrant: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      positionQuadrant: z.string().optional(),
+    })
+  ).optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
   libelleNsf: z.string().optional(),
