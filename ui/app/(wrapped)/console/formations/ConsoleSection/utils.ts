@@ -1,6 +1,6 @@
 import type { FORMATION_COLUMNS_KEYS } from "@/app/(wrapped)/console/formations/types";
 
-import { CHEVRON_COLUMN_WIDTH, COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
+import { COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
 
 
 export const isColonneSticky = ({
@@ -36,7 +36,7 @@ export const getLeftOffset = ({
   colonneFilters: FORMATION_COLUMNS_KEYS[];
   stickyColonnes: FORMATION_COLUMNS_KEYS[];
 }) => {
-  let leftValue = CHEVRON_COLUMN_WIDTH;
+  let leftValue = 0;
   if (!isColonneSticky({ colonne, stickyColonnes })) return leftValue;
   stickyColonnes
     .filter((stickyColonne) => stickyColonne !== colonne)

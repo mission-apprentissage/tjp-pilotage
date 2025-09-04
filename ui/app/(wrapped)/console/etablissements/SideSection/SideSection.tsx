@@ -68,12 +68,12 @@ export const SideSection = ({
             width="18rem"
             onChange={(e) => {
               if(e.target.value) {
-                handleFilters("rentreeScolaire", [e.target.value]);
+                handleFilters("rentreeScolaire", e.target.value);
                 return;
               }
-              handleFilters("rentreeScolaire", [CURRENT_RENTREE]); // Reset to current rentrée if no value is selected
+              handleFilters("rentreeScolaire", CURRENT_RENTREE); // Reset to current rentrée if no value is selected
             }}
-            value={searchParams.filters?.rentreeScolaire?.[0] ?? CURRENT_RENTREE}
+            value={searchParams.filters?.rentreeScolaire ?? CURRENT_RENTREE}
           >
             {filtersList?.rentreesScolaires.map((item) => (
               <option key={item.value} value={item.value}>
