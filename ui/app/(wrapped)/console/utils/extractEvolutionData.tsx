@@ -102,13 +102,15 @@ export const getEvolutionTauxEntreeData = ({
 };
 
 export const getEvolutionIcon = ({
-  data
+  data,
+  keys
 } : {
   data: Record<string, number | undefined>;
+  keys: string[];
 }): ReactNode | undefined => {
-  const values = Object.values(data).filter((value) => value !== undefined);
-  const firstValue = values[0];
-  const lastValue = values[values.length - 1];
+  const values = keys?.map((key) => data[key]);
+  const firstValue = data[keys[0]];
+  const lastValue = data[keys[keys.length - 1]];
 
   if (values.length < 2 || firstValue === undefined || lastValue === undefined) return undefined;
   if (firstValue > lastValue) {
