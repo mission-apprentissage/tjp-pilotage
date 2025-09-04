@@ -20,7 +20,6 @@ import { GraphEvolution } from "@/components/GraphEvolution";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
-import { feature } from "@/utils/feature";
 import { formatCodeDepartement, formatFamilleMetierLibelle} from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxDemandeStyle, getTauxPressionStyle } from "@/utils/getBgScale";
@@ -285,7 +284,7 @@ export const EtablissementLineContent = ({
     >
       {line.libelleNsf ?? "-"}
     </ConditionalTd>
-    {feature.donneesTransfoConsole && user && (
+    {user && (
       <>
         <ConditionalTd
           colonne="numero"

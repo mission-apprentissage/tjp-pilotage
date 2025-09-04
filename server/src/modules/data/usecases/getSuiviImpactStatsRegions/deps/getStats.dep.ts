@@ -40,7 +40,7 @@ export const getStatsRegions = async (filters: Filters) => {
       .leftJoin("indicateurRegion", "indicateurRegion.codeRegion", "indicateurRegionSortie.codeRegion")
       .leftJoin("region", "region.codeRegion", "indicateurRegionSortie.codeRegion")
       .$call((eb) => {
-        if (filters.codeNiveauDiplome) eb.where("formationView.codeNiveauDiplome", "in", [filters.codeNiveauDiplome]);
+        if (filters.codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", [filters.codeNiveauDiplome]);
         return eb;
       })
       .$call((eb) => {
