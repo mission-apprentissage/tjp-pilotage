@@ -28,6 +28,60 @@
     - item.path | regex_search('^tools/?') == none
     - item.path | regex_search('^system/?') == none
 
+# Documentation
+- name: Vérification de l'existence du dossier de la documentation
+  ansible.builtin.stat:
+    path: /opt/app/data/documentation
+  register: dir_check
+
+- name: Zip de la documentation
+  local_action:
+    module: archive
+    path: "{{ inventory_dir }}/../documentation/*"
+    dest: "{{ inventory_dir }}/../documentation.zip"
+    format: zip
+  become: false
+
+- name: Copie de la documentation produit
+  copy:
+    src: "{{ inventory_dir }}/../documentation.zip"
+    dest: /opt/app/data/documentation.zip
+
+- name: Unzip de la documentation
+  shell: "unzip /opt/app/data/documentation.zip -d /tmp/documentation"
+
+- name: Suppression du contenu du dossier de la documentation s'il existe
+  ansible.builtin.shell: rm -rf /opt/app/data/documentation/*
+  when: dir_check.stat.exists and dir_check.stat.isdir
+
+- name: Création du dossier de la documentation s'il n'existe pas
+  ansible.builtin.file:
+    path: /opt/app/data/documentation
+    state: directory
+
+- name: Copie du contenu de la documentation vers le reverse proxy
+  shell: "cp -r /tmp/documentation/* /opt/app/data/documentation/"
+
+- name: Suppression du zip distant & de l'extraction
+  shell: "rm /opt/app/data/documentation.zip && rm -rf /tmp/documentation"
+  when: dir_check.stat.exists and dir_check.stat.isdir
+
+- name: Suppression du zip local
+  shell: "rm {{ inventory_dir }}/../documentation.zip"
+  delegate_to: localhost
+  become: false
+
+- name: Assignation des permissions au dossier de la doc pour www-data
+  ansible.builtin.file:
+    path: /opt/app/data/documentation
+    group: www-data
+    recurse: yes
+    state: directory
+
+- name: Reconcile SSL certificates
+  shell: "bash /opt/app/tools/ssl/reconcile-ssl-certificates.sh"
+  register: reconcile_output
+
 - name: Copie du fichier de seed
   ansible.builtin.copy:
     src: "{{inventory_dir}}/files/configs/mongodb/seed.gpg"
@@ -51,13 +105,16 @@
     - "{{inventory_dir}}/.env_ui"
   when: env_type != 'preview'
 
+- name: cleanup des docker-compose
+  shell: "rm -f /opt/app/docker-compose.all.yml /opt/app/docker-compose.production.yml /opt/app/docker-compose.recette.yml"
+
 - name: copy du fichier docker compose
   ansible.builtin.template:
     src: "{{ item }}"
     dest: "/opt/app/docker-compose.production.yml"
   with_fileglob:
     - "{{inventory_dir}}/docker-compose.production.yml"
-  when: env_type != 'preview'
+  when: env_type == 'production'
 
 - name: copy du fichier recette docker compose
   ansible.builtin.template:
@@ -66,6 +123,13 @@
   with_fileglob:
     - "{{inventory_dir}}/docker-compose.recette.yml"
   when: env_type == 'recette'
+
+- name: copy du fichier docker compose générique
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "/opt/app/docker-compose.all.yml"
+  with_fileglob:
+    - "{{inventory_dir}}/docker-compose.all.yml"
 
 - name: creation du fichier docker compose preview system
   ansible.builtin.template:

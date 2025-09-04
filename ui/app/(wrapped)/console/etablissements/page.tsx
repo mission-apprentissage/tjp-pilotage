@@ -6,7 +6,7 @@ import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { parse } from "qs";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect,useState } from "react";
 import { CURRENT_RENTREE } from 'shared';
 import type { TypeDemandeType } from 'shared/enum/demandeTypeEnum';
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
@@ -14,6 +14,7 @@ import type { UserType } from 'shared/schema/userSchema';
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
+import { getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData,getEvolutionTauxSortieKeys } from "@/app/(wrapped)/console/utils/extractEvolutionData";
 import { CodeDepartementContext } from '@/app/codeDepartementContext';
 import { CodeRegionContext } from '@/app/codeRegionContext';
 import { UaisContext } from '@/app/uaiContext';
@@ -40,109 +41,157 @@ import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL, GROUPED_FORMATION_ETA
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { SideSection } from "./SideSection/SideSection";
 import type { Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS, Order } from "./types";
+import { DisplayTypeEnum } from "./types";
 
 const PAGE_SIZE = 30;
 
 type QueryResult = (typeof client.infer)["[GET]/etablissements"];
 
+const COLONNES_GLOBAL: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> =
+  Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+
 const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
   "rentreeScolaire",
   "libelleEtablissement",
+  "commune",
+  "libelleDispositif",
   "libelleFormation",
-  "tauxPression",
+  "capacite",
+  "evolutionCapacite",
+  "effectif1",
+  "effectif2",
+  "effectif3",
+  "evolutionEffectif",
   "tauxRemplissage",
-  "tauxInsertion",
-  "tauxPoursuite",
+  "evolutionTauxRemplissage",
+  "tauxPression",
+  "evolutionTauxPression",
+  "tauxDemande",
+  "evolutionTauxDemande",
   "positionQuadrant",
+  // "evolutionPositionQuadrant",
   "tauxDevenirFavorable",
+  "evolutionTauxDevenirFavorable",
   "tauxInsertion",
+  "evolutionTauxInsertion",
   "tauxPoursuite",
+  "evolutionTauxPoursuite",
   "tauxDevenirFavorableEtablissement",
+  "evolutionTauxDevenirFavorableEtablissement",
   "tauxInsertionEtablissement",
+  "evolutionTauxInsertionEtablissement",
   "tauxPoursuiteEtablissement",
+  "evolutionTauxPoursuiteEtablissement",
+  "valeurAjoutee"
 ];
 
 const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
   "rentreeScolaire",
   "libelleEtablissement",
+  "commune",
+  "libelleDispositif",
   "libelleFormation",
   "numero",
   "dateEffetTransformation",
   "typeDemande",
-  "tauxPression",
+  "capacite",
+  "effectif1",
+  "effectif2",
+  "effectif3",
   "tauxRemplissage",
-  "tauxInsertion",
-  "tauxPoursuite",
+  "evolutionTauxRemplissage",
+  "tauxPression",
+  "evolutionTauxPression",
+  "tauxDemande",
+  "evolutionTauxDemande",
   "positionQuadrant",
+  // "evolutionPositionQuadrant",
   "tauxDevenirFavorable",
+  "evolutionTauxDevenirFavorable",
   "tauxInsertion",
+  "evolutionTauxInsertion",
   "tauxPoursuite",
+  "evolutionTauxPoursuite",
   "tauxDevenirFavorableEtablissement",
+  "evolutionTauxDevenirFavorableEtablissement",
   "tauxInsertionEtablissement",
+  "evolutionTauxInsertionEtablissement",
   "tauxPoursuiteEtablissement",
+  "evolutionTauxPoursuiteEtablissement",
+  "valeurAjoutee"
 ];
 
 const TabsSection = chakra((
   {
-    handleColonneFilters,
-  }:
+    displayType,
+    setDisplayType,
+  } :
   {
-    handleColonneFilters: (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => void;
+    displayType: DisplayTypeEnum;
+    setDisplayType: (value: DisplayTypeEnum) => void;
   }
 ) => {
-  return (<Tabs
-    isLazy={true}
-    // index={getTabIndex()}
-    display="flex"
-    flex="1"
-    flexDirection="column"
-    variant="blue-border"
-    minHeight="0"
-    width={"100%"}
-  >
-    <TabList>
-      <Tab
-        as={Button}
-        onClick={() => {
-          handleColonneFilters(
-            Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]
-          );
-        }}
-        p={2}
-      >
-        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
-          <Icon icon="ri:slideshow-line" />
-          <Text>Vue globale</Text>
-        </Flex>
-      </Tab>
-      {feature.donneesEvolutionTauxConsole && (
+  const getTabIndex = () => {
+    if (displayType === DisplayTypeEnum.global)
+      return 0;
+    if (displayType === DisplayTypeEnum.donneesEvolutionTaux)
+      return feature.donneesEvolutionTauxConsole ? 1 : undefined;
+    if (displayType === DisplayTypeEnum.suiviTransformation)
+      return feature.donneesEvolutionTauxConsole ? 2 : 1;
+  };
+
+  return (
+    <Tabs
+      isLazy={true}
+      index={getTabIndex()}
+      display="flex"
+      flex="1"
+      flexDirection="column"
+      variant="blue-border"
+      minHeight="0"
+      width={"100%"}
+    >
+      <TabList>
         <Tab
           as={Button}
           onClick={() => {
-            handleColonneFilters(COLONNES_EVOLUTION_TAUX);
+            setDisplayType(DisplayTypeEnum.global);
           }}
           p={2}
         >
           <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
-            <Icon icon="ri:line-chart-line" />
-            <Text>Évolution des taux</Text>
+            <Icon icon="ri:slideshow-line" />
+            <Text>Vue globale</Text>
           </Flex>
         </Tab>
-      )}
-      <Tab
-        as={Button}
-        onClick={() => {
-          handleColonneFilters(COLONNES_SUIVI_TRANSFO);
-        }}
-        p={2}
-      >
-        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
-          <Icon icon="ri:seedling-line" />
-          <Text>Suivi de la transformation</Text>
-        </Flex>
-      </Tab>
-    </TabList>
-  </Tabs>
+        {feature.donneesEvolutionTauxConsole && (
+          <Tab
+            as={Button}
+            onClick={() => {
+              setDisplayType(DisplayTypeEnum.donneesEvolutionTaux);
+            }}
+            p={2}
+          >
+            <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+              <Icon icon="ri:line-chart-line" />
+              <Text>Évolution des taux</Text>
+            </Flex>
+          </Tab>
+        )}
+        <Tab
+          as={Button}
+          onClick={() => {
+            setDisplayType(DisplayTypeEnum.suiviTransformation);
+          }}
+          p={2}
+        >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+            <Icon icon="ri:seedling-line" />
+            <Text>Suivi de la transformation</Text>
+          </Flex>
+        </Tab>
+      </TabList>
+    </Tabs>
   );
 });
 
@@ -222,6 +271,18 @@ const ColonneFilterSection = chakra(
   }
 );
 
+const getColonnesFromDisplayType = (displayType?: DisplayTypeEnum): FORMATION_ETABLISSEMENT_COLUMNS_KEYS[] => {
+  switch (displayType) {
+  case DisplayTypeEnum.donneesEvolutionTaux:
+    return COLONNES_EVOLUTION_TAUX;
+  case DisplayTypeEnum.suiviTransformation:
+    return COLONNES_SUIVI_TRANSFO;
+  case DisplayTypeEnum.global:
+  default:
+    return COLONNES_GLOBAL;
+  }
+};
+
 const Page = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const trackEvent = usePlausible();
@@ -234,7 +295,14 @@ const Page = () => {
     columns?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     order?: Partial<Order>;
     page?: string;
+    displayType?: DisplayTypeEnum;
   } = parse(queryParams.toString(), { arrayLimit: Infinity });
+
+  const filters = searchParams.filters ?? {};
+  const columns = searchParams.columns ?? [];
+  const order = searchParams.order ?? { order: "asc" };
+  const page = searchParams.page ? parseInt(searchParams.page) : 0;
+  const search = searchParams.search ?? "";
 
   const setSearchParams = (params: {
     filters?: typeof filters;
@@ -242,15 +310,26 @@ const Page = () => {
     columns?: typeof columns;
     order?: typeof order;
     page?: typeof page;
+    displayType?: DisplayTypeEnum;
   }) => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
-  const filters = searchParams.filters ?? {};
-  const columns = searchParams.columns ?? [];
-  const order = searchParams.order ?? { order: "asc" };
-  const page = searchParams.page ? parseInt(searchParams.page) : 0;
-  const search = searchParams.search ?? "";
+  const setDisplayType = (
+    displayType: DisplayTypeEnum
+  ) => {
+    trackEvent("etablissements:vue-tabs", {
+      props: { type: displayType },
+    });
+    const columns = getColonnesFromDisplayType(displayType);
+
+    handleColonneFilters(columns);
+    setSearchParams({
+      ...searchParams,
+      page: page,
+      displayType,
+    });
+  };
 
   const [searchFormationEtablissement, setSearchFormationEtablissement] = useState<string>(search);
 
@@ -303,11 +382,41 @@ const Page = () => {
       selectedDepartement: "Departement sélectionnée",
     };
 
+    const evolutionTauxEntreeColumns = {
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Effectif en entrée ${key}`]: `Effectif en entrée ${key}`,
+        [`Capacité d'accueil ${key}`]: `Capacité d'accueil ${key}`,
+        [`Taux de pression ${key}`]: `Taux de pression ${key}`,
+        [`Taux de demande ${key}`]: `Taux de demande ${key}`,
+        [`Taux de remplissage ${key}`]: `Taux de remplissage ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
+    const evolutionTauxSortieColumns = {
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux d'insertion ${key}`]: `Taux d'insertion ${key}`,
+        [`Taux de poursuite d'étude ${key}`]: `Taux de poursuite d'étude ${key}`,
+        [`Taux de devenir favorable ${key}`]: `Taux de devenir favorable ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
     const columns = {
-      ..._.omit(user ? FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED : FORMATION_ETABLISSEMENT_COLUMNS, "formationSpecifique"),
+      ..._.omit(user ? FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED : FORMATION_ETABLISSEMENT_COLUMNS, [
+        "formationSpecifique",
+        "evolutionEffectif",
+        "evolutionCapacite",
+        "evolutionTauxPression",
+        "evolutionTauxDemande",
+        "evolutionTauxRemplissage",
+        "evolutionTauxInsertion",
+        "evolutionTauxPoursuite",
+        "evolutionTauxDevenirFavorable"
+      ]),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
+      ...evolutionTauxEntreeColumns,
+      ...evolutionTauxSortieColumns
     };
 
     let etablissements = [];
@@ -348,7 +457,21 @@ const Page = () => {
             .map((typeDemande) => formatTypeDemande(typeDemande as TypeDemandeType))
             .join(", ")
           : undefined
-      }
+      },
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Effectif en entrée ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "effectif"})[key],
+        [`Capacité d'accueil ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "capacite"})[key],
+        [`Taux de remplissage ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxRemplissage"})[key],
+        [`Taux de pression ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxPression"})[key],
+        [`Taux de demande ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxDemande"})[key],
+      })
+      ).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux d'insertion ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxInsertion"})[key],
+        [`Taux de poursuite d'étude ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxPoursuite"})[key],
+        [`Taux de devenir favorable ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxDevenirFavorable"})[key],
+      })
+      ).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
     }));
 
     return {
@@ -514,7 +637,7 @@ const Page = () => {
   }, [filters.rentreeScolaire]);
 
   return (
-    <Flex direction="column" overflowY="auto" bgColor={"bluefrance.975"}>
+    <>
       <HeaderSection
         setSearchParams={setSearchParams}
         searchParams={searchParams}
@@ -524,29 +647,27 @@ const Page = () => {
         requeteEnregistreeActuelle={requeteEnregistreeActuelle}
         setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
-      <Flex direction={"row"} flex={1} position="relative" minH="0">
+      <Flex direction={"row"} flex={1} position="relative" minH="100%" minW={0} bgColor={"bluefrance.975"}>
         <SideSection
           searchParams={searchParams}
           filtersList={data?.filters}
           handleFilters={handleFilters}
           user={user}
         />
-        <Flex direction="column" flex={1} position="relative" minW={0}>
-          <Flex direction={"column"} bgColor={"white"}>
+        <Flex direction="column" flex={1} position="relative" minW="0">
+          <Flex direction="column" bgColor={"white"} boxShadow={"0px 1px 4px 0px #00000026"}>
             <TableHeader
-              p={4}
+              m={4}
               SaveFiltersButton={
-                <Flex py="2">
-                  <Button
-                    variant={"externalLink"}
-                    leftIcon={<Icon icon="ri:save-3-line" />}
-                    onClick={() => {
-                      onOpen();
-                    }}
-                  >
-                    Enregistrer la requête
-                  </Button>
-                </Flex>
+                <Button
+                  variant={"externalLink"}
+                  leftIcon={<Icon icon="ri:save-3-line" />}
+                  onClick={() => {
+                    onOpen();
+                  }}
+                >
+                  Enregistrer la requête
+                </Button>
               }
               SearchInput={
                 <ConsoleSearchInput
@@ -560,8 +681,25 @@ const Page = () => {
                   }}
                   value={searchFormationEtablissement}
                   onClick={onSearch}
-                  width={{ base: "15rem", ["2xl"]: "25rem" }}
+                  width={{ base: "25rem", ["2xl"]: "35rem" }}
                 />
+              }
+              ColonneFilter={
+                <ColonneFilterSection
+                  colonneFilters={colonneFilters}
+                  handleColonneFilters={handleColonneFilters}
+                  forcedColonnes={["libelleEtablissement", "libelleFormation"]}
+                  trackEvent={trackEvent}
+                  user={user}
+                />
+              }
+              TabsSection={
+                feature.donneesTransfoConsole && user && (
+                  <TabsSection
+                    displayType={searchParams.displayType ?? DisplayTypeEnum.global}
+                    setDisplayType={setDisplayType}
+                  />
+                )
               }
               onExportCsv={onExportCsv}
               onExportExcel={onExportExcel}
@@ -570,19 +708,6 @@ const Page = () => {
               count={data?.count}
               onPageChange={(newPage) => setSearchParams({ page: newPage })}
             />
-            <Flex ms={"auto"} p={4} gap={2} flexWrap="wrap" alignItems="center">
-              <ColonneFilterSection
-                colonneFilters={colonneFilters}
-                handleColonneFilters={handleColonneFilters}
-                forcedColonnes={["libelleEtablissement", "libelleFormation"]}
-                trackEvent={trackEvent}
-                user={user}
-                ms={"auto"}
-              />
-              <TabsSection
-                handleColonneFilters={handleColonneFilters}
-              />
-            </Flex>
           </Flex>
           {isLoading && (
             <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
@@ -608,7 +733,7 @@ const Page = () => {
           page="formationEtablissement"
         />
       )}
-    </Flex>
+    </>
   );
 };
 

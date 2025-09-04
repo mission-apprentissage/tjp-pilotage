@@ -151,7 +151,7 @@ describe("submitDemande usecase", () => {
           statut: DemandeStatutEnum["demande validée"],
         },
       })
-    ).rejects.toThrow("Demande soumise sur un établissement non autorisée");
+    ).rejects.toThrow("Demande soumise sur un établissement non autorisé");
   });
 
   it("should create a new demande if data is valid and sent demand does not contain a numero", async () => {
