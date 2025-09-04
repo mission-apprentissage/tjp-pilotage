@@ -21,7 +21,6 @@ import { TooltipDefinitionValeurAjoutee } from "@/app/(wrapped)/components/defin
 import { FORMATION_ETABLISSEMENT_COLUMNS, FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type {Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Order} from "@/app/(wrapped)/console/etablissements/types";
 import { OrderIcon } from "@/components/OrderIcon";
-import { feature } from "@/utils/feature";
 
 import { COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
 import { getLeftOffset, isColonneSticky  } from "./utils";
@@ -362,7 +361,8 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="libelleNsf" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleNsf}
-        </ConditionalTh>{feature.donneesTransfoConsole && user && (
+        </ConditionalTh>
+        {user && (
           <>
             <ConditionalTh
               colonne="numero"

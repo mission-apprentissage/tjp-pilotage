@@ -1,6 +1,6 @@
 "use client";
 
-import {Button, Center, chakra, Flex, MenuButton,Spinner, useDisclosure} from '@chakra-ui/react';
+import { Button, Center, chakra, Flex, MenuButton, Spinner, Tab, TabList, Tabs, Text,useDisclosure } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -32,9 +32,95 @@ import { FORMATION_COLUMNS, FORMATION_COLUMNS_DEFAULT } from "./FORMATION_COLUMN
 import { GROUPED_FORMATION_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_COLUMNS";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { SideSection } from "./SideSection/SideSection";
-import type { Filters, Formations, Order } from "./types";
+import type { Filters, FORMATION_COLUMNS_KEYS , Formations, Order } from "./types";
+import { DisplayTypeEnum  } from "./types";
 
 const PAGE_SIZE = 30;
+
+
+const COLONNES_SYNTHESE: Array<Partial<FORMATION_COLUMNS_KEYS>> =
+  Object.keys(FORMATION_COLUMNS_DEFAULT) as FORMATION_COLUMNS_KEYS[];
+
+const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_COLUMNS_KEYS>> = [
+  "rentreeScolaire",
+  "libelleDispositif",
+  "libelleFormation",
+  "effectif1",
+  "effectif2",
+  "effectif3",
+  "evolutionEffectif",
+  "tauxRemplissage",
+  "evolutionTauxRemplissage",
+  "tauxPression",
+  "evolutionTauxPression",
+  "tauxDemande",
+  "evolutionTauxDemande",
+  "positionQuadrant",
+  // "evolutionPositionQuadrant",
+  "tauxDevenirFavorable",
+  "evolutionTauxDevenirFavorable",
+  "tauxInsertion",
+  "evolutionTauxInsertion",
+  "tauxPoursuite",
+  "evolutionTauxPoursuite"
+];
+
+const TabsSection = chakra((
+  {
+    displayType,
+    setDisplayType
+  } : {
+    displayType: DisplayTypeEnum;
+    setDisplayType: (value: DisplayTypeEnum) => void;
+  }
+) => {
+  const getTabIndex = () => {
+    if (displayType === DisplayTypeEnum.synthese)
+      return 0;
+    if (displayType === DisplayTypeEnum.evolutionDesTaux)
+      return 1;
+  };
+
+  return (
+    <Tabs
+      isLazy={true}
+      index={getTabIndex()}
+      display="flex"
+      flex="1"
+      flexDirection="column"
+      variant="blue-border"
+      minHeight="0"
+      width={"100%"}
+    >
+      <TabList>
+        <Tab
+          as={Button}
+          onClick={() => {
+            setDisplayType(DisplayTypeEnum.synthese);
+          }}
+          p={2}
+        >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+            <Icon icon="ri:slideshow-line" />
+            <Text>Vue synthétique</Text>
+          </Flex>
+        </Tab>
+        <Tab
+          as={Button}
+          onClick={() => {
+            setDisplayType(DisplayTypeEnum.evolutionDesTaux);
+          }}
+          p={2}
+        >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+            <Icon icon="ri:line-chart-line" />
+            <Text>Évolution des taux</Text>
+          </Flex>
+        </Tab>
+      </TabList>
+    </Tabs>
+  );
+});
 
 const ColonneFilterSection = chakra(
   ({
@@ -103,6 +189,16 @@ const ColonneFilterSection = chakra(
     </Flex>
 );
 
+const getColonnesFromDisplayType = (displayType?: DisplayTypeEnum): FORMATION_COLUMNS_KEYS[] => {
+  switch (displayType) {
+  case DisplayTypeEnum.evolutionDesTaux:
+    return COLONNES_EVOLUTION_TAUX;
+  case DisplayTypeEnum.synthese:
+  default:
+    return COLONNES_SYNTHESE;
+  }
+};
+
 const Page = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const router = useRouter();
@@ -113,9 +209,17 @@ const Page = () => {
     columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
+    displayType?: DisplayTypeEnum;
   } = parse(queryParams.toString(), { arrayLimit: Infinity });
   const trackEvent = usePlausible();
   const { auth } = useAuth();
+
+  const filters = searchParams.filters ?? {};
+  const columns = searchParams.columns ?? [];
+  const order = searchParams.order ?? { order: "asc" };
+  const page = searchParams.page ? parseInt(searchParams.page) : 0;
+  const search = searchParams.search ?? "";
+  const displayType = searchParams.displayType ?? DisplayTypeEnum.synthese;
 
   const setSearchParams = (params: {
     filters?: typeof filters;
@@ -123,15 +227,26 @@ const Page = () => {
     columns?: typeof columns;
     order?: typeof order;
     page?: typeof page;
+    displayType?: typeof displayType;
   }) => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
-  const filters = searchParams.filters ?? {};
-  const columns = searchParams.columns ?? [];
-  const order = searchParams.order ?? { order: "asc" };
-  const page = searchParams.page ? parseInt(searchParams.page) : 0;
-  const search = searchParams.search ?? "";
+  const setDisplayType = (
+    displayType: DisplayTypeEnum
+  ) => {
+    trackEvent("etablissements:vue-tabs", {
+      props: { type: displayType },
+    });
+    const columns = getColonnesFromDisplayType(displayType);
+
+    handleColonneFilters(columns);
+    setSearchParams({
+      ...searchParams,
+      page: page,
+      displayType,
+    });
+  };
 
   const [searchFormation, setSearchFormation] = useState<string>(search);
 
@@ -440,6 +555,12 @@ const Page = () => {
                   value={searchFormation}
                   onClick={onSearch}
                   width={{ base: "25rem", ["2xl"]: "35rem" }}
+                />
+              }
+              TabsSection={
+                <TabsSection
+                  displayType={displayType}
+                  setDisplayType={setDisplayType}
                 />
               }
               ColonneFilter={

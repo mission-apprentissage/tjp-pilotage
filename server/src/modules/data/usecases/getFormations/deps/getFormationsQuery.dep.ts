@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject } from "kysely/helpers/postgres";
-import { CURRENT_RENTREE, VoieEnum } from "shared";
+import { CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import type { TypeFamille } from 'shared/enum/typeFamilleEnum';
@@ -73,9 +73,8 @@ export const getFormationsQuery = async ({
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "formationView.cfd")
+        .onRef("indicateurRegionSortie.voie", "=", "formationView.voie")
         .onRef("indicateurRegionSortie.codeDispositif", "=", "formationEtablissement.codeDispositif")
-        .onRef("indicateurRegionSortie.codeRegion", "=", "etablissement.codeRegion")
-        .on("indicateurRegionSortie.voie", "=", VoieEnum["scolaire"])
         .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     )
     .leftJoin("dataFormation as formationContinuum", "formationContinuum.cfd", "indicateurRegionSortie.cfdContinuum")

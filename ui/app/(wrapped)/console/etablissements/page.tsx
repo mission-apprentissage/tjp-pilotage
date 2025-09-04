@@ -24,7 +24,6 @@ import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
-import { feature } from "@/utils/feature";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 import {formatLibelleFormationWithoutTags, formatTypeDemande} from '@/utils/formatLibelle';
 import { formatArray } from "@/utils/formatUtils";
@@ -47,7 +46,7 @@ const PAGE_SIZE = 30;
 
 type QueryResult = (typeof client.infer)["[GET]/etablissements"];
 
-const COLONNES_GLOBAL: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> =
+const COLONNES_SYNTHESE: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> =
   Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
 
 const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
@@ -125,19 +124,21 @@ const TabsSection = chakra((
   {
     displayType,
     setDisplayType,
+    user
   } :
   {
     displayType: DisplayTypeEnum;
     setDisplayType: (value: DisplayTypeEnum) => void;
+    user?: UserType;
   }
 ) => {
   const getTabIndex = () => {
-    if (displayType === DisplayTypeEnum.global)
+    if (displayType === DisplayTypeEnum.synthese)
       return 0;
-    if (displayType === DisplayTypeEnum.donneesEvolutionTaux)
-      return feature.donneesEvolutionTauxConsole ? 1 : undefined;
+    if (displayType === DisplayTypeEnum.evolutionDesTaux)
+      return 1;
     if (displayType === DisplayTypeEnum.suiviTransformation)
-      return feature.donneesEvolutionTauxConsole ? 2 : 1;
+      return 2;
   };
 
   return (
@@ -155,41 +156,43 @@ const TabsSection = chakra((
         <Tab
           as={Button}
           onClick={() => {
-            setDisplayType(DisplayTypeEnum.global);
+            setDisplayType(DisplayTypeEnum.synthese);
           }}
           p={2}
         >
           <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
             <Icon icon="ri:slideshow-line" />
-            <Text>Vue globale</Text>
+            <Text>Vue synthétique</Text>
           </Flex>
         </Tab>
-        {feature.donneesEvolutionTauxConsole && (
-          <Tab
-            as={Button}
-            onClick={() => {
-              setDisplayType(DisplayTypeEnum.donneesEvolutionTaux);
-            }}
-            p={2}
-          >
-            <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
-              <Icon icon="ri:line-chart-line" />
-              <Text>Évolution des taux</Text>
-            </Flex>
-          </Tab>
-        )}
         <Tab
           as={Button}
           onClick={() => {
-            setDisplayType(DisplayTypeEnum.suiviTransformation);
+            setDisplayType(DisplayTypeEnum.evolutionDesTaux);
           }}
           p={2}
         >
           <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
-            <Icon icon="ri:seedling-line" />
-            <Text>Suivi de la transformation</Text>
+            <Icon icon="ri:line-chart-line" />
+            <Text>Évolution des taux</Text>
           </Flex>
         </Tab>
+        {
+          user ? (
+            <Tab
+              as={Button}
+              onClick={() => {
+                setDisplayType(DisplayTypeEnum.suiviTransformation);
+              }}
+              p={2}
+            >
+              <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+                <Icon icon="ri:seedling-line" />
+                <Text>Suivi de la transformation</Text>
+              </Flex>
+            </Tab>
+          ) : null
+        }
       </TabList>
     </Tabs>
   );
@@ -273,13 +276,13 @@ const ColonneFilterSection = chakra(
 
 const getColonnesFromDisplayType = (displayType?: DisplayTypeEnum): FORMATION_ETABLISSEMENT_COLUMNS_KEYS[] => {
   switch (displayType) {
-  case DisplayTypeEnum.donneesEvolutionTaux:
+  case DisplayTypeEnum.evolutionDesTaux:
     return COLONNES_EVOLUTION_TAUX;
   case DisplayTypeEnum.suiviTransformation:
     return COLONNES_SUIVI_TRANSFO;
-  case DisplayTypeEnum.global:
+  case DisplayTypeEnum.synthese:
   default:
-    return COLONNES_GLOBAL;
+    return COLONNES_SYNTHESE;
   }
 };
 
@@ -303,6 +306,7 @@ const Page = () => {
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
   const search = searchParams.search ?? "";
+  const displayType = searchParams.displayType ?? DisplayTypeEnum.synthese;
 
   const setSearchParams = (params: {
     filters?: typeof filters;
@@ -694,12 +698,10 @@ const Page = () => {
                 />
               }
               TabsSection={
-                feature.donneesTransfoConsole && user && (
-                  <TabsSection
-                    displayType={searchParams.displayType ?? DisplayTypeEnum.global}
-                    setDisplayType={setDisplayType}
-                  />
-                )
+                <TabsSection
+                  displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
+                  setDisplayType={setDisplayType}
+                />
               }
               onExportCsv={onExportCsv}
               onExportExcel={onExportExcel}

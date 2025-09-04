@@ -7,7 +7,6 @@ import type { Filters, FiltersList } from "@/app/(wrapped)/console/etablissement
 import { DoubleArrowLeft } from "@/components/icons/DoubleArrowLeft";
 import { DoubleArrowRight } from "@/components/icons/DoubleArrowRight";
 import { Multiselect } from "@/components/Multiselect";
-import { feature } from "@/utils/feature";
 import { formatTypeDemande } from '@/utils/formatLibelle';
 
 export const SideSection = ({
@@ -179,7 +178,7 @@ export const SideSection = ({
             Position dans le quadrant
           </Multiselect>
           <Divider />
-          {feature.donneesTransfoConsole && user && (
+          {user && (
             <>
               <Multiselect
                 size="md"
