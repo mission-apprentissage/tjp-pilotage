@@ -252,6 +252,7 @@ export const getFormationsQuery = async ({
           .selectFrom("indicateurEntree")
           .leftJoin("formationEtablissement as fe", "fe.id", "indicateurEntree.formationEtablissementId")
           .whereRef("fe.cfd", "=", "formationView.cfd")
+          .whereRef("fe.codeDispositif", "=", "formationEtablissement.codeDispositif")
           .whereRef("fe.voie", "=", "formationView.voie")
           .where("indicateurEntree.rentreeScolaire", "<=", rentreeScolaire)
           .select([

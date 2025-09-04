@@ -376,7 +376,12 @@ export const EtablissementLineContent = ({
     >
       <Flex gap={1} justify={"end"}>
         {line.effectifEntree ?? "-"}
-        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "effectif"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "effectif"}),
+            keys: getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -384,7 +389,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title="Évolution des effectifs"
@@ -401,7 +405,12 @@ export const EtablissementLineContent = ({
     >
       <Flex gap={1} justify={"end"}>
         {line.capacite ?? "-"}
-        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "capacite"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "capacite"}),
+            keys: getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -422,7 +431,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      textAlign={"center"}
     >
       <Flex gap={1} justify={"center"}>
         <TableBadge sx={
@@ -430,7 +438,12 @@ export const EtablissementLineContent = ({
         }>
           {formatNumberToString(line.tauxPression, 2, "-")}
         </TableBadge>
-        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "tauxPression"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "tauxPression"}),
+            keys: getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -438,7 +451,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPression}
@@ -452,7 +464,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      textAlign={"center"}
     >
       <Flex gap={1} justify={"center"}>
         <TableBadge sx={
@@ -460,7 +471,12 @@ export const EtablissementLineContent = ({
         }>
           {formatNumberToString(line.tauxDemande, 2, "-")}
         </TableBadge>
-        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "tauxDemande"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "tauxDemande"}),
+            keys: getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -468,7 +484,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxDemande}
@@ -482,11 +497,15 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      textAlign={"center"}
     >
       <Flex gap={1} justify={"center"}>
         <GraphWrapper value={line.tauxRemplissage} />
-        {getEvolutionIcon({ data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "tauxRemplissage"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, key: "tauxRemplissage"}),
+            keys: getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -494,7 +513,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxRemplissage}
@@ -536,7 +554,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      textAlign="center"
     >
       <Flex gap={1} justify={"center"}>
         <GraphWrapper
@@ -548,7 +565,12 @@ export const EtablissementLineContent = ({
               CURRENT_IJ_MILLESIME
           }
         />
-        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, key: "tauxDevenirFavorable"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, key: "tauxDevenirFavorable"}),
+            keys: getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -556,7 +578,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxDevenirFavorable}
@@ -570,7 +591,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      textAlign={"center"}
     >
       <Flex gap={1} justify={"center"}>
         <GraphWrapper
@@ -582,7 +602,12 @@ export const EtablissementLineContent = ({
               CURRENT_IJ_MILLESIME
           }
         />
-        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, key: "tauxInsertion"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, key: "tauxInsertion"}),
+            keys: getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -590,7 +615,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxInsertion}
@@ -604,7 +628,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      textAlign={"center"}
     >
       <Flex gap={1} justify={"center"}>
         <GraphWrapper
@@ -616,7 +639,12 @@ export const EtablissementLineContent = ({
               CURRENT_IJ_MILLESIME
           }
         />
-        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, key: "tauxPoursuite"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, key: "tauxPoursuite"}),
+            keys: getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -624,7 +652,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPoursuite}
@@ -638,7 +665,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      textAlign="center"
     >
       <Flex gap={1} justify={"center"}>
         <GraphWrapper
@@ -650,7 +676,12 @@ export const EtablissementLineContent = ({
               CURRENT_IJ_MILLESIME
           }
         />
-        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, key: "tauxDevenirFavorable"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, key: "tauxDevenirFavorable"}),
+            keys: getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -658,7 +689,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxDevenirFavorableEtablissement}
@@ -683,7 +713,12 @@ export const EtablissementLineContent = ({
               CURRENT_IJ_MILLESIME
           }
         />
-        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, key: "tauxInsertion"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, key: "tauxInsertion"}),
+            keys: getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -691,7 +726,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxInsertionEtablissement}
@@ -716,7 +750,12 @@ export const EtablissementLineContent = ({
               CURRENT_IJ_MILLESIME
           }
         />
-        {getEvolutionIcon({ data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, key: "tauxPoursuite"}) })}
+        {
+          getEvolutionIcon({
+            data: getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, key: "tauxPoursuite"}),
+            keys: getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire })
+          })
+        }
       </Flex>
     </ConditionalTd>
     <ConditionalTd
@@ -724,7 +763,6 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
       stickyColonnes={stickyColonnes}
-      p={0}
     >
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPoursuiteEtablissement}
