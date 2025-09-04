@@ -63,17 +63,6 @@ const Page = () =>
       </Text>
       <UnorderedList>
         <ListItem>
-          E-mail&nbsp;:{" "}
-          <Link
-            style={{
-              textDecoration: "underline",
-            }}
-            href="mailto:orion@inserjeunes.beta.gouv.fr"
-          >
-            orion@inserjeunes.beta.gouv.fr
-          </Link>
-        </ListItem>
-        <ListItem>
           Formulaire de contact&nbsp;:{" "}
           <Link
             style={{
