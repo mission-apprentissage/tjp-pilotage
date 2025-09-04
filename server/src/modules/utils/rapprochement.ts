@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
-
+import { getRapprochementMotif } from "shared/utils/getRapprochementMotif";
 
 export const rapprochement = (
   campagneAlias: string,
@@ -28,11 +28,7 @@ export const rapprochement = (
   const placesTransformeesScolaire = sql`ABS(${constatTable}."differenceCapaciteScolaire") + ABS(${constatTable}."differenceCapaciteScolaireColoree")`;
   const placesTransformeesApprentissage = sql`ABS(${constatTable}."differenceCapaciteApprentissage") + ABS(${constatTable}."differenceCapaciteApprentissageColoree")`;
 
-  const aucuneDonneeApres = sql`(
-    ${constatTable}."effectifEntreeApres" IS NULL AND
-    ${constatTable}."capaciteEntreeApres" IS NULL AND
-    ${constatTable}."voeuEntreeApres" IS NULL
-  )`;
+  const aucuneDonneeApres = sql`(${constatTable}."formationEtablissementIdApres" IS NULL)`;
 
   const apprentissageOnly = sql`
     (${placesTransformeesScolaire}) <= 1 AND (${placesTransformeesApprentissage}) > 1
@@ -47,7 +43,7 @@ export const rapprochement = (
   const colorationSansDataScolaire = sql`${isColoration} AND (${aucuneDonneeApres})`;
 
   const isFermeture = sql`${demandeTable}."typeDemande" = 'fermeture'`;
-  const aucunEleveApres = sql`${constatTable}."effectifEntreeApres" IS NULL`;
+  const aucunEleveApres = sql`${constatTable}."formationEtablissementIdApres" IS NULL AND ${constatTable}."effectifEntreeApres" IS NULL `;
   const fermetureSansElevesApres = sql`${isFermeture} AND ${aucunEleveApres}`;
   const fermetureAvecElevesApres = sql`${isFermeture} AND NOT (${aucunEleveApres})`;
 
@@ -88,27 +84,4 @@ export const rapprochement = (
   
   `;
 
-};
-
-export const getRapprochementMotif = (
-  key: "statut" | "campagne" | "rentrée" | "niveau" |
-       "apprentissageOK" | "apprentissage" | "colorationOK" |
-       "fermeture" | "fermetureOK" | "horsFermetureKO" | "horsFermetureOK"
-): string => {
-
-  const motifRapprochementList = {
-    "statut": "Cette demande n’est pas validée. Nous n’avons pas fait le rapprochement avec le constat de rentrée",
-    "campagne": "Cette demande est issue d'une campagne en cours. Nous n’avons pas fait le rapprochement avec le constat de rentrée",
-    "rentrée": "Cette demande concerne une rentrée scolaire future (données non disponibles)",
-    "niveau": "Ce type de diplôme n’est pas présent dans le constat de rentrée",
-    "apprentissageOK": "Cette demande concerne des effectifs en apprentissage. La formation est bien présente dans le constat de rentrée en voie scolaire, mais nous ne pouvons pas vérifier les effectifs en apprentissage",
-    "apprentissage": "Cette demande concerne des effectifs en apprentissage ; cette formation n’existe pas dans le constat de rentrée en voie scolaire",
-    "colorationOK": "Cette demande concerne une coloration de places. La formation est bien présente dans le constat de rentrée mais nous ne pouvons pas vérifier les places colorées réellement occupées",
-    "fermeture": "Cette demande concerne une fermeture mais nous avons trouvé des effectifs en entrée",
-    "fermetureOK": "Cette demande concerne une fermeture. Nous n’avons pas trouvé d’effectifs en entrée",
-    "horsFermetureKO": "Cette demande n’a pas pu être rapprochée du constat de rentrée, veuillez vérifier l'UAI et/ou le Code Diplôme et apporter les corrections nécessaires pour que le rapprochement s’opère",
-    "horsFermetureOK": "La formation de cet établissement est bien présente dans le constat de rentrée"
-  };
-
-  return motifRapprochementList[key];
 };
