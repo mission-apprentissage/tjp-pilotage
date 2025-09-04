@@ -5,7 +5,7 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import type { TypeFamille } from 'shared/enum/typeFamilleEnum';
 import { TypeFamilleEnum } from 'shared/enum/typeFamilleEnum';
-import { getMillesimeFromRentreeScolaire, getMillesimesFromRentreeScolaire } from "shared/utils/getMillesime";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -32,7 +32,7 @@ import { cleanNull } from "@/utils/noNull";
 export const getFormationsQuery = async ({
   offset = 0,
   limit = MAX_LIMIT,
-  rentreeScolaire = [CURRENT_RENTREE],
+  rentreeScolaire = CURRENT_RENTREE,
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -51,10 +51,7 @@ export const getFormationsQuery = async ({
   orderBy,
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
-  const millesimesSortie = getMillesimesFromRentreeScolaire({ rentreeScolaire });
-  console.log("rentreesScolaire", rentreeScolaire);
-  console.log(getMillesimeFromRentreeScolaire({ rentreeScolaire: CURRENT_RENTREE }));
-  console.log("millesimesSortie", millesimesSortie);
+  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire });
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
@@ -70,7 +67,7 @@ export const getFormationsQuery = async ({
     .leftJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("indicateurRegionSortie", (join) =>
@@ -79,7 +76,7 @@ export const getFormationsQuery = async ({
         .onRef("indicateurRegionSortie.codeDispositif", "=", "formationEtablissement.codeDispositif")
         .onRef("indicateurRegionSortie.codeRegion", "=", "etablissement.codeRegion")
         .on("indicateurRegionSortie.voie", "=", VoieEnum["scolaire"])
-        .on("indicateurRegionSortie.millesimeSortie", "in", millesimesSortie)
+        .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     )
     .leftJoin("dataFormation as formationContinuum", "formationContinuum.cfd", "indicateurRegionSortie.cfdContinuum")
     .leftJoin("formationHistorique", (join) =>
@@ -100,7 +97,7 @@ export const getFormationsQuery = async ({
             .onRef("positionFormationRegionaleQuadrant.cfd", "=", "formationView.cfd")
             .onRef("positionFormationRegionaleQuadrant.codeDispositif", "=", "formationEtablissement.codeDispositif")
             .onRef("positionFormationRegionaleQuadrant.codeRegion", "=", "etablissement.codeRegion")
-            .on("positionFormationRegionaleQuadrant.millesimeSortie", "in", millesimesSortie)
+            .on("positionFormationRegionaleQuadrant.millesimeSortie", "=", millesimeSortie)
         )
         .select((eb) => [
           eb
@@ -216,9 +213,9 @@ export const getFormationsQuery = async ({
         )
         .end()
         .as("continuum"),
-      isHistoriqueCoExistant(eb, rentreeScolaire[0]).as("isHistoriqueCoExistant"),
+      isHistoriqueCoExistant(eb, rentreeScolaire).as("isHistoriqueCoExistant"),
       "formationHistorique.cfd as formationRenovee",
-      isFormationRenovee({ eb, rentreeScolaire: rentreeScolaire[0] })
+      isFormationRenovee({ eb, rentreeScolaire })
         .as("isFormationRenovee"),
       sql<string | null>`
           case when ${eb.ref("formationView.dateFermeture")} is not null
@@ -235,6 +232,7 @@ export const getFormationsQuery = async ({
           .whereRef("indicateurRegionSortie.cfd", "=", "formationView.cfd")
           .whereRef("indicateurRegionSortie.voie", "=", "formationView.voie")
           .whereRef("indicateurRegionSortie.codeDispositif", "=", "formationEtablissement.codeDispositif")
+          .where("indicateurRegionSortie.millesimeSortie", "<=", millesimeSortie)
           .select([
             "indicateurRegionSortie.millesimeSortie",
             selectTauxDevenirFavorableAgg("indicateurRegionSortie").as("tauxDevenirFavorable"),
@@ -247,7 +245,8 @@ export const getFormationsQuery = async ({
           .groupBy([
             "indicateurRegionSortie.millesimeSortie",
           ])
-          .orderBy("indicateurRegionSortie.millesimeSortie", "asc")
+          .orderBy("indicateurRegionSortie.millesimeSortie", "desc")
+          .limit(3)
       ).as("evolutionTauxSortie"),
       jsonArrayFrom(
         eb
@@ -255,8 +254,7 @@ export const getFormationsQuery = async ({
           .leftJoin("formationEtablissement as fe", "fe.id", "indicateurEntree.formationEtablissementId")
           .whereRef("fe.cfd", "=", "formationView.cfd")
           .whereRef("fe.voie", "=", "formationView.voie")
-          .whereRef("fe.codeDispositif", "=", "fe.codeDispositif")
-          .whereRef("indicateurEntree.formationEtablissementId", "=", "fe.id")
+          .where("indicateurEntree.rentreeScolaire", "<=", rentreeScolaire)
           .select([
             "indicateurEntree.rentreeScolaire",
             selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
@@ -269,7 +267,8 @@ export const getFormationsQuery = async ({
           .groupBy([
             "indicateurEntree.rentreeScolaire",
           ])
-          .orderBy("indicateurEntree.rentreeScolaire", "asc")
+          .orderBy("indicateurEntree.rentreeScolaire", "desc")
+          .limit(3)
       ).as("evolutionTauxEntree"),
     ])
     .where(isInPerimetreIJEtablissement)
@@ -286,7 +285,7 @@ export const getFormationsQuery = async ({
                 .select("fe.cfd")
                 .distinct()
                 .innerJoin("indicateurEntree", "id", "formationEtablissementId")
-                .where("rentreeScolaire", "in", rentreeScolaire)
+                .where("rentreeScolaire", "=", rentreeScolaire)
                 .whereRef("fe.codeDispositif", "=", "formationEtablissement.codeDispositif")
                 .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
             )

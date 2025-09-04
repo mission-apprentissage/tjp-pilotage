@@ -383,7 +383,7 @@ const Page = () => {
     };
 
     const evolutionTauxEntreeColumns = {
-      ...getEvolutionTauxEntreeKeys().map((key) => ({
+      ...getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Effectif en entrée ${key}`]: `Effectif en entrée ${key}`,
         [`Capacité d'accueil ${key}`]: `Capacité d'accueil ${key}`,
         [`Taux de pression ${key}`]: `Taux de pression ${key}`,
@@ -393,7 +393,7 @@ const Page = () => {
     };
 
     const evolutionTauxSortieColumns = {
-      ...getEvolutionTauxSortieKeys().map((key) => ({
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Taux d'insertion ${key}`]: `Taux d'insertion ${key}`,
         [`Taux de poursuite d'étude ${key}`]: `Taux de poursuite d'étude ${key}`,
         [`Taux de devenir favorable ${key}`]: `Taux de devenir favorable ${key}`,
@@ -458,7 +458,7 @@ const Page = () => {
             .join(", ")
           : undefined
       },
-      ...getEvolutionTauxEntreeKeys().map((key) => ({
+      ...getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Effectif en entrée ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "effectif"})[key],
         [`Capacité d'accueil ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "capacite"})[key],
         [`Taux de remplissage ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxRemplissage"})[key],
@@ -466,7 +466,7 @@ const Page = () => {
         [`Taux de demande ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxDemande"})[key],
       })
       ).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
-      ...getEvolutionTauxSortieKeys().map((key) => ({
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Taux d'insertion ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxInsertion"})[key],
         [`Taux de poursuite d'étude ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxPoursuite"})[key],
         [`Taux de devenir favorable ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxDevenirFavorable"})[key],
@@ -624,7 +624,7 @@ const Page = () => {
       setSearchParams({ filters: filters });
     }
     if(rentreeScolaire && !filters.rentreeScolaire?.length) {
-      filters.rentreeScolaire = [rentreeScolaire];
+      filters.rentreeScolaire = rentreeScolaire;
       setSearchParams({ filters: filters });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -632,7 +632,7 @@ const Page = () => {
 
   useEffect(() => {
     if(!filters.rentreeScolaire?.length)
-      setSearchParams({ filters: { ...filters, rentreeScolaire: [CURRENT_RENTREE] } });
+      setSearchParams({ filters: { ...filters, rentreeScolaire: CURRENT_RENTREE } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters.rentreeScolaire]);
 

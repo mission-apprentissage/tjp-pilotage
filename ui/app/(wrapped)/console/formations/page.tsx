@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
+import { CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import type { OptionType } from "shared/schema/optionSchema";
 
@@ -181,7 +182,7 @@ const Page = () => {
     };
 
     const evolutionTauxEntreeColumns = {
-      ...getEvolutionTauxEntreeKeys().map((key) => ({
+      ...getEvolutionTauxEntreeKeys({ rentreeScolaire: filters.rentreeScolaire }).map((key) => ({
         [`Effectif en entrée ${key}`]: `Effectif en entrée ${key}`,
         [`Capacité d'accueil ${key}`]: `Capacité d'accueil ${key}`,
         [`Taux de pression ${key}`]: `Taux de pression ${key}`,
@@ -191,7 +192,7 @@ const Page = () => {
     };
 
     const evolutionTauxSortieColumns = {
-      ...getEvolutionTauxSortieKeys().map((key) => ({
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters.rentreeScolaire }).map((key) => ({
         [`Taux d'insertion ${key}`]: `Taux d'insertion ${key}`,
         [`Taux de poursuite d'étude ${key}`]: `Taux de poursuite d'étude ${key}`,
         [`Taux de devenir favorable ${key}`]: `Taux de devenir favorable ${key}`,
@@ -248,14 +249,14 @@ const Page = () => {
       isFormationRenovee: formation.isFormationRenovee,
       isHistorique: !!formation.formationRenovee,
       isHistoriqueCoExistant: formation.isHistoriqueCoExistant,
-      ...getEvolutionTauxEntreeKeys().map((key) => ({
+      ...getEvolutionTauxEntreeKeys({ rentreeScolaire: filters.rentreeScolaire }).map((key) => ({
         [`Effectif en entrée ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "effectif"})[key],
         [`Capacité d'accueil ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "capacite"})[key],
         [`Taux de remplissage ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxRemplissage"})[key],
         [`Taux de pression ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxPression"})[key],
         [`Taux de demande ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxDemande"})[key],
       })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
-      ...getEvolutionTauxSortieKeys().map((key) => ({
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters.rentreeScolaire }).map((key) => ({
         [`Taux d'insertion ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxInsertion"})[key],
         [`Taux de poursuite d'étude ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxPoursuite"})[key],
         [`Taux de devenir favorable ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxDevenirFavorable"})[key],
@@ -315,6 +316,7 @@ const Page = () => {
 
   const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
   const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
+  const rentreeScolaire = CURRENT_RENTREE;
 
   const handleFiltersContext = (type: keyof Filters, value: Filters[keyof Filters]) => {
     if (type === "codeRegion" && value != null) setCodeRegion((value as string[])[0] ?? "");
@@ -380,8 +382,18 @@ const Page = () => {
       filters.codeDepartement = [codeDepartement];
       setSearchParams({ filters: filters });
     }
+    if(rentreeScolaire && !filters.rentreeScolaire?.length) {
+      filters.rentreeScolaire = rentreeScolaire;
+      setSearchParams({ filters: filters });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if(!filters.rentreeScolaire?.length)
+      setSearchParams({ filters: { ...filters, rentreeScolaire: CURRENT_RENTREE } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.rentreeScolaire]);
 
   return (
     <>

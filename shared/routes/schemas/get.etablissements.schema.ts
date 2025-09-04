@@ -118,7 +118,7 @@ const FiltersSchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   codeDispositif: z.array(z.string()).optional(),
   cfdFamille: z.array(z.string()).optional(),
-  rentreeScolaire: z.array(z.string()).optional(),
+  rentreeScolaire: z.string().optional(),
   secteur: z.array(SecteurZodType).optional(),
   uai: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
