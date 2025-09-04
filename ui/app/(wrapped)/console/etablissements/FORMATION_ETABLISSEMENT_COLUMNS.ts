@@ -167,7 +167,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   tauxDevenirFavorableEtablissement: `Tx de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxInsertionEtablissement: `Tx d'emploi 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   tauxPoursuiteEtablissement: `Tx de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
-  valeurAjoutee: "Valeur ajoutée",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL>;
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED = {
