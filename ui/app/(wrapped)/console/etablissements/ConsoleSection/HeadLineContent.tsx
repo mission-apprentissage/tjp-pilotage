@@ -401,6 +401,8 @@ export const HeadLineContent = ({
               colonneFilters={colonneFilters}
               getCellBgColor={getCellBgColor}
               colonne="previsionnel"
+              stickyColonnes={stickyColonnes}
+              setStickyColonnes={setStickyColonnes}
             >
               {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.previsionnel}
             </ConditionalTh>

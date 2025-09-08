@@ -25,6 +25,7 @@ export const COLUMNS_WIDTH: Record<keyof typeof FORMATION_ETABLISSEMENT_COLUMNS_
   numero: 100,
   dateEffetTransformation: 200,
   typeDemande: 250,
+  previsionnel: 150,
   // Tags formation
   formationSpecifique: 150,
   // Effectifs
