@@ -3,7 +3,6 @@ import {
   chakra,
   Divider,
   Flex,
-  Heading,
   Tab,
   Table,
   TabList,
@@ -180,10 +179,7 @@ export const AnalyseComparativeSection = ({
 
   return (
     <Flex direction={"column"} gap={6}>
-      <Flex direction={"row"} justify={"space-between"}>
-        <Heading as="h3" fontWeight={700} fontSize={20}>
-          Analyse comparative
-        </Heading>
+      <Flex direction={"row"} justify={"end"}>
         <ExportMenuButton
           color={"bluefrance.113"}
           onExportCsv={async () => {
