@@ -7,6 +7,4 @@ export const feature = {
   showColorationFilter: false,
   requetesSuggerees: true,
   formationsSpecifiqueConsole: false,
-  donneesTransfoConsole: true,
-  donneesEvolutionTauxConsole: true
 };

@@ -1,4 +1,5 @@
-import { Button, Checkbox, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Checkbox, Divider, Flex, Select, Text, useDisclosure, VisuallyHidden } from "@chakra-ui/react";
+import { CURRENT_RENTREE } from "shared";
 
 import type { Filters, FiltersList } from "@/app/(wrapped)/console/formations/types";
 import { DoubleArrowLeft } from "@/components/icons/DoubleArrowLeft";
@@ -52,6 +53,28 @@ export const SideSection = ({
       )}
       {isOpen && (
         <Flex gap={3} direction={"column"}>
+          <VisuallyHidden as="label" htmlFor="console-filters-rentree-scolaire">Filtrer par rentrée scolaire</VisuallyHidden>
+          <Select
+            id="console-filters-rentree-scolaire"
+            placeholder="Rentrée scolaire"
+            size="md"
+            variant="newInput"
+            width="18rem"
+            onChange={(e) => {
+              if(e.target.value) {
+                handleFilters("rentreeScolaire", e.target.value);
+                return;
+              }
+              handleFilters("rentreeScolaire", CURRENT_RENTREE); // Reset to current rentrée if no value is selected
+            }}
+            value={searchParams.filters?.rentreeScolaire ?? CURRENT_RENTREE}
+          >
+            {filtersList?.rentreesScolaires.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))}
+          </Select>
           <Multiselect
             size="md"
             variant="newInput"

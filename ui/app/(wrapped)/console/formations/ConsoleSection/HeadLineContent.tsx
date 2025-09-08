@@ -1,4 +1,4 @@
-import { Box, chakra, IconButton,Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chakra-ui/react";
+import { Box, chakra, IconButton,Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
@@ -18,7 +18,7 @@ import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_
 import type { Filters, FORMATION_COLUMNS_KEYS, Order } from "@/app/(wrapped)/console/formations/types";
 import { OrderIcon } from "@/components/OrderIcon";
 
-import { CHEVRON_COLUMN_WIDTH, COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
+import { COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
 import { getLeftOffset, isColonneSticky } from "./utils";
 
 const ConditionalTh = chakra(
@@ -174,24 +174,6 @@ export const HeadLineContent = ({
   return (
     <Thead boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" top={0} position={"sticky"} zIndex={"docked"}>
       <Tr bg={"white"}>
-        <Th
-          boxShadow={{
-            lg: "none",
-            xl: "inset -1px 0px 0px 0px #f6f6f6",
-          }}
-          position={{
-            lg: "static",
-            xl: "sticky",
-          }}
-          left={0}
-          maxW={CHEVRON_COLUMN_WIDTH}
-          minW={CHEVRON_COLUMN_WIDTH}
-          w={CHEVRON_COLUMN_WIDTH}
-          zIndex={2}
-          bgColor={"white"}
-        >
-          <VisuallyHidden>Historique</VisuallyHidden>
-        </Th>
         <ConditionalTh
           colonne={"rentreeScolaire"}
           colonneFilters={colonneFilters}
