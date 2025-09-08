@@ -286,7 +286,6 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
       evolutionTauxInsertionEtablissement: `Évolution du taux d'emploi à 6 mois de la formation dans l'établissement`,
       tauxPoursuiteEtablissement: `Taux de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
       evolutionTauxPoursuiteEtablissement: `Évolution du taux de poursuite d'études de la formation dans l'établissement`,
-      valeurAjoutee: "Valeur ajoutée",
     },
   },
 } as Record<
@@ -314,6 +313,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED: Record<
       numero: "Numéro de la demande",
       typeDemande: "Type de demande",
       dateEffetTransformation: "Date d'effet de la transformation",
+      previsionnel: "Prévisionnel",
     },
   },
 } as Record<
@@ -338,10 +338,10 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED: Record<
     color: themeDefinition.colors.greenArchipel[950],
     cellColor: "inherit",
     options: {
-
       numero: "Numéro de la demande",
       typeDemande: "Type de demande",
       dateEffetTransformation: "Date d'effet de la transformation",
+      previsionnel: "Prévisionnel",
     },
   },
 } as Record<
@@ -369,6 +369,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED: Record<
       numero: "Numéro de la demande",
       typeDemande: "Type de demande",
       dateEffetTransformation: "Date d'effet de la transformation",
+      previsionnel: "Prévisionnel",
     },
   },
 } as Record<
