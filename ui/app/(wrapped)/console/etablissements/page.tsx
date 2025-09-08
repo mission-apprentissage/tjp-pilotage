@@ -92,6 +92,7 @@ const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS
   "libelleFormation",
   "numero",
   "dateEffetTransformation",
+  "previsionnel",
   "typeDemande",
   "capacite",
   "effectif1",
