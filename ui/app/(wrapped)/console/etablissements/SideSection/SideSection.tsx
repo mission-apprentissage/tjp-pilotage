@@ -7,7 +7,6 @@ import type { Filters, FiltersList } from "@/app/(wrapped)/console/etablissement
 import { DoubleArrowLeft } from "@/components/icons/DoubleArrowLeft";
 import { DoubleArrowRight } from "@/components/icons/DoubleArrowRight";
 import { Multiselect } from "@/components/Multiselect";
-import { feature } from "@/utils/feature";
 import { formatTypeDemande } from '@/utils/formatLibelle';
 
 export const SideSection = ({
@@ -26,7 +25,17 @@ export const SideSection = ({
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
 
   return (
-    <Flex direction={"column"}  p={2} pb={4} gap={5} minH={"100%"} h={"fit-content"} >
+    <Flex
+      direction={"column"}
+      p={2}
+      pb={4}
+      gap={5}
+      h={"fit-content"}
+      position={"sticky"}
+      top={0}
+      zIndex={"docked"}
+      flex={"shrink"}
+    >
       {isOpen ? (
         <Button
           variant="externalLink"
@@ -58,12 +67,12 @@ export const SideSection = ({
             width="18rem"
             onChange={(e) => {
               if(e.target.value) {
-                handleFilters("rentreeScolaire", [e.target.value]);
+                handleFilters("rentreeScolaire", e.target.value);
                 return;
               }
-              handleFilters("rentreeScolaire", [CURRENT_RENTREE]); // Reset to current rentrée if no value is selected
+              handleFilters("rentreeScolaire", CURRENT_RENTREE); // Reset to current rentrée if no value is selected
             }}
-            value={searchParams.filters?.rentreeScolaire?.[0] ?? CURRENT_RENTREE}
+            value={searchParams.filters?.rentreeScolaire ?? CURRENT_RENTREE}
           >
             {filtersList?.rentreesScolaires.map((item) => (
               <option key={item.value} value={item.value}>
@@ -169,7 +178,7 @@ export const SideSection = ({
             Position dans le quadrant
           </Multiselect>
           <Divider />
-          {feature.donneesTransfoConsole && user && (
+          {user && (
             <>
               <Multiselect
                 size="md"

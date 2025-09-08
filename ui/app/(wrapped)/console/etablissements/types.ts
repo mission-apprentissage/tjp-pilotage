@@ -35,8 +35,8 @@ export type FORMATION_ETABLISSEMENT_COLUMNS_KEYS = (
 );
 
 export enum DisplayTypeEnum {
-  global = "global",
-  donneesEvolutionTaux = "donneesEvolutionTaux",
+  synthese = "synthese",
+  evolutionDesTaux = "evolutionDesTaux",
   suiviTransformation = "suiviTransformation",
 }
 
