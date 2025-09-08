@@ -343,6 +343,7 @@ export const EtablissementLineContent = ({
           colonne="previsionnel"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
         >
           <BadgesPrevisionnelDemande
             typeDemande={line.typeDemande}
