@@ -1,4 +1,4 @@
-import { Divider, Flex, Heading, List, ListItem, SimpleGrid, Text } from "@chakra-ui/react";
+import { Divider, Flex, List, ListItem, SimpleGrid, Text } from "@chakra-ui/react";
 
 import { PositiveNegativeBarChart } from "@/app/(wrapped)/demandes/pilotage/components/PositiveNegativeBarChart";
 import type { Pilotage } from "@/app/(wrapped)/demandes/pilotage/types";
@@ -16,10 +16,7 @@ export const FiliereNiveauDiplomeSection = ({
 }) => {
   return (
     <Flex direction={"column"} gap={6}>
-      <Flex direction={"row"} justify={"space-between"}>
-        <Heading as="h3" fontWeight={700} fontSize={20}>
-          Par filière et niveau de diplôme
-        </Heading>
+      <Flex direction={"row"} justify={"end"}>
         <ExportMenuButton
           color={"bluefrance.113"}
           onExportExcel={async () => {

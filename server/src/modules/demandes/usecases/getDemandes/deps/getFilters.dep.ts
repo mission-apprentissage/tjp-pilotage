@@ -158,7 +158,11 @@ export const getFiltersQuery = async ({
         inCodeAcademie(eb),
         inCodeDepartement(eb),
         inCommune(eb),
-        inUai(eb)
+        inUai(eb),
+        inCodeNsf(eb),
+        inCfd(eb),
+        inNomCmq(eb),
+        inFiliereCmq(eb)
       ]);
     })
     .execute();
@@ -173,7 +177,10 @@ export const getFiltersQuery = async ({
         inCodeDepartement(eb),
         inCommune(eb),
         inUai(eb),
-        inCodeNiveauDiplome(eb)
+        inCodeNiveauDiplome(eb),
+        inCfd(eb),
+        inNomCmq(eb),
+        inFiliereCmq(eb)
       ]);
     })
     .execute();
@@ -189,7 +196,9 @@ export const getFiltersQuery = async ({
         inCommune(eb),
         inUai(eb),
         inCodeNiveauDiplome(eb),
-        inCodeNsf(eb)
+        inCodeNsf(eb),
+        inNomCmq(eb),
+        inFiliereCmq(eb)
       ]);
     })
     .execute();
@@ -206,7 +215,8 @@ export const getFiltersQuery = async ({
         inUai(eb),
         inCodeNiveauDiplome(eb),
         inCodeNsf(eb),
-        inCfd(eb)
+        inCfd(eb),
+        inFiliereCmq(eb)
       ]);
     })
     .execute();

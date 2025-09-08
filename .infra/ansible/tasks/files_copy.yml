@@ -47,6 +47,9 @@
     src: "{{ inventory_dir }}/../documentation.zip"
     dest: /opt/app/data/documentation.zip
 
+- name: Suppression du dossier temporaire de la documentation (en cas de relicats)
+  shell: "rm -rf /tmp/documentation"
+
 - name: Unzip de la documentation
   shell: "unzip /opt/app/data/documentation.zip -d /tmp/documentation"
 
@@ -62,9 +65,11 @@
 - name: Copie du contenu de la documentation vers le reverse proxy
   shell: "cp -r /tmp/documentation/* /opt/app/data/documentation/"
 
-- name: Suppression du zip distant & de l'extraction
-  shell: "rm /opt/app/data/documentation.zip && rm -rf /tmp/documentation"
-  when: dir_check.stat.exists and dir_check.stat.isdir
+- name: Suppression du dossier temporaire de la documentation
+  shell: "rm -rf /tmp/documentation"
+
+- name: Suppression du zip distant
+  shell: "rm /opt/app/data/documentation.zip"
 
 - name: Suppression du zip local
   shell: "rm {{ inventory_dir }}/../documentation.zip"

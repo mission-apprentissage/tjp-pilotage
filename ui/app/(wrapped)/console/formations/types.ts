@@ -29,3 +29,9 @@ export type RequetesSuggerees = Array<{
 
 export type FORMATION_COLUMNS_KEYS = keyof typeof FORMATION_COLUMNS;
 
+export enum DisplayTypeEnum {
+  synthese = "synthese",
+  evolutionDesTaux = "evolutionDesTaux",
+}
+
+
