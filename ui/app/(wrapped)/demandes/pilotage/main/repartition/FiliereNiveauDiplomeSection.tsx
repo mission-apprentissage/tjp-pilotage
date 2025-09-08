@@ -73,7 +73,7 @@ export const FiliereNiveauDiplomeSection = ({
       </Flex>
       <PositiveNegativeBarChart
         title="10 DOMAINES LES PLUS TRANSFORMÉS"
-        type="domaine"
+        type="Domaine"
         data={data?.top10Domaines}
       />
       <Flex direction={"row"} gap={2} color={"bluefrance.113"}>
@@ -101,7 +101,7 @@ export const FiliereNiveauDiplomeSection = ({
       </Flex>
       <PositiveNegativeBarChart
         title="TRANSFORMATIONS PAR DIPLÔME"
-        type="diplome"
+        type="Diplome"
         data={data?.niveauxDiplome}
       />
     </Flex>
