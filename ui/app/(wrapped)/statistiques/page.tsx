@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 "use client";
 
 import { Box, Container, Flex, HStack, Link, ListItem, Stack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, UnorderedList, VStack } from "@chakra-ui/react";
