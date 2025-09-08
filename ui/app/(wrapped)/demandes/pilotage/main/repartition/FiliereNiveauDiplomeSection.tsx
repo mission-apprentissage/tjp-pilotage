@@ -1,4 +1,4 @@
-import { Divider, Flex, List, ListItem, SimpleGrid, Text } from "@chakra-ui/react";
+import { Divider, Flex, List, ListItem, Text } from "@chakra-ui/react";
 
 import { PositiveNegativeBarChart } from "@/app/(wrapped)/demandes/pilotage/components/PositiveNegativeBarChart";
 import type { Pilotage } from "@/app/(wrapped)/demandes/pilotage/types";
@@ -59,55 +59,51 @@ export const FiliereNiveauDiplomeSection = ({
         />
       </Flex>
       <Divider w={"100%"} />
-      <SimpleGrid columns={2} gap={20} mb={-12}>
-        <Flex direction={"row"} gap={2} color={"bluefrance.113"}>
-          <Text fontWeight={500} fontSize={16}>
+      <Flex direction={"row"} gap={2} color={"bluefrance.113"}>
+        <Text fontWeight={500} fontSize={16}>
             10 DOMAINES LES PLUS TRANSFORMÉS
-          </Text>
-          <TooltipIcon
-            zIndex={1}
-            my={"auto"}
-            label={
-              "Par domaine NSF, en nombre de places transformées (incl. places ouvertes, fermées, et places existantes colorées)."
-            }
-          />
-        </Flex>
-        <Flex direction={"row"} gap={2} color={"bluefrance.113"}>
-          <Text fontWeight={500} fontSize={16}>
+        </Text>
+        <TooltipIcon
+          zIndex={1}
+          my={"auto"}
+          label={
+            "Par domaine NSF, en nombre de places transformées (incl. places ouvertes, fermées, et places existantes colorées)."
+          }
+        />
+      </Flex>
+      <PositiveNegativeBarChart
+        title="10 DOMAINES LES PLUS TRANSFORMÉS"
+        type="Domaine"
+        data={data?.top10Domaines}
+      />
+      <Flex direction={"row"} gap={2} color={"bluefrance.113"}>
+        <Text fontWeight={500} fontSize={16}>
             TRANSFORMATIONS PAR DIPLÔME
-          </Text>
-          <TooltipIcon
-            zIndex={1}
-            my={"auto"}
-            label={
-              <Flex direction={"column"} gap={3}>
-                <Text>Pour certains diplômes le taux de transformation n'apparaît pas :</Text>
-                <List>
-                  <ListItem>
+        </Text>
+        <TooltipIcon
+          zIndex={1}
+          my={"auto"}
+          label={
+            <Flex direction={"column"} gap={3}>
+              <Text>Pour certains diplômes le taux de transformation n'apparaît pas :</Text>
+              <List>
+                <ListItem>
                     soit le numérateur manque: le diplôme n’est pas transformé ⇒ le taux de transformation vaut 0% ;
-                  </ListItem>
-                  <ListItem>
+                </ListItem>
+                <ListItem>
                     soit le dénominateur manque: les effectifs dans le diplôme ne sont pas présents dans le constat de
                     rentrée (FCIL, CS…) ⇒ le taux de transfo n’est pas calculable
-                  </ListItem>
-                </List>
-              </Flex>
-            }
-          />
-        </Flex>
-      </SimpleGrid>
-      <SimpleGrid columns={2} gap={20} height={400}>
-        <PositiveNegativeBarChart
-          title="10 DOMAINES LES PLUS TRANSFORMÉS"
-          type="domaine"
-          data={data?.top10Domaines}
+                </ListItem>
+              </List>
+            </Flex>
+          }
         />
-        <PositiveNegativeBarChart
-          title="TRANSFORMATIONS PAR DIPLÔME"
-          type="diplome"
-          data={data?.niveauxDiplome}
-        />
-      </SimpleGrid>
+      </Flex>
+      <PositiveNegativeBarChart
+        title="TRANSFORMATIONS PAR DIPLÔME"
+        type="Diplome"
+        data={data?.niveauxDiplome}
+      />
     </Flex>
   );
 };
