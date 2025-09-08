@@ -107,7 +107,7 @@ export const FiltersSection = ({
         codeNsf: [],
         positionQuadrant: [],
         formationSpecifique: [],
-        rentreeScolaire: [CURRENT_RENTREE],
+        rentreeScolaire: CURRENT_RENTREE,
       },
     });
     setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });

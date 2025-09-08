@@ -29,6 +29,28 @@ export const FormationLineSchema = z.object({
   tauxInsertion: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
   tauxDevenirFavorable: z.coerce.number().optional(),
+  evolutionTauxSortie: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      tauxInsertion: z.coerce.number().optional(),
+      tauxPoursuite: z.coerce.number().optional(),
+      tauxDevenirFavorable: z.coerce.number().optional(),
+    })
+  ),
+  evolutionTauxEntree: z.array(
+    z.object({
+      rentreeScolaire: z.string(),
+      tauxDemande: z.coerce.number().optional(),
+      tauxPression: z.coerce.number().optional(),
+      tauxRemplissage: z.coerce.number().optional(),
+    })
+  ),
+  evolutionPositionQuadrant: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      positionQuadrant: z.string().optional(),
+    })
+  ).optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
   libelleNsf: z.string().optional(),
@@ -58,7 +80,7 @@ export const getFormationsSchema = {
     codeNiveauDiplome: z.array(z.string()).optional(),
     codeDispositif: z.array(z.string()).optional(),
     cfdFamille: z.array(z.string()).optional(),
-    rentreeScolaire: z.array(z.string()).optional(),
+    rentreeScolaire: z.string().optional(),
     codeNsf: z.array(z.string()).optional(),
     positionQuadrant: z.array(PositionQuadrantZodType).optional(),
     search: z.string().optional(),
@@ -84,6 +106,7 @@ export const getFormationsSchema = {
         formations: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
         positionsQuadrant: z.array(OptionSchema),
+        rentreesScolaires: z.array(OptionSchema),
       }),
       formations: z.array(FormationLineSchema),
     }),
