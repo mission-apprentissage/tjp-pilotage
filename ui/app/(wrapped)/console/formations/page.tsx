@@ -130,9 +130,9 @@ const ColonneFilterSection = chakra(
     trackEvent,
     canShowQuadrantPosition = false,
   }: {
-    colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
-    forcedColonnes?: (keyof typeof FORMATION_COLUMNS)[];
-    handleColonneFilters: (value: (keyof typeof FORMATION_COLUMNS)[]) => void;
+    colonneFilters: Array<FORMATION_COLUMNS_KEYS>;
+    forcedColonnes?: Array<FORMATION_COLUMNS_KEYS>;
+    handleColonneFilters: (value: Array<FORMATION_COLUMNS_KEYS>) => void;
     trackEvent: (name: string, params?: Record<string, unknown>) => void;
     canShowQuadrantPosition?: boolean;
   }) =>
@@ -141,7 +141,7 @@ const ColonneFilterSection = chakra(
         width={"48"}
         size="md"
         variant={"newInput"}
-        onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_COLUMNS)[])}
+        onChange={(selected) => handleColonneFilters(selected as Array<FORMATION_COLUMNS_KEYS>)}
         groupedOptions={Object.entries(GROUPED_FORMATION_COLUMNS_OPTIONAL).reduce(
           (acc, [group, { color, options }]) => {
             acc[group] = {
@@ -206,7 +206,7 @@ const Page = () => {
   const searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    columns?: (keyof typeof FORMATION_COLUMNS)[];
+    columns?: Array<FORMATION_COLUMNS_KEYS>;
     order?: Partial<Order>;
     page?: string;
     displayType?: DisplayTypeEnum;
@@ -243,7 +243,7 @@ const Page = () => {
     handleColonneFilters(columns);
     setSearchParams({
       ...searchParams,
-      page: page,
+      page,
       displayType,
     });
   };
@@ -412,11 +412,11 @@ const Page = () => {
 
   const canShowQuadrantPosition = filters.codeRegion?.length === 1;
 
-  const [colonneFilters, setColonneFilters] = useState<(keyof typeof FORMATION_COLUMNS)[]>(
-    (columns.length ? columns : Object.keys(FORMATION_COLUMNS_DEFAULT)) as (keyof typeof FORMATION_COLUMNS)[]
+  const [colonneFilters, setColonneFilters] = useState<Array<FORMATION_COLUMNS_KEYS>>(
+    (columns.length ? columns : Object.keys(FORMATION_COLUMNS_DEFAULT)) as Array<FORMATION_COLUMNS_KEYS>
   );
 
-  const handleColonneFilters = (value: (keyof typeof FORMATION_COLUMNS)[]) => {
+  const handleColonneFilters = (value: Array<FORMATION_COLUMNS_KEYS>) => {
     setSearchParams({ columns: value });
     setColonneFilters(value);
   };

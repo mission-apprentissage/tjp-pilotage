@@ -638,7 +638,7 @@ const Page = () => {
     if(!filters.rentreeScolaire?.length)
       setSearchParams({ filters: { ...filters, rentreeScolaire: CURRENT_RENTREE } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters.rentreeScolaire]);
+  }, [filters.rentreeScolaire?.length]);
 
   return (
     <>
@@ -699,8 +699,9 @@ const Page = () => {
               }
               TabsSection={
                 <TabsSection
-                  displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
+                  displayType={displayType ?? DisplayTypeEnum.synthese}
                   setDisplayType={setDisplayType}
+                  user={user}
                 />
               }
               onExportCsv={onExportCsv}
