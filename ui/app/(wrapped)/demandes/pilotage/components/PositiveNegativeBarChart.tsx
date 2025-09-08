@@ -283,12 +283,13 @@ export const PositiveNegativeBarChart = ({
           },
         },
         {
-          name: "solde",
+          name: "Solde",
           nameLocation: "end",
           nameTextStyle: {
-            fontSize: 12,
+            fontSize: 14,
             color: grey425,
             fontFamily: "Marianne",
+            margin: 0,
             align: "left",
           },
           type: "category",
