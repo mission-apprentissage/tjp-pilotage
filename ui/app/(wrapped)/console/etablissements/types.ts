@@ -33,3 +33,10 @@ export type FORMATION_ETABLISSEMENT_COLUMNS_KEYS = (
   keyof typeof FORMATION_ETABLISSEMENT_COLUMNS |
   keyof typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED
 );
+
+export enum DisplayTypeEnum {
+  global = "global",
+  donneesEvolutionTaux = "donneesEvolutionTaux",
+  suiviTransformation = "suiviTransformation",
+}
+

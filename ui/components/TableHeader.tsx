@@ -15,6 +15,7 @@ export const TableHeader = chakra(
     SaveFiltersButton,
     ColonneFilter,
     SearchInput,
+    TabsSection
   }: {
     pageSize: number;
     page: number;
@@ -26,19 +27,14 @@ export const TableHeader = chakra(
     SaveFiltersButton?: React.ReactNode;
     ColonneFilter?: React.ReactNode;
     SearchInput?: React.ReactNode;
+    TabsSection?: React.ReactNode;
   }) => {
     return (
-      <Flex direction="column" >
-        <Flex align="center" py="1.5" px={0} className={className} gap={2} maxW={"100%"} overflowY={"hidden"}>
+      <Flex direction="column" className={className} >
+        <Flex align="center" px={0} gap={2} maxW={"100%"} overflowY={"hidden"}>
           {SearchInput}
-          <Flex ms={ColonneFilter ? "none" : "auto"}>
-            {(onExportCsv || onExportExcel) && (
-              <AdvancedExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="externalLink" />
-            )}
-          </Flex>
-          {SaveFiltersButton}
-          <Flex ms={ColonneFilter ? "auto" : "none"} minW={"fit-content"}>
-            <Text mx="4" my="auto">
+          <Flex ms={ColonneFilter ? "auto" : "none"} minW={"fit-content"} gap={2}>
+            <Text my="auto">
               {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur {count}
             </Text>
             <IconButton
@@ -51,19 +47,19 @@ export const TableHeader = chakra(
             <IconButton
               isDisabled={(page + 1) * pageSize >= count}
               onClick={() => onPageChange(page + 1)}
-              ml="2"
               size="sm"
               aria-label="Page suivante"
               icon={<ArrowRightIcon />}
             />
           </Flex>
         </Flex>
-        <Flex direction="row">
-          <Flex ms={"auto"}>
-            {ColonneFilter}
-          </Flex>
-
-
+        <Flex ms={"auto"} direction="row" gap={4} py={2}>
+          {(onExportCsv || onExportExcel) && (
+            <AdvancedExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="externalLink" />
+          )}
+          {SaveFiltersButton}
+          {ColonneFilter}
+          {TabsSection}
         </Flex>
       </Flex>
     );
