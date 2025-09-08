@@ -30,7 +30,10 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const queryClient = useQueryClient();
   const segments = useSelectedLayoutSegments();
   const shouldUseStickyHeader =
-    segments.length === 0 || (segments.length !== 0 && !segments.some((segment) => NON_STICKY_HEADER_SEGMENTS.includes(segment)));
+    segments.length === 0 || (
+      segments.length !== 0 &&
+      !segments.some((segment) => NON_STICKY_HEADER_SEGMENTS.includes(segment))
+    );
 
   const {
     isOpen: isMenuDeconnexionOpen,

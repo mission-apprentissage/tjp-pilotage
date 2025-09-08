@@ -1,4 +1,4 @@
-import { Box, chakra, IconButton, Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chakra-ui/react";
+import { Box, chakra, IconButton, Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import type {CSSProperties} from "react";
@@ -20,9 +20,7 @@ import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/def
 import { TooltipDefinitionValeurAjoutee } from "@/app/(wrapped)/components/definitions/DefinitionValeurAjoutee";
 import { FORMATION_ETABLISSEMENT_COLUMNS, FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type {Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Order} from "@/app/(wrapped)/console/etablissements/types";
-import { CHEVRON_COLUMN_WIDTH } from "@/app/(wrapped)/console/formations/ConsoleSection/COLUMNS_WIDTH";
 import { OrderIcon } from "@/components/OrderIcon";
-import { feature } from "@/utils/feature";
 
 import { COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
 import { getLeftOffset, isColonneSticky  } from "./utils";
@@ -182,24 +180,6 @@ export const HeadLineContent = ({
   return (
     <Thead boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" top={0} position={"sticky"} zIndex={"docked"}>
       <Tr bg={"white"}>
-        <Th
-          boxShadow={{
-            lg: "none",
-            xl: "inset -1px 0px 0px 0px #f6f6f6",
-          }}
-          position={{
-            lg: "static",
-            xl: "sticky",
-          }}
-          left={0}
-          maxW={CHEVRON_COLUMN_WIDTH}
-          minW={CHEVRON_COLUMN_WIDTH}
-          w={CHEVRON_COLUMN_WIDTH}
-          zIndex={2}
-          bgColor={"white"}
-        >
-          <VisuallyHidden>Historique</VisuallyHidden>
-        </Th>
         <ConditionalTh
           colonne="rentreeScolaire"
           colonneFilters={colonneFilters}
@@ -381,7 +361,8 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="libelleNsf" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleNsf}
-        </ConditionalTh>{feature.donneesTransfoConsole && user && (
+        </ConditionalTh>
+        {user && (
           <>
             <ConditionalTh
               colonne="numero"
@@ -415,6 +396,15 @@ export const HeadLineContent = ({
             >
               <OrderIcon {...order} column="typeDemande" />
               {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.typeDemande}
+            </ConditionalTh>
+            <ConditionalTh
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              colonne="previsionnel"
+              stickyColonnes={stickyColonnes}
+              setStickyColonnes={setStickyColonnes}
+            >
+              {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.previsionnel}
             </ConditionalTh>
           </>
         )}
