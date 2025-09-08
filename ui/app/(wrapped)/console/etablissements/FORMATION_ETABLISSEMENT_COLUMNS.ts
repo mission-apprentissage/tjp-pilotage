@@ -174,14 +174,18 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED = {
   // Caractéristiques de la transformation
   numero: "Numéro de la demande",
   dateEffetTransformation: "Date d'effet de la transformation",
+  previsionnel: "Prévisionnel",
   typeDemande: "Type de demande",
-} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]> & {
+  previsionnel: string;
+};
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED = {
   ...FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL,
   // Caractéristiques de la transformation
   numero: "Numéro de la demande",
   dateEffetTransformation: "Date d'effet de la transformation",
+  previsionnel: "Prévisionnel",
   typeDemande: "Type de demande",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED>;
 

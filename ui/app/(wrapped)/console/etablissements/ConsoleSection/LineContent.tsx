@@ -13,6 +13,7 @@ import { getEvolutionIcon, getEvolutionTauxEntreeData, getEvolutionTauxEntreeKey
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
+import { BadgesPrevisionnelDemande } from "@/components/BadgesPrevisionnelDemande";
 import { BadgeTypeDemande } from "@/components/BadgeTypeDemande";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { DateEffetTransformationComponent } from "@/components/DateEffetTransformationComponent";
@@ -336,6 +337,18 @@ export const EtablissementLineContent = ({
             numero={line.numero}
             dateEffetTransformation={line.dateEffetTransformation}
             anneeCampagne={line.anneeCampagne}
+          />
+        </ConditionalTd>
+        <ConditionalTd
+          colonne="previsionnel"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+        >
+          <BadgesPrevisionnelDemande
+            typeDemande={line.typeDemande}
+            differenceCapaciteApprentissage={line.differenceCapaciteApprentissage}
+            differenceCapaciteScolaire={line.differenceCapaciteScolaire}
           />
         </ConditionalTd>
       </>
