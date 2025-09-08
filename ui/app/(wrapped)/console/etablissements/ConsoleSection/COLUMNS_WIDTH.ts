@@ -1,8 +1,6 @@
 
 import type { FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 
-export const CHEVRON_COLUMN_WIDTH = 50;
-
 export const COLUMNS_WIDTH: Record<keyof typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED, number> = {
   // Rentrée scolaire
   rentreeScolaire: 100,

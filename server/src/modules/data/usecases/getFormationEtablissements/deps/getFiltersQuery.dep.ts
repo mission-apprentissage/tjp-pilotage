@@ -27,7 +27,7 @@ export const getFiltersQuery = async ({
   cfd,
   uai,
   codeNsf,
-  rentreeScolaire = [CURRENT_RENTREE],
+  rentreeScolaire = CURRENT_RENTREE,
 }: Partial<Filters>) => {
   const base = getKbdClient()
     .selectFrom("formationScolaireView as formationView")
@@ -40,7 +40,7 @@ export const getFiltersQuery = async ({
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
     .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
@@ -49,7 +49,7 @@ export const getFiltersQuery = async ({
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
-    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
+    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");

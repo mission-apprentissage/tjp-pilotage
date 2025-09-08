@@ -74,8 +74,8 @@ export const PageClient = () => {
     .useQuery(
       {
         query: {
-          ...filters,
-          ...order,
+          ...searchParams.filters,
+          ...searchParams.order,
         },
       },
       {
