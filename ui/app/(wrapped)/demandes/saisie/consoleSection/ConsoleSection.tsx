@@ -236,7 +236,6 @@ export const ConsoleSection = ({
                     setStatut={setStatut}
                     colonneFilters={colonneFilters}
                     stickyColonnes={stickyColonnes}
-                    setStickyColonnes={setStickyColonnes}
                     getCellBgColor={getCellBgColor}
                   />
                 </Tr>

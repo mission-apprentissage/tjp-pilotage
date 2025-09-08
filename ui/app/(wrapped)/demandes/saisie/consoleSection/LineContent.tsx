@@ -111,7 +111,6 @@ export const LineContent = ({
   isLoading,
   colonneFilters,
   stickyColonnes,
-  setStickyColonnes,
   getCellBgColor
 }: {
   user?: UserType;
@@ -125,7 +124,6 @@ export const LineContent = ({
   isLoading?: boolean;
   colonneFilters: (keyof typeof DEMANDES_COLUMNS_OPTIONAL)[];
   stickyColonnes: DEMANDES_COLUMNS_KEYS[];
-  setStickyColonnes: React.Dispatch<React.SetStateAction<DEMANDES_COLUMNS_KEYS[]>>;
   getCellBgColor: (column: keyof typeof DEMANDES_COLUMNS_OPTIONAL) => string;
 }) => {
   const queryClient = useQueryClient();

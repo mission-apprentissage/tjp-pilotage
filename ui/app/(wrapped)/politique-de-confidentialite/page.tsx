@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 "use client";
 
 import { Box, Container, HStack, Link, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
