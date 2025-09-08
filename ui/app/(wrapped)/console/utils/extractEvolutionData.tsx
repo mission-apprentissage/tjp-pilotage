@@ -1,18 +1,19 @@
 import { Flex, Tooltip } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
 import type { ReactNode } from 'react';
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from 'shared';
-import { getMillesime } from 'shared/utils/getMillesime';
+import { CURRENT_RENTREE } from 'shared';
+import { getMillesimeFromRentreeScolaire } from 'shared/utils/getMillesime';
+import { getRentreeScolaire } from 'shared/utils/getRentreeScolaire';
 
 import { themeDefinition } from "@/theme/theme";
 import { formatMillesime } from '@/utils/formatLibelle';
 import { formatNumber } from '@/utils/formatUtils';
 
-export const getEvolutionTauxSortieKeys = () => {
+export const getEvolutionTauxSortieKeys = ({rentreeScolaire = CURRENT_RENTREE}: {rentreeScolaire?: string}) => {
   return [
-    formatMillesime(getMillesime({millesimeSortie: CURRENT_IJ_MILLESIME, offset: -2})),
-    formatMillesime(getMillesime({millesimeSortie: CURRENT_IJ_MILLESIME, offset: -1})),
-    formatMillesime(getMillesime({millesimeSortie: CURRENT_IJ_MILLESIME, offset: 0})),
+    formatMillesime(getMillesimeFromRentreeScolaire({rentreeScolaire, offset: -2})),
+    formatMillesime(getMillesimeFromRentreeScolaire({rentreeScolaire, offset: -1})),
+    formatMillesime(getMillesimeFromRentreeScolaire({rentreeScolaire, offset: 0})),
   ];
 };
 
@@ -26,14 +27,16 @@ export const getEvolutionPositionQuadrantData = ({
 }) => {
   if (!evolutions) return {};
 
-  return evolutions.reduce((acc, evolution) => {
-    const millesime = formatMillesime(evolution.millesimeSortie);
-    const value = evolution.positionQuadrant;
-    if (value !== undefined) {
-      acc[millesime] = value;
-    }
-    return acc;
-  }, {} as Record<string, string>);
+  return evolutions
+    .sort((a, b) => formatMillesime(a.millesimeSortie).localeCompare(formatMillesime(b.millesimeSortie)))
+    .reduce((acc, evolution) => {
+      const millesime = formatMillesime(evolution.millesimeSortie);
+      const value = evolution.positionQuadrant;
+      if (value !== undefined) {
+        acc[millesime] = value;
+      }
+      return acc;
+    }, {} as Record<string, string>);
 };
 
 export const getEvolutionTauxSortieData = ({
@@ -50,21 +53,23 @@ export const getEvolutionTauxSortieData = ({
 }) => {
   if (!evolutions) return {};
 
-  return evolutions.reduce((acc, evolution) => {
-    const millesime = formatMillesime(evolution.millesimeSortie);
-    const tauxValue = evolution[key];
-    if (tauxValue !== undefined) {
-      acc[millesime] = formatNumber(tauxValue, 4);
-    }
-    return acc;
-  }, {} as Record<string, number>);
+  return evolutions
+    .sort((a, b) => formatMillesime(a.millesimeSortie).localeCompare(formatMillesime(b.millesimeSortie)))
+    .reduce((acc, evolution) => {
+      const millesime = formatMillesime(evolution.millesimeSortie);
+      const tauxValue = evolution[key];
+      if (tauxValue !== undefined) {
+        acc[millesime] = formatNumber(tauxValue, 4);
+      }
+      return acc;
+    }, {} as Record<string, number>);
 };
 
-export const getEvolutionTauxEntreeKeys = () => {
+export const getEvolutionTauxEntreeKeys = ({rentreeScolaire = CURRENT_RENTREE}: {rentreeScolaire?: string}) => {
   return [
-    `${parseInt(CURRENT_RENTREE) - 2}`,
-    `${parseInt(CURRENT_RENTREE) - 1}`,
-    `${CURRENT_RENTREE}`,
+    getRentreeScolaire({ rentreeScolaire, offset: -2 }),
+    getRentreeScolaire({ rentreeScolaire, offset: -1 }),
+    getRentreeScolaire({ rentreeScolaire, offset: 0 }),
   ];
 };
 
@@ -84,22 +89,26 @@ export const getEvolutionTauxEntreeData = ({
 }) => {
   if (!evolutions) return {};
 
-  return evolutions.reduce((acc, evolution) => {
-    const rentreeScolaire = evolution.rentreeScolaire;
-    const tauxValue = evolution[key];
-    if (tauxValue !== undefined) {
-      acc[rentreeScolaire] = formatNumber(tauxValue, 4);
-    }
-    return acc;
-  }, {} as Record<string, number>);
+  return evolutions
+    .sort((a, b) => a.rentreeScolaire.localeCompare(b.rentreeScolaire))
+    .reduce((acc, evolution) => {
+      const rentreeScolaire = evolution.rentreeScolaire;
+      const tauxValue = evolution[key];
+      if (tauxValue !== undefined) {
+        acc[rentreeScolaire] = formatNumber(tauxValue, 4);
+      }
+      return acc;
+    }, {} as Record<string, number>);
 };
 
 export const getEvolutionIcon = ({
-  data
+  data,
+  keys
 } : {
   data: Record<string, number | undefined>;
+  keys: string[];
 }): ReactNode | undefined => {
-  const values = Object.values(data).filter((value) => value !== undefined);
+  const values = keys?.map((key) => data[key]);
   const firstValue = values[0];
   const lastValue = values[values.length - 1];
 
