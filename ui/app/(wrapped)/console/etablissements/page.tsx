@@ -389,9 +389,17 @@ const Page = () => {
     const evolutionTauxEntreeColumns = {
       ...getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Effectif en entrée ${key}`]: `Effectif en entrée ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Capacité d'accueil ${key}`]: `Capacité d'accueil ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Taux de pression ${key}`]: `Taux de pression ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Taux de demande ${key}`]: `Taux de demande ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Taux de remplissage ${key}`]: `Taux de remplissage ${key}`,
       })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
     };
@@ -399,8 +407,23 @@ const Page = () => {
     const evolutionTauxSortieColumns = {
       ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Taux d'insertion ${key}`]: `Taux d'insertion ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Taux de poursuite d'étude ${key}`]: `Taux de poursuite d'étude ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Taux de devenir favorable ${key}`]: `Taux de devenir favorable ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+    const evolutionTauxSortieEtablissementColumns = {
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
+        [`Taux d'insertion établissement ${key}`]: `Taux d'insertion établissement ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
+        [`Taux de poursuite d'étude établissement ${key}`]: `Taux de poursuite d'étude établissement ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
+        [`Taux de devenir favorable établissement ${key}`]: `Taux de devenir favorable établissement ${key}`,
       })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
     };
 
@@ -414,13 +437,17 @@ const Page = () => {
         "evolutionTauxRemplissage",
         "evolutionTauxInsertion",
         "evolutionTauxPoursuite",
-        "evolutionTauxDevenirFavorable"
+        "evolutionTauxDevenirFavorable",
+        "evolutionTauxInsertionEtablissement",
+        "evolutionTauxPoursuiteEtablissement",
+        "evolutionTauxDevenirFavorableEtablissement",
       ]),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
       ...evolutionTauxEntreeColumns,
-      ...evolutionTauxSortieColumns
+      ...evolutionTauxSortieColumns,
+      ...evolutionTauxSortieEtablissementColumns
     };
 
     let etablissements = [];
@@ -468,14 +495,17 @@ const Page = () => {
         [`Taux de remplissage ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxRemplissage"})[key],
         [`Taux de pression ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxPression"})[key],
         [`Taux de demande ${key}`]: getEvolutionTauxEntreeData({ evolutions: etablissement.evolutionTauxEntree, key: "tauxDemande"})[key],
-      })
-      ).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
       ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
         [`Taux d'insertion ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxInsertion"})[key],
         [`Taux de poursuite d'étude ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxPoursuite"})[key],
         [`Taux de devenir favorable ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortie, key: "tauxDevenirFavorable"})[key],
-      })
-      ).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys({ rentreeScolaire: filters?.rentreeScolaire }).map((key) => ({
+        [`Taux d'insertion établissement ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortieEtablissement, key: "tauxInsertion"})[key],
+        [`Taux de poursuite d'étude établissement ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortieEtablissement, key: "tauxPoursuite"})[key],
+        [`Taux de devenir favorable établissement ${key}`]: getEvolutionTauxSortieData({ evolutions: etablissement.evolutionTauxSortieEtablissement, key: "tauxDevenirFavorable"})[key],
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
     }));
 
     return {
