@@ -76,7 +76,6 @@ export const getFiltersQuery = async ({
     .selectFrom("region")
     .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "region.codeRegion")
-    .leftJoin("dataEtablissement", "dataEtablissement.codeRegion", "region.codeRegion")
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -104,33 +103,6 @@ export const getFiltersQuery = async ({
     })
     .execute();
 
-  const communeFilters = await geoFiltersBase
-    .select(["dataEtablissement.commune as label", "dataEtablissement.commune as value"])
-    .where("dataEtablissement.commune", "is not", null)
-    .where(isInPerimetreIJAcademie)
-    .where((eb) => {
-      return eb.and([
-        inCodeRegion(eb),
-        inCodeAcademie(eb),
-        inCodeDepartement(eb),
-      ]);
-    })
-    .execute();
-
-  const etablissementFilters = await geoFiltersBase
-    .select(["dataEtablissement.libelleEtablissement as label", "dataEtablissement.uai as value"])
-    .where("dataEtablissement.uai", "is not", null)
-    .where(isInPerimetreIJAcademie)
-    .where((eb) => {
-      return eb.and([
-        inCodeRegion(eb),
-        inCodeAcademie(eb),
-        inCodeDepartement(eb),
-        inCommune(eb),
-      ]);
-    })
-    .execute();
-
   const filtersBase = getKbdClient()
     .selectFrom("latestDemandeView as demande")
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
@@ -148,6 +120,33 @@ export const getFiltersQuery = async ({
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
+
+  const communeFilters = await filtersBase
+    .select(["dataEtablissement.commune as label", "dataEtablissement.commune as value"])
+    .where("dataEtablissement.commune", "is not", null)
+    .where(isInPerimetreIJAcademie)
+    .where((eb) => {
+      return eb.and([
+        inCodeRegion(eb),
+        inCodeAcademie(eb),
+        inCodeDepartement(eb),
+      ]);
+    })
+    .execute();
+
+  const etablissementFilters = await filtersBase
+    .select(["dataEtablissement.libelleEtablissement as label", "dataEtablissement.uai as value"])
+    .where("dataEtablissement.uai", "is not", null)
+    .where(isInPerimetreIJAcademie)
+    .where((eb) => {
+      return eb.and([
+        inCodeRegion(eb),
+        inCodeAcademie(eb),
+        inCodeDepartement(eb),
+        inCommune(eb),
+      ]);
+    })
+    .execute();
 
   const diplomesFilters = await filtersBase
     .select(["niveauDiplome.libelleNiveauDiplome as label", "niveauDiplome.codeNiveauDiplome as value"])
