@@ -25,7 +25,7 @@ export const getFiltersQuery = async ({
   codeNiveauDiplome,
   codeDispositif,
   codeNsf,
-  rentreeScolaire = [CURRENT_RENTREE],
+  rentreeScolaire = CURRENT_RENTREE,
 }: Partial<Filters>) => {
   const base = getKbdClient()
     .selectFrom("formationScolaireView as formationView")
@@ -42,8 +42,8 @@ export const getFiltersQuery = async ({
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
-    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
-    .where((eb) => openForRentreeScolaire(eb, rentreeScolaire[0]))
+    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire))
+    .where((eb) => openForRentreeScolaire(eb, rentreeScolaire))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -189,6 +189,17 @@ export const getFiltersQuery = async ({
     .where("nsf.libelleNsf", "is not", null)
     .execute();
 
+  const rentreesScolaires = await getKbdClient()
+    .selectFrom("indicateurEntree")
+    .select([
+      "indicateurEntree.rentreeScolaire as value",
+      sql<string>`CONCAT('RS ', ${sql.ref("indicateurEntree.rentreeScolaire")})`.as("label"),
+    ])
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc")
+    .execute();
+
   return {
     regions: regionsFilters.map(cleanNull),
     departements: departementFilters.map(cleanNull),
@@ -199,6 +210,7 @@ export const getFiltersQuery = async ({
     familles: familleFilters.map(cleanNull),
     formations: formationFilters.map(cleanNull),
     libellesNsf: libelleNsfFilters.map(cleanNull),
+    rentreesScolaires: rentreesScolaires.map(cleanNull),
     positionsQuadrant: [
       { label: PositionQuadrantEnum["Q1"], value: PositionQuadrantEnum["Q1"] },
       { label: PositionQuadrantEnum["Q2"], value: PositionQuadrantEnum["Q2"] },
