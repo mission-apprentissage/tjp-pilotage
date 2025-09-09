@@ -1,5 +1,5 @@
 import { Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
-import { Fragment, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import { GROUPED_FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/GROUPED_FORMATION_COLUMNS";
@@ -53,18 +53,21 @@ export const ConsoleSection = ({
         />
         <Tbody>
           {data?.formations.map((formation) => (
-            <Fragment key={`${formation.cfd}_${formation.codeDispositif}`}>
-              <Tr h="12" bg={"white"} role="group">
-                <FormationLineContent
-                  stickyColonnes={stickyColonnes}
-                  formation={formation}
-                  filters={filters}
-                  canShowQuadrantPosition={canShowQuadrantPosition}
-                  colonneFilters={colonneFilters}
-                  getCellBgColor={getCellBgColor}
-                />
-              </Tr>
-            </Fragment>
+            <Tr
+              key={`${formation.cfd}_${formation.codeDispositif}`}
+              h="12"
+              bg={"white"}
+              role="group"
+            >
+              <FormationLineContent
+                stickyColonnes={stickyColonnes}
+                formation={formation}
+                filters={filters}
+                canShowQuadrantPosition={canShowQuadrantPosition}
+                colonneFilters={colonneFilters}
+                getCellBgColor={getCellBgColor}
+              />
+            </Tr>
           ))}
         </Tbody>
       </Table>

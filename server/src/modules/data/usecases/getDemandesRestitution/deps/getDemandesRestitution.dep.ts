@@ -128,6 +128,7 @@ export const getDemandesRestitutionQuery = async ({
       "dataFormation.libelleFormation",
       "dataFormation.typeFamille",
       "dispositif.libelleDispositif",
+      "nsf.codeNsf",
       "nsf.libelleNsf",
       "niveauDiplome.codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome",

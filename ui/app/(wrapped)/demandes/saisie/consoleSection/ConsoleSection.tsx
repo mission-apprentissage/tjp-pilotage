@@ -215,32 +215,30 @@ export const ConsoleSection = ({
             getCellBgColor={getCellBgColor}
           />
           <Tbody>
-            {data?.demandes.map((demande: Demande) => {
-
-              return (
-                <Tr
-                  height={"60px"}
-                  key={demande.numero}
-                  whiteSpace={"pre"}
-                  fontWeight={demande.alreadyAccessed ? "400" : "700"}
-                  bg={demande.alreadyAccessed ? "grey.975" : "white"}
-                >
-                  <LineContent
-                    user={user}
-                    demande={demande}
-                    campagne={data?.campagne}
-                    canCheckDemandes={canCheckDemandes}
-                    checkedDemandes={checkedDemandes}
-                    onChangeCheckedDemandes={onChangeCheckedDemandes}
-                    isLoading={isLoading}
-                    setStatut={setStatut}
-                    colonneFilters={colonneFilters}
-                    stickyColonnes={stickyColonnes}
-                    setStickyColonnes={setStickyColonnes}
-                    getCellBgColor={getCellBgColor}
-                  />
-                </Tr>
-              );})}
+            {data?.demandes.map((demande: Demande) => (
+              <Tr
+                height={"60px"}
+                key={demande.numero}
+                whiteSpace={"pre"}
+                fontWeight={demande.alreadyAccessed ? "400" : "700"}
+                bg={demande.alreadyAccessed ? "grey.975" : "white"}
+              >
+                <LineContent
+                  user={user}
+                  demande={demande}
+                  campagne={data?.campagne}
+                  canCheckDemandes={canCheckDemandes}
+                  checkedDemandes={checkedDemandes}
+                  onChangeCheckedDemandes={onChangeCheckedDemandes}
+                  isLoading={isLoading}
+                  setStatut={setStatut}
+                  colonneFilters={colonneFilters}
+                  stickyColonnes={stickyColonnes}
+                  getCellBgColor={getCellBgColor}
+                />
+              </Tr>
+            ))
+            }
           </Tbody>
         </Table>
       </TableContainer>

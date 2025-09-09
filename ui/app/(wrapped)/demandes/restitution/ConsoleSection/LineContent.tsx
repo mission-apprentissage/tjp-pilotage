@@ -4,8 +4,7 @@ import { SecteurEnum } from "shared/enum/secteurEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { unEscapeString } from "shared/utils/escapeString";
 
-import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
-import type { DemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
+import type { Demande , DEMANDES_COLUMNS_KEYS } from "@/app/(wrapped)/demandes/restitution/types";
 import type { AnneeCampagneMotifDemande, MotifDemandeLabel } from "@/app/(wrapped)/demandes/utils/motifDemandeUtils";
 import { getMotifDemandeLabel } from "@/app/(wrapped)/demandes/utils/motifDemandeUtils";
 import type { MotifRefusLabel } from "@/app/(wrapped)/demandes/utils/motifRefusDemandeUtils";
@@ -18,6 +17,9 @@ import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement, formatLibellesColoration, formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber,formatNumberToMonetaryString, formatNumberToString, formatPercentageFixedDigits } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
+
+import { getLeftOffset,isColonneSticky, isColonneVisible } from "./utils";
+
 
 const formatBooleanValue = (value?: boolean) => (value ? "Oui" : "Non");
 
@@ -61,16 +63,22 @@ const ConditionalTd = chakra(
     className,
     colonneFilters,
     colonne,
+    stickyColonnes,
+    getCellBgColor,
     children,
     isNumeric = false,
   }: {
     className?: string;
-    colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
-    colonne: keyof typeof STATS_DEMANDES_COLUMNS;
+    colonneFilters: Array<DEMANDES_COLUMNS_KEYS>;
+    colonne: DEMANDES_COLUMNS_KEYS;
+    stickyColonnes: Array<DEMANDES_COLUMNS_KEYS>;
+    getCellBgColor: (column: DEMANDES_COLUMNS_KEYS) => string;
     children: React.ReactNode;
     isNumeric?: boolean;
   }) => {
-    if (colonneFilters.includes(colonne))
+    const isVisible = isColonneVisible({ colonne, colonneFilters });
+    const isSticky = isColonneSticky({ colonne, stickyColonnes });
+    if (isVisible)
       return (
         <Td
           className={className}
@@ -78,6 +86,17 @@ const ConditionalTd = chakra(
           border={"none"}
           whiteSpace={"normal"}
           _groupHover={{ bgColor: "blueecume.850 !important" }}
+          bgColor={getCellBgColor(colonne)}
+          left={getLeftOffset({ colonne, stickyColonnes, colonneFilters })}
+          zIndex={isSticky ? 2 : undefined}
+          boxShadow={{
+            lg: "none",
+            xl: "inset -1px 0px 0px 0px #f6f6f6",
+          }}
+          position={{
+            lg: "static",
+            xl: isSticky ? "sticky" : "static",
+          }}
         >
           {children}
         </Td>
@@ -89,106 +108,108 @@ const ConditionalTd = chakra(
 export const LineContent = ({
   demande,
   colonneFilters,
-  getCellColor,
+  getCellBgColor,
+  stickyColonnes,
   displayPilotageColumns,
 }: {
-  demande: DemandesRestitution["demandes"][0];
-  colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
-  getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
+  demande: Demande;
+  colonneFilters: Array<DEMANDES_COLUMNS_KEYS>;
+  getCellBgColor: (column: DEMANDES_COLUMNS_KEYS) => string;
+  stickyColonnes: Array<DEMANDES_COLUMNS_KEYS>;
   displayPilotageColumns: boolean;
 }) => {
   return (
     <>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"libelleEtablissement"}
-        minW={300}
-        maxW={300}
-        left={0}
-        position="sticky"
-        zIndex={1}
-        bgColor={getCellColor("libelleEtablissement")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.libelleEtablissement}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"commune"}
-        left={colonneFilters.includes("libelleEtablissement") ? 300 : 0}
-        position="sticky"
-        zIndex={1}
-        boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
-        bgColor={getCellColor("commune")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {formatCommuneLibelleWithCodeDepartement({
           commune: demande.commune,
           codeDepartement: demande.codeDepartement,
         })}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"libelleRegion"} bgColor={getCellColor("libelleRegion")}>
+      <ConditionalTd
+        colonne={"libelleRegion"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {demande.libelleRegion}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"libelleAcademie"}
-        bgColor={getCellColor("libelleAcademie")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.libelleAcademie}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"secteur"} bgColor={getCellColor("secteur")}>
+      <ConditionalTd
+        colonne={"secteur"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {demande.secteur === SecteurEnum["PU"] ? "Public" : "Privé"}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"libelleNsf"}
-        minW={300}
-        maxW={300}
-        bgColor={getCellColor("libelleNsf")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.libelleNsf}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"libelleFormation"}
-        minW={300}
-        maxW={300}
-        bgColor={getCellColor("libelleFormation")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.libelleFormation}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"formationSpecifique"}
-        minW={300}
-        maxW={300}
-        bgColor={getCellColor("formationSpecifique")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         <BadgesFormationSpecifique formationSpecifique={demande.formationSpecifique} />
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"libelleNiveauDiplome"}
-        bgColor={getCellColor("libelleNiveauDiplome")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.libelleNiveauDiplome}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"typeDemande"}
-        pr="0"
-        py="1"
-        bgColor={getCellColor("typeDemande")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {getTypeDemandeLabel(demande.typeDemande as TypeDemandeType)}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"motif"}
-        minW={400}
-        maxW={400}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         textOverflow={"ellipsis"}
         isTruncated={true}
-        bgColor={getCellColor("motif")}
       >
         {handleMotifDemandeLabel({
           motifs: demande.motif,
@@ -197,121 +218,153 @@ export const LineContent = ({
         })}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"differenceCapaciteScolaire"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         isNumeric
-        bgColor={getCellColor("differenceCapaciteScolaire")}
       >
         {demande.differenceCapaciteScolaire ?? 0}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"differenceCapaciteApprentissage"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         isNumeric
-        bgColor={getCellColor("differenceCapaciteApprentissage")}
       >
         {demande.differenceCapaciteApprentissage ?? 0}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"differenceCapaciteScolaireColoree"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         isNumeric
-        bgColor={getCellColor("capaciteScolaireColoree")}
       >
         {demande.differenceCapaciteScolaireColoree ?? 0}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"differenceCapaciteApprentissageColoree"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         isNumeric
-        bgColor={getCellColor("differenceCapaciteApprentissageColoree")}
       >
         {demande.differenceCapaciteApprentissageColoree ?? 0}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"libelleColoration"}
-        minW={300}
-        maxW={300}
-        bgColor={getCellColor("libelleColoration")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {formatLibellesColoration(demande)}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"libelleFCIL"}
-        minW={300}
-        maxW={300}
-        bgColor={getCellColor("libelleFCIL")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.libelleFCIL}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"amiCma"} bgColor={getCellColor("amiCma")}>
+      <ConditionalTd
+        colonne={"amiCma"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {formatBooleanValue(demande.amiCma)}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"amiCmaValide"} bgColor={getCellColor("amiCmaValide")}>
+      <ConditionalTd
+        colonne={"amiCmaValide"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {formatBooleanValue(demande.amiCmaValide)}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"amiCmaEnCoursValidation"}
-        bgColor={getCellColor("amiCmaEnCoursValidation")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {formatBooleanValue(demande.amiCmaEnCoursValidation)}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"amiCmaValideAnnee"}
-        bgColor={getCellColor("amiCmaValideAnnee")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.amiCmaValideAnnee}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"filiereCmq"} bgColor={getCellColor("filiereCmq")}>
+      <ConditionalTd
+        colonne={"filiereCmq"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {demande.filiereCmq}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"nomCmq"} bgColor={getCellColor("nomCmq")}>
+      <ConditionalTd
+        colonne={"nomCmq"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {demande.nomCmq}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"inspecteurReferent"}
-        bgColor={getCellColor("inspecteurReferent")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.inspecteurReferent}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"partenaireEconomique1"}
-        bgColor={getCellColor("partenaireEconomique1")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.partenaireEconomique1}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"partenaireEconomique2"}
-        bgColor={getCellColor("partenaireEconomique2")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.partenaireEconomique2}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"commentaire"}
-        minW={400}
-        maxW={400}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         textOverflow={"ellipsis"}
         isTruncated={true}
-        bgColor={getCellColor("commentaire")}
       >
         {demande.commentaire}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"numero"} bgColor={getCellColor("numero")}>
+      <ConditionalTd
+        colonne={"numero"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {demande.numero}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
-        isNumeric
         colonne={"positionQuadrant"}
-        bgColor={getCellColor("positionQuadrant")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        textAlign="center"
       >
         <Tooltip
           label={`Position dans le quadrant (millésimes ${formatMillesime(getMillesimeFromCampagne(demande.campagne.annee))})`}
@@ -321,10 +374,11 @@ export const LineContent = ({
         </Tooltip>
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"tauxInsertionRegional"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         textAlign="center"
-        bgColor={getCellColor("tauxInsertionRegional")}
       >
         <GraphWrapper
           value={demande.tauxInsertionRegional}
@@ -332,10 +386,11 @@ export const LineContent = ({
         />
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"tauxPoursuiteRegional"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         textAlign="center"
-        bgColor={getCellColor("tauxPoursuiteRegional")}
       >
         <GraphWrapper
           value={demande.tauxPoursuiteRegional}
@@ -343,10 +398,11 @@ export const LineContent = ({
         />
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"tauxDevenirFavorableRegional"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         textAlign="center"
-        bgColor={getCellColor("tauxDevenirFavorableRegional")}
       >
         <GraphWrapper
           value={demande.tauxDevenirFavorableRegional}
@@ -354,10 +410,11 @@ export const LineContent = ({
         />
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"tauxPressionRegional"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         textAlign="center"
-        bgColor={getCellColor("tauxPressionRegional")}
       >
         <TableBadge sx={
           getTauxPressionStyle(
@@ -370,127 +427,158 @@ export const LineContent = ({
         </TableBadge>
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"nbEtablissement"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         isNumeric
-        bgColor={getCellColor("nbEtablissement")}
       >
         {demande.nbEtablissement}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"nbRecrutementRH"}
-        bgColor={getCellColor("nbRecrutementRH")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.nbRecrutementRH}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"nbReconversionRH"}
-        bgColor={getCellColor("nbReconversionRH")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.nbReconversionRH}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"nbProfesseurAssocieRH"}
-        bgColor={getCellColor("nbProfesseurAssocieRH")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.nbProfesseurAssocieRH}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"nbFormationRH"} bgColor={getCellColor("nbFormationRH")}>
+      <ConditionalTd
+        colonne={"nbFormationRH"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {demande.nbFormationRH}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"travauxAmenagement"}
-        bgColor={getCellColor("travauxAmenagement")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {formatBooleanValue(demande.travauxAmenagement)}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"travauxAmenagementCout"}
-        bgColor={getCellColor("travauxAmenagementCout")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         isNumeric
       >
         {formatNumberToMonetaryString(demande.travauxAmenagementCout, 0, "-")}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"travauxAmenagementDescription"}
-        bgColor={getCellColor("travauxAmenagementDescription")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.travauxAmenagementDescription}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"achatEquipement"}
-        bgColor={getCellColor("achatEquipement")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {formatBooleanValue(demande.achatEquipement)}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"achatEquipementCout"}
-        bgColor={getCellColor("achatEquipementCout")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
         isNumeric
       >
         {formatNumberToMonetaryString(demande.achatEquipementCout, 0, "-")}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"achatEquipementDescription"}
-        bgColor={getCellColor("achatEquipementDescription")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.achatEquipementDescription}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilHebergement"}
-        bgColor={getCellColor("augmentationCapaciteAccueilHebergement")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {formatBooleanValue(demande.augmentationCapaciteAccueilHebergement)}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilHebergementPlaces"}
-        bgColor={getCellColor("augmentationCapaciteAccueilHebergementPlaces")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.augmentationCapaciteAccueilHebergementPlaces}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilHebergementPrecisions"}
-        bgColor={getCellColor("augmentationCapaciteAccueilHebergementPrecisions")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.augmentationCapaciteAccueilHebergementPrecisions}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilRestauration"}
-        bgColor={getCellColor("augmentationCapaciteAccueilRestauration")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {formatBooleanValue(demande.augmentationCapaciteAccueilRestauration)}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilRestaurationPlaces"}
-        bgColor={getCellColor("augmentationCapaciteAccueilRestaurationPlaces")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.augmentationCapaciteAccueilRestaurationPlaces}
       </ConditionalTd>
       <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilRestaurationPrecisions"}
-        bgColor={getCellColor("augmentationCapaciteAccueilRestaurationPrecisions")}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
       >
         {demande.augmentationCapaciteAccueilRestaurationPrecisions}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"statut"} bgColor={getCellColor("statut")}>
+      <ConditionalTd
+        colonne={"statut"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {formatStatut(demande.statut)}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"motifRefus"} bgColor={getCellColor("motifRefus")}>
+      <ConditionalTd
+        colonne={"motifRefus"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
         {handleMotifRefusLabel({
           motifsRefus: demande.motifRefus,
           autreMotifRefus: demande.autreMotifRefus,
@@ -499,30 +587,47 @@ export const LineContent = ({
       {
         displayPilotageColumns && (
           <>
-            <ConditionalTd colonneFilters={colonneFilters} colonne={"pilotageCapacite"} bgColor={getCellColor("pilotageCapacite")}>
+            <ConditionalTd
+              colonne={"pilotageCapacite"}
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              stickyColonnes={stickyColonnes}
+            >
               {demande.pilotageCapacite}
             </ConditionalTd>
-            <ConditionalTd colonneFilters={colonneFilters} colonne={"pilotageEffectif"} bgColor={getCellColor("pilotageEffectif")}>
+            <ConditionalTd
+              colonne={"pilotageEffectif"}
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              stickyColonnes={stickyColonnes}
+              isNumeric
+            >
               {demande.pilotageEffectif}
             </ConditionalTd>
             <ConditionalTd
-              colonneFilters={colonneFilters}
               colonne={"pilotageTauxRemplissage"}
-              bgColor={getCellColor("pilotageTauxRemplissage")}
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              stickyColonnes={stickyColonnes}
+              textAlign={"center"}
             >
               {formatPercentageFixedDigits(demande.pilotageTauxRemplissage, 1, "")}
             </ConditionalTd>
             <ConditionalTd
-              colonneFilters={colonneFilters}
               colonne={"pilotageTauxPression"}
-              bgColor={getCellColor("pilotageTauxPression")}
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              stickyColonnes={stickyColonnes}
+              textAlign={"center"}
             >
               {formatNumberToString(demande.pilotageTauxPression, 2, "-")}
             </ConditionalTd>
             <ConditionalTd
-              colonneFilters={colonneFilters}
               colonne={"pilotageTauxDemande"}
-              bgColor={getCellColor("pilotageTauxDemande")}
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              stickyColonnes={stickyColonnes}
+              textAlign={"center"}
             >
               {formatNumberToString(demande.pilotageTauxDemande, 2, "-") }
             </ConditionalTd>

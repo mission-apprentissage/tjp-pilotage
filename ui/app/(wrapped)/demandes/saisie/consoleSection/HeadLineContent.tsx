@@ -63,7 +63,7 @@ const ConditionalTh = chakra(
           }}
           fontSize={12}
         >
-          <Box maxW={280} sx={{
+          <Box sx={{
             display: "flex",
             alignItems: "center",
           }}>
@@ -78,7 +78,7 @@ const ConditionalTh = chakra(
                 isTruncated
                 whiteSpace="nowrap"
               >
-                <OrderIcon {...order} column={colonne} />
+                {handleOrder && order && (<OrderIcon {...order} column={colonne} />)}
                 {DEMANDES_COLUMNS_OPTIONAL[colonne]}
               </Box>
             </Tooltip>

@@ -19,7 +19,6 @@ import { AvisTags } from "@/app/(wrapped)/demandes/saisie/components/AvisTags";
 import { DeleteDemandeButton } from "@/app/(wrapped)/demandes/saisie/components/DeleteDemandeButton";
 import { ModificationDemandeButton } from "@/app/(wrapped)/demandes/saisie/components/ModificationDemandeButton";
 import { ProgressSteps } from "@/app/(wrapped)/demandes/saisie/components/ProgressSteps";
-import type { DEMANDES_COLUMNS_OPTIONAL } from "@/app/(wrapped)/demandes/saisie/DEMANDES_COLUMNS";
 import type { CheckedDemandesType } from "@/app/(wrapped)/demandes/saisie/page.client";
 import type { Demande, DEMANDES_COLUMNS_KEYS } from "@/app/(wrapped)/demandes/saisie/types";
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/demandes/utils/statutUtils";
@@ -111,7 +110,6 @@ export const LineContent = ({
   isLoading,
   colonneFilters,
   stickyColonnes,
-  setStickyColonnes,
   getCellBgColor
 }: {
   user?: UserType;
@@ -123,10 +121,9 @@ export const LineContent = ({
   onChangeCheckedDemandes: (demande: { statut: DemandeStatutType, numero: string }) => void;
   setStatut: (statut: DemandeStatutType | undefined) => void;
   isLoading?: boolean;
-  colonneFilters: (keyof typeof DEMANDES_COLUMNS_OPTIONAL)[];
-  stickyColonnes: DEMANDES_COLUMNS_KEYS[];
-  setStickyColonnes: React.Dispatch<React.SetStateAction<DEMANDES_COLUMNS_KEYS[]>>;
-  getCellBgColor: (column: keyof typeof DEMANDES_COLUMNS_OPTIONAL) => string;
+  colonneFilters: Array<DEMANDES_COLUMNS_KEYS>;
+  stickyColonnes: Array<DEMANDES_COLUMNS_KEYS>;
+  getCellBgColor: (column: DEMANDES_COLUMNS_KEYS) => string;
 }) => {
   const queryClient = useQueryClient();
   const toast = useToast();

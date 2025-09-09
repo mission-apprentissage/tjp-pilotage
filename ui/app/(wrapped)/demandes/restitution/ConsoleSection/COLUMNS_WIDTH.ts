@@ -1,0 +1,72 @@
+import type { DEMANDES_COLUMNS_KEYS } from "@/app/(wrapped)/demandes/restitution/types";
+
+export const COLUMNS_WIDTH: Record<DEMANDES_COLUMNS_KEYS, number> = {
+  // établissement
+  libelleEtablissement: 300,
+  commune: 250,
+  libelleRegion: 200,
+  libelleAcademie: 200,
+  libelleDepartement: 200,
+  secteur: 100,
+  // formation
+  codeNsf: 100,
+  libelleNsf: 250,
+  libelleFormation: 300,
+  formationSpecifique: 200,
+  libelleNiveauDiplome: 150,
+  // demande
+  typeDemande: 150,
+  motif: 400,
+  differenceCapaciteScolaire: 200,
+  differenceCapaciteApprentissage: 200,
+  differenceCapaciteScolaireColoree: 200,
+  differenceCapaciteApprentissageColoree: 200,
+  libelleColoration: 300,
+  libelleFCIL: 300,
+  amiCma: 150,
+  amiCmaValide: 150,
+  amiCmaEnCoursValidation: 150,
+  amiCmaValideAnnee: 150,
+  filiereCmq: 150,
+  nomCmq: 150,
+  inspecteurReferent: 150,
+  partenaireEconomique1: 150,
+  partenaireEconomique2: 150,
+  commentaire: 400,
+  numero: 100,
+  // Devenir favorable de la formation
+  positionQuadrant: 100,
+  tauxInsertionRegional: 200,
+  tauxPoursuiteRegional: 200,
+  tauxDevenirFavorableRegional: 200,
+  tauxPressionRegional: 200,
+  nbEtablissement: 200,
+  // RH
+  nbRecrutementRH: 100,
+  nbReconversionRH: 100,
+  nbProfesseurAssocieRH: 100,
+  nbFormationRH: 100,
+  // Travaux et achats
+  travauxAmenagement: 100,
+  travauxAmenagementCout: 100,
+  travauxAmenagementDescription: 100,
+  achatEquipement: 100,
+  achatEquipementCout: 100,
+  achatEquipementDescription: 100,
+  // Hébergement
+  augmentationCapaciteAccueilHebergement: 100,
+  augmentationCapaciteAccueilHebergementPlaces: 100,
+  augmentationCapaciteAccueilHebergementPrecisions: 100,
+  augmentationCapaciteAccueilRestauration: 100,
+  augmentationCapaciteAccueilRestaurationPlaces: 100,
+  augmentationCapaciteAccueilRestaurationPrecisions: 100,
+  // Statut
+  statut: 200,
+  motifRefus: 150,
+  // Suivi du taux de remplissage des demandes
+  pilotageCapacite: 200,
+  pilotageEffectif: 200,
+  pilotageTauxRemplissage: 200,
+  pilotageTauxPression: 200,
+  pilotageTauxDemande: 200,
+};

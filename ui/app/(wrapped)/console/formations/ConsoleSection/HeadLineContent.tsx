@@ -38,11 +38,11 @@ const ConditionalTh = chakra(
     className?: string;
     style?: CSSProperties;
     children: React.ReactNode;
-    colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
-    colonne: keyof typeof FORMATION_COLUMNS;
-    stickyColonnes: FORMATION_COLUMNS_KEYS[];
-    setStickyColonnes: React.Dispatch<React.SetStateAction<FORMATION_COLUMNS_KEYS[]>>;
-    getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
+    colonneFilters: Array<FORMATION_COLUMNS_KEYS>;
+    colonne: FORMATION_COLUMNS_KEYS;
+    stickyColonnes: Array<FORMATION_COLUMNS_KEYS>;
+    setStickyColonnes: React.Dispatch<React.SetStateAction<Array<FORMATION_COLUMNS_KEYS>>>;
+    getCellBgColor: (column: FORMATION_COLUMNS_KEYS) => string;
     onClick?: (column: Order["orderBy"]) => void;
     isNumeric?: boolean;
     icon?: React.ReactNode;

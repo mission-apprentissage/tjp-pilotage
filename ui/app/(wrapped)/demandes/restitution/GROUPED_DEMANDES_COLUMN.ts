@@ -1,17 +1,16 @@
 import { themeDefinition } from "@/theme/theme";
 
 import type {
-  STATS_DEMANDES_COLUMNS,
-  STATS_DEMANDES_COLUMNS_DEFAULT,
-  STATS_DEMANDES_COLUMNS_OPTIONAL,
-} from "./STATS_DEMANDES_COLUMN";
+  DEMANDES_COLUMNS,
+  DEMANDES_COLUMNS_OPTIONAL,
+} from "./DEMANDES_COLUMN";
 
-export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
+export const GROUPED_DEMANDES_COLUMNS: Record<
   string,
   {
     color: string;
     cellColor: string;
-    options: Partial<typeof STATS_DEMANDES_COLUMNS>;
+    options: Partial<typeof DEMANDES_COLUMNS>;
   }
 > = {
   // établissement
@@ -37,12 +36,13 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
     cellColor: themeDefinition.colors.bluefrance[975],
     options: {
       cfd: "CFD",
+      codeNsf: "Code NSF",
       libelleNsf: "Domaine de formation (NSF)",
       libelleFormation: "Formation",
       formationSpecifique: "Formation spécifique",
       codeDispositif: "Code Dispositif",
       libelleDispositif: "Dispositif",
-      libelleNiveauDiplome: "Diplôme",
+      libelleNiveauDiplome: "Type de diplôme",
     },
   },
   // demande
@@ -162,13 +162,13 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   {
     color: string;
     cellColor: string;
-    options: Partial<typeof STATS_DEMANDES_COLUMNS>;
+    options: Partial<typeof DEMANDES_COLUMNS>;
   }
 >;
 
-export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
+export const GROUPED_DEMANDES_COLUMNS_OPTIONAL: Record<
   string,
-  { color: string; options: typeof STATS_DEMANDES_COLUMNS_OPTIONAL}
+  { color: string; options: Partial<typeof DEMANDES_COLUMNS_OPTIONAL>}
 > = {
   // établissement
   ["établissement"]: {
@@ -185,10 +185,11 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
     options: {
+      codeNsf: "Code NSF",
       libelleNsf: "Domaine de formation (NSF)",
       libelleFormation: "Formation",
       formationSpecifique: "Formation spécifique",
-      libelleNiveauDiplome: "Diplôme",
+      libelleNiveauDiplome: "Type de diplôme",
     },
   },
   // demande
@@ -282,52 +283,4 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
       pilotageTauxDemande: "Tx Demande RS {0}",
     },
   },
-} as Record<string, { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> }>;
-
-export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
-  string,
-  { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_DEFAULT> }
-> = {
-  // établissement
-  ["établissement"]: {
-    color: themeDefinition.colors.grey[950],
-    options: {
-      libelleEtablissement: "Établissement",
-      commune: "Commune",
-    },
-  },
-  // formation
-  ["formation"]: {
-    color: themeDefinition.colors.bluefrance[950],
-    options: {
-      libelleNsf: "Domaine de formation (NSF)",
-      libelleFormation: "Formation",
-      libelleNiveauDiplome: "Diplôme",
-    },
-  },
-  // demande
-  ["demande"]: {
-    color: "#FEE9E5",
-    options: {
-      typeDemande: "Type de demande",
-      differenceCapaciteScolaire: "Nombre de places en voie scolaire",
-      differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-      differenceCapaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
-      differenceCapaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
-      libelleColoration: "Libellé coloration",
-    },
-  },
-  // Devenir favorable de la formation
-  ["devenir favorable de la formation"]: {
-    color: "#C3FAD5",
-    options: {
-      positionQuadrant: "Position dans le quadrant",
-    },
-  },
-  ["statut"]: {
-    color: themeDefinition.colors.grey[950],
-    options: {
-      statut: "Statut",
-    },
-  },
-} as Record<string, { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_DEFAULT> }>;
+} as Record<string, { color: string; options: Partial<typeof DEMANDES_COLUMNS_OPTIONAL> }>;

@@ -1,6 +1,6 @@
 import type { ExportColumns } from "@/utils/downloadExport";
 
-import type { Demandes } from "./types";
+import type { Demande } from "./types";
 
 export const DEMANDES_COLUMNS = {
   numero: "N°Demande",
@@ -66,7 +66,7 @@ export const DEMANDES_COLUMNS = {
   avis9: "Avis 10",
   lastChangementStatutCommentaire: "Commentaire du dernier changement de statut",
 } satisfies ExportColumns<
-  Demandes[number] & {
+  Demande & {
     [key: `avis${number}`]: string;
   } & {
     libelleColoration?: string;

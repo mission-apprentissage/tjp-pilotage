@@ -48,14 +48,3 @@ export const getLeftOffset = ({
     });
   return leftValue;
 };
-
-export const isLastStickyColonne = ({
-  colonne,
-  stickyColonnes,
-}: {
-  colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
-  stickyColonnes?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
-}) => stickyColonnes &&
-  stickyColonnes.includes(colonne) &&
-  stickyColonnes.indexOf(colonne) === stickyColonnes.length - 1;
-

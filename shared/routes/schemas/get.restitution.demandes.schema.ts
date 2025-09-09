@@ -23,6 +23,7 @@ const DemandeSchema = z.object({
   libelleDepartement: z.string().optional(),
   secteur: z.string().optional(),
   // Formation
+  codeNsf: z.string().optional(),
   libelleNsf: z.string().optional(),
   libelleFormation: z.string(),
   typeFamille: TypeFamilleZodType.optional(),

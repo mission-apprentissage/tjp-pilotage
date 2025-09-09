@@ -1,10 +1,10 @@
 import { Box, Center, Flex, Skeleton, Table, TableContainer, Tbody, Td, Text, Thead, Tr } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { Fragment } from "react";
+import { useState } from "react";
 
-import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/GROUPED_STATS_DEMANDES_COLUMN";
-import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
+import { GROUPED_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/GROUPED_DEMANDES_COLUMN";
 import type {
+  DEMANDES_COLUMNS_KEYS,
   DemandesRestitution,
   FiltersDemandesRestitution,
   OrderDemandesRestitution,
@@ -12,6 +12,13 @@ import type {
 
 import { HeadLineContent } from "./HeadLineContent";
 import { LineContent } from "./LineContent";
+
+const getCellBgColor = (column: DEMANDES_COLUMNS_KEYS) => {
+  const groupLabel = Object.keys(GROUPED_DEMANDES_COLUMNS).find((groupLabel) => {
+    return Object.keys(GROUPED_DEMANDES_COLUMNS[groupLabel].options).includes(column);
+  });
+  return GROUPED_DEMANDES_COLUMNS[groupLabel as string].cellColor;
+};
 
 const Loader = () => {
   return (
@@ -64,18 +71,13 @@ export const ConsoleSection = ({
   order: OrderDemandesRestitution;
   activeFilters: FiltersDemandesRestitution;
   handleOrder: (column: OrderDemandesRestitution["orderBy"]) => void;
-  colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
+  colonneFilters: Array<DEMANDES_COLUMNS_KEYS>;
   displayPilotageColumns: boolean;
   currentRS: string;
 }) => {
   const router = useRouter();
+  const [stickyColonnes, setStickyColonnes] = useState<DEMANDES_COLUMNS_KEYS[]>(["libelleEtablissement", "commune"]);
 
-  const getCellColor = (column: keyof typeof STATS_DEMANDES_COLUMNS) => {
-    const groupLabel = Object.keys(GROUPED_STATS_DEMANDES_COLUMNS).find((groupLabel) => {
-      return Object.keys(GROUPED_STATS_DEMANDES_COLUMNS[groupLabel].options).includes(column);
-    });
-    return GROUPED_STATS_DEMANDES_COLUMNS[groupLabel as string].cellColor;
-  };
 
   if (isLoading) return <Loader />;
   if (colonneFilters.length === 0)
@@ -106,38 +108,38 @@ export const ConsoleSection = ({
                 handleOrder={handleOrder}
                 activeFilters={activeFilters}
                 colonneFilters={colonneFilters}
-                getCellColor={getCellColor}
+                stickyColonnes={stickyColonnes}
+                setStickyColonnes={setStickyColonnes}
+                getCellBgColor={getCellBgColor}
                 displayPilotageColumns={displayPilotageColumns}
                 currentRS={currentRS}
               />
             </Tr>
           </Thead>
           <Tbody>
-            <Fragment>
-              {data?.demandes.map((demande: DemandesRestitution["demandes"][0]) => {
-                return (
-                  <Fragment key={`${demande.numero}`}>
-                    <Tr
-                      h="12"
-                      cursor={"pointer"}
-                      onClick={() =>
-                        router.push(
-                          `/demandes/synthese/${demande.numero}`
-                        )
-                      }
-                      role="group"
-                    >
-                      <LineContent
-                        demande={demande}
-                        colonneFilters={colonneFilters}
-                        getCellColor={getCellColor}
-                        displayPilotageColumns={displayPilotageColumns}
-                      />
-                    </Tr>
-                  </Fragment>
-                );
-              })}
-            </Fragment>
+            {
+              data?.demandes.map((demande: DemandesRestitution["demandes"][0]) => (
+                <Tr
+                  key={`${demande.numero}`}
+                  h="12"
+                  cursor={"pointer"}
+                  onClick={() =>
+                    router.push(
+                      `/demandes/synthese/${demande.numero}`
+                    )
+                  }
+                  role="group"
+                >
+                  <LineContent
+                    demande={demande}
+                    colonneFilters={colonneFilters}
+                    stickyColonnes={stickyColonnes}
+                    getCellBgColor={getCellBgColor}
+                    displayPilotageColumns={displayPilotageColumns}
+                  />
+                </Tr>
+              ))
+            }
           </Tbody>
         </Table>
       </TableContainer>

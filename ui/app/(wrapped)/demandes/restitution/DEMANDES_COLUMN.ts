@@ -1,20 +1,22 @@
-import type { client } from "@/api.client";
 import type { ExportColumns } from "@/utils/downloadExport";
 
-export const STATS_DEMANDES_COLUMNS = {
+import type { Demande } from "./types";
+
+export const DEMANDES_COLUMNS = {
   // établissement
   uai: "UAI",
   libelleEtablissement: "Établissement",
   commune: "Commune",
   codeRegion: "CodeRegion",
   libelleRegion: "Région",
-  codeAcademie: "CodeAcadémie",
+  codeAcademie: "Code Académie",
   libelleAcademie: "Académie",
-  codeDepartement: "CodeDepartement",
+  codeDepartement: "Code Département",
   libelleDepartement: "Département",
   secteur: "Secteur",
   // formation
   cfd: "CFD",
+  codeNsf: "Code NSF",
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
   formationSpecifique: "Formation spécifique",
@@ -24,7 +26,7 @@ export const STATS_DEMANDES_COLUMNS = {
   transitionNumerique: "Transition numérique ?",
   codeDispositif: "Code Dispositif",
   libelleDispositif: "Dispositif",
-  libelleNiveauDiplome: "Diplôme",
+  libelleNiveauDiplome: "Type de diplôme",
   // demande
   typeDemande: "Type de demande",
   motif: "Motif(s) de la demande",
@@ -99,7 +101,7 @@ export const STATS_DEMANDES_COLUMNS = {
   pilotageTauxPression: "Tx Pression RS {0}",
   pilotageTauxDemande: "Tx Demande RS {0}",
 } satisfies ExportColumns<
-  (typeof client.infer)["[GET]/restitution/demandes"]["demandes"][number] & {
+  Demande & {
     libelleColoration: string;
     disciplinesRecrutementRH: string;
     disciplinesReconversionRH: string;
@@ -115,7 +117,7 @@ export const STATS_DEMANDES_COLUMNS = {
   }
 >;
 
-export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<typeof STATS_DEMANDES_COLUMNS> = {
+export const DEMANDES_COLUMNS_OPTIONAL = {
   // établissement
   libelleEtablissement: "Établissement",
   commune: "Commune",
@@ -124,10 +126,11 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<typeof STATS_DEMANDES_COLU
   libelleDepartement: "Département",
   secteur: "Secteur Privé ou Public",
   // formation
+  codeNsf: "Code NSF",
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
   formationSpecifique: "Formation spécifique",
-  libelleNiveauDiplome: "Diplôme",
+  libelleNiveauDiplome: "Type de diplôme",
   // demande
   typeDemande: "Type de demande",
   motif: "Motif(s) de la demande",
@@ -177,21 +180,20 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<typeof STATS_DEMANDES_COLU
   // Statut
   statut: "Statut",
   motifRefus: "Motif(s) de refus",
-  autreMotifRefus: "Autre motif de refus",
   // Suivi du taux de remplissage des demandes
   pilotageCapacite: "Capacité RS {0}",
   pilotageEffectif: "Effectif RS {0}",
   pilotageTauxRemplissage: "Remplissage RS {0}",
   pilotageTauxPression: "Tx Pression RS {0}",
   pilotageTauxDemande: "Tx Demande RS {0}",
-} as Partial<typeof STATS_DEMANDES_COLUMNS>;
+} satisfies Partial<typeof DEMANDES_COLUMNS>;
 
-export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> = {
+export const DEMANDES_COLUMNS_DEFAULT = {
   libelleEtablissement: "Établissement",
   commune: "Commune",
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
-  libelleNiveauDiplome: "Diplôme",
+  libelleNiveauDiplome: "Type de diplôme",
   typeDemande: "Type de demande",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
   differenceCapaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
@@ -200,4 +202,4 @@ export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<typeof STATS_DEMANDES_COLUM
   libelleColoration: "Libellé coloration",
   positionQuadrant: "Position dans le quadrant",
   statut: "Statut",
-} as Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL>;
+} satisfies Partial<typeof DEMANDES_COLUMNS_OPTIONAL>;
