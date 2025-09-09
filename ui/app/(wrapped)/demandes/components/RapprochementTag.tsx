@@ -1,6 +1,6 @@
 import {Flex, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { getRapprochementMotif } from "shared/utils/getRapprochementMotif";
+import { getRapprochementMotif } from "shared/enum/getRapprochementMotif";
 
 export type RapprochementValue = "OK" | "KO" | "-";
 const rapprochementList: Record<RapprochementValue, { label: string; color: string }> = {
@@ -19,9 +19,9 @@ const rapprochementList: Record<RapprochementValue, { label: string; color: stri
 };
 
 export const getLienRapprochement = (rapprochement: string, uai: string, cfd: string, numero: string) => {
-  return rapprochement === 'OK' ? `/console/etablissements?filters[uai][0]=${uai}&filters[cfd][0]=${cfd}`
-    : rapprochement === 'KO' ? `/demandes/saisie/${numero}?editCfdUai=true`
-      : `/demandes/synthese/${numero}`;
+  if (rapprochement === "OK") return `/console/etablissements?filters[uai][0]=${uai}&filters[cfd][0]=${cfd}`;
+  if (rapprochement === "KO") return `/demandes/saisie/${numero}?editCfdUai=true`;
+  return `/demandes/synthese/${numero}`;
 };
 
 export const RapprochementTag = ({
