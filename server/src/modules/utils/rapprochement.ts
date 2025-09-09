@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
-import { getRapprochementMotif } from "shared/utils/getRapprochementMotif";
+import { getRapprochementMotif } from "shared/enum/getRapprochementMotif";
 
 export const rapprochement = (
   campagneAlias: string,
