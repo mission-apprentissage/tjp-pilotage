@@ -1,6 +1,6 @@
 import { Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import type { UserType } from "shared/schema/userSchema";
 
 import { client } from "@/api.client";
@@ -67,46 +67,19 @@ export const ConsoleSection = ({
     },
   });
 
-  const [isFirstColumnSticky, setIsFirstColumnSticky] = useState(false);
-  const [isSecondColumnSticky, setIsSecondColumnSticky] = useState(false);
+  const [stickyColonnes, setStickyColonnes] = useState<FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]>(["libelleEtablissement", "libelleFormation"]);
   const tableRef = useRef<HTMLDivElement>(null);
 
-  const handleScroll = () => {
-    if (tableRef.current) {
-      const scrollLeft = tableRef.current.scrollLeft;
-      if (scrollLeft > 90 && scrollLeft <= 470) {
-        setIsFirstColumnSticky(true);
-      } else {
-        setIsFirstColumnSticky(false);
-      }
-      if (scrollLeft > 475) {
-        setIsSecondColumnSticky(true);
-      } else {
-        setIsSecondColumnSticky(false);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const box = tableRef.current;
-    if (box) {
-      box.addEventListener("scroll", handleScroll);
-      return () => {
-        box.removeEventListener("scroll", handleScroll);
-      };
-    }
-  }, []);
-
   return (
-    <TableContainer overflowY="auto" ref={tableRef} minH={"110%"}>
+    <TableContainer overflowY="auto" flex={1} ref={tableRef} pb={6} m={0}>
       <Table variant="simple" size={"sm"}>
         <HeadLineContent
-          isFirstColumnSticky={isFirstColumnSticky}
-          isSecondColumnSticky={isSecondColumnSticky}
           order={order}
           setSearchParams={setSearchParams}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
           user={user}
           filters={filters}
         />
@@ -115,8 +88,7 @@ export const ConsoleSection = ({
             <Fragment key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}>
               <Tr h="12" bg={"white"} role="group">
                 <EtablissementLineContent
-                  isFirstColumnSticky={isFirstColumnSticky}
-                  isSecondColumnSticky={isSecondColumnSticky}
+                  stickyColonnes={stickyColonnes}
                   line={line}
                   expended={
                     historiqueId?.cfd === line.cfd &&
@@ -143,18 +115,19 @@ export const ConsoleSection = ({
                   {historiqueData?.map((historiqueLine) => (
                     <Tr key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`} bg={"grey.975"}>
                       <EtablissementLineContent
-                        isFirstColumnSticky={isFirstColumnSticky}
-                        isSecondColumnSticky={isSecondColumnSticky}
+                        stickyColonnes={stickyColonnes}
                         line={historiqueLine}
                         colonneFilters={colonneFilters}
                         getCellBgColor={getCellBgColor}
                         user={user}
+                        isHistorique={true}
                       />
                     </Tr>
                   ))}
                   {historiqueData && !historiqueData.length && (
                     <EtablissementLinePlaceholder
                       colonneFilters={colonneFilters}
+                      stickyColonnes={stickyColonnes}
                       getCellBgColor={getCellBgColor}
                       user={user}
                     />

@@ -23,9 +23,6 @@ export type PanoramaFormations = PanoramaFormationsRegion | PanoramaFormationsDe
 export type PanoramaStatsTauxPoursuite = (typeof client.infer)["[GET]/panorama/stats/region"]["tauxPoursuite"];
 export type PanoramaStatsTauxInsertion = (typeof client.infer)["[GET]/panorama/stats/region"]["tauxInsertion"];
 
-export type PanoramaTopFlops = (typeof client.infer)["[GET]/panorama/stats/region"]["topFlops"];
-export type PanoramaTopFlop = (typeof client.infer)["[GET]/panorama/stats/region"]["topFlops"][number];
-
 export type StatsFormationsRegion = (typeof client.infer)["[GET]/region/:codeRegion"];
 export type StatsFormationsDepartement = (typeof client.infer)["[GET]/departement/:codeDepartement"];
 export type StatsFormations = StatsFormationsRegion | StatsFormationsDepartement;

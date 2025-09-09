@@ -12,6 +12,7 @@ import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
+import { getEvolutionTauxEntreeData, getEvolutionTauxEntreeKeys, getEvolutionTauxSortieData, getEvolutionTauxSortieKeys } from '@/app/(wrapped)/console/utils/extractEvolutionData';
 import { CodeDepartementContext } from '@/app/codeDepartementContext';
 import { CodeRegionContext } from '@/app/codeRegionContext';
 import {formatTypeFamilleLong} from '@/components/BadgeTypeFamille';
@@ -179,11 +180,41 @@ const Page = () => {
       selectedDepartement: "Departement sélectionnée",
     };
 
+    const evolutionTauxEntreeColumns = {
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Effectif en entrée ${key}`]: `Effectif en entrée ${key}`,
+        [`Capacité d'accueil ${key}`]: `Capacité d'accueil ${key}`,
+        [`Taux de pression ${key}`]: `Taux de pression ${key}`,
+        [`Taux de demande ${key}`]: `Taux de demande ${key}`,
+        [`Taux de remplissage ${key}`]: `Taux de remplissage ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
+    const evolutionTauxSortieColumns = {
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux d'insertion ${key}`]: `Taux d'insertion ${key}`,
+        [`Taux de poursuite d'étude ${key}`]: `Taux de poursuite d'étude ${key}`,
+        [`Taux de devenir favorable ${key}`]: `Taux de devenir favorable ${key}`,
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+
     const columns = {
-      ..._.omit(FORMATION_COLUMNS, "formationSpecifique"),
+      ..._.omit(FORMATION_COLUMNS, [
+        "formationSpecifique",
+        "evolutionEffectif",
+        "evolutionCapacite",
+        "evolutionTauxPression",
+        "evolutionTauxDemande",
+        "evolutionTauxRemplissage",
+        "evolutionTauxInsertion",
+        "evolutionTauxPoursuite",
+        "evolutionTauxDevenirFavorable"
+      ]),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
+      ...evolutionTauxEntreeColumns,
+      ...evolutionTauxSortieColumns,
     };
 
     let formations = [];
@@ -217,6 +248,18 @@ const Page = () => {
       isFormationRenovee: formation.isFormationRenovee,
       isHistorique: !!formation.formationRenovee,
       isHistoriqueCoExistant: formation.isHistoriqueCoExistant,
+      ...getEvolutionTauxEntreeKeys().map((key) => ({
+        [`Effectif en entrée ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "effectif"})[key],
+        [`Capacité d'accueil ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "capacite"})[key],
+        [`Taux de remplissage ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxRemplissage"})[key],
+        [`Taux de pression ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxPression"})[key],
+        [`Taux de demande ${key}`]: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "tauxDemande"})[key],
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      ...getEvolutionTauxSortieKeys().map((key) => ({
+        [`Taux d'insertion ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxInsertion"})[key],
+        [`Taux de poursuite d'étude ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxPoursuite"})[key],
+        [`Taux de devenir favorable ${key}`]: getEvolutionTauxSortieData({ evolutions: formation.evolutionTauxSortie, key: "tauxDevenirFavorable"})[key],
+      })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
     }));
 
     return {
@@ -351,18 +394,17 @@ const Page = () => {
         requeteEnregistreeActuelle={requeteEnregistreeActuelle}
         setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
-      <Flex direction={"row"} flex={1} position="relative" minH="0" minW={0}>
-        <SideSection handleFilters={handleFilters} searchParams={searchParams} filtersList={data?.filters} />
-        <Flex direction="column" flex={1} position="relative" minW={0}>
-          {isFetching && (
-            <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
-              <Spinner />
-            </Center>
-          )}
-          <TableHeader
-            p={4}
-            SaveFiltersButton={
-              <Flex py="2">
+      <Flex direction={"row"} flex={1} position="relative" minH="100%" minW={0} bgColor={"bluefrance.975"}>
+        <SideSection
+          searchParams={searchParams}
+          handleFilters={handleFilters}
+          filtersList={data?.filters}
+        />
+        <Flex direction="column" flex={1} position="relative" minW="0">
+          <Flex direction="column" bgColor={"white"}>
+            <TableHeader
+              m={4}
+              SaveFiltersButton={
                 <Button
                   variant={"externalLink"}
                   leftIcon={<Icon icon="ri:save-3-line" />}
@@ -372,39 +414,44 @@ const Page = () => {
                 >
                   Enregistrer la requête
                 </Button>
-              </Flex>
-            }
-            SearchInput={
-              <ConsoleSearchInput
-                placeholder="Rechercher dans les résultats"
-                onChange={(newValue) => {
-                  const oldValue = searchFormation;
-                  setSearchFormation(newValue);
-                  if (newValue.length > 2 || oldValue.length > newValue.length) {
-                    onSearch(newValue);
-                  }
-                }}
-                value={searchFormation}
-                onClick={onSearch}
-                width={{ base: "15rem", ["2xl"]: "25rem" }}
-              />
-            }
-            ColonneFilter={
-              <ColonneFilterSection
-                colonneFilters={colonneFilters}
-                handleColonneFilters={handleColonneFilters}
-                forcedColonnes={["libelleFormation"]}
-                trackEvent={trackEvent}
-                canShowQuadrantPosition={canShowQuadrantPosition}
-              />
-            }
-            onExportCsv={onExportCsv}
-            onExportExcel={onExportExcel}
-            page={page}
-            pageSize={PAGE_SIZE}
-            count={data?.count}
-            onPageChange={(newPage) => setSearchParams({ page: newPage })}
-          />
+              }
+              SearchInput={
+                <ConsoleSearchInput
+                  placeholder="Rechercher dans les résultats"
+                  onChange={(newValue) => {
+                    const oldValue = searchFormation;
+                    setSearchFormation(newValue);
+                    if (newValue.length > 2 || oldValue.length > newValue.length) {
+                      onSearch(newValue);
+                    }
+                  }}
+                  value={searchFormation}
+                  onClick={onSearch}
+                  width={{ base: "25rem", ["2xl"]: "35rem" }}
+                />
+              }
+              ColonneFilter={
+                <ColonneFilterSection
+                  colonneFilters={colonneFilters}
+                  handleColonneFilters={handleColonneFilters}
+                  forcedColonnes={["libelleFormation"]}
+                  trackEvent={trackEvent}
+                  canShowQuadrantPosition={canShowQuadrantPosition}
+                />
+              }
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
+              page={page}
+              pageSize={PAGE_SIZE}
+              count={data?.count}
+              onPageChange={(newPage) => setSearchParams({ page: newPage })}
+            />
+          </Flex>
+          {isFetching && (
+            <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
+              <Spinner />
+            </Center>
+          )}
           <ConsoleSection
             data={data}
             canShowQuadrantPosition={canShowQuadrantPosition}

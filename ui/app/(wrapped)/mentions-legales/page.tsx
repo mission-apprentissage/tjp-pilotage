@@ -79,12 +79,6 @@ const Page = () =>
           Signaler un dysfonctionnement
         </DSFRH6>
         <DSFRParagraph>
-          Si vous rencontrez un défaut d'accessibilité vous empêchant d'accéder à un contenu ou une fonctionnalité de la plateforme, merci de nous en faire part :{' '}
-          <Link href="mailto:orion@inserjeunes.beta.gouv.fr" color="blue.500">
-            orion@inserjeunes.beta.gouv.fr
-          </Link>
-        </DSFRParagraph>
-        <DSFRParagraph>
           Si vous n'obtenez pas de réponse rapide de notre part, vous êtes en droit de faire
           parvenir vos doléances ou une demande de saisine au Défenseur des droits.
         </DSFRParagraph>

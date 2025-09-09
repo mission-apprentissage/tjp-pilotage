@@ -502,7 +502,10 @@ export const PageClient = () => {
                                       whiteSpace={"break-spaces"}
                                       noOfLines={2}
                                     >
-                                      {<RapprochementTag value={demande.rapprochement} />}
+                                      {<RapprochementTag
+                                        rapprochement={demande.rapprochement}
+                                        motifRapprochement={demande.motifRapprochement}
+                                      />}
                                     </Text>
                                   </Tooltip>
 
