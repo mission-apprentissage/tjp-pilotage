@@ -225,6 +225,6 @@ export const migrations: Migrations = {
   migration_1748954336997,
   migration_1751881253583,
   migration_1751897523776,
-  migration_1756977716979,
-  migration_1753690950534
+  migration_1753690950534,
+  migration_1756977716979
 };
