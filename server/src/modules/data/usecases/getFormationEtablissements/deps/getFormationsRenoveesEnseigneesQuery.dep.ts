@@ -3,13 +3,13 @@ import { CURRENT_RENTREE } from "shared";
 
 import { getKbdClient } from "@/db/db";
 import { getDateRentreeScolaire } from "@/modules/data/services/getRentreeScolaire";
+import type { Filters } from "@/modules/data/usecases/getFormationEtablissements/getFormationEtablissements.usecase";
 import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 
 export const getFormationsRenoveesEnseigneesQuery = async ({
-  rentreeScolaire = [CURRENT_RENTREE],
-}: {
-  rentreeScolaire?: string[];
-}) => {
+  rentreeScolaire = CURRENT_RENTREE,
+}: Partial<Filters>
+) => {
   return await getKbdClient()
     .selectFrom("formationHistorique")
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "formationHistorique.cfd")
@@ -18,7 +18,7 @@ export const getFormationsRenoveesEnseigneesQuery = async ({
         .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
         .onRef("formationEtablissement.voie", "=", "formationView.voie")
     )
-    .where("formationView.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(rentreeScolaire[0])}`)
+    .where("formationView.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(rentreeScolaire)}`)
     .select("formationHistorique.cfd")
     .where(isScolaireFormationHistorique)
     .distinct()

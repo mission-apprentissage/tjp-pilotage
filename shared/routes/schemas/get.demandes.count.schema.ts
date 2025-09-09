@@ -6,7 +6,14 @@ export const FiltersSchema = z.object({
   campagne: z.string().optional(),
   search: z.string().optional(),
   codeAcademie: z.array(z.string()).optional(),
+  codeDepartement: z.array(z.string()).optional(),
+  commune: z.array(z.string()).optional(),
+  uai: z.array(z.string()).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
+  cfd: z.array(z.string()).optional(),
+  codeNsf: z.array(z.string()).optional(),
+  nomCmq: z.array(z.string()).optional(),
+  filiereCmq: z.array(z.string()).optional()
 });
 
 export const countDemandesSchema = {

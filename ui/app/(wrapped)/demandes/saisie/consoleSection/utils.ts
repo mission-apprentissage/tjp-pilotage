@@ -1,14 +1,15 @@
-import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS } from "@/app/(wrapped)/console/etablissements/types";
+import type { DEMANDES_COLUMNS_KEYS } from "@/app/(wrapped)/demandes/saisie/types";
 
 import { COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
+
 
 export const isColonneSticky = ({
   colonne,
   stickyColonnes
 } :
 {
-  colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
-  stickyColonnes?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+  colonne: DEMANDES_COLUMNS_KEYS;
+  stickyColonnes?: DEMANDES_COLUMNS_KEYS[];
 }) => {
   if (!stickyColonnes || stickyColonnes.length === 0) return false;
   return stickyColonnes.includes(colonne);
@@ -19,8 +20,8 @@ export const isColonneVisible = ({
   colonneFilters
 } :
 {
-  colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
-  colonneFilters?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+  colonne: DEMANDES_COLUMNS_KEYS;
+  colonneFilters?: DEMANDES_COLUMNS_KEYS[];
 }) => {
   if (!colonneFilters || colonneFilters.length === 0) return false;
   return colonneFilters.includes(colonne);
@@ -31,9 +32,9 @@ export const getLeftOffset = ({
   stickyColonnes,
   colonneFilters
 }: {
-  colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
-  colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
-  stickyColonnes: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+  colonne: DEMANDES_COLUMNS_KEYS;
+  colonneFilters: DEMANDES_COLUMNS_KEYS[];
+  stickyColonnes: DEMANDES_COLUMNS_KEYS[];
 }) => {
   let leftValue = 0;
   if (!isColonneSticky({ colonne, stickyColonnes })) return leftValue;
@@ -43,7 +44,7 @@ export const getLeftOffset = ({
     .forEach((stickyColonne) => {
       if (
         Object.keys(COLUMNS_WIDTH).indexOf(colonne) >
-        Object.keys(COLUMNS_WIDTH).indexOf(stickyColonne)
+      Object.keys(COLUMNS_WIDTH).indexOf(stickyColonne)
       ) leftValue += COLUMNS_WIDTH[stickyColonne as keyof typeof COLUMNS_WIDTH] || 0;
     });
   return leftValue;
@@ -53,8 +54,8 @@ export const isLastStickyColonne = ({
   colonne,
   stickyColonnes,
 }: {
-  colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
-  stickyColonnes?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+  colonne: DEMANDES_COLUMNS_KEYS;
+  stickyColonnes?: DEMANDES_COLUMNS_KEYS[];
 }) => stickyColonnes &&
   stickyColonnes.includes(colonne) &&
   stickyColonnes.indexOf(colonne) === stickyColonnes.length - 1;
