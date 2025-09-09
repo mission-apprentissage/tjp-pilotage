@@ -10,7 +10,6 @@ import { IndicateursSection } from "@/app/(wrapped)/panorama/components/Indicate
 import { InfoSection } from "@/app/(wrapped)/panorama/components/InfoSection";
 import { QuadrantSection } from "@/app/(wrapped)/panorama/components/QuadrantSection/QuadrantSection";
 import { TauxInserJeunesSection } from "@/app/(wrapped)/panorama/components/TauxInserJeunesSection/TauxInserJeunesSection";
-import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
 import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
 import { CodeRegionContext } from "@/app/codeRegionContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
@@ -132,7 +131,6 @@ export default function Panorama({
         nbFormationsTotal={stats?.nbFormations}
         effectifEntreeTotal={stats?.effectifEntree}
       />
-      <TopFlopSection topFlops={data?.topFlops} isLoading={isLoading} />
       <InfoSection codeRegion={codeRegion} />
     </>
   );

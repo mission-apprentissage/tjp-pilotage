@@ -32,17 +32,33 @@ export const FORMATION_COLUMNS = {
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
+  evolutionTauxPression: "Évolution du taux de pression",
   tauxDemande: "Tx de demande",
+  evolutionTauxDemande: "Évolution du taux de demande",
   tauxRemplissage: "Tx de remplissage",
+  evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  // evolutionPositionQuadrant: "Évolution de la position dans le quadrant",
   tauxInsertion: `Tx d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
   tauxPoursuite: `Tx de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
   tauxDevenirFavorable: `Tx de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
 } satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]> & {
   formationSpecifique: string;
   actionPrioritaire: string;
+  evolutionEffectif: string;
+  evolutionTauxPression: string;
+  evolutionTauxDemande: string;
+  evolutionTauxRemplissage: string;
+  // evolutionPositionQuadrant: string;
+  evolutionTauxInsertion: string;
+  evolutionTauxPoursuite: string;
+  evolutionTauxDevenirFavorable: string;
   isHistorique: string;
 };
 
@@ -65,14 +81,22 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
+  evolutionTauxPression: "Évolution du taux de pression",
   tauxDemande: "Tx de demande",
+  evolutionTauxDemande: "Évolution du taux de demande",
   tauxRemplissage: "Tx de remplissage",
+  evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: "Position dans le quadrant",
+  // evolutionPositionQuadrant: "Évolution de la position dans le quadrant",
   tauxInsertion: "Tx d'emploi 6 mois régional",
+  evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
+  evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
+  evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
 } satisfies Partial<typeof FORMATION_COLUMNS>;
 
 export const FORMATION_COLUMNS_DEFAULT = {

@@ -92,11 +92,13 @@
         chdir: /opt/app
         cmd: "sudo /opt/app/tools/ssl/renew-certificate.sh {{dns_name}}"
 
-    - name: "Setup de la Metabase"
+    - name: "Setup de Metabase"
       shell:
         chdir: /opt/app
         cmd: "sudo bash /opt/app/configs/metabase/setup-metabase.sh"
       timeout: 86400 # 1 day
+      when:
+        - env_type == 'production'
 
     - name: "Prune Docker"
       shell:

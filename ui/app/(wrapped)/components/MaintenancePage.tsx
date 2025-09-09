@@ -1,5 +1,4 @@
-import { Center, Flex, Heading, Img, Link, Text } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Center, Flex, Heading, Img, Text } from "@chakra-ui/react";
 
 export const MaintenancePage = () => {
   return (
@@ -10,9 +9,6 @@ export const MaintenancePage = () => {
         </Heading>
         <Img src="/illustrations/in-progress.svg" alt="Maintenance en cours" width={60} my={8}/>
         <Text>En cas de demande urgente veuillez contacter</Text>
-        <Link as={NextLink} href="mailto:orion@inserjeunes.beta.gouv.fr" color="bluefrance.113">
-          orion@inserjeunes.beta.gouv.fr
-        </Link>
       </Center>
     </Flex>
   );
