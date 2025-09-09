@@ -43,7 +43,7 @@ export const rapprochement = (
   const colorationSansDataScolaire = sql`${isColoration} AND (${aucuneDonneeApres})`;
 
   const isFermeture = sql`${demandeTable}."typeDemande" = 'fermeture'`;
-  const aucunEleveApres = sql`${constatTable}."formationEtablissementIdApres" IS NULL AND ${constatTable}."effectifEntreeApres" IS NULL `;
+  const aucunEleveApres = sql`${constatTable}."effectifEntreeApres" IS NULL `;
   const fermetureSansElevesApres = sql`${isFermeture} AND ${aucunEleveApres}`;
   const fermetureAvecElevesApres = sql`${isFermeture} AND NOT (${aucunEleveApres})`;
 
