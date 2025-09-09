@@ -19,7 +19,14 @@ export const getDemandesQuery = async (
     campagne,
     statut,
     codeAcademie,
+    codeDepartement,
+    commune,
+    uai,
     codeNiveauDiplome,
+    codeNsf,
+    cfd,
+    nomCmq,
+    filiereCmq,
     user,
     search,
     offset = 0,
@@ -39,6 +46,7 @@ export const getDemandesQuery = async (
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
     .leftJoin(
       (join) =>
         join
@@ -181,7 +189,13 @@ export const getDemandesQuery = async (
                   ' ',
                   unaccent(${eb.ref("dataEtablissement.uai")}),
                   ' ',
-                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")})
+                  unaccent(${eb.ref("nsf.libelleNsf")}),
+                  ' ',
+                  unaccent(${eb.ref("demande.nomCmq")}),
+                  ' ',
+                  unaccent(${eb.ref("demande.filiereCmq")}),
+                  ' ',
+                  unaccent(${eb.ref("demande.inspecteurReferent")})
                 )`,
                 "ilike",
                 `%${search_word}%`
@@ -202,8 +216,50 @@ export const getDemandesQuery = async (
       return eb;
     })
     .$call((eb) => {
+      if (codeDepartement) {
+        return eb.where("departement.codeDepartement", "in", codeDepartement);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (commune) {
+        return eb.where("dataEtablissement.commune", "in", commune);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (uai) {
+        return eb.where("dataEtablissement.uai", "in", uai);
+      }
+      return eb;
+    })
+    .$call((eb) => {
       if (codeNiveauDiplome) {
         return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNsf) {
+        return eb.where("dataFormation.codeNsf", "in", codeNsf);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (cfd) {
+        return eb.where("dataFormation.cfd", "in", cfd);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiereCmq) {
+        return eb.where("demande.filiereCmq", "in", filiereCmq);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (nomCmq) {
+        return eb.where("demande.nomCmq", "in", nomCmq);
       }
       return eb;
     })

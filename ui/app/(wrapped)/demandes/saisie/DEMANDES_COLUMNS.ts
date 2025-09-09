@@ -3,6 +3,8 @@ import type { ExportColumns } from "@/utils/downloadExport";
 import type { Demandes } from "./types";
 
 export const DEMANDES_COLUMNS = {
+  rapprochement: "Rapprochement",
+  motifRapprochement: "Motif rapprochement",
   numero: "N°Demande",
   cfd: "CFD",
   libelleFormation: "Diplôme",
@@ -65,8 +67,6 @@ export const DEMANDES_COLUMNS = {
   avis8: "Avis 9",
   avis9: "Avis 10",
   lastChangementStatutCommentaire: "Commentaire du dernier changement de statut",
-  rapprochement: "Rapprochement",
-  motifRapprochement: "Motif rapprochement"
 } satisfies ExportColumns<
   Demandes[number] & {
     [key: `avis${number}`]: string;
@@ -74,3 +74,69 @@ export const DEMANDES_COLUMNS = {
     libelleColoration?: string;
   }
 >;
+
+export const DEMANDES_COLUMNS_OPTIONAL = {
+  rapprochement: "Rapprochement",
+  updatedAt: "Der. modif.",
+  cfd: "CFD",
+  libelleFormation: "Diplôme",
+  codeDispositif: "Code dispositif",
+  libelleDispositif: "Dispositif",
+  libelleFCIL: "Libellé de la FCIL",
+  uai: "UAI",
+  libelleEtablissement: "Établissement",
+  codeRegion: "Code Region",
+  libelleRegion: "Région",
+  codeAcademie: "Code Académie",
+  libelleAcademie: "Académie",
+  codeDepartement: "Code Département",
+  libelleDepartement: "Dpt.",
+  rentreeScolaire: "RS",
+  statut: "Statut",
+  actions: "Actions",
+  typeDemande: "Type",
+  createdAt: "Créé le",
+  numero: "N°Demande",
+  userName: "Auteur",
+  inspecteurReferent: "Inspecteur",
+  motif: "Motif",
+  autreMotif: "Autre motif",
+  coloration: "Coloration",
+  libelleColoration: "Libellé(s) coloration(s)",
+  amiCma: "AMI/CMA ?",
+  commentaire: "Commentaire",
+  capaciteScolaireActuelle: "Capacité actuelle en voie scolaire",
+  capaciteScolaire: "Future capacité en voie scolaire",
+  capaciteScolaireColoreeActuelle: "Capacité colorée actuelle en voie scolaire",
+  capaciteScolaireColoree: "Future capacité colorée en voie scolaire",
+  capaciteApprentissageActuelle: "Capacité actuelle en apprentissage",
+  capaciteApprentissage: "Future capacité en apprentissage",
+  capaciteApprentissageColoreeActuelle: "Capacité colorée actuelle en apprentissage",
+  capaciteApprentissageColoree: "Future capacité colorée en apprentissage",
+  progression: "Progression",
+  avisPhaseEnCours: "Avis - phase en cours",
+  derniersAvisPhaseEnCours: "Derniers avis - phase en cours",
+} satisfies Partial<typeof DEMANDES_COLUMNS> & {
+  actions: string;
+  progression: string;
+  avisPhaseEnCours: string;
+  derniersAvisPhaseEnCours: string;
+};
+
+export const DEMANDES_COLUMNS_DEFAULT = {
+  rapprochement: "Rapprochement",
+  updatedAt: "Der. modif.",
+  libelleFormation: "Diplôme",
+  libelleEtablissement: "Établissement",
+  libelleDepartement: "Dpt.",
+  statut: "Statut",
+  actions: "Actions",
+  typeDemande: "Type",
+  createdAt: "Créé le",
+  numero: "N°Demande",
+  userName: "Auteur",
+  inspecteurReferent: "Inspecteur",
+  progression: "Progression",
+  avisPhaseEnCours: "Avis - phase en cours",
+  derniersAvisPhaseEnCours: "Derniers avis - phase en cours",
+} satisfies Partial<typeof DEMANDES_COLUMNS_OPTIONAL>;

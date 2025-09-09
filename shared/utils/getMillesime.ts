@@ -17,9 +17,9 @@ export const getMillesimeFromRentreeScolaire = ({
 
 export const getMillesimesFromRentreeScolaire = ({
   rentreeScolaire,
-  offset,
+  offset = 0,
 }: {
   rentreeScolaire: Array<string>;
-  offset: number;
+  offset?: number;
 }): Array<string> =>
   rentreeScolaire.map((rentree) => getMillesimeFromRentreeScolaire({ rentreeScolaire: rentree, offset }));

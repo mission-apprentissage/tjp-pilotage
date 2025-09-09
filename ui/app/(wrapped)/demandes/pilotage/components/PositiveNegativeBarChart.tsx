@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Flex, Heading, Img, useToken, VStack } from "@chakra-ui/react";
+import { Box, Flex, Heading, Img, useToken, VStack } from "@chakra-ui/react";
 import { init, registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
@@ -31,6 +31,7 @@ export const PositiveNegativeBarChart = ({
   const bf113 = useToken("colors", "bluefrance.113");
   const bf850 = useToken("colors", "bluefrance.850");
   const bf850_active = useToken("colors", "bluefrance.850_active");
+  const grey925 = useToken("colors", "grey.925");
   const grey425 = useToken("colors", "grey.425");
   const pilotageGreen2 = useToken("colors", "pilotage.green.2");
   const pilotageRed = useToken("colors", "pilotage.red");
@@ -250,7 +251,7 @@ export const PositiveNegativeBarChart = ({
           name: type,
           nameLocation: "end",
           nameTextStyle: {
-            fontSize: 12,
+            fontSize: 14,
             color: grey425,
             fontFamily: "Marianne",
             margin: 0,
@@ -259,14 +260,14 @@ export const PositiveNegativeBarChart = ({
           type: "category",
           show: true,
           data: getYAxisTitle(),
-          offset: 170,
+          offset: 400,
           axisLabel: {
             show: true,
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: 400,
             color: grey425,
             align: "left",
-            width: 150,
+            width: 350,
             overflow: "truncate",
             fontFamily: "Marianne",
           },
@@ -282,12 +283,13 @@ export const PositiveNegativeBarChart = ({
           },
         },
         {
-          name: "solde",
+          name: "Solde",
           nameLocation: "end",
           nameTextStyle: {
-            fontSize: 12,
+            fontSize: 14,
             color: grey425,
             fontFamily: "Marianne",
+            margin: 0,
             align: "left",
           },
           type: "category",
@@ -382,10 +384,8 @@ export const PositiveNegativeBarChart = ({
   }, [data]);
 
   return (
-    <AspectRatio ratio={2}>
-      <Box position="relative" overflow={"visible !important"}>
-        <Box ref={containerRef} h={"100%"} w={"100%"} role="figure" />
-      </Box>
-    </AspectRatio>
+    <Box position="relative" overflow={"visible !important"} h="400px" border={`1px solid ${grey925}`} borderRadius="md" p={3}>
+      <Box ref={containerRef} h={"100%"} w={"100%"} role="figure" />
+    </Box>
   );
 };
