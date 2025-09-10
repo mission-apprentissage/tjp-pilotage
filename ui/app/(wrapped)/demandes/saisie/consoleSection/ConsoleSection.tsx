@@ -53,7 +53,6 @@ export const ConsoleSection = ({
   const [checkedDemandes, setCheckedDemandes] = useState<CheckedDemandesType | undefined>();
   const [stickyColonnes, setStickyColonnes] = useState<DEMANDES_COLUMNS_KEYS[]>(["libelleFormation"]);
 
-
   const onChangeCheckedDemandes = (demande: { statut: DemandeStatutType, numero: string }) => {
     setCheckedDemandes((prevState: CheckedDemandesType | undefined) => {
       if (!prevState?.demandes.length) {
@@ -204,6 +203,7 @@ export const ConsoleSection = ({
       <TableContainer overflowY="auto" flex={1} position="relative">
         <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
           <HeadLineContent
+            campagne={data?.campagne}
             handleOrder={handleOrder}
             order={order}
             canCheckDemandes={canCheckDemandes}
@@ -216,7 +216,6 @@ export const ConsoleSection = ({
           />
           <Tbody>
             {data?.demandes.map((demande: Demande) => {
-
               return (
                 <Tr
                   height={"60px"}
@@ -236,7 +235,6 @@ export const ConsoleSection = ({
                     setStatut={setStatut}
                     colonneFilters={colonneFilters}
                     stickyColonnes={stickyColonnes}
-                    setStickyColonnes={setStickyColonnes}
                     getCellBgColor={getCellBgColor}
                   />
                 </Tr>
