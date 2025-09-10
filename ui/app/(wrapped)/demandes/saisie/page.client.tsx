@@ -258,7 +258,7 @@ export const PageClient = () => {
   );
 
   const handleColonneFilters = (value: Array<DEMANDES_COLUMNS_KEYS>) => {
-    setSearchParams({ columns: value });
+    setSearchParams({ ...searchParams, columns: value });
     setColonneFilters(value);
   };
 

@@ -3,6 +3,8 @@ import type { ExportColumns } from "@/utils/downloadExport";
 import type { Demandes } from "./types";
 
 export const DEMANDES_COLUMNS = {
+  rapprochement: "Rapprochement",
+  motifRapprochement: "Motif rapprochement",
   numero: "N°Demande",
   cfd: "CFD",
   libelleFormation: "Diplôme",
@@ -74,7 +76,8 @@ export const DEMANDES_COLUMNS = {
 >;
 
 export const DEMANDES_COLUMNS_OPTIONAL = {
-  numero: "N°Demande",
+  rapprochement: "Rapprochement",
+  updatedAt: "Der. modif.",
   cfd: "CFD",
   libelleFormation: "Diplôme",
   codeDispositif: "Code dispositif",
@@ -89,18 +92,19 @@ export const DEMANDES_COLUMNS_OPTIONAL = {
   codeDepartement: "Code Département",
   libelleDepartement: "Dpt.",
   rentreeScolaire: "RS",
+  statut: "Statut",
+  actions: "Actions",
   typeDemande: "Type",
+  createdAt: "Créé le",
+  numero: "N°Demande",
+  userName: "Auteur",
+  inspecteurReferent: "Inspecteur",
   motif: "Motif",
   autreMotif: "Autre motif",
   coloration: "Coloration",
   libelleColoration: "Libellé(s) coloration(s)",
   amiCma: "AMI/CMA ?",
   commentaire: "Commentaire",
-  statut: "Statut",
-  createdAt: "Créé le",
-  updatedAt: "Der. modif.",
-  userName: "Auteur",
-  inspecteurReferent: "Inspecteur",
   capaciteScolaireActuelle: "Capacité actuelle en voie scolaire",
   capaciteScolaire: "Future capacité en voie scolaire",
   capaciteScolaireColoreeActuelle: "Capacité colorée actuelle en voie scolaire",
@@ -109,7 +113,6 @@ export const DEMANDES_COLUMNS_OPTIONAL = {
   capaciteApprentissage: "Future capacité en apprentissage",
   capaciteApprentissageColoreeActuelle: "Capacité colorée actuelle en apprentissage",
   capaciteApprentissageColoree: "Future capacité colorée en apprentissage",
-  actions: "Actions",
   progression: "Progression",
   avisPhaseEnCours: "Avis - phase en cours",
   derniersAvisPhaseEnCours: "Derniers avis - phase en cours",
@@ -120,8 +123,8 @@ export const DEMANDES_COLUMNS_OPTIONAL = {
   derniersAvisPhaseEnCours: string;
 };
 
-
 export const DEMANDES_COLUMNS_DEFAULT = {
+  rapprochement: "Rapprochement",
   updatedAt: "Der. modif.",
   libelleFormation: "Diplôme",
   libelleEtablissement: "Établissement",
