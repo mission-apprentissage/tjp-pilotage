@@ -3,6 +3,8 @@ import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
 
+  await viderFamilleMetier(db);
+
   //supprimer le contenu entier de la table familleMetier
   await db.executeQuery(sql`TRUNCATE TABLE "familleMetier";`.compile(db));
 
@@ -24,14 +26,15 @@ export const up = async (db: Kysely<unknown>) => {
     .dropColumn("codeMinistereTutelle")
     .execute();
 
-  //Alimenter la table avec la BCN: yarn cli importTables importFamillesMetiersBcn
+  //Alimenter la table avec la BCN:
+  //yarn cli importTables importFamillesMetiersBcn && yarn cli importTables importDataFormations
+
 
 };
 
 export const down = async (db: Kysely<unknown>) => {
 
-  //supprimer le contenu entier de la table familleMetier
-  await db.executeQuery(sql`TRUNCATE TABLE "familleMetier";`.compile(db));
+  await viderFamilleMetier(db);
 
   //Suppression des 2 nouveaux champs
   await db.schema
@@ -43,10 +46,21 @@ export const down = async (db: Kysely<unknown>) => {
   //Rajout de la colonne codeMinistereTutelle
   await db.schema
     .alterTable("familleMetier")
-    .addColumn("codeMinistereTutelle", sql`varchar(2) NOT NULL`)
+    .addColumn("codeMinistereTutelle", sql`varchar(2)`)
     .execute();
 
-  //Alimenter la table avec l'ancien fichier: yarn cli importTables importFamillesMetiers
+  //Alimenter la table avec l'ancien fichier:
+  //yarn cli importTables importFamillesMetiers && yarn cli importTables importDataFormations
+
+};
+
+const viderFamilleMetier = async (db: Kysely<unknown>) => {
+
+  //supprimer le contenu entier de la table familleMetier
+  await db.executeQuery(sql`TRUNCATE TABLE "familleMetier";`.compile(db));
+
+  //supprimer le contenu du champ dataFormation.typeFamille
+  await db.executeQuery(sql`UPDATE "dataFormation" SET "typeFamille" = null WHERE true;`.compile(db));
 
 };
 
