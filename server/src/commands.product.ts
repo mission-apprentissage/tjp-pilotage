@@ -23,6 +23,7 @@ import { importDiplomesProfessionnels } from "./modules/import/usecases/importDi
 import { importDiscipline } from "./modules/import/usecases/importDiscipline/importDiscipline.usecase";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
+import { importFamillesMetiersBcn } from "./modules/import/usecases/importFamillesMetiersBcn/importFamillesMetiersBcn.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importIJData } from "./modules/import/usecases/importIJData/importIJData.usecase";
 import { importIndicateursDepartement } from "./modules/import/usecases/importIndicateursDepartement/importIndicateursDepartement.usecase";
@@ -330,6 +331,7 @@ export function productCommands(cli: Command) {
         importNSF,
         importDispositifs,
         importFamillesMetiers,
+        importFamillesMetiersBcn,
         importDataEtablissements,
         importDataFormations,
         importConstatRentree,
