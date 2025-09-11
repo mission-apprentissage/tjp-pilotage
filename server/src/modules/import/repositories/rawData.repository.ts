@@ -33,6 +33,8 @@ import type { NFormationDiplomeLine } from "@/modules/import/fileTypes/NFormatio
 import { NFormationDiplomeSchema } from "@/modules/import/fileTypes/NFormationDiplome";
 import type { NGroupeFormation } from "@/modules/import/fileTypes/NGroupeFormation";
 import { NGroupeFormationSchema } from "@/modules/import/fileTypes/NGroupeFormation";
+import type { NLienFormationGroupe } from "@/modules/import/fileTypes/NLienFormationGroupe";
+import { NLienFormationGroupeSchema } from "@/modules/import/fileTypes/NLienFormationGroupe";
 import type { NMefLine } from "@/modules/import/fileTypes/NMef";
 import { NMefSchema } from "@/modules/import/fileTypes/NMef";
 import type { NNiveauFormationDiplome } from "@/modules/import/fileTypes/NNiveauFormationDiplome";
@@ -43,6 +45,8 @@ import type { NSF_Domaine_Specialite } from "@/modules/import/fileTypes/NSFDomai
 import { NSFDomaineSpecialiteSchema } from "@/modules/import/fileTypes/NSFDomaineSpecialite";
 import type { NSF_Groupe_Specialite } from "@/modules/import/fileTypes/NSFGroupeSpecialite";
 import { NSFGroupeSpecialiteSchema } from "@/modules/import/fileTypes/NSFGroupeSpecialite";
+import type { NTypeGroupeFormation } from "@/modules/import/fileTypes/NTypeGroupeFormation";
+import { NTypeGroupeFormationSchema } from "@/modules/import/fileTypes/NTypeGroupeFormation";
 import type { Offres_apprentissage } from "@/modules/import/fileTypes/Offres_apprentissage";
 import { OffresApprentissageSchema } from "@/modules/import/fileTypes/Offres_apprentissage";
 import type { OptionsBTSLine } from "@/modules/import/fileTypes/OptionsBTS";
@@ -93,7 +97,8 @@ export const Schemas = {
   tension_rome: TensionRomeSchema,
   actions_prioritaires: ActionsPrioritairesSchema,
   n_groupe_formation_: NGroupeFormationSchema,
-
+  n_type_groupe_formation_: NTypeGroupeFormationSchema,
+  n_lien_formation_groupe_: NLienFormationGroupeSchema,
 };
 
 export type LineTypes = {
@@ -131,6 +136,8 @@ export type LineTypes = {
   tension_rome: Tension_Rome;
   actions_prioritaires: Actions_prioritaires;
   n_groupe_formation_: NGroupeFormation;
+  n_type_groupe_formation_: NTypeGroupeFormation;
+  n_lien_formation_groupe_: NLienFormationGroupe;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
