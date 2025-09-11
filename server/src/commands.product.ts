@@ -275,6 +275,10 @@ export function productCommands(cli: Command) {
           type: "actions_prioritaires",
           schema: Schemas.actions_prioritaires,
         }),
+        ...getImports({
+          type: "n_groupe_formation_",
+          schema: Schemas.n_groupe_formation_,
+        }),
       };
 
       await writeErrorLogs({

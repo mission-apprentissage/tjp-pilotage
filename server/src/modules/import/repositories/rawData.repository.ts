@@ -31,6 +31,8 @@ import type { NDispositifFormation } from "@/modules/import/fileTypes/NDispositi
 import { NDispositifFormationSchema } from "@/modules/import/fileTypes/NDispositifFormation";
 import type { NFormationDiplomeLine } from "@/modules/import/fileTypes/NFormationDiplome";
 import { NFormationDiplomeSchema } from "@/modules/import/fileTypes/NFormationDiplome";
+import type { NGroupeFormation } from "@/modules/import/fileTypes/NGroupeFormation";
+import { NGroupeFormationSchema } from "@/modules/import/fileTypes/NGroupeFormation";
 import type { NMefLine } from "@/modules/import/fileTypes/NMef";
 import { NMefSchema } from "@/modules/import/fileTypes/NMef";
 import type { NNiveauFormationDiplome } from "@/modules/import/fileTypes/NNiveauFormationDiplome";
@@ -90,6 +92,8 @@ export const Schemas = {
   tension_rome_region: TensionRomeSchema,
   tension_rome: TensionRomeSchema,
   actions_prioritaires: ActionsPrioritairesSchema,
+  n_groupe_formation_: NGroupeFormationSchema,
+
 };
 
 export type LineTypes = {
@@ -126,6 +130,7 @@ export type LineTypes = {
   tension_rome_region: Tension_Rome;
   tension_rome: Tension_Rome;
   actions_prioritaires: Actions_prioritaires;
+  n_groupe_formation_: NGroupeFormation;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
