@@ -279,6 +279,14 @@ export function productCommands(cli: Command) {
           type: "n_groupe_formation_",
           schema: Schemas.n_groupe_formation_,
         }),
+        ...getImports({
+          type: "n_type_groupe_formation_",
+          schema: Schemas.n_type_groupe_formation_,
+        }),
+        ...getImports({
+          type: "n_lien_formation_groupe_",
+          schema: Schemas.n_lien_formation_groupe_,
+        }),
       };
 
       await writeErrorLogs({
