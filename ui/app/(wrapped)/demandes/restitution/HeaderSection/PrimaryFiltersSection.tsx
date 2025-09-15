@@ -43,7 +43,7 @@ export const PrimaryFiltersSection = ({
           <Skeleton opacity="0.3" width="100%" height={"100%"} py={4} px={8}></Skeleton>
         </Box>
       ) : (
-        <Flex borderRadius={5} px={4} py={2} mb={2} bg="blueecume.400_hover" h="100%">
+        <Flex borderRadius={5} px={4} py={2} mb={2} bg="blueecume.400_hover" h="100%" mt={"auto"}>
           <LightMode>
             <Flex justifyContent={"start"} gap={4} flexDirection={"column"} py={3} w="100%">
               <Flex gap={4}>

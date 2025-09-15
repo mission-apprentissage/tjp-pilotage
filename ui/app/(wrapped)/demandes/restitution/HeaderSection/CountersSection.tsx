@@ -20,7 +20,7 @@ const CountCard = ({
     apprentissage?: number;
   };
 }) => (
-  <Card minW={[null, null, "72"]} flex={1} bgColor="white" borderRadius={5}>
+  <Card minW={[null, null, "96"]} flex={1} bgColor="white" borderRadius={5}>
     <CardHeader px={3} pt={2} pb={1}>
       <Flex flexDirection="column" minH="42px">
         <Flex>

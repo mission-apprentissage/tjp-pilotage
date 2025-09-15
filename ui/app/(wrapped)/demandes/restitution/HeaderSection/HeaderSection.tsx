@@ -7,6 +7,7 @@ import type {
 } from "@/app/(wrapped)/demandes/restitution/types";
 
 import { CountersSection } from "./CountersSection";
+import { ModeComptabilisationSection } from "./ModeComptabilisationSection";
 import { PrimaryFiltersSection } from "./PrimaryFiltersSection";
 import { SecondaryFiltersSection } from "./SecondaryFiltersSection";
 
@@ -75,7 +76,14 @@ export const HeaderSection = ({
             isLoading={isLoading}
             data={data}
           />
-          <CountersSection countData={countData} />
+          <Flex direction={"column"}>
+            <ModeComptabilisationSection
+              activeFilters={activeFilters}
+              handleFilters={handleFilters}
+              filterTracker={filterTracker}
+            />
+            <CountersSection countData={countData} />
+          </Flex>
         </Flex>
         <SecondaryFiltersSection
           activeFilters={activeFilters}
