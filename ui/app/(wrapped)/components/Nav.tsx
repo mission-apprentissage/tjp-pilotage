@@ -1,5 +1,5 @@
 "use client";
-import {ChevronDownIcon} from '@chakra-ui/icons';
+import { ChevronDownIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import { Box, Button, chakra, Flex, Link, Menu, MenuButton, MenuItem, MenuList, Portal, Tooltip,useDisclosure } from "@chakra-ui/react";
 import {Icon} from '@iconify/react';
 import NextLink from "next/link";
@@ -22,6 +22,37 @@ import { isPerdirPartOfSaisieDemande } from "@/utils/isPartOfSaisieDemande";
 import { canCreateDemande } from "@/utils/permissionsDemandeUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
+
+const DOCUMENTATION_LINKS = {
+  // Panorama
+  ["panorama/region"]: "/documentation/co/000_-_Panorama_Region_-_Departement.html",
+  ["panorama/departement"]: "/documentation/co/000_-_Panorama_Region_-_Departement.html",
+  ["panorama/etablissement"]: "/documentation/co/000_-_Panorama_Etablissement.html",
+  ["panorama/lien-metier-formation"]: "/documentation/co/000_-_Panorama_Domaine_de_formation.html",
+  ["panorama/domaine-de-formation"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
+  // Console
+  ["console/formations"]: "/documentation/co/000_-_Consoles.html",
+  ["console/etablissements"]: "/documentation/co/000_-_Consoles.html",
+  // Demandes
+  ["demandes/saisie"]: "/documentation/co/000_-_Gestion_des_demandes.html",
+  ["demandes/saisie/"]: "/documentation/co/001_-_Saisie_dans_le_formulaire.html",
+  ["demandes/restitution"]: "/documentation/co/002_-_Restitution_des_demandes.html",
+  ["demandes/corrections"]: "/documentation/co/006_-_Restitution_des_corrections.html",
+  ["demandes/pilotage"]: "/documentation/co/002_-_Comprendre_et_utiliser_les_projections_de_transformation.html",
+  // Suivi de l'impact
+  ["suivi-impact"]: "/documentation/co/007_-_Suivi_de_l3impact.html",
+  // Admin
+  ["admin/users"]: "/documentation/co/000_-_Gestion_des_utilisateurs_dans_Orion.html",
+  ["admin/roles"]: "/documentation/co/000_-_Comprendre_les_roles__permissions_et_responsabilites_dans_Orion_.html",
+  ["admin/campagnes/national"]: "/documentation/co/001_-_Gestion_des_campagnes_et_temporalite.html",
+  ["admin/campagnes/regional"]: "/documentation/co/001_-_Gestion_des_campagnes_et_temporalite.html",
+};
+
+const getDocumentationLink = (segment?: string) => {
+  if(segment === "") return "/documentation";
+  if(segment?.startsWith("demandes/saisie/")) return DOCUMENTATION_LINKS["demandes/saisie/"] ?? "/documentation";
+  return DOCUMENTATION_LINKS[segment as keyof typeof DOCUMENTATION_LINKS] ?? "/documentation";
+};
 
 const shouldDisplayDemandesMenu = ({ user, campagne }: {user?: UserType, campagne?: CampagneType}) => {
   if(!campagne || !user) return false;
@@ -167,6 +198,9 @@ export const Nav = () => {
   const { user, role } = useAuth();
   const { campagne } = useCurrentCampagne();
   const { uais } = useContext(UaisContext);
+  const segment = useSelectedLayoutSegments().join("/");
+
+  console.log(segment);
 
   const hasAdminMenu =
     hasPermission(role, PermissionEnum["users/lecture"]) || hasPermission(role, PermissionEnum["campagnes/lecture"]);
@@ -398,6 +432,18 @@ export const Nav = () => {
           </Box>
         )
       }
+      <Button
+        as={NextLink}
+        href={getDocumentationLink(segment)}
+        variant={"secondary"}
+        leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
+        color="bluefrance.113"
+        fontSize={14}
+        ms={"auto"}
+        me={2}
+      >
+        Aide en ligne
+      </Button>
       <Glossaire />
     </Flex>
   );
