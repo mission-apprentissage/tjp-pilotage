@@ -7,35 +7,38 @@ import type {
 } from "@/app/(wrapped)/demandes/restitution/types";
 
 import { CountersSection } from "./CountersSection";
+import { ModeComptabilisationSection } from "./ModeComptabilisationSection";
 import { PrimaryFiltersSection } from "./PrimaryFiltersSection";
 import { SecondaryFiltersSection } from "./SecondaryFiltersSection";
 
 const Loader = () => (
-  <Flex gap={8} flexDirection={"column"}>
-    <Flex w="100%" gap={4} mb="8">
-      <Flex h="182px" w="100%" gap={4}>
-        <Flex minW="532px">
-          <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
-        </Flex>
-        <Flex minW="52">
-          <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
-        </Flex>
-        <Flex minW="52">
-          <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
-        </Flex>
-        <Flex minW="52">
-          <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
-        </Flex>
-        <Flex minW="52">
-          <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
-        </Flex>
-        <Flex minW="52">
+  <Flex gap={8} direction={"column"} mb={10}>
+    <Flex gap={2} direction={"column"}>
+      <Flex h="42px" w="100%" gap={4}>
+        <Flex minW="490px" />
+        <Flex minW="784px">
           <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
         </Flex>
       </Flex>
+      <Flex w="100%" gap={4}>
+        <Flex h="176px" w="100%" gap={4}>
+          <Flex minW="490px">
+            <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
+          </Flex>
+          <Flex minW="72">
+            <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
+          </Flex>
+          <Flex minW="72">
+            <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
+          </Flex>
+          <Flex minW="72">
+            <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
+          </Flex>
+        </Flex>
+      </Flex>
     </Flex>
-    <Flex w="100%" gap={4} mb="8">
-      <Flex h="140px" w="100%">
+    <Flex w="100%" gap={4}>
+      <Flex h="154px" w="100%">
         <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
       </Flex>
     </Flex>
@@ -75,7 +78,14 @@ export const HeaderSection = ({
             isLoading={isLoading}
             data={data}
           />
-          <CountersSection countData={countData} />
+          <Flex direction={"column"}>
+            <ModeComptabilisationSection
+              activeFilters={activeFilters}
+              handleFilters={handleFilters}
+              filterTracker={filterTracker}
+            />
+            <CountersSection countData={countData} />
+          </Flex>
         </Flex>
         <SecondaryFiltersSection
           activeFilters={activeFilters}

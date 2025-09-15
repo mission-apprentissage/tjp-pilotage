@@ -1,8 +1,9 @@
+import _ from "lodash";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { SecteurEnum } from "shared/enum/secteurEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
-import { formatLibelleFormationWithoutTags, formatLibellesColoration, formatMillesime } from "@/utils/formatLibelle";
+import { formatLibelleFormationWithoutTags, formatLibellesColoration, formatMillesime, formatTypeDemande } from "@/utils/formatLibelle";
 
 import { STATS_DEMANDES_COLUMNS } from "./STATS_DEMANDES_COLUMN";
 import type { DemandesRestitution, FiltersDemandesRestitution } from "./types";
@@ -57,7 +58,7 @@ export const getDataForExport = ({
     ...demandesColumns } = STATS_DEMANDES_COLUMNS;
 
   let columns : Record<string, string> = {
-    ...demandesColumns,
+    ..._.omit(demandesColumns, ["formationSpecifique"]),
     ...(filters.codeRegion && region ? regionsColumns : {}),
     ...(filters.codeAcademie && academies ? academiesColumns : {}),
     ...(filters.codeDepartement && departements ? departementsColumns : {}),
@@ -86,6 +87,7 @@ export const getDataForExport = ({
       hour: "2-digit",
       minute: "2-digit",
     }),
+    typeDemande: formatTypeDemande(demande.typeDemande),
     millesime: formatMillesime(getMillesimeFromCampagne(demande.campagne.annee)),
     disciplinesRecrutementRH:
       demande.discipline1RecrutementRH &&
