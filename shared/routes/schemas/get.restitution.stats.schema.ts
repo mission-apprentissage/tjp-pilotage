@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
-import {VoieZodType} from '../../enum/voieEnum';
 
 const CountCapaciteStatsSchema = z.object({
   total: z.number(),
@@ -24,11 +23,12 @@ export const FiltersSchema = z.object({
   amiCMA: z.string().optional(),
   secteur: z.string().optional(),
   positionQuadrant: z.string().optional(),
-  voie: VoieZodType.optional(),
+  voie: z.string().optional(),
   codeNsf: z.array(z.string()).optional(),
   campagne: z.string().optional(),
   search: z.string().optional(),
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
+  modeComptabilisation: z.enum(["capaciteReelle", "tauxTransformation"]).optional(),
 });
 
 export const getStatsRestitutionSchema = {
