@@ -1,4 +1,5 @@
-import { redirect } from "next/navigation";
+import { PageClient } from "./page.client";
 
-const Page = () => redirect("/panorama/lien-metier-formation/formation");
+const Page = () => <PageClient />;
+
 export default Page;
