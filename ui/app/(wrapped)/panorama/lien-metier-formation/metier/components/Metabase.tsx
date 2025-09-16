@@ -35,7 +35,7 @@ const Metabase = ({ domaineProfessionnel, metier, dashboardId }: DashboardProps)
     return <></>;
   }
 
-  return <iframe ref={iframeRef} src={data?.url} width="100%" onLoad={onIFrameLoad} />;
+  return <iframe title="Lien métier formation" ref={iframeRef} src={data?.url} width="100%" onLoad={onIFrameLoad} />;
 };
 
 export { Metabase };
