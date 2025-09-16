@@ -46,5 +46,5 @@ const blueControl = definePartsStyle({
 
 export const radioTheme = defineMultiStyleConfig({
   baseStyle,
-  variants: { blueControl}
+  variants: { blueControl }
 });
