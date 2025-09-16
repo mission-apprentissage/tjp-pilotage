@@ -36,4 +36,15 @@ const baseStyle = definePartsStyle({
   }
 });
 
-export const radioTheme = defineMultiStyleConfig({ baseStyle });
+const blueControl = definePartsStyle({
+  ...baseStyle,
+  control: {
+    ...baseStyle.control,
+    borderColor: "bluefrance.850",
+  }
+});
+
+export const radioTheme = defineMultiStyleConfig({
+  baseStyle,
+  variants: { blueControl }
+});
