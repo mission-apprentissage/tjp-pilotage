@@ -4,15 +4,21 @@ import { Flex, Tab, TabList, Tabs, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
+import { useState } from "react";
+
+import DashboardFormation from "./formation/page";
+import DashboardMetier from "./metier/page";
 
 const getTabIndex = (segment: string | null) => {
   if (segment === "formation") return 0;
   if (segment === "metier") return 1;
 };
 
-export const PageClient = ({ children }: { children: React.ReactNode }) => {
+export const PageClient = () => {
   const segment = useSelectedLayoutSegment();
   const tabIndex = getTabIndex(segment);
+
+  const [displayType, setDisplayType] = useState<"formation" | "metier">("formation");
 
   return (
     <VStack gap="12px" py="16px" alignItems="start" width="100%">
@@ -27,13 +33,27 @@ export const PageClient = ({ children }: { children: React.ReactNode }) => {
         width={"100%"}
       >
         <TabList>
-          <Tab as={NextLink} href="/panorama/lien-metier-formation/formation">
+          <Tab
+            onClick={(e) => {
+              setDisplayType("formation");
+              e.preventDefault();
+            }}
+            as={NextLink}
+            href="/panorama/lien-metier-formation/formation"
+          >
             <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
               <Icon icon="ri:book-open-line" />
               <Text>À partir d'une formation</Text>
             </Flex>
           </Tab>
-          <Tab as={NextLink} href="/panorama/lien-metier-formation/metier">
+          <Tab
+            onClick={(e) => {
+              setDisplayType("metier");
+              e.preventDefault();
+            }}
+            as={NextLink}
+            href="/panorama/lien-metier-formation/metier"
+          >
             <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
               <Icon icon="ri:briefcase-line" />
               <Text>À partir d'un métier</Text>
@@ -41,7 +61,13 @@ export const PageClient = ({ children }: { children: React.ReactNode }) => {
           </Tab>
         </TabList>
       </Tabs>
-      {children}
+      {displayType === "formation" ?
+        (
+          <DashboardFormation />
+        ) : (
+          <DashboardMetier />
+        )
+      }
     </VStack>
   );
 };
