@@ -48,7 +48,7 @@ export const ModeComptabilisationSection = ({
           <Flex>
             Capacité réelle
             <TooltipIcon ms={2} my={"auto"} label={
-              "Comptabilise les créations et fermetures nettes de places par formation et établissement (mêmes données que dans la Console)."
+              "Comptabilise les créations et fermetures nettes de places par formation et établissement (données alignées avec l'export)."
             } />
           </Flex>
         </Radio>
