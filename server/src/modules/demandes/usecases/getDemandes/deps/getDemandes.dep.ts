@@ -10,9 +10,9 @@ import type { Filters } from "@/modules/demandes/usecases/getDemandes/getDemande
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 import { isDemandeBrouillonVisible, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { rapprochement } from "@/modules/utils/rapprochement";
 import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
-
 
 export const getDemandesQuery = async (
   {
@@ -77,6 +77,7 @@ export const getDemandesQuery = async (
         .onRef("demandeAccessLog.updatedAt", ">", "demande.updatedAt")
         .on("demandeAccessLog.userId", "=", user.id)
     )
+    .leftJoin("demandeConstatView", "demandeConstatView.numero", "demande.numero")
     .selectAll("demande")
     .select((eb) => [
       "suivi.id as suiviId",
@@ -143,12 +144,17 @@ export const getDemandesQuery = async (
           ])
           .where(isAvisVisible({ user }))
       ).as("avis"),
+
       eb
         .selectFrom("correction")
         .whereRef("correction.demandeNumero", "=", "demande.numero")
         .select("correction.id")
         .limit(1)
-        .as("correction")
+        .as("correction"),
+
+      rapprochement("campagne", "demande","demandeConstatView", "dataFormation", false).as("rapprochement"),
+      rapprochement("campagne", "demande","demandeConstatView", "dataFormation", true).as("motifRapprochement")
+
     ])
     .$narrowType<{
       statut: DemandeStatutTypeWithoutSupprimee,
