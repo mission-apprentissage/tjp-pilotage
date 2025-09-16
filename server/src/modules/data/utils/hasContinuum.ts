@@ -1,6 +1,7 @@
 import type { ExpressionBuilder } from "kysely";
 import { expressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
+import { VoieEnum } from "shared";
 
 import type { DB } from "@/db/db";
 
@@ -29,7 +30,7 @@ export function hasContinuum<
       .whereRef("subIRS.codeDispositif", "=", codeDispositifRef)
       .whereRef("subIRS.codeRegion", "=", sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`)
       .where("subIRS.millesimeSortie", "=", millesimeSortie)
-      .where("subIRS.voie", "=", "scolaire")
+      .where("subIRS.voie", "=", VoieEnum["scolaire"])
       .where("subIRS.cfdContinuum", "is not", null)
       .select(["subIRS.cfdContinuum as cfd", "subFormation.libelleFormation as libelleFormation"])
       .$narrowType<{ cfd: string; libelleFormation: string }>()

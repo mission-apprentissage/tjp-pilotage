@@ -1,6 +1,8 @@
 import { Box, chakra, Checkbox, IconButton, Th, Thead, Tooltip,Tr } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import type { CSSProperties } from "react";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { DEMANDES_COLUMNS_OPTIONAL } from "@/app/(wrapped)/demandes/saisie/DEMANDES_COLUMNS";
 import type { CheckedDemandesType } from "@/app/(wrapped)/demandes/saisie/page.client";
@@ -78,7 +80,7 @@ const ConditionalTh = chakra(
                 isTruncated
                 whiteSpace="nowrap"
               >
-                <OrderIcon {...order} column={colonne} />
+                {handleOrder && (<OrderIcon {...order} column={colonne} />)}
                 {DEMANDES_COLUMNS_OPTIONAL[colonne]}
               </Box>
             </Tooltip>
@@ -119,6 +121,7 @@ const ConditionalTh = chakra(
 );
 
 export const HeadLineContent = ({
+  campagne,
   handleOrder,
   order,
   canCheckDemandes,
@@ -129,6 +132,7 @@ export const HeadLineContent = ({
   setStickyColonnes,
   getCellBgColor
 } : {
+  campagne?: CampagneType;
   handleOrder: (column: Order["orderBy"]) => void;
   order: Partial<Order>;
   canCheckDemandes: boolean;
@@ -138,37 +142,36 @@ export const HeadLineContent = ({
   stickyColonnes: DEMANDES_COLUMNS_KEYS[];
   setStickyColonnes: React.Dispatch<React.SetStateAction<DEMANDES_COLUMNS_KEYS[]>>;
   getCellBgColor: (column: keyof typeof DEMANDES_COLUMNS_OPTIONAL) => string;
-}) => {
-
-  return (
-    <Thead boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" top={0} position={"sticky"} zIndex={"docked"}>
-      <Tr bg={"white"}>
-        {canCheckDemandes && (
-          <Th textAlign={"center"}>
-            {checkedDemandes?.demandes.length &&
-              (
-                <Checkbox
-                  onChange={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setCheckedDemandes(undefined);
-                  }}
-                  borderRadius={4}
-                  borderColor={"bluefrance.113"}
-                  bgColor={"white"}
-                  _checked={{
-                    bgColor: "bluefrance.113",
-                  }}
-                  colorScheme="bluefrance"
-                  iconColor={"white"}
-                  isChecked={true}
-                />
-              )
-            }
-          </Th>
-        )}
+}) => (
+  <Thead boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" top={0} position={"sticky"} zIndex={"docked"}>
+    <Tr bg={"white"}>
+      {canCheckDemandes && (
+        <Th textAlign={"center"}>
+          {checkedDemandes?.demandes.length &&
+            (
+              <Checkbox
+                onChange={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setCheckedDemandes(undefined);
+                }}
+                borderRadius={4}
+                borderColor={"bluefrance.113"}
+                bgColor={"white"}
+                _checked={{
+                  bgColor: "bluefrance.113",
+                }}
+                colorScheme="bluefrance"
+                iconColor={"white"}
+                isChecked={true}
+              />
+            )
+          }
+        </Th>
+      )}
+      {isCampagneTerminee(campagne) && (
         <ConditionalTh
-          colonne={"updatedAt"}
+          colonne={"rapprochement"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           handleOrder={handleOrder}
@@ -176,116 +179,350 @@ export const HeadLineContent = ({
           stickyColonnes={stickyColonnes}
           setStickyColonnes={setStickyColonnes}
         />
-        <ConditionalTh
-          colonne={"libelleFormation"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          handleOrder={handleOrder}
-          order={order}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"libelleEtablissement"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          handleOrder={handleOrder}
-          order={order}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"libelleDepartement"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          handleOrder={handleOrder}
-          order={order}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"statut"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          handleOrder={handleOrder}
-          order={order}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"actions"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"typeDemande"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          handleOrder={handleOrder}
-          order={order}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"createdAt"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          handleOrder={handleOrder}
-          order={order}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"numero"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          handleOrder={handleOrder}
-          order={order}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"userName"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          handleOrder={handleOrder}
-          order={order}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"inspecteurReferent"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          handleOrder={handleOrder}
-          order={order}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"progression"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"avisPhaseEnCours"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-        <ConditionalTh
-          colonne={"derniersAvisPhaseEnCours"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-        />
-      </Tr>
-    </Thead>
-  );
-};
+      )}
+      <ConditionalTh
+        colonne={"updatedAt"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"cfd"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"libelleFormation"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"codeDispositif"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"libelleDispositif"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"libelleFCIL"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"uai"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"libelleEtablissement"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"codeRegion"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"libelleRegion"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"codeAcademie"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"libelleAcademie"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"codeDepartement"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"libelleDepartement"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"rentreeScolaire"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"statut"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"actions"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"typeDemande"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"createdAt"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"numero"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"userName"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"inspecteurReferent"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"motif"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"autreMotif"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"coloration"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"libelleColoration"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"amiCma"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"commentaire"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"capaciteScolaireActuelle"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+        isNumeric
+      />
+      <ConditionalTh
+        colonne={"capaciteScolaire"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+        isNumeric
+      />
+      <ConditionalTh
+        colonne={"capaciteScolaireColoreeActuelle"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+        isNumeric
+      />
+      <ConditionalTh
+        colonne={"capaciteScolaireColoree"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+        isNumeric
+      />
+      <ConditionalTh
+        colonne={"capaciteApprentissageActuelle"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+        isNumeric
+      />
+      <ConditionalTh
+        colonne={"capaciteApprentissage"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+        isNumeric
+      />
+      <ConditionalTh
+        colonne={"capaciteApprentissageColoreeActuelle"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+        isNumeric
+      />
+      <ConditionalTh
+        colonne={"capaciteApprentissageColoree"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+        isNumeric
+      />
+      <ConditionalTh
+        colonne={"progression"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"avisPhaseEnCours"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+      <ConditionalTh
+        colonne={"derniersAvisPhaseEnCours"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        setStickyColonnes={setStickyColonnes}
+      />
+    </Tr>
+  </Thead>
+);

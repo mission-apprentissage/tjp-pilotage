@@ -1,4 +1,4 @@
-import { Avatar, chakra,Checkbox, Flex, HStack, IconButton, Tag, Td, Text, Tooltip, useToast, useToken } from "@chakra-ui/react";
+import { Avatar, chakra, Checkbox, Flex, HStack, IconButton, Link,Tag, Td, Text, Tooltip, useToast, useToken } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
@@ -14,6 +14,7 @@ import type { UserType } from "shared/schema/userSchema";
 import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
+import { getLienRapprochement, RapprochementTag } from "@/app/(wrapped)/demandes/components/RapprochementTag";
 import { StatutTag } from "@/app/(wrapped)/demandes/components/StatutTag";
 import { AvisTags } from "@/app/(wrapped)/demandes/saisie/components/AvisTags";
 import { DeleteDemandeButton } from "@/app/(wrapped)/demandes/saisie/components/DeleteDemandeButton";
@@ -263,6 +264,40 @@ export const LineContent = ({
           </Tooltip>
         </Td>
       )}
+      {isCampagneTerminee(campagne) && (
+        <ConditionalTd
+          colonne={"rapprochement"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+        >
+          <Link
+            as={NextLink}
+            href={getLienRapprochement(
+              demande.rapprochement,
+              demande.uai,
+              demande.cfd,
+              demande.numero
+            )}
+            target="_blank"
+          >
+            <Tooltip label={demande.motifRapprochement}>
+              <Text
+                textOverflow={"ellipsis"}
+                overflow={"hidden"}
+                whiteSpace={"break-spaces"}
+                noOfLines={2}
+              >
+                {<RapprochementTag
+                  rapprochement={demande.rapprochement}
+                  motifRapprochement={demande.motifRapprochement}
+                />}
+              </Text>
+            </Tooltip>
+
+          </Link>
+        </ConditionalTd>
+      )}
       <ConditionalTd
         colonne={"updatedAt"}
         colonneFilters={colonneFilters}
@@ -275,6 +310,16 @@ export const LineContent = ({
             locale: fr,
           })}
         </Tooltip>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"cfd"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.cfd}
+        </Text>
       </ConditionalTd>
       <ConditionalTd
         colonne={"libelleFormation"}
@@ -294,6 +339,54 @@ export const LineContent = ({
         </Tooltip>
       </ConditionalTd>
       <ConditionalTd
+        colonne={"codeDispositif"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.codeDispositif}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"libelleDispositif"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          whiteSpace={"break-spaces"}
+        >
+          {demande.libelleDispositif}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"libelleFCIL"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          whiteSpace={"break-spaces"}
+        >
+          {demande.libelleFCIL}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"uai"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.uai}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
         colonne={"libelleEtablissement"}
         colonneFilters={colonneFilters}
         getCellBgColor={getCellBgColor}
@@ -309,6 +402,64 @@ export const LineContent = ({
             {demande.libelleEtablissement}
           </Text>
         </Tooltip>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"codeRegion"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.codeRegion}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"libelleRegion"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          whiteSpace={"break-spaces"}
+        >
+          {demande.libelleRegion}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"codeAcademie"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.codeAcademie}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"libelleAcademie"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          whiteSpace={"break-spaces"}
+        >
+          {demande.libelleAcademie}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"codeDepartement"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.codeDepartement}
+        </Text>
       </ConditionalTd>
       <ConditionalTd
         colonne={"libelleDepartement"}
@@ -331,6 +482,16 @@ export const LineContent = ({
           >
             {formatCodeDepartement(demande.codeDepartement)}
           </Tooltip>
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"rentreeScolaire"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.rentreeScolaire}
         </Text>
       </ConditionalTd>
       <ConditionalTd
@@ -400,44 +561,45 @@ export const LineContent = ({
             />
           </Tooltip>
           {isCampagneTerminee(campagne) &&
-        (demande.numeroDemandeImportee ? (
-          <Tooltip label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`} shouldWrapChildren>
-            <IconButton
-              as={NextLink}
-              href={linkSaisieImported}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                router.push(linkSaisieImported);
-              }}
-              aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
-              color={"bluefrance.113"}
-              bgColor={"transparent"}
-              icon={<Icon icon="ri:external-link-line" width={"24px"} color={bluefrance113} />}
-            />
-          </Tooltip>
-        ) : (
-          <Tooltip label={"Dupliquer la demande"} shouldWrapChildren>
-            <IconButton
-              onClick={(e) => {
-                if(isImportDisabled) return;
-                setIsImporting(true);
-                e.preventDefault();
-                e.stopPropagation();
-                importDemande({
-                  params: {
-                    numero: demande.numero,
-                  },
-                });
-              }}
-              isDisabled={isImportDisabled}
-              aria-label="Dupliquer la demande"
-              color={"bluefrance.113"}
-              bgColor={"transparent"}
-              icon={<Icon icon="ri:file-copy-line" width={"24px"} color={bluefrance113} />}
-            />
-          </Tooltip>
-        ))}
+            (demande.numeroDemandeImportee ? (
+              <Tooltip label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`} shouldWrapChildren>
+                <IconButton
+                  as={NextLink}
+                  href={linkSaisieImported}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    router.push(linkSaisieImported);
+                  }}
+                  aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
+                  color={"bluefrance.113"}
+                  bgColor={"transparent"}
+                  icon={<Icon icon="ri:external-link-line" width={"24px"} color={bluefrance113} />}
+                />
+              </Tooltip>
+            ) : (
+              <Tooltip label={"Dupliquer la demande"} shouldWrapChildren>
+                <IconButton
+                  onClick={(e) => {
+                    if(isImportDisabled) return;
+                    setIsImporting(true);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    importDemande({
+                      params: {
+                        numero: demande.numero,
+                      },
+                    });
+                  }}
+                  isDisabled={isImportDisabled}
+                  aria-label="Dupliquer la demande"
+                  color={"bluefrance.113"}
+                  bgColor={"transparent"}
+                  icon={<Icon icon="ri:file-copy-line" width={"24px"} color={bluefrance113} />}
+                />
+              </Tooltip>
+            ))
+          }
         </Flex>
       </ConditionalTd>
       <ConditionalTd
@@ -502,9 +664,175 @@ export const LineContent = ({
         getCellBgColor={getCellBgColor}
         stickyColonnes={stickyColonnes}
       >
-        <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"}>
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          whiteSpace={"break-spaces"}
+        >
           {demande.inspecteurReferent}
         </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"motif"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          whiteSpace={"break-spaces"}
+        >
+          {demande.motif}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"autreMotif"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          whiteSpace={"break-spaces"}
+        >
+          {demande.autreMotif}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"coloration"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.coloration}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"libelleColoration"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text
+          textAlign={"center"}
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          whiteSpace={"break-spaces"}
+        >
+          {demande.libelleColoration1}
+          {demande.libelleColoration2 ? ` / ${demande.libelleColoration2}` : ""}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"amiCma"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.amiCma ? "Oui" : "Non"}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"amiCma"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Text textAlign={"center"}>
+          {demande.amiCma ? "Oui" : "Non"}
+        </Text>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"commentaire"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+      >
+        <Tooltip label={demande.commentaire}>
+          <Text
+            textOverflow={"ellipsis"}
+            overflow={"hidden"}
+            whiteSpace={"break-spaces"}
+          >
+            {demande.commentaire}
+          </Text>
+        </Tooltip>
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"capaciteScolaireActuelle"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        isNumeric
+      >
+        {demande.capaciteScolaireActuelle}
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"capaciteScolaire"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        isNumeric
+      >
+        {demande.capaciteScolaire}
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"capaciteScolaireColoreeActuelle"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        isNumeric
+      >
+        {demande.capaciteScolaireColoreeActuelle}
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"capaciteScolaireColoree"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        isNumeric
+      >
+        {demande.capaciteScolaireColoree}
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"capaciteApprentissageActuelle"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        isNumeric
+      >
+        {demande.capaciteApprentissageActuelle}
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"capaciteApprentissage"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        isNumeric
+      >
+        {demande.capaciteApprentissage}
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"capaciteApprentissageColoreeActuelle"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        isNumeric
+      >
+        {demande.capaciteApprentissageColoreeActuelle}
+      </ConditionalTd>
+      <ConditionalTd
+        colonne={"capaciteApprentissageColoree"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        stickyColonnes={stickyColonnes}
+        isNumeric
+      >
+        {demande.capaciteApprentissageColoree}
       </ConditionalTd>
       <ConditionalTd
         colonne={"statut"}
