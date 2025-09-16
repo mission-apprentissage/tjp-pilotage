@@ -201,7 +201,6 @@ export const Nav = () => {
   const { uais } = useContext(UaisContext);
   const segment = useSelectedLayoutSegments().join("/");
 
-  console.log(segment);
 
   const hasAdminMenu =
     hasPermission(role, PermissionEnum["users/lecture"]) || hasPermission(role, PermissionEnum["campagnes/lecture"]);
