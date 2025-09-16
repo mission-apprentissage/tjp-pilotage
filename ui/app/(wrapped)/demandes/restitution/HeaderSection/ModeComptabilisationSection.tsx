@@ -61,8 +61,6 @@ export const ModeComptabilisationSection = ({
           </Flex>
         </Radio>
       </RadioGroup>
-
     </Flex>
-
   );
 };
