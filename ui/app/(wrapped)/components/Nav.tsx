@@ -29,6 +29,7 @@ const DOCUMENTATION_LINKS = {
   ["panorama/departement"]: "/documentation/co/000_-_Panorama_Region_-_Departement.html",
   ["panorama/etablissement"]: "/documentation/co/000_-_Panorama_Etablissement.html",
   ["panorama/domaine-de-formation"]: "/documentation/co/000_-_Panorama_Domaine_de_formation.html",
+  ["panorama/lien-metier-formation"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
   ["panorama/lien-metier-formation/metier"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
   ["panorama/lien-metier-formation/formation"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
   // Console
