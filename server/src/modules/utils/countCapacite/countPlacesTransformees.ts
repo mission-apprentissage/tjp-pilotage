@@ -323,7 +323,7 @@ export const getTauxTransformation = ({
   effectifAlias: string;
   campagne: string;
 }) => {
-  if(campagne === "2023") return sql<number>`
+  if (campagne === "2023") return sql<number>`
     ${sql.table(demandeAlias)}.placesTransformeesCampagne2023::INTEGER /
     ${sql.table(effectifAlias)}.effectif::INTEGER
   `;
