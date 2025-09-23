@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import fs from "fs";
-import { inject } from "injecti";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";
 
 import { localFilePathManager } from "@/modules/core/services/filePathManager/localFilePathManager";
@@ -15,6 +14,7 @@ import { findFormationsHistoriques } from "@/modules/import/usecases/importIJDat
 import { fetchIJ } from "@/modules/import/usecases/importIJData/steps/fetchIJ/fetchIJ.step";
 import { fetchIjReg } from "@/modules/import/usecases/importIJData/steps/fetchIjReg/fetchIjReg.step";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { appendIJUaiDataFile, createIJUaiDataFile, loadIdsFromFile } from "./utils";
 

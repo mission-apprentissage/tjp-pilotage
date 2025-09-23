@@ -1,11 +1,11 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import fs from "fs";
-import { inject } from "injecti";
 import { MILLESIMES_IJ_REG } from "shared";
 
 import { localFilePathManager } from "@/modules/core/services/filePathManager/localFilePathManager";
 import { regionAcademiqueMapping } from "@/modules/import/domain/regionAcademiqueMapping";
 import { getRegionData } from "@/modules/import/services/inserJeunesApi/inserJeunes.api";
+import { inject } from "@/utils/inject";
 
 import { appendIJRegionDataFile, createIJRegionDataFile, loadIdsFromFile } from "./utils";
 
