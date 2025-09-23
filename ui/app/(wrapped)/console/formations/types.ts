@@ -1,5 +1,7 @@
 import type { client } from "@/api.client";
 
+import type { FORMATION_COLUMNS } from "./FORMATION_COLUMNS";
+
 export type Query = (typeof client.inferArgs)["[GET]/formations"]["query"];
 
 export type Filters = Omit<Query, "order" | "orderBy" | "offset" | "limit">;
@@ -9,7 +11,7 @@ export type Order = Pick<Query, "order" | "orderBy">;
 export type Formations = (typeof client.infer)["[GET]/formations"];
 export type FiltersList = Formations["filters"];
 
-export type Line = (typeof client.infer)["[GET]/formations"]["formations"][number];
+export type Formation = (typeof client.infer)["[GET]/formations"]["formations"][number];
 
 export type LineId = {
   codeDispositif?: string;
@@ -24,3 +26,12 @@ export type RequetesSuggerees = Array<{
   active?: boolean;
   conditions: Array<keyof Partial<Filters>>;
 }>;
+
+export type FORMATION_COLUMNS_KEYS = keyof typeof FORMATION_COLUMNS;
+
+export enum DisplayTypeEnum {
+  synthese = "synthese",
+  evolutionDesTaux = "evolutionDesTaux",
+}
+
+

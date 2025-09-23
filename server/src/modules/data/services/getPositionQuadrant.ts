@@ -1,5 +1,7 @@
+import type {OrderType} from 'shared/enum/orderEnum';
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
-import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
+import { TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
 
 export const UNDEFINED_QUADRANT = "-";
@@ -8,7 +10,7 @@ export const getPositionQuadrant = (
   formation: {
     tauxInsertion?: number;
     tauxPoursuite?: number;
-    typeFamille?: string;
+    typeFamille?: TypeFamille;
   },
   moyenne?: {
     tauxInsertion?: number;
@@ -49,7 +51,7 @@ export const filterPositionQuadrant = (formations: { positionQuadrant: string }[
 
 export const orderPositionQuadrant = (
   formations: { positionQuadrant: string }[],
-  orderBy?: { column: string; order: "asc" | "desc" }
+  orderBy?: { column: string; order: OrderType }
 ) => {
   if (orderBy && orderBy.column === "positionQuadrant")
     return formations.sort((a, b) =>
@@ -63,7 +65,7 @@ export const orderPositionQuadrant = (
 export const filterOrderPositionQuadrant = (
   formations: { positionQuadrant: string }[],
   positionQuadrantFilter?: string,
-  orderBy?: { column: string; order: "asc" | "desc" }
+  orderBy?: { column: string; order: OrderType }
 ) => {
   return orderPositionQuadrant(filterPositionQuadrant(formations, positionQuadrantFilter), orderBy);
 };

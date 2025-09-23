@@ -1,14 +1,17 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
+import { inject } from "@/utils/inject";
 
 import { searchEtablissementQuery } from "./searchEtablissement.query";
 
 export const [searchEtablissement] = inject(
   { searchEtablissementQuery },
   (deps) =>
-    async ({ search, filtered, user }: { search: string; filtered?: boolean; user?: { codeRegion?: string } }) => {
+    async (
+      { search, isFormulaire, filtered, user }:
+      { search: string; isFormulaire?: boolean; filtered?: boolean; user?: { codeRegion?: string } }
+    ) => {
       const etablissements = await deps.searchEtablissementQuery({
         search,
+        isFormulaire,
         filtered,
         codeRegion: user?.codeRegion,
       });

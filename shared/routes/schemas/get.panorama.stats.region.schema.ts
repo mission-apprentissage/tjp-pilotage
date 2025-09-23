@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { OrderZodType } from "../../enum/orderEnum";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
@@ -39,21 +40,17 @@ const FormationSchema = z.object({
     .optional(),
 });
 
-const TopFlopSchema = FormationSchema.extend({
-  tauxInsertion: z.coerce.number().optional(),
-});
 
 export const getDataForPanoramaRegionSchema = {
   querystring: z.object({
     codeRegion: z.string(),
     codeNiveauDiplome: z.array(z.string()).optional(),
     codeNsf: z.array(z.string()).optional(),
-    order: z.enum(["asc", "desc"]).optional(),
+    order: OrderZodType.optional(),
     orderBy: FormationSchema.keyof().optional(),
   }),
   response: {
     200: z.object({
-      topFlops: z.array(TopFlopSchema),
       formations: z.array(FormationSchema),
       filters: z.object({
         diplomes: z.array(OptionSchema),

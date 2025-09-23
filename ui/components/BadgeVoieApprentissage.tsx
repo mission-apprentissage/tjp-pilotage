@@ -1,23 +1,32 @@
-import { Badge } from "@chakra-ui/react";
-import type { Voie } from "shared";
+import type { BadgeProps} from '@chakra-ui/react';
+import {Badge, chakra} from '@chakra-ui/react';
+import type { VoieType } from "shared";
+import { VoieEnum  } from "shared";
 
-export const BadgeVoieApprentissage = ({
+export const BadgeVoieApprentissage = chakra(({
   voie,
   labelSize = "short",
-  size = "xs",
+  size,
+  ...props
 }: {
-  voie?: Voie;
+  voie?: VoieType;
   labelSize?: "short" | "long";
-  size?: "xs" | "sm" | "md";
+  size?: "xs" | "sm" | "md" | "lg";
+  props?: BadgeProps
 }) => {
-  if (!voie || voie !== "apprentissage") {
+  if (!voie || voie !== VoieEnum.apprentissage) {
     return null;
   }
 
   return (
-    <Badge variant={"new"} size={size}>
+    <Badge
+      my={"auto"}
+      variant={"new"}
+      size={size}
+      {...props}
+    >
       {labelSize === "short" && "Appr"}
       {labelSize === "long" && "Apprentissage"}
     </Badge>
   );
-};
+});

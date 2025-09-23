@@ -1,61 +1,137 @@
-import {Box, chakra, Text, Th, Thead, Tooltip, Tr, VisuallyHidden} from '@chakra-ui/react';
+import { Box, chakra, IconButton, Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
-import type { CSSProperties } from "react";
+import type {CSSProperties} from "react";
+import { CURRENT_IJ_MILLESIME } from "shared";
+import type { UserType } from "shared/schema/userSchema";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
-import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Filters, Order } from "@/app/(wrapped)/console/etablissements/types";
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
+import { TooltipDefinitionEffectifEnEntree } from "@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree";
+import { TooltipDefinitionFormationSpecifique } from "@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique";
+import { TooltipDefinitionNombreEleves } from "@/app/(wrapped)/components/definitions/DefinitionNombreEleves";
+import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
+import { TooltipDefinitionTauxDeDemande } from "@/app/(wrapped)/components/definitions/DefinitionTauxDeDemande";
+import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
+import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage";
+import { TooltipDefinitionValeurAjoutee } from "@/app/(wrapped)/components/definitions/DefinitionValeurAjoutee";
+import { FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
+import type {Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Order} from "@/app/(wrapped)/console/etablissements/types";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TauxPressionScale } from "@/components/TauxPressionScale";
-import { TooltipIcon } from "@/components/TooltipIcon";
+
+import { COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
+import { getLeftOffset, isColonneSticky  } from "./utils";
 
 const ConditionalTh = chakra(
   ({
     className,
-    children,
     style,
     colonneFilters,
     colonne,
+    stickyColonnes,
+    setStickyColonnes,
     getCellBgColor,
-    onClick,
+    handleOrder,
+    order,
     isNumeric = false,
+    icon
   }: {
     className?: string;
     style?: CSSProperties;
-    children: React.ReactNode;
-    colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    colonne: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS;
-    getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
-    onClick?: (column: Order["orderBy"]) => void;
+    colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+    colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
+    stickyColonnes: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+    setStickyColonnes: React.Dispatch<React.SetStateAction<FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]>>;
+    getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
+    handleOrder?: (column: Order["orderBy"]) => void;
+    order?: Partial<Order>;
     isNumeric?: boolean;
+    icon?: React.ReactNode;
   }) => {
+    const isSticky = isColonneSticky({ colonne, stickyColonnes });
+
     if (colonneFilters.includes(colonne))
       return (
         <Th
-          maxW={300}
           p={2}
           className={className}
           style={style}
           isNumeric={isNumeric}
-          cursor={onClick ? "pointer" : "default"}
-          onClick={() => onClick && onClick(colonne as Order["orderBy"])}
+          cursor={handleOrder ? "pointer" : "default"}
+          onClick={() => handleOrder && handleOrder(colonne as Order["orderBy"])}
           bgColor={getCellBgColor(colonne)}
+          w={COLUMNS_WIDTH[colonne as keyof typeof COLUMNS_WIDTH]}
+          minW={COLUMNS_WIDTH[colonne as keyof typeof COLUMNS_WIDTH]}
+          maxW={COLUMNS_WIDTH[colonne as keyof typeof COLUMNS_WIDTH]}
+          left={getLeftOffset({ colonne, stickyColonnes, colonneFilters })}
+          zIndex={isSticky ? 2 : undefined}
+          boxShadow={{
+            lg: "none",
+            xl: "inset -1px 0px 0px 0px #f6f6f6",
+          }}
+          position={{
+            lg: "static",
+            xl: isSticky ? "sticky" : "static",
+          }}
         >
-          <Tooltip label={FORMATION_ETABLISSEMENT_COLUMNS[colonne]} placement="top">
-            <Box
-              fontSize={12}
-              fontWeight={700}
-              lineHeight={"20px"}
-              textTransform={"uppercase"}
-              textOverflow={"ellipsis"}
-              alignSelf={"stretch"}
-              isTruncated
-              whiteSpace="nowrap"
+          <Box sx={{
+            display: "flex",
+            alignItems: "center",
+          }}>
+            <Tooltip
+              label={FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne]}
+              placement="top"
             >
-              {children}
-            </Box>
-          </Tooltip>
+              <Box
+                fontSize={12}
+                fontWeight={700}
+                lineHeight={"20px"}
+                textTransform={"uppercase"}
+                textOverflow={"ellipsis"}
+                alignSelf={"stretch"}
+                isTruncated
+                whiteSpace="nowrap"
+              >
+                {handleOrder && (<OrderIcon {...order} column={colonne} />)}
+                {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne]}
+              </Box>
+            </Tooltip>
+            {icon}
+            <Tooltip
+              label={`${isSticky ? "Libérer" : "Figer"} la colonne ${FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne].toLocaleLowerCase()}`}
+              placement="top"
+            >
+              <IconButton
+                aria-label={`Figer la colonne ${FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne].toLocaleLowerCase()}`}
+                icon={
+                  isSticky ?
+                    <Icon icon={"ri:lock-line"} /> :
+                    <Icon icon={"ri:lock-unlock-line"} />
+                }
+                ms={"auto"}
+                size="xs"
+                variant="ghost"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setStickyColonnes((prev) => {
+                    if (prev.includes(colonne)) {
+                      return prev.filter((c) => c !== colonne) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+                    }
+                    return ([...prev, colonne] as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]).sort((a, b) =>
+                      (
+                        Object.keys(COLUMNS_WIDTH).indexOf(a) -
+                          Object.keys(COLUMNS_WIDTH).indexOf(b)
+                      )
+                    );
+                  });
+                }}
+              />
+            </Tooltip>
+          </Box>
         </Th>
       );
     return null;
@@ -65,10 +141,12 @@ const ConditionalTh = chakra(
 export const HeadLineContent = ({
   order,
   setSearchParams,
-  isFirstColumnSticky,
-  isSecondColumnSticky,
+  stickyColonnes,
+  setStickyColonnes,
   colonneFilters,
   getCellBgColor,
+  user,
+  filters
 }: {
   order: Partial<Order>;
   setSearchParams: (params: {
@@ -77,12 +155,13 @@ export const HeadLineContent = ({
     order?: Partial<Order>;
     page?: number;
   }) => void;
-  isFirstColumnSticky?: boolean;
-  isSecondColumnSticky?: boolean;
-  colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-  getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+  stickyColonnes: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+  setStickyColonnes: React.Dispatch<React.SetStateAction<FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]>>;
+  colonneFilters: (FORMATION_ETABLISSEMENT_COLUMNS_KEYS)[];
+  getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
+  user?: UserType;
+  filters?: Partial<Filters>;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   const trackEvent = usePlausible();
 
   const handleOrder = (column: Order["orderBy"]) => {
@@ -98,482 +177,531 @@ export const HeadLineContent = ({
       },
     });
   };
+
   return (
-    <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={"docked"}>
+    <Thead boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" top={0} position={"sticky"} zIndex={"docked"}>
       <Tr bg={"white"}>
-        <Th>
-          <VisuallyHidden>Historique</VisuallyHidden>
-        </Th>
-        <ConditionalTh colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} colonne="rentreeScolaire">
-          {FORMATION_ETABLISSEMENT_COLUMNS.rentreeScolaire}
-        </ConditionalTh>
         <ConditionalTh
+          colonne="rentreeScolaire"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="libelleEtablissement"
-          cursor="pointer"
-          onClick={handleOrder}
-          minW={ETABLISSEMENT_COLUMN_WIDTH}
-          maxW={ETABLISSEMENT_COLUMN_WIDTH}
-          left={0}
-          zIndex={1}
-          position={{ lg: "relative", xl: "sticky" }}
-          boxShadow={{
-            lg: "none",
-            xl: isFirstColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
-          }}
-        >
-          <OrderIcon {...order} column="libelleEtablissement" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.libelleEtablissement}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="commune"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="commune" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.commune}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="libelleDepartement"
-          cursor="pointer"
-        >
-          <OrderIcon {...order} column="libelleDepartement" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.libelleDepartement}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
+          colonne="libelleAcademie"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
+          colonne="libelleRegion"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="secteur"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="secteur" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.secteur}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="uai"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="uai" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.uai}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="libelleDispositif"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="libelleDispositif" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.libelleDispositif}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="libelleFormation"
-          cursor="pointer"
-          onClick={handleOrder}
-          minW={450}
-          zIndex={1}
-          position={{ lg: "relative", xl: "sticky" }}
-          left={{ lg: "unset", xl: 300 - 1 }}
-          boxShadow={{
-            lg: "none",
-            xl: isSecondColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
-          }}
-        >
-          <OrderIcon {...order} column="libelleFormation" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.libelleFormation}
-        </ConditionalTh>
-        <ConditionalTh colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-          {FORMATION_ETABLISSEMENT_COLUMNS.formationSpecifique}
-          <TooltipIcon
-            ml="1"
-            label="Cliquez pour plus d'infos."
-            onClick={() => openGlossaire("formation-specifique")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
+          colonne={"formationSpecifique"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionFormationSpecifique /> }
+        />
+        <ConditionalTh
           colonne="libelleNiveauDiplome"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="libelleNiveauDiplome" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.libelleNiveauDiplome}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="libelleFamille"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="libelleFamille" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.libelleFamille}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="cfd"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="cfd" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.cfd}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="cpc"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="cpc" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.cpc}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="cpcSecteur"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="cpcSecteur" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.cpcSecteur}
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="libelleNsf"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="libelleNsf" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.libelleNsf}
-          <TooltipIcon
-            ml="1"
-            label="Cliquez pour plus d'infos."
-            onClick={() => openGlossaire("domaine-de-formation-nsf")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          colonne="effectif1"
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionDomaineDeFormation />}
+        />
+        {user && (
+          <>
+            <ConditionalTh
+              colonne="numero"
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              handleOrder={handleOrder}
+              order={order}
+              stickyColonnes={stickyColonnes}
+              setStickyColonnes={setStickyColonnes}
+            />
+            <ConditionalTh
+              colonne="dateEffetTransformation"
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              handleOrder={handleOrder}
+              order={order}
+              stickyColonnes={stickyColonnes}
+              setStickyColonnes={setStickyColonnes}
+            />
+            <ConditionalTh
+              colonne="typeDemande"
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              handleOrder={handleOrder}
+              order={order}
+              stickyColonnes={stickyColonnes}
+              setStickyColonnes={setStickyColonnes}
+            />
+            <ConditionalTh
+              colonne="previsionnel"
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              stickyColonnes={stickyColonnes}
+              setStickyColonnes={setStickyColonnes}
+            />
+          </>
+        )}
+        <ConditionalTh
+          colonne={"effectif1"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionNombreEleves /> }
           isNumeric
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="effectif1" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.effectif1}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Nb d'élèves.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("nombre-deleves")}
-          />
-        </ConditionalTh>
+        />
         <ConditionalTh
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
           colonne="effectif2"
-          isNumeric
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="effectif2" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.effectif2}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Nb d'élèves.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("nombre-deleves")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionNombreEleves /> }
+          isNumeric
+        />
+        <ConditionalTh
           colonne="effectif3"
-          isNumeric
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="effectif3" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.effectif3}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Nb d'élèves.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("nombre-deleves")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionNombreEleves /> }
+          isNumeric
+        />
+        <ConditionalTh
           colonne="effectifEntree"
-          cursor="pointer"
-          onClick={handleOrder}
-          width={"fit-content"}
-        >
-          <OrderIcon {...order} column="effectifEntree" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Effectifs en entrée en première année de formation.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("effectif-en-entree")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          colonne="capacite"
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionEffectifEnEntree /> }
           isNumeric
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="capacite" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.capacite}
-        </ConditionalTh>
+        />
+        <ConditionalTh
+          colonne={"evolutionEffectif"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
+          colonne="capacite"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          isNumeric
+        />
+        <ConditionalTh
+          colonne="evolutionCapacite"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
+          colonne="tauxPression"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionTauxDePression rentreeScolaire={filters?.rentreeScolaire?.[0]} />}
+        />
+        <ConditionalTh
+          colonne={"evolutionTauxPression"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
         <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          colonne="tauxPression"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="tauxPression" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxPression}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>
-                  Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.
-                </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-                <TauxPressionScale />
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-de-pression")}
-          />
-        </ConditionalTh>
+          colonne="tauxDemande"
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionTauxDeDemande rentreeScolaire={filters?.rentreeScolaire?.[0]} /> }
+        />
+        <ConditionalTh
+          colonne={"evolutionTauxDemande"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
         <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           colonne="tauxRemplissage"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="tauxRemplissage" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxRemplissage}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-de-remplissage")}
-          />
-        </ConditionalTh>
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionTauxRemplissage rentreeScolaire={filters?.rentreeScolaire?.[0]} /> }
+        />
         <ConditionalTh
+          colonne={"evolutionTauxRemplissage"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="positionQuadrant"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="positionQuadrant" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.positionQuadrant}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>
-                  Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux
-                  d'emploi et de poursuite d'études appliquées au niveau de diplôme.
-                </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("quadrant")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          colonne="tauxInsertion"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="tauxInsertion" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxInsertion}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-emploi-6-mois")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionPositionQuadrant
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
+        {/* <ConditionalTh
+          colonne="evolutionPositionQuadrant"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          colonne="tauxPoursuite"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="tauxPoursuite" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuite}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-poursuite-etudes")}
-          />
-        </ConditionalTh>
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        /> */}
         <ConditionalTh
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
           colonne="tauxDevenirFavorable"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="tauxDevenirFavorable" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorable}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>
-                  (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                  dernière année de formation.
-                </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-de-devenir-favorable")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          colonne="tauxInsertionEtablissement"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="tauxInsertionEtablissement" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxInsertionEtablissement}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-de-devenir-favorable")}
-          />
-        </ConditionalTh>
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxDevenirFavorable
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
         <ConditionalTh
+          colonne={"evolutionTauxDevenirFavorable"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          colonne="tauxPoursuiteEtablissement"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="tauxPoursuiteEtablissement" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuiteEtablissement}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-poursuite-etudes")}
-          />
-        </ConditionalTh>
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
         <ConditionalTh
+          colonne="tauxInsertion"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxEmploi6Mois
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
+        <ConditionalTh
+          colonne={"evolutionTauxInsertion"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
+          colonne="tauxPoursuite"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxPoursuiteEtudes
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
+        <ConditionalTh
+          colonne={"evolutionTauxPoursuite"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+        />
+        <ConditionalTh
           colonne="tauxDevenirFavorableEtablissement"
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="tauxDevenirFavorableEtablissement" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorableEtablissement}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-de-devenir-favorable")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxDevenirFavorable
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
+        <ConditionalTh
+          colonne={"evolutionTauxDevenirFavorable"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxDevenirFavorable
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
+        <ConditionalTh
+          colonne="tauxInsertionEtablissement"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxEmploi6Mois
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
+        <ConditionalTh
+          colonne={"evolutionTauxInsertionEtablissement"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxEmploi6Mois
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
+        <ConditionalTh
+          colonne="tauxPoursuiteEtablissement"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxPoursuiteEtudes
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
+        <ConditionalTh
+          colonne={"evolutionTauxPoursuiteEtablissement"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={
+            <TooltipDefinitionTauxPoursuiteEtudes
+              millesime={
+                filters?.rentreeScolaire ?
+                  getMillesimeFromRentreeScolaire({rentreeScolaire: filters?.rentreeScolaire[0], offset: 0}) :
+                  CURRENT_IJ_MILLESIME
+              }
+            />
+          }
+        />
+        <ConditionalTh
           colonne="valeurAjoutee"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          handleOrder={handleOrder}
+          order={order}
+          stickyColonnes={stickyColonnes}
+          setStickyColonnes={setStickyColonnes}
+          icon={<TooltipDefinitionValeurAjoutee />}
           isNumeric
-          cursor="pointer"
-          onClick={handleOrder}
-        >
-          <OrderIcon {...order} column="valeurAjoutee" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.valeurAjoutee}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>
-                  Capacité de l'établissement à insérer, en prenant en compte le profil social des élèves et le taux de
-                  chômage de la zone d'emploi, comparativement au taux de référence d’établissements similaires.
-                </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("valeur-ajoutee")}
-          />
-        </ConditionalTh>
+        />
       </Tr>
     </Thead>
   );

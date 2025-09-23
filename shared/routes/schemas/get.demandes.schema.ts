@@ -2,13 +2,22 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
-import { CampagneSchema } from "../../schema/campagneSchema";
+import {OrderZodType} from '../../enum/orderEnum';
+import { CampagneSchema } from '../../schema/campagneSchema';
 import { OptionSchema } from "../../schema/optionSchema";
 
 const UserSchema = z.object({
   fullname: z.string().optional(),
   id: z.string().optional(),
   role: z.string().optional(),
+});
+
+const AvisSchema = z.object({
+  id: z.string().optional(),
+  statut: z.string().optional(),
+  commentaire: z.string().optional(),
+  type: z.string().optional(),
+  fonction: z.string().optional(),
 });
 
 const DemandeItem = z.object({
@@ -22,16 +31,17 @@ const DemandeItem = z.object({
   codeRegion: z.string(),
   libelleRegion: z.string().optional(),
   libelleDispositif: z.string().optional(),
-  uai: z.string().optional(),
-  cfd: z.string().optional(),
-  codeDispositif: z.string().optional(),
+  uai: z.string(),
+  cfd: z.string(),
+  codeDispositif: z.string(),
   libelleFCIL: z.string().optional(),
   // Type de demande
   rentreeScolaire: z.coerce.number().optional(),
   typeDemande: DemandeTypeZodType,
-  coloration: z.boolean().optional(),
-  libelleColoration: z.string().optional(),
-  // Capacités
+  coloration: z.boolean(),
+  libelleColoration1: z.string().optional(),
+  libelleColoration2: z.string().optional(),
+  // Capacité
   mixte: z.boolean().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),
   capaciteScolaire: z.coerce.number().optional(),
@@ -41,20 +51,21 @@ const DemandeItem = z.object({
   capaciteApprentissage: z.coerce.number().optional(),
   capaciteApprentissageColoreeActuelle: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
-  // Compensation
-  compensationCfd: z.string().optional(),
-  compensationCodeDispositif: z.string().optional(),
-  compensationUai: z.string().optional(),
-  compensationRentreeScolaire: z.coerce.number().optional(),
   // Précisions
-  motif: z.array(z.string()).optional(),
+  motif: z.array(z.string()),
   autreMotif: z.string().optional(),
   amiCma: z.boolean().optional(),
   amiCmaValide: z.boolean().optional(),
   amiCmaValideAnnee: z.string().optional(),
   amiCmaEnCoursValidation: z.boolean().optional(),
-  poursuitePedagogique: z.boolean().optional(),
-  // RH
+  partenairesEconomiquesImpliques: z.boolean().optional(),
+  partenaireEconomique1: z.string().optional(),
+  partenaireEconomique2: z.string().optional(),
+  cmqImplique: z.boolean().optional(),
+  filiereCmq: z.string().optional(),
+  nomCmq: z.string().optional(),
+  inspecteurReferent: z.string().optional(),
+  //RH
   recrutementRH: z.boolean().optional(),
   nbRecrutementRH: z.coerce.number().optional(),
   discipline1RecrutementRH: z.string().optional(),
@@ -71,10 +82,28 @@ const DemandeItem = z.object({
   nbFormationRH: z.coerce.number().optional(),
   discipline1FormationRH: z.string().optional(),
   discipline2FormationRH: z.string().optional(),
+  besoinRHPrecisions: z.string().optional(),
+  // Travaux et équipements
+  travauxAmenagement: z.boolean().optional(),
+  travauxAmenagementCout: z.coerce.number().optional(),
+  travauxAmenagementDescription: z.string().optional(),
+  achatEquipement: z.boolean().optional(),
+  achatEquipementCout: z.coerce.number().optional(),
+  achatEquipementDescription: z.string().optional(),
+  // Internat et restauration
+  augmentationCapaciteAccueilHebergement: z.boolean().optional(),
+  augmentationCapaciteAccueilHebergementPlaces: z.coerce.number().optional(),
+  augmentationCapaciteAccueilHebergementPrecisions: z.string().optional(),
+  augmentationCapaciteAccueilRestauration: z.boolean().optional(),
+  augmentationCapaciteAccueilRestaurationPlaces: z.coerce.number().optional(),
+  augmentationCapaciteAccueilRestaurationPrecisions: z.string().optional(),
   // Observations / commentaires
   commentaire: z.string().optional(),
   // Statut
   statut: DemandeStatutZodType.exclude(["supprimée"]),
+  motifRefus: z.array(z.string()).optional(),
+  autreMotifRefus: z.string().optional(),
+  lastChangementStatutCommentaire: z.string().optional(),
   // Autre
   numero: z.string(),
   campagneId: z.string(),
@@ -88,20 +117,31 @@ const DemandeItem = z.object({
   canEdit: z.boolean(),
   correction: z.string().optional(),
   alreadyAccessed: z.boolean(),
-  isIntention: z.boolean(),
+  avis: z.array(AvisSchema),
+  isOldDemande: z.boolean(),
+  // Lien avec le constat de rentrée
+  rapprochement: z.string(),
+  motifRapprochement: z.string(),
 });
 
 export const FiltersSchema = z.object({
   statut: z.union([DemandeStatutZodType.exclude(["supprimée"]), z.literal("suivies")]).optional(),
-  search: z.string().optional(),
   suivies: z.coerce.boolean().optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  search: z.string().optional(),
+  order: OrderZodType.optional(),
   orderBy: DemandeItem.keyof().optional(),
   offset: z.coerce.number().optional(),
   limit: z.coerce.number().optional(),
   campagne: z.string().optional(),
   codeAcademie: z.array(z.string()).optional(),
+  codeDepartement: z.array(z.string()).optional(),
+  commune: z.array(z.string()).optional(),
+  uai: z.array(z.string()).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
+  codeNsf: z.array(z.string()).optional(),
+  cfd: z.array(z.string()).optional(),
+  nomCmq: z.array(z.string()).optional(),
+  filiereCmq: z.array(z.string()).optional(),
 });
 
 export const getDemandesSchema = {
@@ -113,8 +153,15 @@ export const getDemandesSchema = {
       campagne: CampagneSchema,
       filters: z.object({
         academies: z.array(OptionSchema),
+        departements: z.array(OptionSchema),
+        communes: z.array(OptionSchema),
+        etablissements: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
         campagnes: z.array(CampagneSchema),
+        domaines: z.array(OptionSchema),
+        formations: z.array(OptionSchema),
+        nomsCmq: z.array(OptionSchema),
+        filieresCmq: z.array(OptionSchema),
       }),
     }),
   },

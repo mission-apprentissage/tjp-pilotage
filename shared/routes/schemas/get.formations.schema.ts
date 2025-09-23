@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import {OrderZodType} from '../../enum/orderEnum';
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
+import { TypeFamilleZodType } from "../../enum/typeFamilleEnum";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
@@ -23,9 +25,32 @@ export const FormationLineSchema = z.object({
   effectif3: z.coerce.number().optional(),
   tauxRemplissage: z.coerce.number().optional(),
   tauxPression: z.coerce.number().optional(),
+  tauxDemande: z.coerce.number().optional(),
   tauxInsertion: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
   tauxDevenirFavorable: z.coerce.number().optional(),
+  evolutionTauxSortie: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      tauxInsertion: z.coerce.number().optional(),
+      tauxPoursuite: z.coerce.number().optional(),
+      tauxDevenirFavorable: z.coerce.number().optional(),
+    })
+  ),
+  evolutionTauxEntree: z.array(
+    z.object({
+      rentreeScolaire: z.string(),
+      tauxDemande: z.coerce.number().optional(),
+      tauxPression: z.coerce.number().optional(),
+      tauxRemplissage: z.coerce.number().optional(),
+    })
+  ),
+  evolutionPositionQuadrant: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      positionQuadrant: z.string().optional(),
+    })
+  ).optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
   libelleNsf: z.string().optional(),
@@ -36,7 +61,7 @@ export const FormationLineSchema = z.object({
     })
     .optional(),
   positionQuadrant: z.string().optional(),
-  typeFamille: z.string().optional(),
+  typeFamille: TypeFamilleZodType.optional(),
   isHistoriqueCoExistant: z.coerce.boolean().optional(),
   // CFD de l'éventuelle formation renovant la formation actuelle
   formationRenovee: z.string().optional(),
@@ -55,14 +80,14 @@ export const getFormationsSchema = {
     codeNiveauDiplome: z.array(z.string()).optional(),
     codeDispositif: z.array(z.string()).optional(),
     cfdFamille: z.array(z.string()).optional(),
-    rentreeScolaire: z.array(z.string()).optional(),
+    rentreeScolaire: z.string().optional(),
     codeNsf: z.array(z.string()).optional(),
     positionQuadrant: z.array(PositionQuadrantZodType).optional(),
     search: z.string().optional(),
     withEmptyFormations: z.string().optional(),
     withAnneeCommune: z.string().optional(),
     formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
-    order: z.enum(["asc", "desc"]).optional(),
+    order: OrderZodType.optional(),
     orderBy: FormationLineSchema.keyof().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
@@ -81,6 +106,7 @@ export const getFormationsSchema = {
         formations: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
         positionsQuadrant: z.array(OptionSchema),
+        rentreesScolaires: z.array(OptionSchema),
       }),
       formations: z.array(FormationLineSchema),
     }),

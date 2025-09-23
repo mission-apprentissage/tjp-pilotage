@@ -1,11 +1,11 @@
-import { Box, Text, useToken } from "@chakra-ui/react";
+import { Flex,Text, useToken} from '@chakra-ui/react';
 
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
 import { LineChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/LineChart";
-import { formatAbsoluteOrUndefined } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import type { ChiffresEntreeOffre } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+import { formatNumber } from '@/utils/formatUtils';
 
 const CODE_NIVEAU_DIPLOME_BTS = "320";
 
@@ -46,10 +46,10 @@ const getData = ({
     });
 
     return {
-      établissement: filteredData.map((value) => formatAbsoluteOrUndefined(value.tauxPression)),
-      départemental: filteredData.map((value) => formatAbsoluteOrUndefined(value.tauxPressionDepartemental)),
-      régional: filteredData.map((value) => formatAbsoluteOrUndefined(value.tauxPressionRegional)),
-      national: filteredData.map((value) => formatAbsoluteOrUndefined(value.tauxPressionNational)),
+      établissement: filteredData.map((value) => formatNumber(value.tauxPression, 2, undefined)),
+      départemental: filteredData.map((value) => formatNumber(value.tauxPressionDepartemental, 2, undefined)),
+      régional: filteredData.map((value) => formatNumber(value.tauxPressionRegional, 2, undefined)),
+      national: filteredData.map((value) => formatNumber(value.tauxPressionNational, 2, undefined)),
     };
   }
   return {
@@ -98,22 +98,22 @@ export const TauxPression = ({
         codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? (
           <GlossaireShortcut
             tooltip={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>Le ratio entre le nombre de voeux et la capacité de la formation dans l'établissement.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             glossaireEntryKey="taux-de-demande"
           />
         ) : (
           <GlossaireShortcut
             tooltip={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>
                   Le ratio entre le nombre de premiers voeux et la capacité de la formation dans l'établissement.
                 </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             glossaireEntryKey="taux-de-pression"
           />

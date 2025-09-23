@@ -1,9 +1,11 @@
 import { sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { jsonArrayFrom } from "kysely/helpers/postgres";
+import { CURRENT_RENTREE, VoieEnum } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
-import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
-import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
+import type { TypeFamille } from 'shared/enum/typeFamilleEnum';
+import { TypeFamilleEnum } from 'shared/enum/typeFamilleEnum';
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -16,21 +18,22 @@ import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
 import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistantIndicateurEntree } from "@/modules/data/utils/notHistorique";
 import { openForRentreeScolaireIndicateurEntree } from "@/modules/data/utils/openForRentreeScolaire";
-import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
-import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
+import { selectTauxDemandeAgg } from "@/modules/data/utils/tauxDemande";
+import { selectTauxDevenirFavorableAgg, withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
+import { selectTauxInsertion6moisAgg, withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg, withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { isFormationRenovee } from '@/modules/utils/isFormationRenovee';
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const getFormationsQuery = async ({
   offset = 0,
   limit = MAX_LIMIT,
-  rentreeScolaire = [CURRENT_RENTREE],
-  millesimeSortie = CURRENT_IJ_MILLESIME,
+  rentreeScolaire = CURRENT_RENTREE,
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -49,26 +52,23 @@ export const getFormationsQuery = async ({
   orderBy,
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
+  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire });
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
     .leftJoin("formationEtablissement", (join) =>
       join
         .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
-        .on("formationEtablissement.codeDispositif", "is not", null)
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
     )
+    .innerJoin("dataFormation", "dataFormation.cfd", "formationView.cfd")
     .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
-    )
-    .leftJoin("indicateurSortie", (join) =>
-      join
-        .onRef("formationEtablissement.id", "=", "indicateurSortie.formationEtablissementId")
-        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
+        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("formationHistorique", (join) =>
@@ -116,6 +116,25 @@ export const getFormationsQuery = async ({
             codeDispositifRef: "formationEtablissement.codeDispositif",
             codeRegionRef: "etablissement.codeRegion",
           }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+          jsonArrayFrom(
+            eb
+              .selectFrom("positionFormationRegionaleQuadrant")
+              .whereRef("positionFormationRegionaleQuadrant.cfd", "=", "formationView.cfd")
+              .whereRef("positionFormationRegionaleQuadrant.codeDispositif", "=", "formationEtablissement.codeDispositif")
+              .whereRef("positionFormationRegionaleQuadrant.codeRegion", "=", "etablissement.codeRegion")
+              .select([
+                "positionFormationRegionaleQuadrant.millesimeSortie",
+                "positionFormationRegionaleQuadrant.positionQuadrant"
+              ])
+              .$narrowType<{
+              millesimeSortie: string;
+            }>()
+              .groupBy([
+                "positionFormationRegionaleQuadrant.millesimeSortie",
+                "positionFormationRegionaleQuadrant.positionQuadrant",
+              ])
+              .orderBy("positionFormationRegionaleQuadrant.millesimeSortie", "asc")
+          ).as("evolutionPositionQuadrant"),
         ])
         .$call((eb) => {
           if (!positionQuadrant) return eb;
@@ -136,12 +155,11 @@ export const getFormationsQuery = async ({
       "formationView.cpcSecteur",
       "nsf.libelleNsf",
       "familleMetier.libelleFamille",
-      "dispositif.libelleDispositif",
+      sql<string>`COALESCE("dispositif"."libelleDispositif","niveauDiplome"."libelleNiveauDiplome" || ' SANS DISPOSITIF')`.as("libelleDispositif"),
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
-      "indicateurEntree.rentreeScolaire",
+      sql<string>`COALESCE("indicateurEntree"."rentreeScolaire",${CURRENT_RENTREE})`.as("rentreeScolaire"),
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
-      selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectifEntree"),
       sql<number>`SUM(${effectifAnnee({
@@ -170,14 +188,9 @@ export const getFormationsQuery = async ({
         alias: "indicateurEntree",
         annee: sql`'2'`,
       })})`.as("capacite3"),
+      selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
-      hasContinuum({
-        eb,
-        millesimeSortie,
-        cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.codeDispositif",
-        codeRegionRef: "etablissement.codeRegion",
-      }).as("continuum"),
+      selectTauxDemandeAgg("indicateurEntree", "formationView").as("tauxDemande"),
       withPoursuiteReg({
         eb,
         millesimeSortie,
@@ -199,18 +212,16 @@ export const getFormationsQuery = async ({
         codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
-      isHistoriqueCoExistant(eb, rentreeScolaire[0]).as("isHistoriqueCoExistant"),
+      hasContinuum({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("continuum"),
+      isHistoriqueCoExistant(eb, rentreeScolaire).as("isHistoriqueCoExistant"),
       "formationHistorique.cfd as formationRenovee",
-      eb
-        .selectFrom("formationHistorique")
-        .innerJoin("formationView as fva", "fva.cfd", "formationHistorique.ancienCFD")
-        .select("formationHistorique.ancienCFD")
-        .where(wb => wb.and([
-          wb(wb.ref("formationHistorique.cfd"), "=", wb.ref("formationView.cfd")),
-          wb("fva.dateFermeture", "is not", null),
-          wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(rentreeScolaire[0])}`)
-        ]))
-        .limit(1)
+      isFormationRenovee({ eb, rentreeScolaire })
         .as("isFormationRenovee"),
       sql<string | null>`
           case when ${eb.ref("formationView.dateFermeture")} is not null
@@ -221,6 +232,52 @@ export const getFormationsQuery = async ({
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
+      jsonArrayFrom(
+        eb
+          .selectFrom("indicateurRegionSortie")
+          .whereRef("indicateurRegionSortie.cfd", "=", "formationEtablissement.cfd")
+          .whereRef("indicateurRegionSortie.codeDispositif", "=", "formationEtablissement.codeDispositif")
+          .whereRef("indicateurRegionSortie.codeRegion", "=", sql`ANY(array_agg(${eb.ref("etablissement.codeRegion")}))`)
+          .where("indicateurRegionSortie.voie", "=", VoieEnum["scolaire"])
+          .where("indicateurRegionSortie.millesimeSortie", "<=", millesimeSortie)
+          .select([
+            "indicateurRegionSortie.millesimeSortie",
+            selectTauxDevenirFavorableAgg("indicateurRegionSortie").as("tauxDevenirFavorable"),
+            selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
+            selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
+          ])
+          .$narrowType<{
+            millesimeSortie: string;
+          }>()
+          .groupBy([
+            "indicateurRegionSortie.millesimeSortie",
+          ])
+          .orderBy("indicateurRegionSortie.millesimeSortie", "desc")
+          .limit(3)
+      ).as("evolutionTauxSortie"),
+      jsonArrayFrom(
+        eb
+          .selectFrom("indicateurEntree")
+          .leftJoin("formationEtablissement as fe", "fe.id", "indicateurEntree.formationEtablissementId")
+          .whereRef("fe.cfd", "=", "formationView.cfd")
+          .whereRef("fe.codeDispositif", "=", "formationEtablissement.codeDispositif")
+          .where("fe.voie", "=", VoieEnum["scolaire"])
+          .where("indicateurEntree.rentreeScolaire", "<=", rentreeScolaire)
+          .select([
+            "indicateurEntree.rentreeScolaire",
+            selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
+            selectTauxDemandeAgg("indicateurEntree", "formationView").as("tauxDemande"),
+            selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
+          ])
+          .$narrowType<{
+            rentreeScolaire: string;
+          }>()
+          .groupBy([
+            "indicateurEntree.rentreeScolaire",
+          ])
+          .orderBy("indicateurEntree.rentreeScolaire", "desc")
+          .limit(3)
+      ).as("evolutionTauxEntree"),
     ])
     .where(isInPerimetreIJEtablissement)
     .where(notHistoriqueUnlessCoExistantIndicateurEntree)
@@ -236,7 +293,7 @@ export const getFormationsQuery = async ({
                 .select("fe.cfd")
                 .distinct()
                 .innerJoin("indicateurEntree", "id", "formationEtablissementId")
-                .where("rentreeScolaire", "in", rentreeScolaire)
+                .where("rentreeScolaire", "=", rentreeScolaire)
                 .whereRef("fe.codeDispositif", "=", "formationEtablissement.codeDispositif")
                 .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
             )
@@ -257,15 +314,23 @@ export const getFormationsQuery = async ({
       "formationView.isTransitionDemographique",
       "formationView.isTransitionEcologique",
       "formationView.isTransitionNumerique",
+      "dataFormation.cfd",
       "nsf.libelleNsf",
       "formationHistorique.cfd",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
       "dispositif.codeDispositif",
       "formationEtablissement.codeDispositif",
-      "libelleFamille",
+      "familleMetier.libelleFamille",
       "niveauDiplome.libelleNiveauDiplome",
     ])
+    .$narrowType<{
+      typeFamille: TypeFamille;
+      continuum: {
+        cfd: string;
+        libelleFormation: string;
+      }
+    }>()
     .$call((eb) => {
       if (search)
         return eb.where((eb) =>

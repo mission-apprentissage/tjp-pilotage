@@ -1,21 +1,16 @@
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
-import type { searchDiplomeSchema } from "shared/routes/schemas/get.diplome.search.search.schema";
-import type { z } from "zod";
+import { TypeFamilleEnum } from 'shared/enum/typeFamilleEnum';
 
 import { getKbdClient } from "@/db/db";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { isFormationRenovee } from "@/modules/utils/isFormationRenovee";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
-export const findManyInDataFormationQuery = async ({
-  search,
-  filters,
-}: {
-  search: string;
-  filters: z.infer<typeof searchDiplomeSchema.querystring>;
-}) => {
-  const search_array = getNormalizedSearchArray(search);
+import type { Filters } from "./searchDiplome.usecase";
+
+export const searchDiplomeQuery = async (filters: Filters) => {
+  const search_array = getNormalizedSearchArray(filters.search);
 
   const formations = await getKbdClient()
     .selectFrom("dataFormation")
@@ -79,7 +74,7 @@ export const findManyInDataFormationQuery = async ({
       }
       return q;
     })
-    .select((eb) =>
+    .select((eb) => [
       eb
         .case()
         .when("dataFormation.codeNiveauDiplome", "in", [
@@ -109,9 +104,7 @@ export const findManyInDataFormationQuery = async ({
           )
         )
         .end()
-        .as("dispositifs")
-    )
-    .select((eb) => [
+        .as("dispositifs"),
       "dataFormation.cfd as value",
       sql<string>`CONCAT(${eb.ref("dataFormation.libelleFormation")},
       ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')',
@@ -130,12 +123,26 @@ export const findManyInDataFormationQuery = async ({
         else null
         end
       `.as("dateFermeture"),
+      isFormationRenovee({eb, rentreeScolaire: filters.campagne})
+        .as("isFormationRenovee"),
     ])
-    .distinctOn(["dataFormation.cfd", "dataFormation.libelleFormation", "niveauDiplome.libelleNiveauDiplome"])
-    .orderBy(["niveauDiplome.libelleNiveauDiplome", "dataFormation.libelleFormation asc"])
+    .distinctOn([
+      "dataFormation.cfd",
+      "dataFormation.libelleFormation",
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataFormation.dateFermeture"
+    ])
+    .orderBy([
+      "dataFormation.dateFermeture desc",
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataFormation.libelleFormation asc",
+    ])
     .limit(20)
     .execute()
-    .then(cleanNull);
+    .then((formations) => formations.map((formation) => cleanNull({
+      ...formation,
+      isFormationRenovee: !!formation.isFormationRenovee
+    })));
 
   return formations;
 };

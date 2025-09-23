@@ -1,12 +1,22 @@
 export {
+  countDifferenceCapacitePlacesOuvertes,
+  countDifferenceCapacitePlacesOuvertesScolaire,
+  countDifferenceCapacitePlacesOuvertesApprentissage,
+  countDifferenceCapacitePlacesFermees,
+  countDifferenceCapacitePlacesFermeesScolaire,
+  countDifferenceCapacitePlacesFermeesApprentissage,
+  countDifferenceCapacitePlacesOuvertesColorees,
+  countDifferenceCapacitePlacesOuvertesColoreesScolaire,
+  countDifferenceCapacitePlacesOuvertesColoreesApprentissage,
+  countDifferenceCapacitePlacesFermeesColorees,
+  countDifferenceCapacitePlacesFermeesColoreesScolaire,
+  countDifferenceCapacitePlacesFermeesColoreesApprentissage,
   countDifferenceCapaciteScolaire,
   countDifferenceCapaciteScolaireColoree,
   countDifferenceCapaciteScolaireCorrection,
-  countDifferenceCapaciteScolaireIntention,
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteApprentissageColoree,
   countDifferenceCapaciteApprentissageCorrection,
-  countDifferenceCapaciteApprentissageIntention,
 } from "./countDifferenceCapacite";
 
 export {

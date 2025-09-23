@@ -9,10 +9,10 @@ import { getGlossaireEntryRoute } from "./usecases/getGlossaireEntry/getGlossair
 const UNE_MINUTE_EN_SECONDES = 60;
 
 const glossaireCache = new NodeCache({
-  stdTTL: config.env === "production" ? UNE_MINUTE_EN_SECONDES : undefined,
+  stdTTL: config.env?.includes("production") ? UNE_MINUTE_EN_SECONDES : undefined,
 });
 
 export const registerGlossaireModule = (server: Server) => ({
   ...getGlossaireRoute({ server, cache: glossaireCache }),
-  ...getGlossaireEntryRoute({ server, cache: glossaireCache }),
+  ...getGlossaireEntryRoute({ server }),
 });

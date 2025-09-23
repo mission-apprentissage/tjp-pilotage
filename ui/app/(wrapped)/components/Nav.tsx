@@ -1,17 +1,7 @@
 "use client";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  chakra,
-  Flex,
-  Link,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Portal,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { ChevronDownIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
+import { Box, Button, chakra, Flex, Link, Menu, MenuButton, MenuItem, MenuList, Portal, Tooltip,useDisclosure } from "@chakra-ui/react";
+import {Icon} from '@iconify/react';
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -22,26 +12,60 @@ import {PermissionEnum} from 'shared/enum/permissionEnum';
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 
+import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/demandes/utils/messageAccompagnementUtils";
 import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisContext } from "@/app/uaiContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
-import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
-import { isPerdirPartOfExpe } from "@/utils/isPartOfExpe";
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
+import { isPerdirPartOfSaisieDemande } from "@/utils/isPartOfSaisieDemande";
+import { canCreateDemande } from "@/utils/permissionsDemandeUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
-const shouldDisplayIntentionsMenu = ({ user, campagne }: {user?: UserType, campagne?: CampagneType}) => {
+const DOCUMENTATION_LINKS = {
+  // Panorama
+  ["panorama/region"]: "/documentation/co/000_-_Panorama_Region_-_Departement.html",
+  ["panorama/departement"]: "/documentation/co/000_-_Panorama_Region_-_Departement.html",
+  ["panorama/etablissement"]: "/documentation/co/000_-_Panorama_Etablissement.html",
+  ["panorama/domaine-de-formation"]: "/documentation/co/000_-_Panorama_Domaine_de_formation.html",
+  ["panorama/lien-metier-formation"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
+  ["panorama/lien-metier-formation/metier"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
+  ["panorama/lien-metier-formation/formation"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
+  // Console
+  ["console/formations"]: "/documentation/co/000_-_Consoles.html",
+  ["console/etablissements"]: "/documentation/co/000_-_Consoles.html",
+  // Demandes
+  ["demandes/saisie"]: "/documentation/co/000_-_Gestion_des_demandes.html",
+  ["demandes/saisie/"]: "/documentation/co/001_-_Saisie_dans_le_formulaire.html",
+  ["demandes/restitution"]: "/documentation/co/002_-_Restitution_des_demandes.html",
+  ["demandes/corrections"]: "/documentation/co/006_-_Restitution_des_corrections.html",
+  ["demandes/pilotage"]: "/documentation/co/002_-_Comprendre_et_utiliser_les_projections_de_transformation.html",
+  // Suivi de l'impact
+  ["suivi-impact"]: "/documentation/co/007_-_Suivi_de_l3impact.html",
+  // Admin
+  ["admin/users"]: "/documentation/co/000_-_Gestion_des_utilisateurs_dans_Orion.html",
+  ["admin/roles"]: "/documentation/co/000_-_Comprendre_les_roles__permissions_et_responsabilites_dans_Orion_.html",
+  ["admin/campagnes/national"]: "/documentation/co/001_-_Gestion_des_campagnes_et_temporalite.html",
+  ["admin/campagnes/regional"]: "/documentation/co/001_-_Gestion_des_campagnes_et_temporalite.html",
+};
+
+const getDocumentationLink = (segment?: string) => {
+  if(segment === "") return "/documentation";
+  if(segment?.startsWith("demandes/saisie/")) return DOCUMENTATION_LINKS["demandes/saisie/"] ?? "/documentation";
+  return DOCUMENTATION_LINKS[segment as keyof typeof DOCUMENTATION_LINKS] ?? "/documentation";
+};
+
+const shouldDisplayDemandesMenu = ({ user, campagne }: {user?: UserType, campagne?: CampagneType}) => {
   if(!campagne || !user) return false;
 
   if(
-    !hasPermission(user.role, PermissionEnum["intentions/lecture"]) &&
-    !hasPermission(user.role, PermissionEnum["intentions-perdir/lecture"]) &&
-    !hasPermission(user.role, PermissionEnum["pilotage-intentions/lecture"]) &&
-    !hasPermission(user.role, PermissionEnum["restitution-intentions/lecture"])
+    !hasPermission(user.role, PermissionEnum["demande/lecture"]) &&
+    !hasPermission(user.role, PermissionEnum["pilotage/lecture"]) &&
+    !hasPermission(user.role, PermissionEnum["restitution/lecture"])
   ) return false;
 
-  if(hasRole({user, role: RoleEnum["perdir"]})) return isPerdirPartOfExpe({user, campagne});
+  if(hasRole({user, role: RoleEnum["perdir"]})) return isPerdirPartOfSaisieDemande({user, campagne});
 
   return true;
 };
@@ -176,6 +200,8 @@ export const Nav = () => {
   const { user, role } = useAuth();
   const { campagne } = useCurrentCampagne();
   const { uais } = useContext(UaisContext);
+  const segment = useSelectedLayoutSegments().join("/");
+
 
   const hasAdminMenu =
     hasPermission(role, PermissionEnum["users/lecture"]) || hasPermission(role, PermissionEnum["campagnes/lecture"]);
@@ -184,12 +210,12 @@ export const Nav = () => {
 
   const { isOpen: isMenuConsoleOpen, onOpen: onMenuConsoleOpen, onClose: onMenuConsoleClose } = useDisclosure();
 
-  const { isOpen: isMenuIntentionOpen, onOpen: onMenuIntentionOpen, onClose: onMenuIntentionClose } = useDisclosure();
+  const { isOpen: isMenuDemandeOpen, onOpen: onMenuDemandeOpen, onClose: onMenuDemandeClose } = useDisclosure();
 
   const { isOpen: isMenuAdminOpen, onOpen: onMenuAdminOpen, onClose: onMenuAdminClose } = useDisclosure();
 
   return (
-    <Flex direction={"row"} align="center" flexWrap="wrap" width={"100%"}>
+    <Flex direction={"row"} align="center" flexWrap="wrap" width={"100%"} zIndex="100">
       <NavLink mr="4" href="/" segment={null}>
         Accueil
       </NavLink>
@@ -279,13 +305,13 @@ export const Nav = () => {
           </MenuList>
         </Portal>
       </Menu>
-      {shouldDisplayIntentionsMenu({ user, campagne }) && (
-        <Menu gutter={0} isOpen={isMenuIntentionOpen}>
+      {shouldDisplayDemandesMenu({ user, campagne }) && (
+        <Menu gutter={0} isOpen={isMenuDemandeOpen}>
           <NavMenuButton
-            segment="intentions"
-            isOpen={isMenuIntentionOpen}
-            onMouseEnter={onMenuIntentionOpen}
-            onMouseLeave={onMenuIntentionClose}
+            segment="demandes"
+            isOpen={isMenuDemandeOpen}
+            onMouseEnter={onMenuDemandeOpen}
+            onMouseLeave={onMenuDemandeClose}
           >
             Transformation
           </NavMenuButton>
@@ -294,32 +320,32 @@ export const Nav = () => {
               p="0"
               borderTop="unset"
               w="100%"
-              onMouseEnter={onMenuIntentionOpen}
-              onMouseLeave={onMenuIntentionClose}
+              onMouseEnter={onMenuDemandeOpen}
+              onMouseLeave={onMenuDemandeClose}
               zIndex={"dropdown"}
             >
               <MenuItem p="0" w="100%">
-                <NavMenuLink href={getRoutingSaisieRecueilDemande({campagne, user})} segment="saisie-intentions">
+                <NavMenuLink href={getRoutingAccessSaisieDemande({user, campagne})} segment="saisie">
                     Gestion des demandes
                 </NavMenuLink>
               </MenuItem>
-              {hasPermission(role, PermissionEnum["pilotage-intentions/lecture"]) && (
+              {hasPermission(role, PermissionEnum["pilotage/lecture"]) && (
                 <MenuItem p="0">
-                  <NavMenuLink href="/intentions/pilotage" segment="pilotage-intentions" prefetch={false}>
+                  <NavMenuLink href="/demandes/pilotage" segment="pilotage" prefetch={false}>
                     Pilotage
                   </NavMenuLink>
                 </MenuItem>
               )}
-              {(hasPermission(role, PermissionEnum["restitution-intentions/lecture"])) && (
+              {(hasPermission(role, PermissionEnum["restitution/lecture"])) && (
                 <MenuItem p="0" w="100%">
-                  <NavMenuLink href="/intentions/restitution" segment="restitution-intentions" prefetch={false}>
+                  <NavMenuLink href="/demandes/restitution" segment="restitution" prefetch={false}>
                     Restitution des demandes
                   </NavMenuLink>
                 </MenuItem>
               )}
-              {feature.correction && hasPermission(role, PermissionEnum["intentions/lecture"]) && (
+              {feature.correction && hasPermission(role, PermissionEnum["demande/lecture"]) && (
                 <MenuItem p="0" w="100%">
-                  <NavMenuLink href="/intentions/corrections" segment="corrections" prefetch={false}>
+                  <NavMenuLink href="/demandes/corrections" segment="corrections" prefetch={false}>
                     Restitution des corrections
                   </NavMenuLink>
                 </MenuItem>
@@ -379,6 +405,46 @@ export const Nav = () => {
           </Portal>
         </Menu>
       )}
+      {
+        (
+          hasRole({ user, role: RoleEnum["perdir"] }) &&
+          campagne &&
+          canCreateDemande({ user, campagne: campagne!})
+        ) && (
+          <Box display={"flex"} flexGrow={"1"} justifyContent={"end"} zIndex={"tooltip"} me={2}>
+
+            <Tooltip
+              label={getMessageAccompagnementCampagne({ campagne: campagne!, currentCampagne: campagne!, user })}
+              shouldWrapChildren
+              placement="bottom-start"
+            >
+              <Button
+                as={NextLink}
+                href={getRoutingAccessSaisieDemande({user, campagne, suffix: `new?campagneId=${campagne?.id}`})}
+                isDisabled={!canCreateDemande({ user, campagne: campagne! })}
+                variant={"primary"}
+                fontSize={14}
+                color={"white"}
+                leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
+              >
+                Nouvelle demande
+              </Button>
+            </Tooltip>
+          </Box>
+        )
+      }
+      <Button
+        as={NextLink}
+        href={getDocumentationLink(segment)}
+        variant={"secondary"}
+        leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
+        color="bluefrance.113"
+        fontSize={14}
+        ms={"auto"}
+        me={2}
+      >
+        Aide en ligne
+      </Button>
       <Glossaire />
     </Flex>
   );

@@ -17,7 +17,6 @@
     "shared"
   ],
   "dependencies": {
-    "@sentry/cli": "^2.37.0",
     "@vitejs/plugin-react": "^4.3.4",
     "dotenv": "^16.4.5",
     "eslint-plugin-react": "^7.37.1",
@@ -41,7 +40,6 @@
     "services:start": "docker compose up --remove-orphans -d --wait",
     "services:stop": "docker compose down",
     "services:clean": "yarn services:stop; docker system prune --volumes",
-    "seed:update": ".bin/product seed:update",
     "lint": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx -c ./.eslintrc.json .",
     "lint:ci": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx -c ./.eslintrc.ci.json .",
     "lint:fix": "yarn lint --fix",
@@ -55,6 +53,7 @@
     "test:ci": "yarn test --run --silent",
     "test:ci:coverage": "yarn test:ci --coverage.include='ui' --coverage.include='server/src' --coverage.provider='v8' --coverage.enabled --coverage.all --coverage.exclude='**/tests' --coverage.exclude='**/.next'",
     "test:watch": "vitest --watch",
+    "test:clean": "yarn test --run && yarn cli clean:testdb",
     "typecheck": "yarn foreach:parallel run typecheck",
     "typecheck:ci": "yarn foreach:ci run typecheck",
     "vault:edit": ".bin/product vault:edit",
@@ -67,8 +66,9 @@
     "import:formations": "yarn cli importFormations",
     "import:users": "yarn cli importUsers",
     "import:users:dryRun": "yarn cli importUsers --dryRun true",
-    "migrate:up": "yarn cli migrateDB",
-    "migrate:down": "yarn cli migrateDownDB"
+    "migrate:up": "yarn cli migrate:up",
+    "migrate:down": "yarn cli migrate:down",
+    "clean:testdb": "yarn cli clean:testdb"
   },
   "devDependencies": {
     "@commitlint/cli": "18.4.3",
@@ -96,7 +96,7 @@
     "eslint-plugin-zod": "^1.4.0",
     "exceljs": "^4.4.0",
     "lint-staged": "^15.2.10",
-    "node-talisman": "^1.29.11",
+    "node-talisman": "^1.29.15",
     "semantic-release": "22.0.12",
     "semantic-release-slack-bot": "4.0.2",
     "typescript": "^5.6.3",

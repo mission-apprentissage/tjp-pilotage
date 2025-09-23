@@ -1,11 +1,13 @@
 import { sql } from "kysely";
 import type { Role } from "shared";
-import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
-import { PermissionScopeEnum} from 'shared/enum/permissionScopeEnum';
+import type { OrderType } from 'shared/enum/orderEnum';
+import type { PermissionScope } from 'shared/enum/permissionScopeEnum';
+import { PermissionScopeEnum } from 'shared/enum/permissionScopeEnum';
+import type { UserFonction } from "shared/enum/userFonctionEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const findUsers = async ({
@@ -19,7 +21,7 @@ export const findUsers = async ({
   offset?: number;
   limit?: number;
   search?: string;
-  orderBy?: { order: "asc" | "desc"; column: string };
+  orderBy?: { order: OrderType; column: string };
   scope: PermissionScope;
   scopeFilter: Array<string>;
 }) => {
@@ -53,7 +55,10 @@ export const findUsers = async ({
       }
       return q;
     })
-    .$narrowType<{ role: Role }>()
+    .$narrowType<{
+      role: Role;
+      fonction: UserFonction;
+     }>()
     .offset(offset)
     .limit(limit)
     .$call((q) => {

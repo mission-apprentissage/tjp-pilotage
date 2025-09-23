@@ -1,10 +1,10 @@
 import * as Boom from "@hapi/boom";
-import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 
 import config from "@/config";
 import { shootTemplate } from "@/modules/core/services/mailer/mailer";
+import { inject } from "@/utils/inject";
 
 import { findUserQuery } from "./findUserQuery.dep";
 export const [sendResetPassword, sendResetPasswordFactory] = inject(
@@ -28,7 +28,7 @@ export const [sendResetPassword, sendResetPasswordFactory] = inject(
       }
 
       const resetPasswordToken = jwt.sign({ email }, deps.jwtSecret, {
-        expiresIn: "1h",
+        expiresIn: "24h",
       });
 
       await deps.shootTemplate({

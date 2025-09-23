@@ -1,68 +1,99 @@
 import { sql } from "kysely";
-import { jsonObjectFrom } from "kysely/helpers/postgres";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
+import type { DemandeStatutTypeWithoutSupprimee } from 'shared/enum/demandeStatutEnum';
+import { DemandeStatutEnum } from 'shared/enum/demandeStatutEnum';
+import type { TypeDemandeType } from 'shared/enum/demandeTypeEnum';
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
-import type {Filters} from '@/modules/demandes/usecases/getDemandes/getDemandes.usecase';
-import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
-import {castTypeDemande} from '@/modules/utils/castTypeDemande';
+import type { Filters } from "@/modules/demandes/usecases/getDemandes/getDemandes.usecase";
+import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
-import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { isDemandeBrouillonVisible, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { rapprochement } from "@/modules/utils/rapprochement";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
-export const getDemandesQuery = async ({
-  campagne,
-  statut,
-  codeAcademie,
-  codeNiveauDiplome,
-  user,
-  search,
-  offset = 0,
-  limit = MAX_LIMIT,
-  order,
-  orderBy,
-}: Filters) => {
+export const getDemandesQuery = async (
+  {
+    campagne,
+    statut,
+    codeAcademie,
+    codeDepartement,
+    commune,
+    uai,
+    codeNiveauDiplome,
+    codeNsf,
+    cfd,
+    nomCmq,
+    filiereCmq,
+    user,
+    search,
+    offset = 0,
+    limit = MAX_LIMIT,
+    order,
+    orderBy,
+  }: Filters,
+) => {
   const search_array = getNormalizedSearchArray(search);
 
   const demandes = await getKbdClient()
-    .selectFrom("latestDemandeIntentionView as demande")
-    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .selectFrom("latestDemandeView as demande")
+    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
-    .leftJoin("user", "user.id", "demande.createdBy")
-    .leftJoin("suivi", (join) => join.onRef("suivi.intentionNumero", "=", "demande.numero").on("userId", "=", user.id))
-    .innerJoin("campagne", "demande.campagneId", "campagne.id")
-    .leftJoin("intentionAccessLog", (join) =>
-      join
-        .onRef("intentionAccessLog.intentionNumero", "=", "demande.numero")
-        .onRef("intentionAccessLog.updatedAt", ">", "demande.updatedAt")
-        .on("intentionAccessLog.userId", "=", user.id)
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
+    .leftJoin(
+      (join) =>
+        join
+          .selectFrom("changementStatut")
+          .select(["changementStatut.demandeNumero", "changementStatut.statut", "changementStatut.commentaire"])
+          .distinctOn(["changementStatut.demandeNumero"])
+          .orderBy("changementStatut.demandeNumero", "desc")
+          .orderBy("changementStatut.updatedAt", "desc")
+          .as("changementStatut"),
+      (join) =>
+        join
+          .onRef("changementStatut.demandeNumero", "=", "demande.numero")
+          .onRef("changementStatut.statut", "=", "demande.statut")
     )
+    .leftJoin("user", "user.id", "demande.createdBy")
+    .leftJoin("suivi", (join) =>
+      join.onRef("suivi.demandeNumero", "=", "demande.numero").on("userId", "=", user.id)
+    )
+    .innerJoin("campagne", (join) =>
+      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+        if (campagne) return eb.on("campagne.annee", "=", campagne);
+        return eb;
+      })
+    )
+    .leftJoin("demandeAccessLog", (join) =>
+      join
+        .onRef("demandeAccessLog.demandeNumero", "=", "demande.numero")
+        .onRef("demandeAccessLog.updatedAt", ">", "demande.updatedAt")
+        .on("demandeAccessLog.userId", "=", user.id)
+    )
+    .leftJoin("demandeConstatView", "demandeConstatView.numero", "demande.numero")
     .selectAll("demande")
     .select((eb) => [
-      "demande.isIntention",
       "suivi.id as suiviId",
-      sql<string>`CONCAT(
-        ${eb.ref("user.firstname")},
-        ' ',
-        ${eb.ref("user.lastname")}
-      )`.as("userName"),
-      sql<boolean>`(
-        "intentionAccessLog"."id" is not null
-         OR "demande"."updatedBy" = ${user.id}
-      )`.as("alreadyAccessed"),
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
-      "departement.codeDepartement",
       "departement.libelleDepartement",
+      "departement.codeDepartement",
       "academie.libelleAcademie",
       "region.libelleRegion",
       "dispositif.libelleDispositif",
+      "changementStatut.commentaire as lastChangementStatutCommentaire",
+      sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("userName"),
+      eb.or([
+        eb("demandeAccessLog.id", "is not", null),
+        eb("demande.updatedBy", "=", user.id),
+      ]).as("alreadyAccessed"),
       sql<string>`count(*) over()`.as("count"),
       eb
         .selectFrom((eb) =>
@@ -100,19 +131,41 @@ export const getDemandesQuery = async ({
           ])
           .where("demande.updatedBy", "is not", null)
       ).as("updatedBy"),
+      jsonArrayFrom(
+        eb
+          .selectFrom("avis")
+          .whereRef("avis.demandeNumero", "=", "demande.numero")
+          .select(({ ref }) => [
+            ref("avis.id").as("id"),
+            ref("avis.statutAvis").as("statut"),
+            ref("avis.commentaire").as("commentaire"),
+            ref("avis.typeAvis").as("type"),
+            ref("avis.userFonction").as("fonction"),
+          ])
+          .where(isAvisVisible({ user }))
+      ).as("avis"),
+
       eb
         .selectFrom("correction")
-        .whereRef("correction.intentionNumero", "=", "demande.numero")
+        .whereRef("correction.demandeNumero", "=", "demande.numero")
         .select("correction.id")
         .limit(1)
         .as("correction"),
+
+      rapprochement("campagne", "demande","demandeConstatView", "dataFormation", false).as("rapprochement"),
+      rapprochement("campagne", "demande","demandeConstatView", "dataFormation", true).as("motifRapprochement")
+
     ])
+    .$narrowType<{
+      statut: DemandeStatutTypeWithoutSupprimee,
+      typeDemande: TypeDemandeType
+    }>()
     .$call((eb) => {
       if (statut) {
         if (statut === "suivies")
           return eb.innerJoin("suivi as suiviUtilisateur", (join) =>
             join
-              .onRef("suiviUtilisateur.intentionNumero", "=", "demande.numero")
+              .onRef("suiviUtilisateur.demandeNumero", "=", "demande.numero")
               .on("suiviUtilisateur.userId", "=", user.id)
           );
         return eb.where("demande.statut", "=", statut);
@@ -130,7 +183,19 @@ export const getDemandesQuery = async ({
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                  unaccent(${eb.ref("dataFormation.cfd")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.uai")}),
+                  ' ',
+                  unaccent(${eb.ref("nsf.libelleNsf")}),
+                  ' ',
+                  unaccent(${eb.ref("demande.nomCmq")}),
+                  ' ',
+                  unaccent(${eb.ref("demande.filiereCmq")}),
+                  ' ',
+                  unaccent(${eb.ref("demande.inspecteurReferent")})
                 )`,
                 "ilike",
                 `%${search_word}%`
@@ -145,16 +210,62 @@ export const getDemandesQuery = async ({
       return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
     })
     .$call((eb) => {
-      if (codeAcademie) return eb.where("academie.codeAcademie", "in", codeAcademie);
+      if (codeAcademie) {
+        return eb.where("academie.codeAcademie", "in", codeAcademie);
+      }
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeDepartement) {
+        return eb.where("departement.codeDepartement", "in", codeDepartement);
+      }
       return eb;
     })
-    .where("campagne.annee", "=", campagne)
+    .$call((eb) => {
+      if (commune) {
+        return eb.where("dataEtablissement.commune", "in", commune);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (uai) {
+        return eb.where("dataEtablissement.uai", "in", uai);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome) {
+        return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNsf) {
+        return eb.where("dataFormation.codeNsf", "in", codeNsf);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (cfd) {
+        return eb.where("dataFormation.cfd", "in", cfd);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiereCmq) {
+        return eb.where("demande.filiereCmq", "in", filiereCmq);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (nomCmq) {
+        return eb.where("demande.nomCmq", "in", nomCmq);
+      }
+      return eb;
+    })
     .orderBy("updatedAt desc")
     .where(isDemandeSelectable({ user }))
+    .where(isDemandeBrouillonVisible({ user }))
     .offset(offset)
     .limit(limit)
     .execute();
@@ -163,11 +274,11 @@ export const getDemandesQuery = async ({
     demandes: demandes.map((demande) =>
       cleanNull({
         ...demande,
-        statut: castDemandeStatutWithoutSupprimee(demande.statut),
-        typeDemande: castTypeDemande(demande.typeDemande),
+        avis: demande.avis.filter((c) => c).map((avis) => avis),
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
-        alreadyAccessed: demande.alreadyAccessed ?? true,
+        alreadyAccessed: !!(demande.alreadyAccessed ?? true),
+        isOldDemande: demande.isOldDemande ?? false,
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,

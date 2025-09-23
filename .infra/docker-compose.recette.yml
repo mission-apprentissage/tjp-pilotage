@@ -15,6 +15,7 @@ services:
         parallelism: 1
         delay: 10s
       restart_policy:
+        condition: on-failure
         window: 360s
         delay: 30s
         # Max 24hours
@@ -43,6 +44,7 @@ services:
     restart: unless-stopped
     ports:
       - "5432:5432"
+    shm_size: 2gb
     networks:
       - ij_network
     volumes:

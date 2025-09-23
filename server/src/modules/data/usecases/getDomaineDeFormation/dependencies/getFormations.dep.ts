@@ -1,8 +1,8 @@
 import { sql } from "kysely";
+import type { VoieType } from "shared";
 import { CURRENT_RENTREE } from "shared";
-import type { formationSchema } from "shared/routes/schemas/get.domaine-de-formation.codeNsf.schema";
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
 import { notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
@@ -13,11 +13,13 @@ export const getFormations = async ({
   codeRegion,
   codeDepartement,
   codeAcademie,
+  voie
 }: {
   codeNsf: string;
   codeRegion?: string;
   codeDepartement?: string;
   codeAcademie?: string;
+  voie?: VoieType
 }) =>
   getKbdClient()
     .with("formations", (wb) =>
@@ -34,6 +36,7 @@ export const getFormations = async ({
           sb.ref("niveauDiplome.libelleNiveauDiplome").as("libelleNiveauDiplome"),
           sb.ref("niveauDiplome.codeNiveauDiplome").as("codeNiveauDiplome"),
           sb.ref("formationView.typeFamille").as("typeFamille"),
+          sb.ref("formationView.voie").as("voie"),
         ])
         .orderBy("formationView.libelleFormation", "asc")
         .distinct()
@@ -47,7 +50,6 @@ export const getFormations = async ({
           wb("formations.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
           wb("fva.dateFermeture", "is not", null),
           wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
-          wb("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
         ]))
         .select("formationHistorique.cfd")
         .distinct()
@@ -55,12 +57,17 @@ export const getFormations = async ({
     .with("formation_etab", (wb) =>
       wb
         .selectFrom("formations")
-        .leftJoin("formationEtablissement", "formations.cfd", "formationEtablissement.cfd")
+        .leftJoin("formationEtablissement", (join) =>
+          join
+            .onRef("formationEtablissement.cfd", "=", "formations.cfd")
+            .onRef("formationEtablissement.voie", "=", "formations.voie")
+        )
         .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
+        .leftJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "formationEtablissement.id")
         .selectAll("formations")
         .select((sb) => [
           sb.ref("formationEtablissement.uai").as("uai"),
-          sb.ref("formationEtablissement.voie").as("voie"),
+          sb.ref("formations.voie").as("formations.voie"),
           sb.ref("dataEtablissement.codeRegion").as("codeRegion"),
           sb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
           sb.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
@@ -83,14 +90,21 @@ export const getFormations = async ({
           }
           return q;
         })
+        .$call((q) => {
+          if (voie) {
+            return q.where("formationEtablissement.voie", "=", voie);
+          }
+          return q;
+        })
+        .where(wb => wb("indicateurEntree.rentreeScolaire", "=", wb.val(CURRENT_RENTREE)))
     )
     .selectFrom("formations")
     .leftJoin("formation_etab", "formations.cfd", "formation_etab.cfd")
     .selectAll("formations")
     .select((sb) => [
       sb.fn.count<number>("formation_etab.uai").as("nbEtab"),
-      sql<boolean>`bool_or(voie = 'apprentissage' OR voie IS NULL)`.as("apprentissage"),
-      sql<boolean>`bool_or(voie = 'scolaire' OR voie IS NULL)`.as("scolaire"),
+      sql<boolean>`bool_or(formations.voie = 'apprentissage' OR formations.voie IS NULL)`.as("apprentissage"),
+      sql<boolean>`bool_or(formations.voie = 'scolaire' OR formations.voie IS NULL)`.as("scolaire"),
       sb.fn
         .coalesce(sql<boolean>`formations.cfd IN (SELECT cfd FROM formation_renovee)`, sql<boolean>`false`)
         .as("isFormationRenovee"),
@@ -104,7 +118,11 @@ export const getFormations = async ({
       "formations.typeFamille",
       "formations.codeNsf",
       "formations.dateOuverture",
+      "formations.voie"
     ])
-    .$castTo<z.infer<typeof formationSchema>>()
+    .$narrowType<{
+      voie: VoieType;
+      typeFamille: TypeFamille;
+    }>()
     .execute()
     .then(cleanNull);

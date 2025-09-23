@@ -1,10 +1,9 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/schema";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { createDiscipline } from "./createDiscipline";
 
@@ -40,6 +39,6 @@ export const [importDiscipline] = inject(
       },
       { parallel: 20 }
     );
-    process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
+    process.stdout.write(errorCount > 0 ? `(avec ${errorCount} erreurs)\n\n` : "\n\n");
   }
 );

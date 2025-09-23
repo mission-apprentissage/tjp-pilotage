@@ -6,7 +6,7 @@ import { createRoute } from "shared/utils/http-wizard/core";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { submitDemande } from "./submitDemande.usecase";
+import { submitDemandeUsecase } from "./submitDemande.usecase";
 
 const ROUTE = ROUTES["[POST]/demande/submit"];
 
@@ -17,12 +17,12 @@ export const submitDemandeRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/ecriture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/ecriture"]),
       handler: async (request, response) => {
         const { demande } = request.body;
         if (!request.user) throw Boom.unauthorized();
 
-        const result = await submitDemande({
+        const result = await submitDemandeUsecase({
           demande,
           user: request.user,
         });

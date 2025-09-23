@@ -1,10 +1,9 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { RENTREES_SCOLAIRES } from "shared";
 
 import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
@@ -18,9 +17,7 @@ const UAI_TO_PROCESS: {
 } = {};
 
 function addUaiToProcess(uai: string) {
-  if (!UAI_TO_PROCESS[uai]) {
-    UAI_TO_PROCESS[uai] = true;
-  }
+  UAI_TO_PROCESS[uai] ??= true;
 }
 
 const BATCH_SIZE = 50;

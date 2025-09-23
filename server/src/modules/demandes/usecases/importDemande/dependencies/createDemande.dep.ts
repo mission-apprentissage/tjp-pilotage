@@ -8,13 +8,17 @@ import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 
+const getNextRentreeScolaire = (campagne: { annee: string }) => {
+  return Number.parseInt(campagne.annee) + 1;
+};
+
 export const createDemandeQuery = ({
   demande,
   campagne,
   user,
 }: {
   demande: Insertable<DB["demande"]>;
-  campagne: { id: string };
+  campagne: { id: string, annee: string };
   user: Pick<RequestUser, "id">;
 }) => {
   const getTypeDemande = (demande: Insertable<DB["demande"]>) => {
@@ -26,6 +30,7 @@ export const createDemandeQuery = ({
     }
     return demande.typeDemande;
   };
+
   return getKbdClient()
     .insertInto("demande")
     .values({
@@ -34,18 +39,15 @@ export const createDemandeQuery = ({
         "numero",
         "numeroHistorique",
         "createdAt",
-        "rentreeScolaire",
         "updatedAt",
         "campagneId",
-        "compensationUai",
-        "compensationCfd",
-        "compensationCodeDispositif",
-        "compensationRentreeScolaire",
+        "rentreeScolaire",
         "createdBy",
         "statut",
         "motifRefus",
         "autreMotifRefus",
         "typeDemande",
+        "isOldDemande",
       ]) as Insertable<DB["demande"]>),
       id: generateId(),
       numero: generateShortId(),
@@ -53,14 +55,11 @@ export const createDemandeQuery = ({
       createdAt: new Date(),
       updatedAt: new Date(),
       campagneId: campagne.id,
-      compensationUai: null,
-      compensationCfd: null,
-      compensationCodeDispositif: null,
-      compensationRentreeScolaire: null,
-      amiCma: null,
+      rentreeScolaire: getNextRentreeScolaire(campagne),
       createdBy: user.id,
-      statut: DemandeStatutEnum["projet de demande"],
+      statut: DemandeStatutEnum["proposition"],
       typeDemande: getTypeDemande(demande),
+      isOldDemande: false,
     })
     .returning("id")
     .executeTakeFirst();

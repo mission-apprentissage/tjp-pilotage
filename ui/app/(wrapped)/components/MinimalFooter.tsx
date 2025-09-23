@@ -1,8 +1,10 @@
 "use client";
 
-import { Box, HStack, Link, StackDivider, VStack } from "@chakra-ui/react";
+import { Box, HStack, Link, StackDivider, Text, VStack } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
+
+import { publicConfig } from "@/config.public";
 
 export const MinimalFooter = () => {
   const trackEvent = usePlausible();
@@ -50,9 +52,6 @@ export const MinimalFooter = () => {
           </Link>
         </Box>
         <Box>
-          <Link href="mailto:orion@inserjeunes.beta.gouv.fr">Nous contacter</Link>
-        </Box>
-        <Box>
           <Link as={NextLink} href="/statistiques" onClick={() => trackEvent("footer:statistiques")}>
             Statistiques
           </Link>
@@ -80,6 +79,9 @@ export const MinimalFooter = () => {
           <Link as={NextLink} href="/ressources" onClick={() => trackEvent("footer:ressources")}>
             Ressources
           </Link>
+        </Box>
+        <Box>
+          <Text>v{publicConfig.version}</Text>
         </Box>
       </HStack>
     </VStack>

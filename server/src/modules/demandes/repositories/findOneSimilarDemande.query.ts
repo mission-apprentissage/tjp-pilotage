@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
-export const findOneSimilarDemande = ({
+export const findOneSimilarDemandeQuery = ({
   cfd,
   uai,
   codeDispositif,

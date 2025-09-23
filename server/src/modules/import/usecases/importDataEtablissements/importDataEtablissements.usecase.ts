@@ -1,9 +1,7 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
-
 import type { DB } from "@/db/db";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { createDataEtablissement } from "./createDataEtablissement.dep";
 import { findDepartement } from "./findDepartement.dep";
@@ -51,10 +49,10 @@ export const [importDataEtablissements] = inject(
       },
       { parallel: 20 }
     );
-    process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
+    process.stdout.write(errorCount > 0 ? `(avec ${errorCount} erreurs)\n\n` : "\n\n");
   }
 );
-// @ts-expect-error TODO
+// @ts-expect-error
 const formatCodeDepartement = (codeInsee: string | undefined) => {
   if (!codeInsee) return;
   if (codeInsee.length === 3) return codeInsee as `${number}${number}${string}`;

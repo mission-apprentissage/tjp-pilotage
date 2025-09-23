@@ -1,9 +1,8 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/db";
 import type { IJDataWithValeurAjoutee } from "@/modules/import/services/inserJeunesApi/formatUaiData";
+import { inject } from "@/utils/inject";
 
 import { getUaiData } from "./getUaiData.dep";
 import { upsertIndicateurEtablissement } from "./upsertIndicateurEtablissement.dep";

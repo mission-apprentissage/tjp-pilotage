@@ -11,6 +11,8 @@ import { client } from "@/api.client";
 import type { AnalyseDetaillee } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
 import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
+import { BadgeFermeture } from "@/components/BadgeFermeture";
+import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { themeDefinition } from "@/theme/theme";
@@ -25,10 +27,11 @@ interface Option {
   isOption: boolean;
   is1ereCommune: boolean;
   is2ndeCommune: boolean;
+  isFormationRenovee?: boolean;
 }
 
 const formatOffreToCfdSearchResult = (offre: AnalyseDetaillee["formations"][number] | undefined): TCfdSearchResult => ({
-  value: offre?.cfd ? offre?.cfd : "",
+  value: offre?.cfd ?? "",
   label: offre?.libelleFormation
     ? `${offre?.libelleFormation} (${offre?.libelleDispositif ?? ""}) (${offre?.cfd})`
     : "",
@@ -39,9 +42,9 @@ const formatOffreToCfdSearchResult = (offre: AnalyseDetaillee["formations"][numb
   is1ereCommune: false,
   is2ndeCommune: false,
   //
-  libelleFormation: offre?.libelleFormation || "",
-  libelleNiveauDiplome: offre?.libelleNiveauDiplome || "",
-  cfd: offre?.cfd || "",
+  libelleFormation: offre?.libelleFormation ?? "",
+  libelleNiveauDiplome: offre?.libelleNiveauDiplome ?? "",
+  cfd: offre?.cfd ?? "",
 });
 
 const formatSearchResultToOption = (cfdSearchResult: TCfdSearchResult): Option => ({
@@ -52,6 +55,7 @@ const formatSearchResultToOption = (cfdSearchResult: TCfdSearchResult): Option =
   isOption: cfdSearchResult.isOption,
   is1ereCommune: cfdSearchResult.is1ereCommune,
   is2ndeCommune: cfdSearchResult.is2ndeCommune,
+  isFormationRenovee: cfdSearchResult.isFormationRenovee,
 });
 
 export const CfdSelect = () => {
@@ -78,7 +82,6 @@ export const CfdSelect = () => {
 
   const defaultValue: Option = useMemo(
     () => formatSearchResultToOption(formatOffreToCfdSearchResult(analyseDetailleeOffre)),
-    // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [offre, analyseDetailleeOffre]
   );
@@ -87,7 +90,6 @@ export const CfdSelect = () => {
     if (selected) {
       setCfdFilter(selected.value);
     }
-    // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
@@ -96,7 +98,6 @@ export const CfdSelect = () => {
       setCfdFilter(analyseDetailleeOffre.cfd);
       setSelected(formatSearchResultToOption(formatOffreToCfdSearchResult(analyseDetailleeOffre)));
     }
-    // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [analyseDetailleeOffre]);
 
@@ -142,10 +143,6 @@ export const CfdSelect = () => {
       return TypeFamilleEnum["option"];
     }
 
-    if (option.dateFermeture) {
-      return "fermeture";
-    }
-
     if (option.is1ereCommune) {
       return TypeFamilleEnum["1ere_commune"];
     }
@@ -179,9 +176,9 @@ export const CfdSelect = () => {
               return (
                 <Flex gap="4px">
                   <Text>{option.label} </Text>
-                  <BadgeTypeFamille typeFamille={getFormationTypeFamille(option)} labelSize="short">
-                    {option.dateFermeture !== undefined ? option.dateFermeture : undefined}
-                  </BadgeTypeFamille>
+                  <BadgeTypeFamille typeFamille={getFormationTypeFamille(option)} labelSize="long"/>
+                  <BadgeFermeture dateFermeture={option.dateFermeture} />
+                  <BadgeFormationRenovee isFormationRenovee={option.isFormationRenovee} labelSize="long"/>
                 </Flex>
               );
             }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import _ from "lodash";
 import { useId, useRef } from "react";
 import type { GroupBase, SelectInstance } from "react-select";
@@ -39,7 +39,7 @@ const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
   }, 300);
 
   return (
-    <>
+    <Flex direction="column" gap={1}>
       <Text as="label" onClick={openSelect} pb="4px" cursor="pointer" htmlFor="select-nsf">
         Domaine de formation
         <TooltipIcon ml="1" label="" onClick={() => openGlossaire("domaine-de-formation-nsf")} />
@@ -67,7 +67,7 @@ const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
         }
         placeholder="Libellé domaine de formation"
       />
-    </>
+    </Flex>
   );
 };
 

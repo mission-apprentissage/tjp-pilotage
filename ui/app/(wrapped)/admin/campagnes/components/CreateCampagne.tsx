@@ -104,7 +104,7 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
                     z.coerce
                       .string()
                       .regex(/^\d{4}$/)
-                      .safeParse(annee).success || "Veuillez saisir une année valide",
+                      .safeParse(annee).success ?? "Veuillez saisir une année valide",
                 })}
               />
               <NumberInputStepper>

@@ -15,18 +15,23 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import type { Role } from "shared";
-import {getHierarchy, hasRole} from 'shared';
-import {RoleEnum} from 'shared/enum/roleEnum';
+import { getHierarchy, hasRole } from 'shared';
+import { RoleEnum } from 'shared/enum/roleEnum';
+import type { UserFonction} from "shared/enum/userFonctionEnum";
 import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
 
 import { client } from "@/api.client";
+import { getErrorMessage } from '@/utils/apiError';
 import { useAuth } from "@/utils/security/useAuth";
+
+type IUserForm = Omit<(typeof client.inferArgs)["[PUT]/users/:userId"]["body"], "fonction"> & { fonction: UserFonction | "" };
 
 export const EditUser = ({
   isOpen,
@@ -43,15 +48,15 @@ export const EditUser = ({
     formState: { errors },
     reset,
     handleSubmit,
-  } = useForm<(typeof client.inferArgs)["[PUT]/users/:userId"]["body"]>({
+  } = useForm<IUserForm>({
     shouldUseNativeValidation: false,
     defaultValues: {
-      email: "",
-      codeRegion: "",
-      firstname: "",
-      lastname: "",
-      role: RoleEnum["gestionnaire_region"],
-      enabled: true,
+      email: user.email ?? "",
+      codeRegion: user.codeRegion ?? "",
+      firstname: user.firstname ?? "",
+      lastname: user.lastname ?? "",
+      role: user.role ?? RoleEnum["gestionnaire_region"],
+      enabled: user.enabled ?? true,
     },
   });
 
@@ -60,7 +65,7 @@ export const EditUser = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, reset]);
 
-  const { data: regions } = client.ref("[GET]/regions").useQuery({});
+  const { data: regions, isLoading: isLoadingRegions } = client.ref("[GET]/regions").useQuery({});
 
   const queryClient = useQueryClient();
 
@@ -68,6 +73,7 @@ export const EditUser = ({
     mutate: updateUser,
     isLoading,
     isError,
+    error
   } = client.ref("[PUT]/users/:userId").useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries(["[GET]/users"]);
@@ -77,25 +83,29 @@ export const EditUser = ({
 
   const roles = getHierarchy(auth?.user?.role as Role);
   const isAdminRegion = hasRole({user: auth?.user, role: RoleEnum["admin_region"]});
-  const filteredRegions = (() => {
+  const filteredRegions = useMemo(() => {
     if (!regions) return [];
     if (isAdminRegion) {
       return regions.filter((region) => region.value === auth?.user?.codeRegion);
     }
     return regions;
-  })();
+  }, [regions, isAdminRegion, auth?.user?.codeRegion]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
         as="form"
-        onSubmit={handleSubmit((v) =>
+        onSubmit={handleSubmit((v) => {
           updateUser({
-            body: { ...v, codeRegion: v.codeRegion || null },
+            body: {
+              ...v,
+              codeRegion: v.codeRegion === "" ? null : v.codeRegion,
+              fonction: v.fonction === "" ? null : v.fonction,
+            },
             params: { userId: user?.id },
-          })
-        )}
+          });
+        })}
       >
         <ModalHeader>Éditer un utilisateur</ModalHeader>
         <ModalCloseButton />
@@ -105,7 +115,7 @@ export const EditUser = ({
             <Input
               type="email"
               {...register("email", {
-                validate: (v) => z.string().email().safeParse(v).success || "Veuillez saisir un email valide",
+                validate: (v) => z.string().email().safeParse(v).success ?? "Veuillez saisir un email valide",
               })}
             />
             {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
@@ -143,22 +153,25 @@ export const EditUser = ({
             </Select>
             {!!errors.role && <FormErrorMessage>{errors.role.message}</FormErrorMessage>}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.codeRegion}>
-            <FormLabel>Code région</FormLabel>
-            <Select {...register("codeRegion")}>
-              {!isAdminRegion && <option value="">Aucune</option>}
-              {filteredRegions?.map((region) => (
-                <option key={region.value} value={region.value}>
-                  {region.label}
-                </option>
-              ))}
-            </Select>
-            {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
-          </FormControl>
+          {
+            !isLoadingRegions ? (<FormControl mb="4" isInvalid={!!errors.codeRegion}>
+              <FormLabel>Code région</FormLabel>
+              <Select {...register("codeRegion")}>
+                {!isAdminRegion && <option value={""}>Aucun</option>}
+                {filteredRegions?.map((region) => (
+                  <option key={region.value} value={region.value}>
+                    {region.label}
+                  </option>
+                ))}
+              </Select>
+              {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
+            </FormControl>
+            ) : <Skeleton mb="4" height="40px" />
+          }
           <FormControl mb="4" isInvalid={!!errors.fonction}>
             <FormLabel>Fonction de l'utilisateur</FormLabel>
             <Select {...register("fonction")}>
-              {<option value="">Aucune</option>}
+              {<option value={""}>Aucune</option>}
               {Object.keys(UserFonctionEnum)?.map((userFonction) => (
                 <option key={userFonction} value={userFonction}>
                   {userFonction}
@@ -176,7 +189,7 @@ export const EditUser = ({
           </FormControl>
           {isError && (
             <Alert status="error">
-              <AlertDescription>Erreur lors de la création</AlertDescription>
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
             </Alert>
           )}
         </ModalBody>

@@ -1,9 +1,8 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line n/no-extraneous-import, import/no-extraneous-dependencies
-import { inject } from "injecti";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import {findOneDemandeQuery} from '@/modules/demandes/repositories/findOneDemande.query';
+import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
+import { inject } from "@/utils/inject";
 
 import { createSuiviQuery } from "./submitSuivi.query";
 
@@ -15,16 +14,16 @@ export const [submitSuiviUsecase, submitSuiviFactory] = inject(
   (deps) =>
     async ({
       user,
-      intentionNumero,
+      demandeNumero,
     }: {
       user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
-      intentionNumero: string;
+      demandeNumero: string;
     }) => {
-      const intentionData = await findOneDemandeQuery(intentionNumero);
-      if (!intentionData) throw Boom.notFound("Intention non trouvée en base");
+      const demandeData = await findOneDemandeQuery(demandeNumero);
+      if (!demandeData) throw Boom.notFound("Demande non trouvée en base");
 
       const createdSuivi = await deps.createSuiviQuery({
-        intentionNumero,
+        demandeNumero,
         userId: user.id,
       });
 

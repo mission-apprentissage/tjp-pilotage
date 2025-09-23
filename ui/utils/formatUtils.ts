@@ -39,8 +39,20 @@ export const formatArray = (values?: Array<string | number | undefined>, capital
   return values.filter((value) => value).join(", ");
 };
 
-export const formatNumber = (value?: number, numberOfDigits: number = 0): number => {
-  if (!value) return 0;
+export const formatNumber = (
+  value?: number,
+  numberOfDigits: number = 0,
+  nullValue: number = 0
+): number => {
+  if (value === undefined || value === null || Number.isNaN(value)) return nullValue;
+  return Number.parseFloat(value.toFixed(numberOfDigits));
+};
+
+export const formatNumberWithUndefined = (
+  value?: number,
+  numberOfDigits: number = 0,
+): number | undefined => {
+  if (value === undefined || value === null || Number.isNaN(value)) return undefined;
   return Number.parseFloat(value.toFixed(numberOfDigits));
 };
 
@@ -55,6 +67,12 @@ export const formatNumberToString = (
     maximumFractionDigits: numberOfDigits,
   }).format(value);
 };
+
+export const formatNumberToMonetaryString = (
+  value?: number | null,
+  numberOfDigits: number = 0,
+  nullValue: string = "0"
+): string => `${formatNumberToString(value, numberOfDigits, nullValue)} €`;
 
 export const formatPercentage = (
   value?: number | null,

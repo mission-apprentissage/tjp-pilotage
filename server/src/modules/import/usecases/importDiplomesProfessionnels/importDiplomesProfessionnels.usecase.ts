@@ -1,8 +1,6 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
-
 import type { DiplomeProfessionnelLine } from "@/modules/import/fileTypes/DiplomesProfessionnels";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { createDiplomeProfessionnel } from "./createDiplomeProfessionnel.dep";
 import { findDiplomesProfessionnels } from "./findDiplomeProfessionnel.dep";
@@ -51,7 +49,7 @@ export const [importDiplomesProfessionnels] = inject(
       },
       { parallel: 20 }
     ).then(() => {
-      process.stdout.write(`${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`);
+      process.stdout.write(errorCount > 0 ? `(avec ${errorCount} erreurs)\n\n` : "\n\n");
     });
     console.log("Import des diplomeProfessionnel (apprentissage)");
     errorCount = 0;
@@ -72,7 +70,7 @@ export const [importDiplomesProfessionnels] = inject(
       },
       { parallel: 20 }
     ).then(() => {
-      process.stdout.write(`${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`);
+      process.stdout.write(errorCount > 0 ? `(avec ${errorCount} erreurs)\n\n` : "\n\n");
     });
   }
 );

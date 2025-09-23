@@ -3,15 +3,17 @@ import { CURRENT_RENTREE } from "shared";
 
 import { getKbdClient } from "@/db/db";
 import { getDateRentreeScolaire } from "@/modules/data/services/getRentreeScolaire";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const searchEtablissementQuery = async ({
   search,
+  isFormulaire = false,
   filtered,
   codeRegion,
 }: {
   search: string;
+  isFormulaire?: boolean;
   filtered?: boolean;
   codeRegion?: string;
 }) => {
@@ -23,7 +25,6 @@ export const searchEtablissementQuery = async ({
     .distinct()
     .where((eb) =>
       eb.and([
-        eb("dataEtablissement.typeUai", "in", ["CLG", "EREA", "EXP", "LP", "LYC", "SEP", "TSGE"]),
         eb.or([
           eb("dataEtablissement.uai", "ilike", `${search}%`),
           eb.and(
@@ -39,6 +40,19 @@ export const searchEtablissementQuery = async ({
         ]),
       ])
     )
+    .$call((q) => {
+      // Dans le cas de la recherche d'établissement dans le formulaire, on ne veut que les établissements qui sont
+      // - les collèges (CLG),
+      // - les établissements régionaux d'enseignement adapté (EREA),
+      // - les lycées pro (LP),
+      // - les lycées (LYC)
+      if(isFormulaire) return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "LP", "LYC"]);
+      // Sinon dans le cas du panorama établissement par exemple on inclut également
+      // - les sections d'enseignement professionnel (SEP),
+      // - les expérience en milieu professionnel (EXP),
+      // - les tronc commun sciences de gestion et numérique (TSGE)
+      return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "LP", "LYC", "EXP", "SEP", "TSGE"]);
+    })
     .$call((q) => {
       if (!codeRegion) return q;
       return q.where("dataEtablissement.codeRegion", "=", codeRegion);

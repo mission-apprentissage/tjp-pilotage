@@ -16,13 +16,16 @@ export const isUserInRegionsExperimentation2024 = (
   { user }:
   { user?: { codeRegion?: string, role?: Role } }
 ): boolean => {
-  if(hasRole({ user, role: RoleEnum["admin"] }) || hasRole({ user, role : RoleEnum["pilote"]})) return true;
+  if(isUserNational({user})) return true;
   if (!user?.codeRegion) return false;
   return CODES_REGIONS_EXPE_2024.includes(user.codeRegion);
 };
 
 export const isUserNational = ({ user }: { user?: { role?: Role };}): boolean =>
   hasRole({user, role: RoleEnum["admin"]}) || hasRole({user, role: RoleEnum["pilote"]});
+
+export const isAdmin = ({ user }: { user?: { role?: Role };}): boolean =>
+  hasRole({user, role: RoleEnum["admin"]}) || hasRole({user, role: RoleEnum["admin_region"]});
 
 export const hasRole = ({ user, role }: { user?: { role?: Role }; role: Role }): boolean =>
   user?.role === role;

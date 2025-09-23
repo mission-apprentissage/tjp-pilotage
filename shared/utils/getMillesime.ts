@@ -9,8 +9,17 @@ export const getMillesime = ({ millesimeSortie, offset }: { millesimeSortie: str
 
 export const getMillesimeFromRentreeScolaire = ({
   rentreeScolaire,
-  offset,
+  offset = 0,
 }: {
   rentreeScolaire: string;
-  offset: number;
+  offset?: number;
 }): string => `${+rentreeScolaire + (offset - 2)}_${+rentreeScolaire + (offset - 1)}`;
+
+export const getMillesimesFromRentreeScolaire = ({
+  rentreeScolaire,
+  offset = 0,
+}: {
+  rentreeScolaire: Array<string>;
+  offset?: number;
+}): Array<string> =>
+  rentreeScolaire.map((rentree) => getMillesimeFromRentreeScolaire({ rentreeScolaire: rentree, offset }));

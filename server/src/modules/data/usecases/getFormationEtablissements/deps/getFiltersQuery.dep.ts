@@ -1,6 +1,7 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import type { DB } from "@/db/db";
@@ -26,16 +27,20 @@ export const getFiltersQuery = async ({
   cfd,
   uai,
   codeNsf,
-  rentreeScolaire = [CURRENT_RENTREE],
+  rentreeScolaire = CURRENT_RENTREE,
 }: Partial<Filters>) => {
   const base = getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
+    )
     .leftJoin("dataFormation", "dataFormation.cfd", "formationView.cfd")
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
     .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
@@ -44,7 +49,7 @@ export const getFiltersQuery = async ({
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
-    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
+    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -225,6 +230,43 @@ export const getFiltersQuery = async ({
     ])
     .execute();
 
+  const rentreesScolaires = await getKbdClient()
+    .selectFrom("indicateurEntree")
+    .select([
+      "indicateurEntree.rentreeScolaire as value",
+      sql<string>`CONCAT('RS ', ${sql.ref("indicateurEntree.rentreeScolaire")})`.as("label"),
+    ])
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc")
+    .execute();
+
+  const datesEffetTransformation = await getKbdClient()
+    .selectFrom("demandeConstatView as demandeConstat")
+    .select([
+      "demandeConstat.rentreeScolaire as value",
+      sql<string>`CONCAT('Transformation RS ', ${sql.ref("demandeConstat.rentreeScolaire")})`.as("label"),
+    ])
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc")
+    .execute();
+
+  const typesDemande = await getKbdClient()
+    .selectFrom("demandeConstatView as demandeConstat")
+    .select([
+      "demandeConstat.typeDemande as value",
+      "demandeConstat.typeDemande as label"
+    ])
+    .where("demandeConstat.typeDemande", "not in", [
+      DemandeTypeEnum["augmentation_compensation"],
+      DemandeTypeEnum["ouverture_compensation"]
+    ])
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc")
+    .execute();
+
   return {
     regions: regionFilters.map(cleanNull),
     departements: departementFilters.map(cleanNull),
@@ -247,5 +289,8 @@ export const getFiltersQuery = async ({
         value: PositionQuadrantEnum["Hors quadrant"],
       },
     ],
+    rentreesScolaires: rentreesScolaires.map(cleanNull),
+    datesEffetTransformation: datesEffetTransformation.map(cleanNull),
+    typesDemande: typesDemande.map(cleanNull),
   };
 };

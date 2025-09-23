@@ -1,4 +1,5 @@
 import { CURRENT_RENTREE } from "shared";
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 
 import { getKbdClient } from "@/db/db";
 import { notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
@@ -25,6 +26,7 @@ export const getFormationMailleEtab = ({
       "formationView.codeNsf",
       "dateFermeture",
       "typeFamille",
+      "voie"
     ])
     .where((eb) => notHistoriqueUnlessCoExistant(eb, CURRENT_RENTREE))
     .orderBy(["libelleNsf", "libelleNiveauDiplome", "libelleFormation"])
@@ -33,7 +35,11 @@ export const getFormationMailleEtab = ({
   return getKbdClient()
     .with("formations", () => formations)
     .selectFrom("formations")
-    .leftJoin("formationEtablissement", "formations.cfd", "formationEtablissement.cfd")
+    .leftJoin("formationEtablissement",(join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formations.cfd")
+        .onRef("formationEtablissement.voie", "=", "formations.voie")
+    )
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
     .select((sb) => [
       sb.ref("formations.libelleNiveauDiplome").as("libelleNiveauDiplome"),
@@ -56,6 +62,9 @@ export const getFormationMailleEtab = ({
       "formations.typeFamille",
       "formations.codeNsf",
     ])
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .$call((q) => {
       if (codeRegion) {
         return q.where("codeRegion", "=", codeRegion);

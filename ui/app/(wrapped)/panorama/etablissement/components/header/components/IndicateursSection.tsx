@@ -1,5 +1,8 @@
-import { Badge, Box, Flex, GridItem, Heading, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
+import { Badge, Flex, GridItem, Heading, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
 
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
@@ -14,13 +17,12 @@ import { formatNumberToString } from "@/utils/formatUtils";
 import { DonneesIncompletes } from "./DonneesIncompletes";
 
 const getCompareData = (compareTo?: CompareTo) => {
-  const { value, direction } = compareTo || {};
+  const { value, direction } = compareTo ?? {};
 
   if (!value || !direction) return null;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [green, red, grey] = useToken("colors", [
-    // TODO useToken
     "success.425",
     "error.425",
     "grey.425",
@@ -52,13 +54,13 @@ const IndicateurValeurAjoutee = ({ indicateur }: { indicateur?: Indicateur }) =>
         iconSize={"16px"}
         glossaireEntryKey={"valeur-ajoutee"}
         tooltip={
-          <Box>
+          <Flex direction="column" gap={2}>
             <Text>
               Capacité de l'établissement à insérer, en prenant en compte le profil social des élèves et le taux de
               chômage de la zone d'emploi, comparativement au taux de référence d’établissements similaires.
             </Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
+            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+          </Flex>
         }
       />
     }
@@ -82,20 +84,7 @@ const IndicateurTauxEmploi6mois = ({ indicateur }: { indicateur?: Indicateur }) 
   <DashboardCard
     label="Taux d'emploi à 6 mois"
     grow={1}
-    tooltip={
-      <GlossaireShortcut
-        display={"inline"}
-        marginInline={1}
-        iconSize={"16px"}
-        glossaireEntryKey={"taux-emploi-6-mois"}
-        tooltip={
-          <Box>
-            <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
-        }
-      />
-    }
+    tooltip={<TooltipDefinitionTauxEmploi6Mois />}
     minH={"120px"}
     badge={
       <Badge variant="lavander" size={"xs"}>
@@ -115,20 +104,7 @@ const IndicateurPoursuiteDetudes = ({ indicateur }: { indicateur?: Indicateur })
   <DashboardCard
     label="Poursuite d'études"
     grow={1}
-    tooltip={
-      <GlossaireShortcut
-        display={"inline"}
-        marginInline={1}
-        iconSize={"16px"}
-        glossaireEntryKey={"taux-poursuite-etudes"}
-        tooltip={
-          <Box>
-            <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
-        }
-      />
-    }
+    tooltip={<TooltipDefinitionTauxPoursuiteEtudes />}
     minH={"120px"}
     badge={
       <Badge variant="lavander" size={"xs"}>
@@ -155,15 +131,7 @@ const IndicateurTauxDevenirFavorable = ({ indicateur }: { indicateur?: Indicateu
           marginInline={1}
           iconSize={"16px"}
           glossaireEntryKey={"taux-de-devenir-favorable"}
-          tooltip={
-            <Box>
-              <Text>
-                (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                dernière année de formation.
-              </Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
-          }
+          tooltip={<TooltipDefinitionTauxDevenirFavorable />}
         />
       }
       minH={"120px"}
@@ -209,10 +177,11 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
             iconSize={"14px"}
             glossaireEntryKey={"inserjeunes"}
             tooltip={
-              <Box>
-                <Text>Ces chiffres incluent l'apprentissage pour les établissements qui en proposent.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+              <Flex direction="column" gap={2}>
+                <Text>Ces chiffres incluent les élèves en apprentissage pour les établissements qui en proposent en classes mixtes{' '}
+                  (les données pour les classes en 100% apprentissage ne sont pas disponibles).</Text>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
           />
         </Flex>
@@ -222,13 +191,13 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
             marginLeft={1}
             glossaireEntryKey={"millesime"}
             tooltip={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>
-                  Cohorte d’élèves pour laquelle les indicateurs InserJeunes ont été mesurés systématiquement sur 2
-                  années scolaires cumulées.
+                  Cohorte d’élèves pour laquelle les indicateurs InserJeunes ont été mesurés{" "}
+                  (systématiquement pour 2 années scolaires cumulées)
                 </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
           />
         </Badge>

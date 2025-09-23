@@ -2,12 +2,15 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { OrderZodType } from "../../enum/orderEnum";
+import { TypeFamilleZodType } from "../../enum/typeFamilleEnum";
+import {VoieZodType} from '../../enum/voieEnum';
 import {CampagneSchema} from '../../schema/campagneSchema';
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const CorrectionItem = z.object({
-  intentionNumero: z.string().optional(),
+  demandeNumero: z.string().optional(),
   // Établissement
   libelleEtablissement: z.string().optional(),
   uai: z.string(),
@@ -27,9 +30,12 @@ const CorrectionItem = z.object({
   libelleDispositif: z.string().optional(),
   codeDispositif: z.string(),
   cfd: z.string(),
+  isFormationRenovee: z.boolean().optional(),
+  typeFamille: TypeFamilleZodType.optional(),
   // Demande
   coloration: z.boolean().optional(),
-  libelleColoration: z.string().optional(),
+  libelleColoration1: z.string().optional(),
+  libelleColoration2: z.string().optional(),
   commentaire: z.string().optional(),
   updatedAt: z.string(),
   createdAt: z.string(),
@@ -75,10 +81,10 @@ export const FiltersSchema = z.object({
   amiCMA: z.string().optional(),
   secteur: z.string().optional(),
   positionQuadrant: z.string().optional(),
-  voie: z.enum(["scolaire", "apprentissage"]).optional(),
+  voie: VoieZodType.optional(),
   campagne: z.string().optional(),
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  order: OrderZodType.optional(),
   orderBy: CorrectionItem.keyof().optional(),
   offset: z.coerce.number().optional(),
   limit: z.coerce.number().optional(),

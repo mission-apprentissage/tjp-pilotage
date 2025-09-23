@@ -1,8 +1,10 @@
 import { z } from "zod";
 
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import {OrderZodType} from '../../enum/orderEnum';
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
+import {TypeFamilleZodType} from '../../enum/typeFamilleEnum';
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
@@ -34,6 +36,7 @@ const FormationEtablissementLineSchema = z.object({
   effectif2: z.coerce.number().optional(),
   effectif3: z.coerce.number().optional(),
   tauxPression: z.coerce.number().optional(),
+  tauxDemande: z.coerce.number().optional(),
   tauxRemplissage: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
   tauxInsertion: z.coerce.number().optional(),
@@ -42,6 +45,38 @@ const FormationEtablissementLineSchema = z.object({
   tauxPoursuiteEtablissement: z.number().optional(),
   tauxInsertionEtablissement: z.number().optional(),
   tauxDevenirFavorableEtablissement: z.number().optional(),
+  evolutionTauxSortie: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      tauxInsertion: z.coerce.number().optional(),
+      tauxPoursuite: z.coerce.number().optional(),
+      tauxDevenirFavorable: z.coerce.number().optional(),
+    })
+  ),
+  evolutionTauxSortieEtablissement: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      tauxInsertion: z.coerce.number().optional(),
+      tauxPoursuite: z.coerce.number().optional(),
+      tauxDevenirFavorable: z.coerce.number().optional(),
+    })
+  ),
+  evolutionTauxEntree: z.array(
+    z.object({
+      rentreeScolaire: z.string(),
+      tauxDemande: z.coerce.number().optional(),
+      tauxPression: z.coerce.number().optional(),
+      tauxRemplissage: z.coerce.number().optional(),
+      capacite: z.coerce.number().optional(),
+      effectif: z.coerce.number().optional()
+    })
+  ),
+  evolutionPositionQuadrant: z.array(
+    z.object({
+      millesimeSortie: z.string(),
+      positionQuadrant: z.string().optional(),
+    })
+  ),
   valeurAjoutee: z.coerce.number().optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
@@ -58,13 +93,20 @@ const FormationEtablissementLineSchema = z.object({
       libelleFormation: z.string().optional(),
     })
     .optional(),
-  typeFamille: z.string().optional(),
+  typeFamille: TypeFamilleZodType.optional(),
   isHistoriqueCoExistant: z.coerce.boolean().optional(),
   // CFD de l'éventuelle formation renovant la formation actuelle
   formationRenovee: z.string().optional(),
   // Flag indiquant si la formation est renovée
   isFormationRenovee: z.coerce.boolean().optional(),
   dateFermeture: z.string().optional(),
+  // Caractéristiques de la transformation
+  numero: z.string().optional(),
+  typeDemande: z.string().optional(),
+  dateEffetTransformation: z.string().optional(),
+  differenceCapaciteApprentissage: z.string().optional(),
+  differenceCapaciteScolaire: z.string().optional(),
+  anneeCampagne: z.string().optional()
 });
 
 const FiltersSchema = z.object({
@@ -76,7 +118,7 @@ const FiltersSchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   codeDispositif: z.array(z.string()).optional(),
   cfdFamille: z.array(z.string()).optional(),
-  rentreeScolaire: z.array(z.string()).optional(),
+  rentreeScolaire: z.string().optional(),
   secteur: z.array(SecteurZodType).optional(),
   uai: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
@@ -84,7 +126,9 @@ const FiltersSchema = z.object({
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
   withAnneeCommune: z.string().optional(),
   search: z.string().optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  dateEffetTransformation: z.array(z.string()).optional(),
+  typeDemande: z.array(z.string()).optional(),
+  order: OrderZodType.optional(),
   orderBy: FormationEtablissementLineSchema.keyof().optional(),
   offset: z.coerce.number().optional(),
   limit: z.coerce.number().optional(),
@@ -108,6 +152,9 @@ export const getFormationEtablissementsSchema = {
         libellesNsf: z.array(OptionSchema),
         secteurs: z.array(OptionSchema),
         positionsQuadrant: z.array(OptionSchema),
+        rentreesScolaires: z.array(OptionSchema),
+        datesEffetTransformation: z.array(OptionSchema),
+        typesDemande: z.array(OptionSchema),
       }),
       etablissements: z.array(FormationEtablissementLineSchema),
     }),

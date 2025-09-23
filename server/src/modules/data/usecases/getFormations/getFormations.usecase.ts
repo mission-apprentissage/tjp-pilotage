@@ -1,15 +1,14 @@
-import type { MILLESIMES_IJ } from "shared";
 import type { getFormationsSchema } from "shared/routes/schemas/get.formations.schema";
 import type { z } from "zod";
 
-import { getFormationsRenoveesRentreeScolaireQuery } from "@/modules/data/queries/getFormationsRenovees/getFormationsRenovees";
-import { getStatsSortieParNiveauDiplomeQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
+import type { RequestUser } from "@/modules/core/model/User";
 
 import { getFiltersQuery } from "./deps/getFiltersQuery.dep";
 import { getFormationsQuery } from "./deps/getFormationsQuery.dep";
+import { getFormationsScolairesRenoveesQuery } from './deps/getFormationsScolairesRenoveesQuery.dep';
 
 export interface Filters extends z.infer<typeof getFormationsSchema.querystring> {
-  millesimeSortie: (typeof MILLESIMES_IJ)[number];
+  user?: RequestUser
 }
 
 const getFormationsFactory =
@@ -17,15 +16,14 @@ const getFormationsFactory =
     deps = {
       getFormationsQuery,
       getFiltersQuery,
-      getStatsSortieParNiveauDiplomeQuery,
-      getFormationsRenoveesRentreeScolaireQuery,
+      getFormationsScolairesRenoveesQuery,
     }
   ) =>
     async (activeFilters: Partial<Filters>) => {
       const [{ formations, count }, filters, formationsRenoveesEnseignees] = await Promise.all([
         deps.getFormationsQuery(activeFilters),
         deps.getFiltersQuery(activeFilters),
-        deps.getFormationsRenoveesRentreeScolaireQuery(activeFilters),
+        deps.getFormationsScolairesRenoveesQuery(activeFilters),
       ]);
 
       return {

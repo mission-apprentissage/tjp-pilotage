@@ -14,33 +14,20 @@ import type { DB as DBSchema } from "./schema";
 export interface DB
   extends Omit<
     DBSchema,
-    | "demandeIntentionNonMaterializedView"
-    | "latestDemandeIntentionNonMaterializedView"
-    | "latestIntentionNonMaterializedView"
     | "latestDemandeNonMaterializedView"
     | "formationNonMaterializedView"
+    | "demandeConstatNonMaterializedView"
   > {
-  demandeIntentionView: {
-    [K in keyof DBSchema["demandeIntentionNonMaterializedView"]]: NonNullable<
-      DBSchema["demandeIntentionNonMaterializedView"][K]
-    >;
-  };
-
-  latestDemandeIntentionView: {
-    [K in keyof DBSchema["latestDemandeIntentionNonMaterializedView"]]: NonNullable<
-      DBSchema["latestDemandeIntentionNonMaterializedView"][K]
-    >;
-  };
-
-  latestIntentionView: {
-    [K in keyof DBSchema["latestIntentionNonMaterializedView"]]: NonNullable<
-      DBSchema["latestIntentionNonMaterializedView"][K]
-    >;
-  };
 
   latestDemandeView: {
     [K in keyof DBSchema["latestDemandeNonMaterializedView"]]: NonNullable<
       DBSchema["latestDemandeNonMaterializedView"][K]
+    >;
+  };
+
+  demandeConstatView: {
+    [K in keyof DBSchema["demandeConstatNonMaterializedView"]]: NonNullable<
+      DBSchema["demandeConstatNonMaterializedView"][K]
     >;
   };
 

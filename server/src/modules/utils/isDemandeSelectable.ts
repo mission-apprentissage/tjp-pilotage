@@ -1,43 +1,12 @@
 import * as Boom from "@hapi/boom";
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import {getPermissionScope, RoleEnum} from 'shared';
+import { getPermissionScope, hasRole, RoleEnum } from 'shared';
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import {PermissionEnum} from 'shared/enum/permissionEnum';
+import { PermissionEnum } from 'shared/enum/permissionEnum';
 
 import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
-
-export const isDemandeSelectable =
-  ({ user }: { user: RequestUser }) =>
-    (eb: ExpressionBuilder<DB, "demande">) => {
-      const filters = getDemandeSelectableFilters(user);
-
-      if(filters.role === RoleEnum["invite"]) return eb
-        .and([
-          filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
-          eb("demande.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
-        ]);
-
-      return eb.and([
-        filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
-        filters.uais ? eb("demande.uai", "in", filters.uais) : sql<boolean>`true`,
-      ]);
-    };
-
-const getDemandeSelectableFilters = (user?: RequestUser) => {
-  if (!user) throw new Error("missing variable user");
-  const scope = getPermissionScope(user?.role, "intentions/lecture");
-  if (!scope) throw Boom.forbidden();
-
-  return {
-    national: {},
-    région: { codeRegion: user.codeRegion },
-    user: { userId: user.id },
-    uai: { uais: user.uais ?? [] },
-    role: { role: user.role, codeRegion: user.codeRegion },
-  }[scope];
-};
 
 export const isDemandeNotDeleted = (eb: ExpressionBuilder<DB, "demande">) =>
   eb("demande.statut", "!=", DemandeStatutEnum["supprimée"]);
@@ -48,48 +17,66 @@ export const isDemandeNotDeletedOrRefused = (eb: ExpressionBuilder<DB, "demande"
 export const isDemandeNotAjustementRentree = (eb: ExpressionBuilder<DB, "demande">) =>
   eb("demande.typeDemande", "not in", ["ajustement"]);
 
-export const isIntentionBrouillonVisible =
+export const isDemandeBrouillonVisible =
   ({ user }: { user: RequestUser }) =>
-    (eb: ExpressionBuilder<DB, "intention">) => {
+    (eb: ExpressionBuilder<DB, "demande">) => {
       return eb.or([
-        eb.and([eb("intention.statut", "=", DemandeStatutEnum["brouillon"]), eb("intention.createdBy", "=", user.id)]),
-        eb("intention.statut", "!=", DemandeStatutEnum["brouillon"]),
+        eb.and([
+          eb("demande.statut", "=", DemandeStatutEnum["brouillon"]),
+          (user.uais && user.uais.length > 0) ? eb("demande.uai", "in", user.uais) : eb("demande.createdBy", "=", user.id),
+        ]),
+        eb("demande.statut", "!=", DemandeStatutEnum["brouillon"]),
       ]);
     };
 
-export const isIntentionSelectable =
+export const isDemandeSelectable =
   ({ user }: { user: RequestUser }) =>
-    (eb: ExpressionBuilder<DB, "intention">) => {
-      const filters = getIntentionSelectableFilters(user);
+    (eb: ExpressionBuilder<DB, "demande">) => {
+      const filters = getDemandeSelectableFilters(user);
 
-      if(filters.role === RoleEnum["invite"]) return eb
+      if (hasRole({ user, role: RoleEnum["invite"] })) return eb
         .and([
-          filters.codeRegion ? eb("intention.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
-          eb("intention.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
+          filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+          eb("demande.statut", "in", [
+            DemandeStatutEnum["demande validée"],
+            DemandeStatutEnum["refusée"]]),
+        ]);
+
+      if (hasRole({ user, role: RoleEnum["region"] })) return eb
+        .and([
+          filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+          eb("demande.statut", "in", [
+            DemandeStatutEnum["dossier complet"],
+            DemandeStatutEnum["projet de demande"],
+            DemandeStatutEnum["prêt pour le vote"],
+            DemandeStatutEnum["demande validée"],
+            DemandeStatutEnum["refusée"],
+          ]),
         ]);
 
       return eb.and([
-        filters.codeRegion ? eb("intention.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
-        filters.uais ? eb("intention.uai", "in", filters.uais) : sql<boolean>`true`,
+        filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+        filters.uais ? eb("demande.uai", "in", filters.uais) : sql<boolean>`true`,
       ]);
     };
 
-const getIntentionSelectableFilters = (user?: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">) => {
+export const isDemandeRegionVisible =
+  ({ user }: { user: RequestUser }) =>
+    (eb: ExpressionBuilder<DB, "region">) => {
+      const filters = getDemandeSelectableFilters(user);
+      return eb.and([filters.codeRegion ? eb("region.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`]);
+    };
+
+const getDemandeSelectableFilters = (user?: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">) => {
   if (!user) throw new Error("missing variable user");
-  const scope = getPermissionScope(user?.role, PermissionEnum["intentions-perdir/lecture"]);
+  const scope = getPermissionScope(user?.role, PermissionEnum["demande/lecture"]);
   if (!scope) throw Boom.forbidden();
 
   return {
     national: {},
     région: { codeRegion: user.codeRegion },
-    uai: { uais: user.uais },
+    uai: { uais: (user.uais && user.uais.length > 0) ? user.uais : undefined },
     role: { role: user.role, codeRegion: user.codeRegion },
     user: { userId: user.id },
   }[scope];
 };
-
-export const isIntentionNotDeleted = (eb: ExpressionBuilder<DB, "intention">) =>
-  eb("intention.statut", "!=", DemandeStatutEnum["supprimée"]);
-
-export const isIntentionNotDeletedOrRefused = (eb: ExpressionBuilder<DB, "intention">) =>
-  eb("intention.statut", "not in", [DemandeStatutEnum["supprimée"], DemandeStatutEnum["refusée"]]);

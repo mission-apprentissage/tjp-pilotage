@@ -1,5 +1,6 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
 
 import type { DB } from "@/db/db";
 import { getDateRentreeScolaire } from "@/modules/data/services/getRentreeScolaire";
@@ -18,9 +19,9 @@ export const openForRentreeScolaireIndicateurEntree = (
   eb:ExpressionBuilder<DB, "formationView" | "indicateurEntree">
 ) => {
   return eb.and([
-    eb("formationView.dateOuverture", "<=", sql<Date>`(${eb.ref("indicateurEntree.rentreeScolaire")} || '-09-01')::Date`),
+    eb("formationView.dateOuverture", "<=", sql<Date>`(${CURRENT_RENTREE} || '-09-01')::Date`),
     eb.or([
-      eb(sql<number>`date_part('year',${eb.ref("formationView.dateFermeture")})`, ">", sql<number>`${eb.ref("indicateurEntree.rentreeScolaire")}::float`),
+      eb(sql<number>`date_part('year',${eb.ref("formationView.dateFermeture")})`, ">", sql<number>`${CURRENT_RENTREE}::float`),
       eb("formationView.dateFermeture", "is", null),
     ]),
   ]);

@@ -47,11 +47,46 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 785 },
-          { rentreeScolaire: "2021", nbEtablissements: 797 },
-          { rentreeScolaire: "2022", nbEtablissements: 802 },
-          { rentreeScolaire: "2023", nbEtablissements: 806 },
-          { rentreeScolaire: "2024", nbEtablissements: 814 },
+          {
+            rentreeScolaire: "2020",
+            nbEtablissements: {
+              all: 785,
+              apprentissage: 0,
+              scolaire:785
+            }
+          },
+          {
+            rentreeScolaire: "2021",
+            nbEtablissements: {
+              all: 961,
+              apprentissage: 164,
+              scolaire: 797
+            }
+          },
+          {
+            rentreeScolaire: "2022",
+            nbEtablissements: {
+              all: 1162,
+              apprentissage: 360,
+              scolaire: 802
+            }
+          },
+          {
+            rentreeScolaire: "2023",
+            nbEtablissements: {
+              all: 1227,
+              apprentissage: 421,
+              scolaire: 806
+            }
+          },
+          {
+            rentreeScolaire: "2024",
+            nbEtablissements: {
+              all: 1224,
+              apprentissage: 410,
+              scolaire: 814
+            },
+          }
         ])
       );
     });
@@ -68,10 +103,46 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 89 },
-          { rentreeScolaire: "2021", nbEtablissements: 92 },
-          { rentreeScolaire: "2022", nbEtablissements: 94 },
-          { rentreeScolaire: "2023", nbEtablissements: 95 },
+          {
+            rentreeScolaire: "2020",
+            nbEtablissements: {
+              all: 89,
+              apprentissage: 0,
+              scolaire: 89,
+            }
+          },
+          {
+            rentreeScolaire: "2021",
+            nbEtablissements: {
+              all: 111,
+              apprentissage: 19,
+              scolaire: 92,
+            }
+          },
+          {
+            rentreeScolaire: "2022",
+            nbEtablissements: {
+              all: 149,
+              apprentissage: 55,
+              scolaire: 94,
+            }
+          },
+          {
+            rentreeScolaire: "2023",
+            nbEtablissements: {
+              all: 168,
+              apprentissage: 73,
+              scolaire: 95,
+            }
+          },
+          {
+            rentreeScolaire: "2024",
+            nbEtablissements: {
+              all: 173,
+              apprentissage: 76,
+              scolaire: 97,
+            }
+          },
         ])
       );
     });
@@ -89,10 +160,46 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 36 },
-          { rentreeScolaire: "2021", nbEtablissements: 37 },
-          { rentreeScolaire: "2022", nbEtablissements: 38 },
-          { rentreeScolaire: "2023", nbEtablissements: 39 },
+          {
+            rentreeScolaire: "2020",
+            nbEtablissements: {
+              all: 36,
+              apprentissage: 0,
+              scolaire: 36
+            }
+          },
+          {
+            rentreeScolaire: "2021",
+            nbEtablissements: {
+              all: 44,
+              apprentissage: 7,
+              scolaire: 37
+            }
+          },
+          {
+            rentreeScolaire: "2022",
+            nbEtablissements: {
+              all: 56,
+              apprentissage: 18,
+              scolaire: 38
+            }
+          },
+          {
+            rentreeScolaire: "2023",
+            nbEtablissements: {
+              all: 59,
+              apprentissage: 20,
+              scolaire: 39
+            }
+          },
+          {
+            rentreeScolaire: "2024",
+            nbEtablissements: {
+              all: 59,
+              apprentissage: 19,
+              scolaire: 40
+            }
+          },
         ])
       );
     });
@@ -111,11 +218,47 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 18 },
-          { rentreeScolaire: "2021", nbEtablissements: 18 },
-          { rentreeScolaire: "2022", nbEtablissements: 19 },
-          { rentreeScolaire: "2023", nbEtablissements: 20 },
-        ])
+          {
+            rentreeScolaire: "2020",
+            nbEtablissements: {
+              all: 18,
+              apprentissage: 0,
+              scolaire: 18
+            }
+          },
+          {
+            rentreeScolaire: "2021",
+            nbEtablissements: {
+              all: 20,
+              apprentissage: 2,
+              scolaire: 18
+            }
+          },
+          {
+            rentreeScolaire: "2022",
+            nbEtablissements: {
+              all: 28,
+              apprentissage: 9,
+              scolaire: 19
+            }
+          },
+          {
+            rentreeScolaire: "2023",
+            nbEtablissements: {
+              all: 30,
+              apprentissage: 10,
+              scolaire: 20
+            }
+          },
+          {
+            rentreeScolaire: "2024",
+            nbEtablissements: {
+              all: 29,
+              apprentissage: 9,
+              scolaire: 20
+            }
+          }]
+        )
       );
     });
   });

@@ -1,23 +1,38 @@
 import { Grid, GridItem, HStack, Tag, Text, VStack } from "@chakra-ui/react";
 
-import type { ChangelogEntry } from "@/app/(wrapped)/changelog/changelogContext";
+import type { ChangelogTypeType, IChangelog } from "@/app/(wrapped)/changelog/const";
 import { themeDefinition } from "@/theme/theme";
 
 interface EntryProps {
-  changelogEntry: ChangelogEntry;
+  changelogEntry: IChangelog;
 }
 
 // This is to ensure each react list element has a unique ID
 let entry = 0;
 
 const mois = ["Jan.", "Fev.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Aout", "Sept.", "Oct.", "Nov.", "Dec."];
-const generateDateString = (str: string) => {
-  const date = new Date(str);
+const generateDateString = (date: Date) => {
   const day = date.getDate();
   const month = mois[date.getMonth()];
   const year = date.getFullYear();
 
   return `${day} ${month} ${year}`;
+};
+
+const BG_COLOR: Record<ChangelogTypeType, string> = {
+  "Fonctionnalité": themeDefinition.colors.info[950],
+  "Données": themeDefinition.colors.orange.draft,
+  "BANDEAU": themeDefinition.colors.info[950],
+  "Bug": themeDefinition.colors.redmarianne[925],
+  "Maintenance": themeDefinition.colors.orange.draft,
+};
+
+const TEXT_COLOR: Record<ChangelogTypeType, string> = {
+  "Fonctionnalité": themeDefinition.colors.info[525],
+  "Données": themeDefinition.colors.yellowTournesol[407],
+  "BANDEAU": themeDefinition.colors.info[525],
+  "Bug": themeDefinition.colors.redmarianne[625],
+  "Maintenance": themeDefinition.colors.yellowTournesol[407],
 };
 
 export const Entry = ({ changelogEntry }: EntryProps) => {
@@ -48,21 +63,14 @@ export const Entry = ({ changelogEntry }: EntryProps) => {
             {changelogEntry.types.map((type, i) => (
               <Tag
                 key={`${entry}-${type}-${i}`}
-                backgroundColor={
-                  type.label === "Données" ? themeDefinition.colors.orange.draft : themeDefinition.colors.info[950]
-                }
-                color={
-                  type.label === "Données"
-                    ? themeDefinition.colors.yellowTournesol[407]
-                    : themeDefinition.colors.info[525]
-                }
+                backgroundColor={BG_COLOR[type]}
+                color={TEXT_COLOR[type]}
               >
-                {type.label.toUpperCase()}
+                {type.toUpperCase()}
               </Tag>
             ))}
             <Text color={themeDefinition.colors.grey["425_hover"]}>
-              {changelogEntry.date.type === "string" && changelogEntry.date.value}
-              {changelogEntry.date.type === "date" && generateDateString(changelogEntry.date.value)}
+              {generateDateString(changelogEntry.date)}
             </Text>
           </HStack>
           <Text fontSize={16} fontWeight={400}>

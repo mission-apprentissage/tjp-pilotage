@@ -24,6 +24,7 @@ import { PermissionEnum} from 'shared/enum/permissionEnum';
 import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
 
 import { themeDefinition } from "@/theme/theme";
+import { formatRole } from "@/utils/formatLibelle";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { PermissionBadge } from "./components/PermissionBadge";
@@ -75,8 +76,7 @@ const formatRights = (role: Role, label: string, user?: User) => {
   return formatPermissions(overridePermissions);
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
+const Page = () => {
   const [selectedUser, setSelectedUser] = useState<User>();
 
   return (
@@ -148,7 +148,7 @@ export default () => {
                       fontWeight={700}
                       borderBottom={"none"}
                     >
-                      {ROLES_LABELS[role](selectedUser?.codeRegion).label}
+                      {formatRole(role)}
                     </Td>
                     <Td
                       position="sticky"
@@ -184,3 +184,5 @@ export default () => {
     </GuardPermission>
   );
 };
+
+export default Page;

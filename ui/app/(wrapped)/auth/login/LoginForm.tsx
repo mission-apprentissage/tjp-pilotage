@@ -14,18 +14,25 @@ import {
   Link,
   Text,
 } from "@chakra-ui/react";
+import type { AxiosError } from "axios";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { emailRegex, hasRole, RoleEnum } from "shared";
+import { LoginErrorsEnum } from "shared/enum/loginErrorsEnum";
+import type { loginSchema } from "shared/routes/schemas/post.auth.login.schema";
+import type { z } from "zod";
 
 import { client } from "@/api.client";
 import { CodeRegionContext } from "@/app/codeRegionContext";
 import { PreviousCampagneContext } from "@/app/previousCampagneContext";
 import { UaisContext } from "@/app/uaiContext";
+import { publicConfig } from "@/config.public";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
+
+import { LOGIN_ERRORS } from "./const";
 
 
 export const LoginForm = () => {
@@ -45,10 +52,13 @@ export const LoginForm = () => {
   const { setUais } = useContext(UaisContext);
   const { data: { url } = {} } = client.ref("[GET]/dne_url").useQuery({});
 
+  const showConnectToDNEPortal = publicConfig.env !== "production" && url !== undefined;
+
   const {
     mutateAsync: login,
     isLoading,
     isError,
+    error
   } = client.ref("[POST]/auth/login").useMutation({
     onSuccess: async () => {
       const whoAmI = await client.ref("[GET]/auth/whoAmI").query({});
@@ -63,6 +73,10 @@ export const LoginForm = () => {
     },
   });
 
+  const loginError = useMemo(() => {
+    if (!error) return undefined;
+    return ((error as AxiosError)?.response?.data as z.infer<typeof loginSchema.response["401"]>).message ?? LoginErrorsEnum.UNKNOWN;
+  }, [error]);
 
   const router = useRouter();
 
@@ -104,9 +118,9 @@ export const LoginForm = () => {
             />
             {!!errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
           </FormControl>
-          {isError && (
+          {isError && loginError && (
             <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
-              Identifiants incorrects
+              {LOGIN_ERRORS[loginError].message}
             </Text>
           )}
           <Flex>
@@ -114,7 +128,7 @@ export const LoginForm = () => {
               Se connecter
             </Button>
           </Flex>
-          {false && (
+          {showConnectToDNEPortal && (
             <>
               <Divider mt="6" mb="6" />
               <Button width="100%" as={NextLink} href={url ?? "#"}>

@@ -5,6 +5,8 @@ import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 
+import { publicConfig } from "@/config.public";
+
 interface LinkWithIconProps {
   children: React.ReactNode;
   href: string;
@@ -117,9 +119,6 @@ export const LandingFooter = () => {
             </Link>
           </Box>
           <Box>
-            <Link href="mailto:orion@inserjeunes.beta.gouv.fr">Nous contacter : orion@inserjeunes.beta.gouv.fr</Link>
-          </Box>
-          <Box>
             <Link as={NextLink} href="/statistiques" onClick={() => trackEvent("footer:statistiques")}>
               Statistiques
             </Link>
@@ -147,6 +146,9 @@ export const LandingFooter = () => {
             <Link as={NextLink} href="/ressources" onClick={() => trackEvent("footer:ressources")}>
               Ressources
             </Link>
+          </Box>
+          <Box>
+            <Text>v{publicConfig.version}</Text>
           </Box>
         </HStack>
         <Flex justifyContent={"center"} width="100%">

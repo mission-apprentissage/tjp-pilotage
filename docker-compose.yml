@@ -7,7 +7,7 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - "127.0.0.1:5432:5432"
-    shm_size: 1gb
+    shm_size: 2gb
     volumes:
       - pilotage_postgres_data:/var/lib/postgresql/data:z
       - ./server/seed/seed_schema.dump:/seed_schema.dump:ro
@@ -38,6 +38,26 @@ services:
       - MP_WEBROOT=smtp
     volumes:
       - pilotage_smtp_data:/data
+  
+  documentation:
+    image: nginx:alpine
+    volumes:
+      - ./documentation:/usr/share/nginx/html
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    expose:
+      - "80"
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - pilotage_network
+
+networks:
+  pilotage_network:
+    name: pilotage_network
+
 
 volumes:
   pilotage_postgres_data:

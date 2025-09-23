@@ -16,6 +16,7 @@ export const up = async (db: Kysely<unknown>) => {
     .createView("demandeIntentionNonMaterializedView")
     .as(
       getKbdClient()
+        // @ts-ignore
         .selectFrom("intention")
         // @ts-ignore
         .select([
@@ -93,8 +94,11 @@ export const up = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
+          // @ts-ignore
           getKbdClient()
+            // @ts-ignore
             .selectFrom("demande")
+            // @ts-ignore
             .select([
               sql<boolean>`false`.as("isIntention"),
               "numero",
@@ -177,6 +181,7 @@ export const up = async (db: Kysely<unknown>) => {
     .createView("demandeIntentionView")
     .as(
       getKbdClient()
+        // @ts-ignore
         .selectFrom("intention")
         // @ts-ignore
         .select([
@@ -254,8 +259,11 @@ export const up = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
+          // @ts-ignore
           getKbdClient()
+            // @ts-ignore
             .selectFrom("demande")
+            // @ts-ignore
             .select([
               sql<boolean>`false`.as("isIntention"),
               "numero",
@@ -425,6 +433,7 @@ export const down = async (db: Kysely<unknown>) => {
     .createView("demandeIntentionNonMaterializedView")
     .as(
       getKbdClient()
+        // @ts-ignore
         .selectFrom("intention")
         // @ts-ignore
         .select([
@@ -500,9 +509,13 @@ export const down = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPlaces",
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
+      // @ts-ignore
         .union(
+          // @ts-ignore
           getKbdClient()
+            // @ts-ignore
             .selectFrom("demande")
+            // @ts-ignore
             .select([
               "numero",
               "cfd",
@@ -584,6 +597,7 @@ export const down = async (db: Kysely<unknown>) => {
     .createView("demandeIntentionView")
     .as(
       getKbdClient()
+        // @ts-ignore
         .selectFrom("intention")
         // @ts-ignore
         .select([
@@ -660,8 +674,11 @@ export const down = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
+          // @ts-ignore
           getKbdClient()
+            // @ts-ignore
             .selectFrom("demande")
+            // @ts-ignore
             .select([
               "numero",
               "cfd",

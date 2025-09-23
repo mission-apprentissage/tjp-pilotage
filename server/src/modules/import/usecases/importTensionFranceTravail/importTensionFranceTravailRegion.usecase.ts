@@ -1,10 +1,10 @@
 import { AxiosError } from "axios";
-import { inject } from "injecti";
 import { setTimeout } from "timers/promises";
 
 import { localFilePathManager } from "@/modules/core/services/filePathManager/localFilePathManager";
 import { getStatsPerspectivesRecrutementRegion } from "@/modules/import/services/franceTravail/franceTravail.api";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import {
   appendFranceTravailTensionFile,
@@ -78,11 +78,11 @@ export const [importTensionFranceTravailRegion] = inject(
                   retry = false;
                   if (e.response?.data?.message?.includes("FiltreErreurSldng")) {
                     console.error(
-                      `ERROR [REG=${codeRegion},ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`
+                      `ERROR [REG=${codeRegion},ROME=${codeRome}] Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`
                     );
                   } else {
                     console.error(
-                      `ERROR [REG=${codeRegion},ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`
+                      `ERROR [REG=${codeRegion},ROME=${codeRome}] Status code : ${e.response?.status}`
                     );
                   }
                 } else {

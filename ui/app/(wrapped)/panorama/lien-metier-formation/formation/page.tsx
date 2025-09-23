@@ -18,8 +18,6 @@ export type NsfOption = (typeof client.infer)["[GET]/nsf/search/:search"][number
 
 export type FormationOption = (typeof client.infer)["[GET]/nsf-diplome/search/:search"][number];
 
-// test
-
 const DashboardFormation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -109,11 +107,8 @@ const DashboardFormation = () => {
 
   return (
     <VStack width="100%" alignItems="start" gap="16px">
-      <Text>
-        À partir d’une formation, visualisez tous les débouchés métiers et l’offre de formation sur le territoire
-      </Text>
       <HStack alignItems="end" width="100%">
-        <HStack>
+        <HStack gap={4}>
           <Box width="300px">
             <AsyncNsfSearch onSelectNsf={onUpdateNsf} nsf={selectedNsf} />
           </Box>

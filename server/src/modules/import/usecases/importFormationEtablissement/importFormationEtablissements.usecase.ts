@@ -1,16 +1,20 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
-import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";
+import { MILLESIMES_IJ, RENTREES_SCOLAIRES, VoieEnum } from "shared";
 
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
+import { countDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/countDiplomesProfessionnels.dep";
+import { countFamillesMetiers } from "@/modules/import/usecases/importIJData/countFamillesMetiers.dep";
 import { findDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/findDiplomesProfessionnels.dep";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
+import { cleanApprentissageData } from "./cleanApprentissageData.dep";
 import { deleteFormationEtablissement } from "./deleteFormationEtablissement";
+import { findDataFormation } from "./findDataFormation.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { findFormationEtablissement } from "./findFormationEtablissement";
+import { findOffreApprentissageCfdUai } from "./findOffreApprentissageCfdUai";
 import { findUAIsApprentissage } from "./findUAIsApprentissage";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
 import { importFormation } from "./steps/importFormation/importFormation.step";
@@ -26,7 +30,7 @@ import {
   importIndicateursRegionSortie,
   importIndicateursRegionSortieApprentissage,
 } from "./steps/importIndicateursSortieRegionaux/importIndicateursSortieRegionaux.step";
-import { extractCfdFromMefAndDuree } from "./utils";
+import { extractCfdFromMefAndDuree, extractYearFromTags, isYearBetweenOuvertureAndFermeture } from "./utils";
 
 const processedUais = new Set<string>();
 
@@ -36,15 +40,28 @@ export const [importFormations] = inject(
     importFormationHistorique,
     findDiplomesProfessionnels,
     findFamillesMetiers,
+    countDiplomesProfessionnels,
+    countFamillesMetiers,
+    cleanApprentissageData
   },
   (deps) => {
     return async () => {
+      const { nbDiplomesProfessionnels } = await deps.countDiplomesProfessionnels();
+      const { nbFamillesMetiers } = await deps.countFamillesMetiers();
+      const total = nbDiplomesProfessionnels + nbFamillesMetiers;
+
+      console.log("Suppression des données apprentissage : IJ (indicateurSortie, indicateurEntree, indicateurRegionSortie) puis formationEtablissement");
+      await deps.cleanApprentissageData();
+      console.log("Données apprentissage supprimées");
+
+      console.log(`Début de l'import des données sur les ${total} formations`);
+
       await streamIt(
         (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
           const voie = item.voie;
-          console.log("cfd", `(${voie})`, cfd, count);
+          console.log("--", "cfd", `(${voie})`, cfd, `-- ${Math.round(count/total * 10000)/100}%`);
           if (!cfd) return;
           const ancienCfds = await deps.importFormationHistorique({
             cfd,
@@ -62,7 +79,7 @@ export const [importFormations] = inject(
         (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
-          console.log("cfd famille", cfd, count);
+          console.log("--", "cfd famille", cfd, `-- (${Math.round((count+nbDiplomesProfessionnels)/total * 10000)/100}%)`);
           if (!cfd) return;
           const formation = await deps.importFormation({ cfd });
           const ancienCfds = await deps.importFormationHistorique({ cfd });
@@ -93,16 +110,20 @@ export const [importFormationEtablissements] = inject(
     findUAIsApprentissage,
     findRawData: rawDataRepository.findRawData,
     findRawDatas: rawDataRepository.findRawDatas,
+    findDataFormation,
     findFormationEtablissement,
-    deleteFormationEtablissement
+    deleteFormationEtablissement,
+    findOffreApprentissageCfdUai
   },
   (deps) => {
-    return async ({ cfd, voie = "scolaire" }: { cfd: string; voie?: string }) => {
-      if (voie === "apprentissage") {
+    return async ({ cfd, voie = VoieEnum.scolaire }: { cfd: string; voie?: string }) => {
+      if (voie === VoieEnum.apprentissage) {
         await deps.importIndicateursRegionSortieApprentissage({ cfd });
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
-        for (const uai of uais) {
+        for (const offreUai of uais) {
+          // Récupération des données établissements concernés par l'offre apprentissage
+          const uai = offreUai.toUpperCase();
           if (!processedUais.has(uai)) {
             await deps.importEtablissement({ uai });
             for (const millesime of MILLESIMES_IJ) {
@@ -113,18 +134,36 @@ export const [importFormationEtablissements] = inject(
 
           // Récupération du codeDispositif pour les formations en apprentissage
           // à partir du contenu du fichier offres_apprentissage
-          const offreApprentissage = await deps.findRawData({
-            type: "offres_apprentissage",
-            filter: { "Formation: code CFD": cfd },
-          });
+          const offresApprentissages = await deps.findOffreApprentissageCfdUai({
+            cfd,
+            // Nous devons utiliser la valeure brute pour aller chercher la donnée dans le fichier CSV
+            uai: offreUai
+          }) ?? [];
 
-          if (!offreApprentissage) continue;
+          if (offresApprentissages.length === 0) {
+            console.log("---- Pas d'offre en apprentissage pour le couple", cfd, uai);
+            continue;
+          }
 
+          const tags: string[] = [];
+          for (let i = 0; i < offresApprentissages.length; i++) {
+            tags.push(offresApprentissages[i]["Offre: Tags"]);
+          }
+          const aggregatedTags = tags.join(",");
+
+          const offreApprentissage = offresApprentissages[0];
           const codesDispositifs: Array<string> = [];
           const mefs = offreApprentissage["Formation: codes MEF"]?.split(",").map((mef) => mef.trim()) ?? [];
           const dureeCollectee = offreApprentissage?.["Formation: durée collectée"]
             ? parseInt(offreApprentissage?.["Formation: durée collectée"])
             : -1;
+
+          const dataFormation = await deps.findDataFormation({ cfd });
+          const rentreesScolaires: string[] = extractYearFromTags(aggregatedTags)
+            .filter(year => isYearBetweenOuvertureAndFermeture(year, dataFormation));
+
+          // Ne pas importer les données concernant la formation si elle n'est pas associée à une rentrée scolaire
+          if (rentreesScolaires.length === 0) continue;
 
           if (mefs.length > 0) {
             /**
@@ -154,7 +193,7 @@ export const [importFormationEtablissements] = inject(
           if (codesDispositifs.length > 0) {
             // Il faut supprimer les anciens CodeDispositif à null puisqu'on les a maintenant déduits
             const oldFormationEtablissement = await deps.findFormationEtablissement({
-              uai, cfd, voie: "apprentissage", codeDispositif: null
+              uai, cfd, voie: VoieEnum.apprentissage, codeDispositif: null
             });
 
             if (oldFormationEtablissement) {
@@ -168,8 +207,20 @@ export const [importFormationEtablissements] = inject(
                 uai,
                 cfd,
                 codeDispositif,
-                voie: "apprentissage",
+                voie: VoieEnum.apprentissage,
               });
+
+              for (const rentreeScolaire of rentreesScolaires) {
+                await deps.importIndicateurEntree({
+                  formationEtablissementId: formationEtablissement.id,
+                  rentreeScolaire,
+                  cfd,
+                  uai,
+                  anneesEnseignement: [],
+                  anneesDispositif: {},
+                  voie: VoieEnum.apprentissage
+                });
+              }
 
               for (const millesime of MILLESIMES_IJ) {
                 await deps.importIndicateurSortieApprentissage({
@@ -185,8 +236,20 @@ export const [importFormationEtablissements] = inject(
               uai,
               cfd,
               codeDispositif: null,
-              voie: "apprentissage",
+              voie: VoieEnum.apprentissage,
             });
+
+            for (const rentreeScolaire of rentreesScolaires) {
+              await deps.importIndicateurEntree({
+                formationEtablissementId: formationEtablissement.id,
+                rentreeScolaire,
+                cfd,
+                uai,
+                anneesEnseignement: [],
+                anneesDispositif: {},
+                voie: VoieEnum.apprentissage
+              });
+            }
 
             for (const millesime of MILLESIMES_IJ) {
               await deps.importIndicateurSortieApprentissage({
@@ -246,6 +309,7 @@ export const [importFormationEtablissements] = inject(
                 uai,
                 anneesEnseignement,
                 anneesDispositif,
+                voie: VoieEnum.scolaire
               });
 
               for (const millesime of MILLESIMES_IJ) {

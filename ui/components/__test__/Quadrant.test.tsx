@@ -8,7 +8,7 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import { Quadrant } from "@/components/Quadrant";
 
-// from ui/app/(wrapped)/intentions/pilotage/main/quadrant/QuadrantSection.tsx
+// from ui/app/(wrapped)/demandes/pilotage/main/quadrant/QuadrantSection.tsx
 const EFFECTIF_SIZES = [
   { max: 15, size: 6 },
   { min: 15, max: 40, size: 10 },
@@ -17,7 +17,7 @@ const EFFECTIF_SIZES = [
   { min: 150, size: 22 },
 ];
 
-const { stats, formations } = generateMock(ROUTES["[GET]/pilotage-intentions/formations"].schema.response[200]);
+const { stats, formations } = generateMock(ROUTES["[GET]/pilotage/formations"].schema.response[200]);
 
 const setCurrentFormationId = vi.fn(({ _cfd, _dispositif }) => {});
 

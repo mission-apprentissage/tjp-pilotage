@@ -17,22 +17,24 @@ export const getDemandesRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/lecture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/lecture"]),
       handler: async (request, response) => {
         const user = request.user!;
         const { ...filters } = request.query;
+
         const result = await getDemandesUsecase({
           ...filters,
           user,
         });
 
-        const scope = getPermissionScope(user.role, PermissionEnum["intentions/ecriture"]);
+        const scope = getPermissionScope(user.role, PermissionEnum["demande/ecriture"]);
 
         response.status(200).send({
           ...result,
           demandes: result.demandes.map((demande) => ({
             ...demande,
             canEdit: guardScope(scope, {
+              uai: () => user.uais?.includes(demande.uai) ?? false,
               région: () => user.codeRegion === demande.codeRegion,
               national: () => true,
             }),

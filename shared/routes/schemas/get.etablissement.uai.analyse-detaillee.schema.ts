@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import { voie } from "../../enum/voieEnum";
+import {TypeFamilleZodType} from '../../enum/typeFamilleEnum';
+import {VoieZodType} from '../../enum/voieEnum';
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 
 const EtablissementSchema = z.object({
@@ -21,7 +22,7 @@ const ChiffresIjSchema = z.record(
   z.string(), // millesimeSortie
   z.object({
     millesimeSortie: z.string(),
-    voie: z.string(),
+    voie: VoieZodType,
     cfd: z.string(),
     codeDispositif: z.string().optional(),
     tauxPoursuite: z.coerce.number().optional(),
@@ -47,7 +48,7 @@ const ChiffresEntreeSchema = z.record(
   z.string(), // rentreeScolaire
   z.object({
     rentreeScolaire: z.string(),
-    voie: z.string(),
+    voie: VoieZodType,
     uai: z.string(),
     cfd: z.string(),
     codeDispositif: z.coerce.string().optional(),
@@ -71,14 +72,15 @@ export const FormationSchema = z.object({
   offre: z.string(),
   libelleNiveauDiplome: z.string().optional(),
   libelleFormation: z.string(),
-  voie: voie,
+  voie: VoieZodType,
   libelleDispositif: z.string().optional(),
   cfd: z.string(),
   codeDispositif: z.string().optional(),
   codeNiveauDiplome: z.string(),
-  typeFamille: z.string().optional(),
+  typeFamille: TypeFamilleZodType.optional(),
   dateOuverture: z.date().optional(),
   formationSpecifique: FormationSpecifiqueFlagsSchema,
+  isFormationRenovee: z.boolean().optional(),
 });
 
 const OffreSchema = z.string();
@@ -99,7 +101,7 @@ export const getAnalyseDetailleeEtablissementSchema = {
       }),
       filters: z.object({
         diplomes: z.array(OptionSchema),
-        voies: z.array(voie),
+        voies: z.array(VoieZodType),
       }),
     }),
   },

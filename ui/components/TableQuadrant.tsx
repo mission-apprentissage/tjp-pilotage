@@ -1,15 +1,16 @@
-import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { CURRENT_IJ_MILLESIME } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import { formatNumber } from "@/utils/formatUtils";
+import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
+import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "./GraphWrapper";
 import { OrderIcon } from "./OrderIcon";
 import { TableBadge } from "./TableBadge";
-import { TauxPressionScale } from "./TauxPressionScale";
-import { TooltipIcon } from "./TooltipIcon";
 
 type Formation = {
   libelleFormation?: string;
@@ -41,7 +42,6 @@ export const TableQuadrant = ({
     orderBy?: string;
   };
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   const getTdColor = (formation: Formation) => {
     if (currentFormationId && `${formation.cfd}_${formation.codeDispositif}` === currentFormationId)
       return "white !important";
@@ -93,19 +93,7 @@ export const TableQuadrant = ({
               >
                 {handleOrder && <OrderIcon {...order} column="tauxPression" />}
                 TX PRESSION
-                <TooltipIcon
-                  ml="1"
-                  label={
-                    <Box>
-                      <Text>
-                        Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.
-                      </Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
-                      <TauxPressionScale />
-                    </Box>
-                  }
-                  onClick={() => openGlossaire("taux-de-pression")}
-                />
+                <TooltipDefinitionTauxDePression />
               </Th>
               <Th
                 px="2"
@@ -117,16 +105,7 @@ export const TableQuadrant = ({
               >
                 {handleOrder && <OrderIcon {...order} column="tauxInsertion" />}
                 TX EMPLOI
-                <TooltipIcon
-                  ml="1"
-                  label={
-                    <Box>
-                      <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
-                    </Box>
-                  }
-                  onClick={() => openGlossaire("taux-emploi-6-mois")}
-                />
+                <TooltipDefinitionTauxEmploi6Mois />
               </Th>
               <Th
                 px="2"
@@ -138,16 +117,7 @@ export const TableQuadrant = ({
               >
                 {handleOrder && <OrderIcon {...order} column="tauxPoursuite" />}
                 TX POURSUITE
-                <TooltipIcon
-                  ml="1"
-                  label={
-                    <Box>
-                      <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
-                    </Box>
-                  }
-                  onClick={() => openGlossaire("taux-poursuite-etudes")}
-                />
+                <TooltipDefinitionTauxPoursuiteEtudes />
               </Th>
             </Tr>
           </Thead>
@@ -173,19 +143,21 @@ export const TableQuadrant = ({
                     {formation.libelle}
                   </Td>
                   <Td textAlign={"center"}>
-                    <TableBadge
-                      sx={getTauxPressionStyle(
-                        formation.tauxPression !== undefined ? formation?.tauxPression : undefined
-                      )}
-                    >
-                      {formation.tauxPression !== undefined ? formatNumber(formation?.tauxPression, 2) : "-"}
+                    <TableBadge sx={
+                      getTauxPressionStyle(
+                        formation.tauxPression !== undefined ?
+                          formatNumber(formation.tauxPression, 2) :
+                          undefined
+                      )
+                    }>
+                      {formatNumberToString(formation.tauxPression, 2, "-")}
                     </TableBadge>
                   </Td>
                   <Td color={getTdColor(formation)} maxW="20%">
-                    <GraphWrapper maxW="120px" value={formation.tauxInsertion} continuum={formation.continuum} />
+                    <GraphWrapper maxW="120px" value={formation.tauxInsertion} continuum={formation.continuum} millesime={CURRENT_IJ_MILLESIME} />
                   </Td>
                   <Td color={getTdColor(formation)} maxW="20%">
-                    <GraphWrapper maxW="120px" value={formation.tauxPoursuite} continuum={formation.continuum} />
+                    <GraphWrapper maxW="120px" value={formation.tauxPoursuite} continuum={formation.continuum} millesime={CURRENT_IJ_MILLESIME} />
                   </Td>
                 </Tr>
               ))}

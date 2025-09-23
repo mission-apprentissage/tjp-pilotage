@@ -1,18 +1,18 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, Flex, HStack, Text } from "@chakra-ui/react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import type { PanoramaFormation, PanoramaTopFlop } from "@/app/(wrapped)/panorama/types";
+import type { PanoramaFormation } from "@/app/(wrapped)/panorama/types";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 import { TableBadge } from "@/components/TableBadge";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { feature } from "@/utils/feature";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-type Formation = PanoramaFormation | PanoramaTopFlop;
+type Formation = PanoramaFormation;
 
 export const FormationTooltipContent = ({ formation }: { formation: Formation }) => {
   const { openGlossaire } = useGlossaireContext();
@@ -38,10 +38,10 @@ export const FormationTooltipContent = ({ formation }: { formation: Formation })
                 ml="1"
                 onClick={() => openGlossaire("effectif-en-entree")}
                 label={
-                  <Box>
+                  <Flex direction="column" gap={2}>
                     <Text>Effectifs en entrée en première année de formation.</Text>
-                    <Text>Cliquez pour plus d'infos.</Text>
-                  </Box>
+                    <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                  </Flex>
                 }
               />
             </span>
@@ -56,8 +56,14 @@ export const FormationTooltipContent = ({ formation }: { formation: Formation })
         label="Taux de pression"
         textBg="white"
         value={
-          <TableBadge sx={getTauxPressionStyle(formation?.tauxPression)}>
-            {formation.tauxPression !== undefined ? formatNumber(formation?.tauxPression, 2) : "-"}
+          <TableBadge sx={
+            getTauxPressionStyle(
+              formation.tauxPression !== undefined ?
+                formatNumber(formation.tauxPression, 2) :
+                undefined
+            )
+          }>
+            {formatNumberToString(formation.tauxPression, 2, "-")}
           </TableBadge>
         }
       />

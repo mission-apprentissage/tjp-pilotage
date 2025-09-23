@@ -1,7 +1,7 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { searchMetierSchema } from "shared/routes/schemas/get.metier.search.search.schema";
 import type { z } from "zod";
+
+import { inject } from "@/utils/inject";
 
 import { findMetierQuery } from "./dependencies/findMetier.query";
 

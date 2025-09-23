@@ -1,4 +1,4 @@
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading, Text } from "@chakra-ui/react";
 
 import { InformationDonneeIncompletes } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/InformationDonneeIncompletes";
 import type {
@@ -6,8 +6,8 @@ import type {
   ChiffresIJOffre,
   Formation,
 } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
-import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
@@ -34,24 +34,26 @@ export const Dashboard = ({
           {formation?.libelleFormation.replace("2nde commune", " ").replace("1ere commune", " ")}
         </Heading>
         <Flex direction={"row"} gap={2}>
-          <BadgeTypeFamille typeFamille={formation?.typeFamille as TypeFamilleKeys} labelSize="long" size={"md"} />
+          <BadgeTypeFamille typeFamille={formation?.typeFamille} labelSize="long" size={"md"} />
           <Flex>
             <BadgeVoieApprentissage voie={formation?.voie} labelSize="long" size={"md"} />
+            <BadgeFormationRenovee isFormationRenovee={formation?.isFormationRenovee} labelSize="long" size={"md"} />
             <BadgesFormationSpecifique formationSpecifique={formation?.formationSpecifique} />
             {formation?.voie === "apprentissage" && (
               <GlossaireShortcut
                 ml={2}
                 tooltip={
-                  <Box>
-                    Cette mention signale que la formation est enseignée en apprentissage sur les années civiles 2023
-                    et/ou 2024.
-                    <br />
-                    Une formation peut apparaître "dédoublée", il s'agit alors d'une classe mixte (voie scolaire et
-                    apprentissage), dont la part d'apprentis est inconnue.
-                    <br />
-                    <br />
-                    Cliquez pour plus d'infos.
-                  </Box>
+                  <Flex direction={"column"} gap={2}>
+                    <Text>
+                      Cette mention signale que la formation est enseignée en apprentissage sur les années civiles 2023
+                      et/ou 2024.
+                    </Text>
+                    <Text>
+                      Une formation peut apparaître "dédoublée", il s'agit alors d'une classe mixte (voie scolaire et
+                      apprentissage), dont la part d'apprentis est inconnue.
+                    </Text>
+                    <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                  </Flex>
                 }
               />
             )}

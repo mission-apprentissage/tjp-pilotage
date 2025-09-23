@@ -1,10 +1,17 @@
 "use client";
 
-import { Box, Container, Heading, HStack, Link, Stack, Text, VStack } from "@chakra-ui/react";
+import { Box, Container, Heading, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import type { DneSSOErrorsType } from "shared/enum/dneSSOErrorsEnum";
 
-const ErrorSSO = () => {
+import { ERROR_MESSAGES } from "@/app/(wrapped)/auth/login/const";
+
+interface IErrorSSOProps {
+  errorType: DneSSOErrorsType;
+}
+
+const ErrorSSO = ({ errorType }: IErrorSSOProps) => {
   const [open, setOpen] = useState(true);
 
   return (
@@ -48,13 +55,13 @@ const ErrorSSO = () => {
         <Box paddingX="8px" paddingY="16px" flexGrow={1}>
           <VStack spacing="4px" alignItems="start">
             <Heading as="h3" fontSize="20px" fontWeight={700} textAlign="left">
-              Error lors de la connexion avec Arena
+              {ERROR_MESSAGES[errorType].title}
             </Heading>
             <Text fontSize={16}>
-              Orion utilise les services de la DNE pour vous fournir une connexion unique et sécurisée. Nous n’avons pas
-              réussi à établir une connexion au portail Arena pour vous permettre d’accéder à Orion. Merci de ré-essayer
-              ultérieurement ou de
-              <Link href="mailto:orion@inserjeunes.beta.gouv.fr">contacter le support</Link> si le problème persiste.
+              {ERROR_MESSAGES[errorType].message}
+            </Text>
+            <Text fontSize={14} color="gray.600" pt={2} fontStyle="italic">
+              Code d'erreur : {errorType}
             </Text>
           </VStack>
         </Box>

@@ -1,7 +1,7 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, HStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 
 import { DoubleArrowRight } from "@/components/icons/DoubleArrowRight";
 
@@ -11,6 +11,7 @@ import { GlossaireListContent } from "./GlossaireListContent";
 
 export const Glossaire = () => {
   const { isOpen, openGlossaire, closeGlossaire, selectedEntry, setSelectedEntry, entries } = useGlossaireContext();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const currentContent = useMemo(() => {
     if (selectedEntry) {
@@ -20,8 +21,9 @@ export const Glossaire = () => {
     return <GlossaireListContent selectEntry={(e: string) => setSelectedEntry(e)} initialEntries={entries} />;
   }, [selectedEntry, setSelectedEntry, entries]);
 
+
   return (
-    <Box display={"flex"} flexGrow={"1"} justifyContent={"end"} zIndex={"tooltip"}>
+    <Box display={"flex"} justifyContent={"end"} zIndex={"tooltip"}>
       <Button
         variant={"secondary"}
         leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
@@ -46,6 +48,7 @@ export const Glossaire = () => {
                 <span style={{ paddingBottom: "3px" }}>Retour</span>
               </Button>
               <Button
+                ref={closeButtonRef}
                 variant={"unstyled"}
                 color="bluefrance.113"
                 rightIcon={<DoubleArrowRight />}

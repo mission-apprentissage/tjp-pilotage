@@ -3,13 +3,13 @@ import _ from "lodash";
 import { usePlausible } from "next-plausible";
 import { CURRENT_RENTREE } from "shared";
 
-import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import type { Formation } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
-import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
 import { themeColors } from "@/theme/themeColors";
+import { formatFamilleMetierLibelle } from "@/utils/formatLibelle";
 
 const LabelNumberOfFormations = ({ formations }: { formations?: Array<Formation> }) => (
   <Text>
@@ -88,7 +88,7 @@ export const ListeFormations = ({
                     }}
                     paddingLeft={"2px"}
                   >
-                    <Tooltip label={formatAnneeCommuneLibelle(formation.libelleFormation)}>
+                    <Tooltip label={formatFamilleMetierLibelle({formation, withBadge: false})}>
                       <Text
                         my={2}
                         color={offre === formation.offre ? "bluefrance.113" : ""}
@@ -98,12 +98,13 @@ export const ListeFormations = ({
                         isTruncated={true}
                         _firstLetter={{ textTransform: "uppercase" }}
                       >
-                        {formatAnneeCommuneLibelle(formation.libelleFormation)}
+                        {formatFamilleMetierLibelle({formation, withBadge: false})}
                       </Text>
                     </Tooltip>
                     <Flex direction="row" gap={1}>
                       <BadgeVoieApprentissage voie={formation.voie} />
-                      <BadgeTypeFamille typeFamille={formation.typeFamille as TypeFamilleKeys} />
+                      <BadgeTypeFamille typeFamille={formation.typeFamille} />
+                      <BadgeFormationRenovee isFormationRenovee={formation.isFormationRenovee} />
                       <BadgesFormationSpecifique
                         formationSpecifique={formation.formationSpecifique}
                         labelSize={"short"}

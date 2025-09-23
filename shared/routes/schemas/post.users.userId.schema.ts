@@ -8,9 +8,9 @@ const BodySchema = z.object({
   lastname: z.string().min(1),
   email: z.string().email().toLowerCase(),
   role: RoleZodType,
-  codeRegion: z.string().min(1).optional(),
-  fonction: UserFonctionZodType.optional(),
-  uai: z.string().optional()
+  codeRegion: z.string().optional(),
+  fonction: UserFonctionZodType.nullish(),
+  uai: z.string().optional(),
 });
 
 export type BodySchema = z.infer<typeof BodySchema>;

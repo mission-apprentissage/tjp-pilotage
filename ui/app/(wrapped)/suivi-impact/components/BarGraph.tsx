@@ -37,17 +37,15 @@ export const BarGraph = function <F extends BarGraphData>({
 
   const getNationalSerieData = () => {
     if (graphData !== undefined) {
-      return Object.keys(graphData).map((annee) => typeof graphData[annee].nationale !== "undefined" ? formatNumber(graphData[annee].nationale, 1) : "-");
+      return Object.keys(graphData).map((annee) => formatNumber(graphData[annee].nationale, 1));
     }
-
     return [];
   };
 
   const getFilteredSerieData = () => {
     if (isFiltered && graphData !== undefined) {
-      return Object.keys(graphData).map((annee) =>  typeof graphData[annee].filtered !== "undefined" ? formatNumber(graphData[annee].filtered, 1) : "-");
+      return Object.keys(graphData).map((annee) => formatNumber(graphData[annee].filtered, 1));
     }
-
     return [];
   };
 

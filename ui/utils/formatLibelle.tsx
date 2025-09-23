@@ -1,161 +1,123 @@
 import { Flex } from "@chakra-ui/react";
+import { capitalize } from "lodash";
 import type { ReactNode } from "react";
-import {SecteurEnum} from 'shared/enum/secteurEnum';
-import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
+import type { Role } from "shared";
+import { RoleEnum } from "shared";
+import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import { SecteurEnum } from "shared/enum/secteurEnum";
+import type { TypeFamille } from "shared/enum/typeFamilleEnum";
+import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
 
-import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 
 import { formatArray } from "./formatUtils";
 
-export const formatAnneeCommuneLibelle = (
-  formation: {
-    libelleFormation?: string;
-    typeFamille?: string;
-  },
-  labelSize?: "short" | "long",
-  size?: "xs" | "sm" | "md",
+type LabelSizeType = "short" | "long";
+type SizeType = "xs" | "sm" | "md";
+type Formation = {
+  libelleFormation?: string;
+  isFormationRenovee?: boolean;
+  formationRenovee?: string;
+  typeFamille?: TypeFamille;
+}
+
+export const formatFamilleMetierLibelle = ({
+  formation,
+  labelSize,
+  size,
+  fontSize,
+  withBadge = true,
+}:{
+  formation: Formation,
+  labelSize?: LabelSizeType,
+  size?: SizeType,
   fontSize?: string,
-): React.ReactNode => {
+  withBadge?: boolean
+}): React.ReactNode => {
   switch (formation.typeFamille) {
   case TypeFamilleEnum["2nde_commune"]:
-    return format2ndeCommuneLibelle({
-      libelleFormation: formation.libelleFormation,
-      typeFamille: formation.typeFamille,
-      labelSize,
-      size,
-      fontSize
-    });
   case TypeFamilleEnum["1ere_commune"]:
-    return format1ereCommuneLibelle({
+    return formatAnneeCommuneLibelle({
       libelleFormation : formation.libelleFormation,
       typeFamille: formation.typeFamille,
       labelSize,
       size,
-      fontSize
+      fontSize,
+      withBadge,
     });
   case TypeFamilleEnum["specialite"]:
-    return formatSpecialiteLibelle({
-      libelleFormation : formation.libelleFormation,
-      typeFamille: formation.typeFamille,
-      labelSize,
-      size,
-      fontSize
-    });
   case TypeFamilleEnum["option"]:
-    return formatOptionLibelle({
+    return formatSpecialiteOuOptionLibelle({
       libelleFormation : formation.libelleFormation,
       typeFamille: formation.typeFamille,
       labelSize,
       size,
-      fontSize
+      fontSize,
+      withBadge,
     });
   default:
     return formation.libelleFormation ?? "-";
   }
 };
 
-export const format2ndeCommuneLibelle = (
+export const formatAnneeCommuneLibelle = (
   {
     libelleFormation,
     typeFamille,
     labelSize = "short",
     size = "xs",
     fontSize,
+    withBadge = true,
   }
   : {
     libelleFormation?: string,
-    typeFamille?: string,
-    labelSize?: "short" | "long",
-    size?: "xs" | "sm" | "md",
+    typeFamille?: TypeFamille,
+    labelSize?: LabelSizeType,
+    size?: SizeType,
     fontSize?: string
+    withBadge?: boolean
   }): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
-    {libelleFormation?.replace(" 2nde commune", "")}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-      fontSize={fontSize}
-    />
+    {libelleFormation?.replace(" 2nde commune", "").replace(" 1ere annee commune", "")}
+    {withBadge && (
+      <BadgeTypeFamille
+        typeFamille={typeFamille}
+        labelSize={labelSize}
+        size={size}
+        fontSize={fontSize}
+      />)
+    }
   </Flex>
 );
 
-export const format1ereCommuneLibelle = (
+export const formatSpecialiteOuOptionLibelle = (
   {
     libelleFormation,
     typeFamille,
     labelSize = "short",
     size = "xs",
     fontSize,
+    withBadge = true,
   }
   : {
     libelleFormation?: string,
-    typeFamille?: string,
-    labelSize?: "short" | "long",
-    size?: "xs" | "sm" | "md",
+    typeFamille?: TypeFamille,
+    labelSize?: LabelSizeType,
+    size?: SizeType,
     fontSize?: string
-}): ReactNode => (
-  <Flex alignItems={"center"} gap={2}>
-    {libelleFormation?.replace(" 1ere annee commune", "")}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-      fontSize={fontSize}
-    />
-  </Flex>
-);
-
-export const formatSpecialiteLibelle = (
-  {
-    libelleFormation,
-    typeFamille,
-    labelSize = "short",
-    size = "xs",
-    fontSize,
-  }
-  : {
-    libelleFormation?: string,
-    typeFamille?: string,
-    labelSize?: "short" | "long",
-    size?: "xs" | "sm" | "md",
-    fontSize?: string
+    withBadge?: boolean
 }): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
     {libelleFormation}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-      fontSize={fontSize}
-    />
-  </Flex>
-);
-
-export const formatOptionLibelle = (
-  {
-    libelleFormation,
-    typeFamille,
-    labelSize = "short",
-    size = "xs",
-    fontSize,
-  }
-  : {
-    libelleFormation?: string,
-    typeFamille?: string,
-    labelSize?: "short" | "long",
-    size?: "xs" | "sm" | "md",
-    fontSize?: string
-}): ReactNode => (
-  <Flex alignItems={"center"} gap={2}>
-    {libelleFormation}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-      fontSize={fontSize}
-    />
+    {withBadge && (
+      <BadgeTypeFamille
+        typeFamille={typeFamille}
+        labelSize={labelSize}
+        size={size}
+        fontSize={fontSize}
+      />
+    )}
   </Flex>
 );
 
@@ -182,10 +144,13 @@ export const formatDepartementLibelleWithCodeDepartement = ({
   return `${libelleDepartement} (${formatCodeDepartement(codeDepartement)})`;
 };
 
-export const formatLibelleFormation = (etablissement: { libellesDispositifs: string[]; libelleFormation: string }) => {
+export const formatLibelleFormationWithDispositifs = (
+  { libellesDispositifs, libelleFormation }:
+  { libellesDispositifs: string[]; libelleFormation: string }
+) => {
   const dispositifs =
-    formatArray(etablissement.libellesDispositifs) !== "" ? `(${formatArray(etablissement.libellesDispositifs)})` : "";
-  return `${etablissement.libelleFormation} ${dispositifs}`;
+    formatArray(libellesDispositifs) !== "" ? `(${formatArray(libellesDispositifs)})` : "";
+  return `${libelleFormation} ${dispositifs}`;
 };
 
 /**
@@ -205,4 +170,83 @@ export const formatDispositifs = (dispositifs: string[]) => {
     .map((d) => {
       return d.replace(/\sen\s/i, " ").replace(/professionnel/i, "PRO");
     });
+};
+
+export const formatLibelleFormationWithoutTags = (formation: Formation): string =>
+  formation.libelleFormation ?
+    formation.libelleFormation
+      .replace("2nde commune", "")
+      .replace("2nde année commune", "")
+      .replace("1ere annee commune", "")
+      .replace("1e annee commune", "")
+      .trim()
+    : "";
+
+export const formatMillesime = (millesime: string): string =>
+  `${millesime.split("_")[0]}+${millesime.split("_")[1].substring(2)}`;
+
+export const formatRole = (role: Role) => {
+  switch (role) {
+  case RoleEnum["admin"]:
+    return "Administrateur";
+  case RoleEnum["admin_region"]:
+    return "Administrateur RA";
+  case RoleEnum["expert_region"]:
+    return "Expert RA";
+  case RoleEnum["gestionnaire_region"]:
+    return "Gestionnaire RA";
+  case RoleEnum["pilote"]:
+    return "Pilote national";
+  case RoleEnum["pilote_region"]:
+    return "Pilote RA";
+  case RoleEnum["perdir"]:
+    return "PERDIR / Chef d'établissement";
+  case RoleEnum["region"]:
+    return "Région";
+  case RoleEnum["invite"]:
+    return "Invité";
+  default:
+    return "Inconnu";
+  }
+};
+
+export const formatTypeDemande = (typeDemande?: TypeDemandeType): string => {
+  switch (typeDemande) {
+  case DemandeTypeEnum["ouverture_nette"]:
+  case DemandeTypeEnum["ouverture_compensation"]:
+    return "Ouverture";
+  case DemandeTypeEnum["augmentation_nette"]:
+  case DemandeTypeEnum["augmentation_compensation"]:
+    return "Augmentation";
+  case DemandeTypeEnum["fermeture"]:
+  case DemandeTypeEnum["ajustement"]:
+  case DemandeTypeEnum["coloration"]:
+  case DemandeTypeEnum["diminution"]:
+  case DemandeTypeEnum["transfert"]:
+    return capitalize(typeDemande);
+  default:
+    return "";
+  }
+};
+
+export const formatTypeDemandeArray = (typeDemande: string):
+  Array<{value: TypeDemandeType, label: string}> =>
+  typeDemande
+    .split( ", ")
+    .map((typeDemande) => ({
+      label: formatTypeDemande(typeDemande as TypeDemandeType),
+      value: typeDemande as TypeDemandeType,
+    }));
+
+export const formatLibellesColoration = (demande: {
+  libelleColoration1?: string;
+  libelleColoration2?: string;
+}) => {
+  if (demande.libelleColoration1) {
+    if (demande.libelleColoration2) {
+      return `${demande.libelleColoration1} / ${demande.libelleColoration2}`;
+    }
+    return demande.libelleColoration1;
+  }
+  return undefined;
 };

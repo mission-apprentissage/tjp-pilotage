@@ -14,23 +14,34 @@ describe("Core Service: Ovh file path manager", () => {
     vi.restoreAllMocks();
   });
 
-  it("should generate a path for a given intention id", () => {
+  it("should generate a path for a given demande id", () => {
     // given
     const id = "INTENTION_01";
 
     // when
-    const path = filePathManager.getIntentionFilePath(id);
+    const path = filePathManager.getDemandeFilePath(id);
 
     // then
-    expect(path).toBe(`intentions/${id}/`);
+    expect(path).toBe(`demandes/${id}/`);
   });
 
-  it("should generate a path for a given intention id", () => {
+  it("should generate a path for a given demande id", () => {
     // given
     const id = "INTENTION_01";
 
     // when
-    const path = filePathManager.getIntentionFilePath(id, "exemple.pdf");
+    const path = filePathManager.getDemandeFilePath(id, "exemple.pdf");
+
+    // then
+    expect(path).toBe(`demandes/${id}/exemple.pdf`);
+  });
+
+  it("should generate a path for a given legacy demande id", () => {
+    // given
+    const id = "INTENTION_01";
+
+    // when
+    const path = filePathManager.getLegacyIntentionFilePath(id, "exemple.pdf");
 
     // then
     expect(path).toBe(`intentions/${id}/exemple.pdf`);

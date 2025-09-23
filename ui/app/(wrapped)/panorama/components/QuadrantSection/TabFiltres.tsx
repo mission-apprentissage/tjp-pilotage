@@ -15,6 +15,10 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
+import { TooltipDefinitionEffectifEnEntree } from "@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree";
+import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
@@ -46,10 +50,10 @@ export const TabFiltres = ({ filters, setFilters }: { filters: Filters; setFilte
             <TooltipIcon
               onClick={() => openGlossaire("effectif-en-entree")}
               label={
-                <Box>
+                <Flex direction="column" gap={2}>
                   <Text>Effectifs en entrée en première année de formation.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
             />
           </FormLabel>
@@ -83,23 +87,23 @@ export const TabFiltres = ({ filters, setFilters }: { filters: Filters; setFilte
           label={"Effectif"}
           tendance={filters.effectif}
           setTendance={(effectif) => setFilters({ ...filters, effectif })}
-          glossaire={"effectif-en-entree"}
+          icon={<TooltipDefinitionEffectifEnEntree />}
         />
         <TendanceRadio
           label={"Taux de pression"}
-          glossaire={"taux-de-pression"}
+          icon={<TooltipDefinitionTauxDePression />}
           tendance={filters.tauxPression}
           setTendance={(tauxPression) => setFilters({ ...filters, tauxPression })}
         />
         <TendanceRadio
           label={"Taux d'emploi 6 mois"}
-          glossaire={"taux-emploi-6-mois"}
+          icon={<TooltipDefinitionTauxEmploi6Mois />}
           tendance={filters.tauxEmploi6Mois}
           setTendance={(tauxEmploi6Mois) => setFilters({ ...filters, tauxEmploi6Mois })}
         />
         <TendanceRadio
           label={"Taux de poursuite d'études"}
-          glossaire={"taux-poursuite-etudes"}
+          icon={<TooltipDefinitionTauxPoursuiteEtudes />}
           tendance={filters.tauxPoursuiteEtude}
           setTendance={(tauxPoursuiteEtude) => setFilters({ ...filters, tauxPoursuiteEtude })}
         />

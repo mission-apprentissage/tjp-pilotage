@@ -1,20 +1,20 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
+import { PermissionEnum } from "shared/enum/permissionEnum";
 import type { submitCorrectionSchema } from "shared/routes/schemas/post.correction.submit.schema";
 import type { submitDemandeSchema } from "shared/routes/schemas/post.demande.submit.schema";
 import { correctionValidators } from "shared/validators/correctionValidators";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
+import { findOneDemandeQuery } from '@/modules/demandes/repositories/findOneDemande.query';
 import { getCurrentCampagne } from "@/modules/utils/getCurrentCampagne";
 import logger from "@/services/logger";
+import { inject } from "@/utils/inject";
 import { cleanNull } from "@/utils/noNull";
 
 import { createCorrectionQuery } from "./deps/createCorrection.query";
-import { getCorrectionByIntentionNumeroQuery } from "./deps/getCorrectionByIntentionNumero.query";
+import { getCorrectionByDemandeNumeroQuery } from "./deps/getCorrectionByDemandeNumero.query";
 
 type Correction = z.infer<typeof submitCorrectionSchema.body>["correction"];
 type Demande = z.infer<typeof submitDemandeSchema.body>["demande"];
@@ -34,14 +34,14 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
     createCorrectionQuery,
     findOneDemandeQuery,
     getCurrentCampagne,
-    getCorrectionByIntentionNumeroQuery,
+    getCorrectionByDemandeNumeroQuery,
   },
   (deps) =>
     async ({ correction, user }: { correction: Correction; user: RequestUser }) => {
       const [demande, campagne, correctionExistante] = await Promise.all([
-        deps.findOneDemandeQuery(correction.intentionNumero),
+        deps.findOneDemandeQuery(correction.demandeNumero),
         deps.getCurrentCampagne(user),
-        deps.getCorrectionByIntentionNumeroQuery(correction.intentionNumero),
+        deps.getCorrectionByDemandeNumeroQuery(correction.demandeNumero),
       ]);
 
       if (!campagne) {
@@ -69,7 +69,7 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
         );
         throw Boom.badRequest("Aucune demande correspondant au numéro fourni", {
           errors: {
-            numero: correction.intentionNumero,
+            numero: correction.demandeNumero,
             aucune_demande_correspondante: "Aucune demande correspondant au numéro fourni.",
           },
         });
@@ -85,12 +85,12 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
         );
         throw Boom.forbidden("Une correction existe déjà pour cette demande", {
           errors: {
-            correction_existante_correspondante: `Une correction existe déjà pour la demande ${correctionExistante.intentionNumero} (id: ${correctionExistante.id}).`,
+            correction_existante_correspondante: `Une correction existe déjà pour la demande ${correctionExistante.demandeNumero} (id: ${correctionExistante.id}).`,
           },
         });
       }
 
-      const scope = getPermissionScope(user.role, "intentions/ecriture");
+      const scope = getPermissionScope(user.role, PermissionEnum["demande/ecriture"]);
       const isAllowed = guardScope(scope, {
         région: () => user.codeRegion === demande.codeRegion,
         national: () => true,

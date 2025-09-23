@@ -4,8 +4,8 @@ import { useLayoutEffect, useMemo, useRef } from "react";
 import { CURRENT_IJ_MILLESIME } from "shared";
 import { getMillesime } from "shared/utils/getMillesime";
 
-import { formatMillesime } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import { frenchLocale } from "@/utils/echarts/frenchLocale";
+import {formatMillesime} from '@/utils/formatLibelle';
 
 export const VerticalBarChart = ({
   title,

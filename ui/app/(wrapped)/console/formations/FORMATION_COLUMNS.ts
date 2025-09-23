@@ -7,8 +7,6 @@ export const FORMATION_COLUMNS = {
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
-  formationSpecifique: "Formation spécifique",
-  actionPrioritaire: "Action prioritaire ?",
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
@@ -18,22 +16,47 @@ export const FORMATION_COLUMNS = {
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   codeDispositif: "Code dispositif",
+  // Tags formation
+  formationSpecifique: "Formation spécifique",
+  actionPrioritaire: "Action prioritaire ?",
+  typeFamille: "Type de famille de métiers",
+  isFormationRenovee: "Formation rénovée ?",
+  isHistorique: "Historique ?",
+  isHistoriqueCoExistant: "Historique co-existant ?",
   // Effectifs
   nbEtablissement: "Nb Étab",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
+  evolutionTauxPression: "Évolution du taux de pression",
+  tauxDemande: "Tx de demande",
+  evolutionTauxDemande: "Évolution du taux de demande",
   tauxRemplissage: "Tx de remplissage",
-  positionQuadrant: "Position dans le quadrant",
-  tauxInsertion: "Tx d'emploi 6 mois régional",
-  tauxPoursuite: "Tx de poursuite d'études régional",
-  tauxDevenirFavorable: "Tx de devenir favorable régional",
+  evolutionTauxRemplissage: "Évolution du taux de remplissage",
+  positionQuadrant: `Position dans le quadrant`,
+  // evolutionPositionQuadrant: "Évolution de la position dans le quadrant",
+  tauxInsertion: `Tx d'emploi 6 mois régional`,
+  evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
+  tauxPoursuite: `Tx de poursuite d'études régional`,
+  evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
+  tauxDevenirFavorable: `Tx de devenir favorable régional`,
+  evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
 } satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]> & {
   formationSpecifique: string;
   actionPrioritaire: string;
+  evolutionEffectif: string;
+  evolutionTauxPression: string;
+  evolutionTauxDemande: string;
+  evolutionTauxRemplissage: string;
+  // evolutionPositionQuadrant: string;
+  evolutionTauxInsertion: string;
+  evolutionTauxPoursuite: string;
+  evolutionTauxDevenirFavorable: string;
+  isHistorique: string;
 };
 
 export const FORMATION_COLUMNS_OPTIONAL = {
@@ -55,13 +78,22 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
+  evolutionEffectif: "Évolution des effectifs en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
+  evolutionTauxPression: "Évolution du taux de pression",
+  tauxDemande: "Tx de demande",
+  evolutionTauxDemande: "Évolution du taux de demande",
   tauxRemplissage: "Tx de remplissage",
+  evolutionTauxRemplissage: "Évolution du taux de remplissage",
   positionQuadrant: "Position dans le quadrant",
+  // evolutionPositionQuadrant: "Évolution de la position dans le quadrant",
   tauxInsertion: "Tx d'emploi 6 mois régional",
+  evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
+  evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
+  evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
 } satisfies Partial<typeof FORMATION_COLUMNS>;
 
 export const FORMATION_COLUMNS_DEFAULT = {
@@ -77,6 +109,7 @@ export const FORMATION_COLUMNS_DEFAULT = {
   effectif3: "Année 3",
   // Indicateurs
   tauxPression: "Tx de pression",
+  tauxDemande: "Tx de demande",
   tauxRemplissage: "Tx de remplissage",
   positionQuadrant: "Position dans le quadrant",
   tauxInsertion: "Tx d'emploi 6 mois régional",

@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 
 import { getKbdClient } from "@/db/db";
@@ -26,6 +27,7 @@ export const getFormationMailleEtab = ({
       "formationView.codeNsf",
       "dateFermeture",
       "typeFamille",
+      "voie"
     ])
     .where((eb) =>
       eb.or([
@@ -33,13 +35,20 @@ export const getFormationMailleEtab = ({
         eb("dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
       ])
     )
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .orderBy(["libelleNsf", "libelleNiveauDiplome", "libelleFormation"])
     .distinct();
 
   return getKbdClient()
     .with("formations", () => formations)
     .selectFrom("formations")
-    .leftJoin("formationEtablissement", "formations.cfd", "formationEtablissement.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formations.cfd")
+        .onRef("formationEtablissement.voie", "=", "formations.voie")
+    )
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
     .select((sb) => [
       sb.ref("formations.libelleNiveauDiplome").as("libelleNiveauDiplome"),
@@ -55,6 +64,9 @@ export const getFormationMailleEtab = ({
       sb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
       sb.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
     ])
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .orderBy([
       "formations.codeNsf",
       "formations.libelleNiveauDiplome",

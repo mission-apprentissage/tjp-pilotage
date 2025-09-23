@@ -8,25 +8,91 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: 0577a982f46500c55d62463f34fde72a3e14700b5235f8573cbf870e2452348f
+  checksum: d4e74faba447d572719039eda7aebad30e0709d263b115ca58307f26e7aa8266
 - filename: .yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
   checksum: a663e9955c2825bee3af55be1ebd6e26cd0a17fe7c614a13d726ddd4c7959b82
 - filename: README.md
   checksum: 00ac991f0b2746c5a5ffa14e2b3c5427b739c0d952aa3730efe1f234ac1fc3ca
+- filename: documentation/co/002_-_Comprendre_la_page_Utilisateurs.html
+  checksum: 6422381c03c582d83f7f807aa963504ef11b10183fcdaa6d1ef7652f4cdabf30
+- filename: documentation/co/003_-_Faire_une_suggestion_concernant_l3outil_Orion.html
+  checksum: a6290835e80b063ea1b29f924e89bcda607f13faf6d73610e4b377562ac95844
+- filename: documentation/co/003_-_Fonction_externe_a_l3Education_Nationale.html
+  checksum: 076a5c0043a294e141dae124c7d0d20b5bcc26413d6031302dfaab806bce4ab7
+- filename: documentation/co/004_-_Indicateurs_cles_de_la_transformation.html
+  checksum: 979d6acbc7a7f62851e729c78f2c53eff1b5bb0fd66afbd32dc8b5a16e9cad20
+- filename: documentation/lib-md/s_scSearch/scSearch.js
+  checksum: ad4a1ed25926b8faf665d95468f90824b6fd31e51f660ef7fdcd2bf1b3076adb
+- filename: documentation/lib-md/w_scCodeMgr/scCodeMgr.js
+  checksum: de09c2a86bdda83e51bbaa56a0869ba57d18282a470d8d6f30f576b77d6b9958
+- filename: documentation/lib-md/w_scImageMgr/scImageMgr.js
+  checksum: ba3d1ebb3c6292e4d8a53398c8fe95ae8f6a64fedf4d55a21cfc6139001d9ac3
+- filename: documentation/skin/font/fontello.json
+  checksum: e9488434ed4b47d393c52ec88efb62d20c77d7583d7eb2c01d10b21e25ad2cef
 - filename: server/.env.test
   checksum: df4e0dd70085c1ab9d996395796f6b0bd879653f9866c55ff276579aff84a4ba
 - filename: server/seed/seed_data.dump
   checksum: f47ffbd2ecfa5b8d9e7535ddb62ba2fbe9d1fdce1a4c8b67c4e7c1dd15e889cc
 - filename: server/seed/seed_schema.dump
   checksum: 8eb032b7bc0013ec5dbba6e69fc07a74a5c1ea8c95ff619281106498c263b691
+- filename: server/src/modules/core/usecases/editUser/__tests__/editUser.spec.ts
+  checksum: ea40e69e23f457533a15ea6d14c9cd8e71b096187b5e82a8c0c5b3195aad3d0f
 - filename: server/src/modules/core/usecases/login/__tests__/login.test.ts
   checksum: 28cdc80f0d836857ee9a802bff5a72a3ff3addad70a31b1ad4b7e98bc8db447c
+- filename: server/src/modules/core/usecases/login/login.test.ts
+  checksum: 7ccfc4ed066123e3655f8318830fd72171c689ef172e0f4acfec3ac01a554ccf
 - filename: server/src/modules/core/usecases/redirectDne/redirectDne.test.ts
-  checksum: 97116750d964c12ae4a0ffe9f5477d66526bf2f2e8ac8719ee399dc88faf7ae5
+  checksum: 90716b6b65d7ddc88c878ffbf8827715d60476a1f84a6ff4b645b8d32945588a
+- filename: server/src/modules/demandes/usecases/submitDemande/__tests__/submitDemande.test.ts
+  checksum: 1f964b6895fa14252a42134523c5ee4f36fef5b1885ab1ea5e809c17dae796c8
 - filename: server/src/modules/demandes/usecases/submitDemande/submitDemande.test.ts
   checksum: 47ff94a3172a8c0640853e60ae3501ba59609ba9103e341d072d8012be9a8fd1
-- filename: server/src/modules/intentions/usecases/submitIntention/__tests__/submitIntention.test.ts
-  checksum: 1f964b6895fa14252a42134523c5ee4f36fef5b1885ab1ea5e809c17dae796c8
+- filename: server/src/modules/glossaire/entries/action-prioritaire.md
+  checksum: 5883151dd01d19b71d550e9819719c546435d1c5a1da66b9ebed7414ec94fb60
+- filename: server/src/modules/glossaire/entries/apprentissage.md
+  checksum: a0e7ca953d0b8fb3bdb847b86a469297aef0946bef88d8a564fdb90ee6a8457c
+- filename: server/src/modules/glossaire/entries/capacite.md
+  checksum: 9dcac856584cde38e2beb93741dbbf0d0d84b6f8ccedfbbdad650c2f8eeea860
+- filename: server/src/modules/glossaire/entries/domaine-professionnel-fap.md
+  checksum: e24b8ef5bc01e4309af30c98eb32f0fc2e7be33382ac46905f00b82b9b62f1ed
+- filename: server/src/modules/glossaire/entries/effectif-en-entree.md
+  checksum: 45b82e3c50878609a96289deaa995d61f2f907dbfa8c22365591e846fee92aed
+- filename: server/src/modules/glossaire/entries/effectifs.md
+  checksum: c8052f2f4d7fcd3674652f81f4c2cfdcfe0e6eb0bd100371053dde31aaaf669a
+- filename: server/src/modules/glossaire/entries/formation-historique-renovee.md
+  checksum: ae429425d74267dc3135f981c753ddf29c98a938d3921c1c4d62c2f429a5cf0c
+- filename: server/src/modules/glossaire/entries/formations-specifiques.md
+  checksum: 0aa06b10d752fcfe534003eee14e78524cfe2a4ac0b6ce68f06a214ca2f579f1
+- filename: server/src/modules/glossaire/entries/inser-jeunes.md
+  checksum: 14dbd3939f25fd5e58dcd9c6190da729ae52dfa17ba069ee091ca6d688c84b55
+- filename: server/src/modules/glossaire/entries/millesime.md
+  checksum: 6692cf9a7396478e25379250ca50836842362982374a95433bf0f268895e63a0
+- filename: server/src/modules/glossaire/entries/nombre-deleves.md
+  checksum: 53d88d94c2fed2557ef56fef88bfe5fbfc891f4d860da8ed3c36e28f9f966910
+- filename: server/src/modules/glossaire/entries/quadrant-q1-a-q4.md
+  checksum: fbc339718877e9572afe9c8cf19cdab3ebd8cce4a9fb95f893aa891538eb1c47
+- filename: server/src/modules/glossaire/entries/taux-de-demande.md
+  checksum: f530e4add6438eea9a6a3f5c6b3fd708811d1bb065a6ffbbef4890226fc9a8e1
+- filename: server/src/modules/glossaire/entries/taux-de-devenir-favorable.md
+  checksum: fb9c63cf14a10b30a477f9c673adc89475f88072f6f0f4bff2b1dc76fe8451e4
+- filename: server/src/modules/glossaire/entries/taux-de-poursuite-d-etudes.md
+  checksum: 91474adc55b0d07ac7e0ed9c76807f2a09b134768eb68f16a9f84b22ef4a9f90
+- filename: server/src/modules/glossaire/entries/taux-de-pression.md
+  checksum: 8fe7fa2b0802fa1dbe588346aee3fe3db321f65085519bf9de9e9b56d070ef55
+- filename: server/src/modules/glossaire/entries/taux-de-remplissage.md
+  checksum: 4379cf4bb15c25326d57232164315db4ee4de26dffc220ca6d485692f93b4bb3
+- filename: server/src/modules/glossaire/entries/taux-demploi-a-6mois.md
+  checksum: b82d27e34accb1c6db9c6e7c58afdb04e9b9d8fbb6ba0035cd410048d30e1dda
+- filename: server/src/modules/glossaire/entries/tension-difficulte-de-recrutement.md
+  checksum: 169363bd47a3b2f024a650f645e0df7c7e45ad4cb1f20d29ed31996c79320250
+- filename: server/src/modules/glossaire/entries/transition-ecologique.md
+  checksum: dc2516c520035f1e6762170591346b0050d3764beed27f33e400b8e27e25f6d2
+- filename: server/src/modules/glossaire/entries/transition-numerique.md
+  checksum: a62d0d8f8915380454a5c1a9cbb704a1f75485786a9189a99dfd611d7256744a
+- filename: server/src/modules/glossaire/entries/valeur-ajoutee.md
+  checksum: cfa65284d4510e4475e62743c18ac299c16324358e5cc657d6414b47c21c68bf
+- filename: server/src/modules/glossaire/entries/voeux.md
+  checksum: 9b14d4378c9f49e031f80be65d273d8bd6e07752027bfc037fe5b7722fd8a5d2
 - filename: server/static/files/lyceesACCE.csv
   checksum: 10bcfb7324ef1968ff3c24f3047fc6ce8f148060e625b48ec1b6f7e7a4cde471
 - filename: server/static/files/offres_apprentissage.csv
@@ -59,14 +125,22 @@ fileignoreconfig:
   checksum: 7bdc65299956e6277afa0e0f74bdb55871e5ff7dbae60a127a6a5062745eda74
 - filename: ui/app/(wrapped)/cgu/page.tsx
   checksum: d42601745f99f191e3fb865ed61ef829e4c7e82a5d157a544deb8f4986717fef
+- filename: ui/app/(wrapped)/changelog/const.ts
+  checksum: 1b0663f31bb14845964a65bce8dbaf9016c94568601f555a2dbf31eef3ba363f
+- filename: ui/app/(wrapped)/demandes/perdir/synthese/[numero]/actions/const.ts
+  checksum: d2802537bd9b064191f47c0b697ae683b4077d82ed86d99e094c184c6efb92da
+- filename: ui/app/(wrapped)/demandes/utils/__tests__/messageAccompagneUtils.test.ts
+  checksum: 5e613e7713acca04787d983d04eecaeda58676dd82ef17ce7139a5cd4de55a5d
+- filename: ui/app/(wrapped)/demandes/utils/__tests__/messageAccompagnementUtils.test.ts
+  checksum: b061bff0271e257cc2712811981446c1babc0582a52c5c247c3564ea4c379503
+- filename: ui/app/(wrapped)/demandes/utils/__tests__/permissionsDemandeUtils.test.ts
+  checksum: b3b68b225af36b8a4aa34ec83ac8bfe45db6f610e92a501de62f998222c941d4
+- filename: ui/app/(wrapped)/demandes/utils/__tests__/statutUtils.test.ts
+  checksum: 74019c066c2f2b920ff51a048132365f16fe807cbddf2a9a3c711743a8af7e03
 - filename: ui/app/(wrapped)/documentation/page.tsx
   checksum: 50bc89c2ce7e01f8b8ff7381b44abb68ed2979230dc7252009e2e77b85c11558
 - filename: ui/app/(wrapped)/glossaire/GlossaireEntries.ts
   checksum: 879121c075cb8d6f1bb728ed24706ea5c31b20bc7a0ba1d20747237ddbe42ec5
-- filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsDemandeUtils.test.ts
-  checksum: 2e979fff0e8c1dc927f22a2b30bdd3266a8dedffa86c9130520e4c9809170ff9
-- filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsIntentionUtils.test.ts
-  checksum: b3b68b225af36b8a4aa34ec83ac8bfe45db6f610e92a501de62f998222c941d4
 - filename: ui/app/(wrapped)/mentions-legales/page.tsx
   checksum: 9d41bf20ab3cb269091a285eefeae595ecfd38dad78dbda7859eef31e69e7bc7
 - filename: ui/app/(wrapped)/politique-de-confidentialite/page.tsx
@@ -76,7 +150,7 @@ fileignoreconfig:
 - filename: ui/app/(wrapped)/statistiques/page.tsx
   checksum: 4eff930f0a5a1df09c53d1a2e65c8911b3ae7d0ca8d2393ce371d9773af1e217
 - filename: ui/config.public.ts
-  checksum: 5a6c64c078366fc4c259fcf660abb66e4db3ffbc8365fdad5d3c05cad54d99dc
+  checksum: f87042a78e6486720db05c4bfa540f70eb79b7c1d6151c19dd6aa800061eeaab
 - filename: ui/src/config.public.ts
   checksum: b13b0a1f3d9590d335062a88e76609c40ba790129e481f7e5c25fbdab6840617
 - filename: ui/src/utils/generateUri.ts
@@ -85,7 +159,13 @@ fileignoreconfig:
   checksum: e78f766f2960e574b27ce2c9051324945b10c78e73aae310d11a2e243934afe2
 - filename: ui/utils/__tests__/isPartOfExpe.test.ts
   checksum: 2c57a4ce66aae5885864beab7369094022c779c45800ef2861bdb1a2830ca38f
-- filename: ui/utils/security/__tests__/GuardSaisieExpe.test.tsx
+- filename: ui/utils/__tests__/isPartOfSaisieDemande.test.ts
+  checksum: a9edcc318486f4d65e1d748e650eb7243f387075f093d9568d6f26d4cc03a5b6
+- filename: ui/utils/__tests__/permissionsDemandeUtils.test.ts
+  checksum: e813726f41ea9ab4686b39c14228db602e48df1e1a9ec9b308c39873c8d5a158
+- filename: ui/utils/__tests__/permissionsOldDemandeUtils.test.ts
+  checksum: 4143cc02a050869ae63aa3c4f787e11e995e219fd910e7112e0db54abfe34839
+- filename: ui/utils/security/__tests__/GuardSaisieDemande.test.tsx
   checksum: 26e715515a91e89432de7a0f83edce0b9765e92e4a15f3e731de1abb56090d9e
 scopeconfig:
 - scope: node
@@ -105,5 +185,6 @@ allowed_patterns:
 - '@mail.com'
 - '@exemple.fr'
 - '@inserjeunes.beta.gouv.fr'
+- https://webinaire.numerique.gouv.fr//meeting/signin/31852/creator/16468/hash/6d52a428a84100623dbff7e34ff7843f4a0c9f0f
 threshold: medium
 version: "1.0"

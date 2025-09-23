@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export const voie = z.enum(["scolaire", "apprentissage"]);
+export const VoieZodType = z.enum(["scolaire", "apprentissage"]);
 
-export const VoieEnum = voie.Enum;
+export const VoieEnum = VoieZodType.Enum;
 
-export type Voie = z.infer<typeof voie>;
+export type VoieType = z.infer<typeof VoieZodType>;

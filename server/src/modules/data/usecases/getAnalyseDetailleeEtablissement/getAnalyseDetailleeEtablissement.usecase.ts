@@ -1,14 +1,13 @@
 import type { FormationSchema } from "shared/routes/schemas/get.etablissement.uai.analyse-detaillee.schema";
 import type { z } from "zod";
 
-import { getStatsSortieParRegionsQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
 
-import { getChiffresEntree, getChiffresIj, getEtablissement, getFilters, getFormations } from "./dependencies";
+import { getChiffresEntree, getChiffresIj, getEtablissement, getFilters, getFormations, getStatsSortieParRegionsQuery } from "./dependencies";
 
 type Formation = z.infer<typeof FormationSchema>;
 
-function formatLibelleFormation(formations: Formation[], formation: Formation): string {
+function formatLibelleFormationWithDispositifs(formations: Formation[], formation: Formation): string {
   const formationWithSameLibelle = formations.filter(
     (f) =>
       f.libelleFormation === formation.libelleFormation &&
@@ -54,7 +53,7 @@ export const getAnalyseDetailleeEtablissementFactory =
       formations.forEach((formation) => {
         formationsObject[formation.offre] = {
           ...formation,
-          libelleFormation: formatLibelleFormation(formations, formation),
+          libelleFormation: formatLibelleFormationWithDispositifs(formations, formation),
         };
       });
 
@@ -74,7 +73,7 @@ export const getAnalyseDetailleeEtablissementFactory =
               tauxInsertion: chiffres.tauxInsertion ?? 0,
               tauxPoursuite: chiffres.tauxPoursuite ?? 0,
             },
-            statsSortie[etablissement.codeRegion ?? ""] || {}
+            statsSortie[etablissement.codeRegion ?? ""] ?? {}
           ),
         };
       });
@@ -93,7 +92,7 @@ export const getAnalyseDetailleeEtablissementFactory =
         formations: formationsObject,
         chiffresIJ: chiffresIJObject,
         chiffresEntree: chiffresEntreeObject,
-        statsSortie: statsSortie[etablissement.codeRegion ?? ""] || {},
+        statsSortie: statsSortie[etablissement.codeRegion ?? ""] ?? {},
         filters,
       };
     };

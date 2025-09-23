@@ -5,7 +5,7 @@ import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/corrections/usecases/getCorrections/getCorrections.usecase";
 import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 
 export const getStatsCorrectionsQuery = async ({
   statut,
@@ -31,7 +31,7 @@ export const getStatsCorrectionsQuery = async ({
 
   const statsCorrections = await getKbdClient()
     .selectFrom("correction")
-    .innerJoin("latestDemandeView as demande", "demande.numero", "correction.intentionNumero")
+    .innerJoin("latestDemandeView as demande", "demande.numero", "correction.demandeNumero")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);

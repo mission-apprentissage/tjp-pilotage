@@ -1,3 +1,5 @@
+import { VoieEnum } from "shared";
+
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
@@ -15,7 +17,11 @@ export const getFilters = async ({
       "formationView.codeNiveauDiplome",
       "niveauDiplome.codeNiveauDiplome"
     )
-    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .on(eb => eb("formationEtablissement.voie", "=", eb.val(VoieEnum.scolaire)))
+    )
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .$call((eb) => {
       if (!codeRegion) return eb;

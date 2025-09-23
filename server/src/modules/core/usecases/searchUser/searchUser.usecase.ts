@@ -1,6 +1,6 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
+
+import { inject } from "@/utils/inject";
 
 import { searchUserQuery } from "./searchUser.query";
 
