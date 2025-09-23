@@ -91,7 +91,6 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-mocha": "10.5.0",
     "eslint-plugin-n": "^17.21.3",
-    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.2.0",
     "eslint-plugin-zod": "^1.4.0",
@@ -103,7 +102,7 @@
     "semantic-release-slack-bot": "4.0.2",
     "typescript": "^5.9.2",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^2.1.9",
+    "vitest": "^3.2.4",
     "vitest-canvas-mock": "^0.3.3"
   },
   "lint-staged": {
