@@ -436,6 +436,7 @@ export const Nav = () => {
       <Button
         as={NextLink}
         href={getDocumentationLink(segment)}
+        target="_blank"
         variant={"secondary"}
         leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
         color="bluefrance.113"
