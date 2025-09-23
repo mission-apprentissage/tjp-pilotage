@@ -5,6 +5,18 @@ import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import { getKbdClient } from "@/db/db";
 import {
+  countDifferenceCapacitePlacesFermees,
+  countDifferenceCapacitePlacesFermeesApprentissage,
+  countDifferenceCapacitePlacesFermeesColorees,
+  countDifferenceCapacitePlacesFermeesColoreesApprentissage,
+  countDifferenceCapacitePlacesFermeesColoreesScolaire,
+  countDifferenceCapacitePlacesFermeesScolaire,
+  countDifferenceCapacitePlacesOuvertes,
+  countDifferenceCapacitePlacesOuvertesApprentissage,
+  countDifferenceCapacitePlacesOuvertesColorees,
+  countDifferenceCapacitePlacesOuvertesColoreesApprentissage,
+  countDifferenceCapacitePlacesOuvertesColoreesScolaire,
+  countDifferenceCapacitePlacesOuvertesScolaire,
   countPlacesColorees,
   countPlacesColoreesFermees,
   countPlacesColoreesFermeesApprentissage,
@@ -20,8 +32,7 @@ import {
   countPlacesOuvertesScolaire,
   countPlacesTransformees,
   countPlacesTransformeesApprentissage,
-  countPlacesTransformeesScolaire,
-} from "@/modules/utils/countCapacite";
+  countPlacesTransformeesScolaire} from "@/modules/utils/countCapacite";
 import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
@@ -48,8 +59,10 @@ export const getStatsRestitutionQuery = async ({
   search,
   positionQuadrant,
   formationSpecifique,
+  modeComptabilisation,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
+  const isModeComptabilisationCapaciteReelle = modeComptabilisation === "capaciteReelle";
 
   const countDemandes = await getKbdClient()
     .selectFrom("latestDemandeView as demande")
@@ -95,25 +108,107 @@ export const getStatsRestitutionQuery = async ({
           apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesTransformeesApprentissage(eb)), eb.val(0)),
         }).as("total"),
         jsonBuildObject({
-          total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertes(eb)), eb.val(0)),
-          scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertesScolaire(eb)), eb.val(0)),
-          apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertesApprentissage(eb)), eb.val(0)),
+          total: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesOuvertes(eb) :
+                countPlacesOuvertes(eb)
+            ),
+            eb.val(0)
+          ),
+          scolaire: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesOuvertesScolaire(eb) :
+                countPlacesOuvertesScolaire(eb)
+            ),
+            eb.val(0)
+          ),
+          apprentissage: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesOuvertesApprentissage(eb) :
+                countPlacesOuvertesApprentissage(eb)
+            ),
+            eb.val(0)
+          ),
         }).as("ouvertures"),
         jsonBuildObject({
-          total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermees(eb)), eb.val(0)),
-          scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermeesScolaire(eb)), eb.val(0)),
-          apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermeesApprentissage(eb)), eb.val(0)),
+          total: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesFermees(eb) :
+                countPlacesFermees(eb)
+            ),
+            eb.val(0)
+          ),
+          scolaire: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesFermeesScolaire(eb) :
+                countPlacesFermeesScolaire(eb)
+            ),
+            eb.val(0)
+          ),
+          apprentissage: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesFermeesApprentissage(eb) :
+                countPlacesFermeesApprentissage(eb)
+            ),
+            eb.val(0)
+          ),
         }).as("fermetures"),
         jsonBuildObject({
-          total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesOuvertes(eb)), eb.val(0)),
-          scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesOuvertesScolaire(eb)), eb.val(0)),
-          apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesOuvertesApprentissage(eb)), eb.val(0)),
+          total: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesOuvertesColorees(eb) :
+                countPlacesColoreesOuvertes(eb)
+            ),
+            eb.val(0)
+          ),
+          scolaire: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesOuvertesColoreesScolaire(eb) :
+                countPlacesColoreesOuvertesScolaire(eb)
+            ), eb.val(0)
+          ),
+          apprentissage: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesOuvertesColoreesApprentissage(eb) :
+                countPlacesColoreesOuvertesApprentissage(eb)
+            ),
+            eb.val(0)
+          ),
         }).as("ouverturesColorations"),
         jsonBuildObject({
-          total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesFermees(eb)), eb.val(0)),
-          scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesFermeesScolaire(eb)), eb.val(0)),
-          apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesFermeesApprentissage(eb)), eb.val(0)),
-        }).as("fermeturesColorations")
+          total: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesFermeesColorees(eb) :
+                countPlacesColoreesFermees(eb)
+            ),
+            eb.val(0)
+          ),
+          scolaire: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesFermeesColoreesScolaire(eb) :
+                countPlacesColoreesFermeesScolaire(eb)
+            ), eb.val(0)
+          ),
+          apprentissage: eb.fn.coalesce(
+            eb.fn.sum<number>(
+              isModeComptabilisationCapaciteReelle ?
+                countDifferenceCapacitePlacesFermeesColoreesApprentissage(eb) :
+                countPlacesColoreesFermeesApprentissage(eb)
+            ),
+            eb.val(0)
+          ),
+        }).as("fermeturesColorations"),
       ]
     )
     .$call((eb) => {

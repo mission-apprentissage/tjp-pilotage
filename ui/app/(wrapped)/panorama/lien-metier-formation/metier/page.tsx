@@ -118,9 +118,8 @@ const DashboardMetier = () => {
 
   return (
     <VStack width="100%" alignItems="start" gap="16px">
-      <Text>À partir d’un métier, visualisez les formations y conduisant</Text>
       <HStack width="100%" alignItems="end">
-        <HStack>
+        <HStack gap={4}>
           <Box width="300px">
             <AsyncDomaineProfessionnelSearch
               onSelectDomaineProfessionnel={onUpdateDomaineProfessionnel}
