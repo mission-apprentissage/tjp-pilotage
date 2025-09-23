@@ -29,6 +29,12 @@ fileignoreconfig:
   checksum: ba3d1ebb3c6292e4d8a53398c8fe95ae8f6a64fedf4d55a21cfc6139001d9ac3
 - filename: documentation/skin/font/fontello.json
   checksum: e9488434ed4b47d393c52ec88efb62d20c77d7583d7eb2c01d10b21e25ad2cef
+- filename: documentation/skin/pwa/pwa.json
+  checksum: 602aab71745f3452f7c1219be28a49358d8bc6b6c64309b517837e585c551dce
+- filename: documentation/lib-md/w_stlMgr/stlMgr.js
+  checksum: 085583f6a2a87bf7bfeaa5c5bb09a9a2582eb42c3c125e010073aac6c383154c
+- filename: documentation/co/glossary.html
+  checksum: fad006373f0f20ffb39cabfefcc7d55ee2145f6702f1e190fc9413efba248c84
 - filename: server/.env.test
   checksum: df4e0dd70085c1ab9d996395796f6b0bd879653f9866c55ff276579aff84a4ba
 - filename: server/seed/seed_data.dump
