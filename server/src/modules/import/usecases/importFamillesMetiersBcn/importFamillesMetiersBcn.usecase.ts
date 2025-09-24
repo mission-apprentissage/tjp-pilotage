@@ -68,7 +68,7 @@ export const importFamillesMetiersBcnFactory =
         if(nature === "T"){
 
           process.stdout.write(`\rCFD n°${compteurCfd} : ${cfd}`);
-          await updateCfdFamille({cfd, groupe});
+          await updateCfdFamille({cfdFamille: cfd, groupe});
         }
 
 
