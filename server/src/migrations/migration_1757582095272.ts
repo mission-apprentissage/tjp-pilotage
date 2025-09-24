@@ -3,7 +3,7 @@ import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
 
-  await viderFamilleMetier(db);
+  //await viderFamilleMetier(db);
 
   //supprimer le contenu entier de la table familleMetier
   await db.executeQuery(sql`TRUNCATE TABLE "familleMetier";`.compile(db));
@@ -34,7 +34,7 @@ export const up = async (db: Kysely<unknown>) => {
 
 export const down = async (db: Kysely<unknown>) => {
 
-  await viderFamilleMetier(db);
+  //await viderFamilleMetier(db);
 
   //Suppression des 2 nouveaux champs
   await db.schema
