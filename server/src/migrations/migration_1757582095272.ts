@@ -3,8 +3,6 @@ import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
 
-  //await viderFamilleMetier(db);
-
   //2 nouvelles colonnes:
   //"groupe" varchar(5) qui pourra remplacer le cfdFamille
   //"typeGroupe" varchar(200) qui sera un libellé directement
@@ -29,8 +27,6 @@ export const up = async (db: Kysely<unknown>) => {
 
 export const down = async (db: Kysely<unknown>) => {
 
-  //await viderFamilleMetier(db);
-
   //Suppression des 2 nouveaux champs
   await db.schema
     .alterTable("familleMetier")
@@ -48,14 +44,3 @@ export const down = async (db: Kysely<unknown>) => {
   //yarn cli importTables importFamillesMetiers && yarn cli importTables importDataFormations
 
 };
-
-const viderFamilleMetier = async (db: Kysely<unknown>) => {
-
-  //supprimer le contenu entier de la table familleMetier
-  await db.executeQuery(sql`TRUNCATE TABLE "familleMetier";`.compile(db));
-
-  //supprimer le contenu du champ dataFormation.typeFamille
-  await db.executeQuery(sql`UPDATE "dataFormation" SET "typeFamille" = null WHERE true;`.compile(db));
-
-};
-
