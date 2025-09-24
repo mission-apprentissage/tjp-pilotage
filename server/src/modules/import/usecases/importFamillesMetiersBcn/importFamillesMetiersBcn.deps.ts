@@ -31,14 +31,84 @@ const findNatureCfd = async({ cfd } : { cfd : string }) => {
   return typedNature?.data.NATURE_FORMATION_DIPLOME;
 };
 
-const updateCfdFamille = async({ cfd, groupe } : { cfd : string, groupe: string}) => {
+// Parse une date au format "jj/mm/aaaa"
+const parseDate = (value?: string | null): Date => {
+  if (!value) return new Date("9999-12-31");
 
-  return await getKbdClient()
-    .updateTable("familleMetier")
-    .set({ cfdFamille: cfd })
+  const parts = value.split("/").map(Number);
+  if (parts.length !== 3) return new Date("9999-12-31");
+
+  const [jour, mois, annee] = parts;
+  if (!jour || !mois || !annee) return new Date("9999-12-31");
+
+  // JS : mois 0-indexé
+  const d = new Date(annee, mois - 1, jour);
+  return isNaN(d.getTime()) ? new Date("9999-12-31") : d;
+};
+
+
+const updateCfdFamille = async({ cfdFamille, groupe }: { cfdFamille: string, groupe: string }) => {
+  const kbdClient = await getKbdClient();
+
+  // Récupère les dates d'ouverture et fermeture d'un CFD depuis rawData
+  const getCfdData = async (cfdValue: string) => {
+    const raw = await kbdClient
+      .selectFrom("rawData")
+      .selectAll()
+      .where("type", "=", "nFormationDiplome_")
+      .where("data", "@>", { "FORMATION_DIPLOME": cfdValue })
+      .executeTakeFirst();
+
+    if (!raw) return null;
+
+    const data = raw.data as NFormationDiplomeLine;
+
+    if (!data.DATE_OUVERTURE) return null;
+
+    const start = parseDate(data.DATE_OUVERTURE);
+    const end = parseDate(data.DATE_FERMETURE);
+
+    return { start, end };
+  };
+
+  // Dates du CFD famille "prétendu"
+  const cfdFamilleDetail = await getCfdData(cfdFamille);
+  if (!cfdFamilleDetail) return;
+
+  // Tous les CFD du groupe
+  const cfdRows = await kbdClient
+    .selectFrom("familleMetier")
+    .select(["id", "cfd", "cfdFamille"])
     .where("groupe", "=", groupe)
     .execute();
+
+  // Parcours et mise à jour conditionnelle
+  for (const row of cfdRows) {
+
+    //on a déjà un cfd famille => on skip
+    if(row.cfdFamille) continue;
+
+    //on ne connait pas le détail du cfd en cours => on skip
+    const rowCfdDetail = await getCfdData(row.cfd);
+    if (!rowCfdDetail) continue;
+
+    const isOpenSimultaneous =
+      cfdFamilleDetail.start <= rowCfdDetail.end &&
+      rowCfdDetail.start <= cfdFamilleDetail.end;
+
+    // Debug : affiche le CFD du groupe et le CFD famille
+    // console.log({cfdFamille, cfdFamilleDetail, rowCfd: row.cfd, rowCfdDetail, isOpenSimultaneous});
+
+    if (isOpenSimultaneous) {
+      await kbdClient
+        .updateTable("familleMetier")
+        .set({ cfdFamille })
+        .where("id", "=", row.id)
+        .execute();
+    }
+  }
 };
+
 
 const getCfdLienFormationGroupe = async() => {
 

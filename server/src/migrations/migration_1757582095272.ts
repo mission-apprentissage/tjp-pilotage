@@ -5,12 +5,6 @@ export const up = async (db: Kysely<unknown>) => {
 
   //await viderFamilleMetier(db);
 
-  //supprimer le contenu entier de la table familleMetier
-  await db.executeQuery(sql`TRUNCATE TABLE "familleMetier";`.compile(db));
-
-  //supprimer le contenu du champ dataFormation.typeFamille
-  await db.executeQuery(sql`UPDATE "dataFormation" SET "typeFamille" = null WHERE true;`.compile(db));
-
   //2 nouvelles colonnes:
   //"groupe" varchar(5) qui pourra remplacer le cfdFamille
   //"typeGroupe" varchar(200) qui sera un libellé directement
@@ -27,6 +21,7 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 
   //Alimenter la table avec la BCN:
+  //yarn cli importFiles n_lien_formation_groupe_ && yarn cli importFiles n_type_groupe_formation_ && yarn cli importFiles n_groupe_formation_
   //yarn cli importTables importFamillesMetiersBcn && yarn cli importTables importDataFormations
 
 
