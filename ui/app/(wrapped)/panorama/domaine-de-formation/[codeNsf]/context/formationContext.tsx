@@ -123,6 +123,7 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
         selection
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cfd, setCurrentFilters, selectedCfd, formations, formationsByLibelleNiveauDiplome]);
 
   const handleResetFilters = () => {

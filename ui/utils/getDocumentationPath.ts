@@ -10,7 +10,6 @@ export const getDocumentationPath = (path: string) => {
   case "diffusion":
   case "qualification":
   default:
-    return `/documentation/${path}`;
-
+    return `/documentation/co/${path}`;
   }
 };
