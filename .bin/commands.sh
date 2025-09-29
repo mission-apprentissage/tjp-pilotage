@@ -5,20 +5,21 @@ set -euo pipefail
 function Help() {
    # Display Help
    echo "Commands"
-   echo "  bin:setup                                               Installs ${PRODUCT_NAME} binary with zsh completion on system"
-   echo "  init:env                                                Update local env files using values from vault file"
-   echo "  docker:login                                            Login to ghcr.io"
-   echo "  release:interactive                                                                Build & Push Docker image releases"
-   echo "  release:manual                                                                Build & Push Docker image releases in a new release"
-   echo "  release:candidate                                                                Build & Push Docker image releases in a release candidate"
-   echo "  release:generate:rc-label                                                   Generate next rc label"
-   echo "  release:generate:manual-label                                                   Generate next manual label"
-   echo "  release:app                                                                Build & Push Docker image releases"
-   echo "  deploy <env> --user <your_username>                                           Deploy application to <env>"
-   echo "  preview:build                                                                Build preview"
-   echo "  preview:cleanup --user <your_username>                                        Remove preview from close pull-requests"
-   echo "  vault:edit                                                                    Edit vault file"
-   echo "  vault:password                                                                Show vault password"
+   echo "  bin:setup                                  Installs ${PRODUCT_NAME} binary with zsh completion on system"
+   echo "  init:env                                   Update local env files using values from vault file"
+   echo "  docker:login                               Login to ghcr.io"
+   echo "  release:interactive                        Build & Push Docker image releases"
+   echo "  release:manual                             Build & Push Docker image releases in a new release"
+   echo "  release:candidate                          Build & Push Docker image releases in a release candidate"
+   echo "  release:generate:rc-label                  Generate next rc label"
+   echo "  release:generate:manual-label              Generate next manual label"
+   echo "  release:app                                Build & Push Docker image releases"
+   echo "  deploy <env> --user <your_username>        Deploy application to <env>"
+   echo "  preview:build                              Build preview"
+   echo "  preview:cleanup --user <your_username>     Remove preview from close pull-requests"
+   echo "  vault:edit                                 Edit vault file"
+   echo "  vault:password                             Show vault password"
+   echo "  vault:renew                                Renew vault file"
    echo "  seed:update                                Update seed using a database"
    echo "  seed:apply                                 Apply seed to a database"
    echo "  deploy:log:encrypt                         Encrypt Github ansible logs"
@@ -90,6 +91,10 @@ function vault:edit() {
 
 function vault:password() {
   "${SCRIPT_DIR}/get-vault-password-client.sh" "$@"
+}
+
+function vault:renew() {
+  "${SCRIPT_DIR}/renew-vault.sh" "$@"
 }
 
 function seed:update() {
