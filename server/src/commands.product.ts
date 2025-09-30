@@ -24,7 +24,8 @@ import { importDiscipline } from "./modules/import/usecases/importDiscipline/imp
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
-import { importIJData } from "./modules/import/usecases/importIJData/importIJData.usecase";
+import { importIjRegionDataIntoFile } from "./modules/import/usecases/importIJDataIntoFile/importIjRegionDataIntoFile.usecase";
+import { importIJUaiDataIntoFile } from "./modules/import/usecases/importIJDataIntoFile/importIJUaiDataIntoFile.usecase";
 import { importIndicateursDepartement } from "./modules/import/usecases/importIndicateursDepartement/importIndicateursDepartement.usecase";
 import { importIndicateursRegion } from "./modules/import/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importLienEmploiFormation } from "./modules/import/usecases/importLienEmploiFormation/importLienEmploiFormation.usecase";
@@ -146,6 +147,7 @@ export function productCommands(cli: Command) {
         schema: z.Schema<unknown>;
       }) => {
         const filePath = year ? `${basepath}/files/${year}/${type}_${year}.csv` : `${basepath}/files/${type}.csv`;
+
         return await importRawFile({
           type: year ? `${type}_${year}` : type,
           path: filePath,
@@ -275,6 +277,14 @@ export function productCommands(cli: Command) {
           type: "actions_prioritaires",
           schema: Schemas.actions_prioritaires,
         }),
+        ...getImports({
+          type: "ij_region_data",
+          schema: Schemas.ij_region_data,
+        }),
+        ...getImports({
+          type: "ij_uai_data",
+          schema: Schemas.ij_uai_data,
+        }),
       };
 
       await writeErrorLogs({
@@ -343,10 +353,25 @@ export function productCommands(cli: Command) {
       await createJob({ name: "importTables", sub: usecaseName });
     });
 
-  cli.command("importIJ").action(async () => {
-    await importIJData().then();
-    await createJob({ name: "importIJ" });
-  });
+  cli
+    .command("importIJ")
+    .argument("[usecase]")
+    .action(async (usecase: string) => {
+      const usecases = {
+        region: importIjRegionDataIntoFile,
+        uai: importIJUaiDataIntoFile,
+      };
+
+      if (usecase) {
+        await usecases[usecase as keyof typeof usecases]();
+      } else {
+        for (const usecase of Object.values(usecases)) {
+          await usecase();
+        }
+      }
+
+      await createJob({ name: "saveIJDatas", sub: usecase });
+    });
 
   cli
     .command("importFormations")

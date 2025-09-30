@@ -17,6 +17,12 @@ export const localFilePathManagerFactory = (): FilePathManager => {
     getFranceTravailIndicateurTensionStatsFilePath: () => {
       return "./static/files/tension_rome.csv";
     },
+    getIJRegionDataFilePath: () => {
+      return `./static/files/ij_region_data.csv`;
+    },
+    getIJUaiDataFilePath: () => {
+      return `./static/files/ij_uai_data.csv`;
+    },
   };
 };
 

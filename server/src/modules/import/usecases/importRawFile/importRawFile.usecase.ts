@@ -57,11 +57,27 @@ export const [importRawFile, importRawFileFactory] = inject(
       try {
         await verifyFileEncoding(path);
       } catch (err) {
-        errors.push({
-          type: ImportFileErrorType.FILE,
-          path,
-          error: new ZodError([{ code: ZodIssueCode.custom, message: err as string, path: [path] }]),
-        });
+        if(err instanceof Error) {
+          console.error(`Erreur d'encodage : ${err.message}`);
+          errors.push({
+            type: ImportFileErrorType.FILE,
+            path,
+            error: new ZodError([{ code: ZodIssueCode.custom, message: err.message, path: [path] }]),
+          });
+        } else if (typeof err === "string") {
+          errors.push({
+            type: ImportFileErrorType.FILE,
+            path,
+            error: new ZodError([{ code: ZodIssueCode.custom, message: err, path: [path] }]),
+          });
+        } else {
+          errors.push({
+            type: ImportFileErrorType.FILE,
+            path,
+            error: new ZodError([{ code: ZodIssueCode.custom, message: err as string, path: [path] }]),
+          });
+
+        }
         return errors;
       }
 

@@ -24,8 +24,7 @@ export const [importIndicateurSortie] = inject({ createIndicateurSortie, getUaiD
     cfd: string;
     codeDispositif: string;
   }) => {
-    const ijData = await deps.getUaiData({ millesime, uai });
-    const mefData = ijData?.scolaire[mefstat];
+    const mefData = await deps.getUaiData({ uai, millesime, voie: "scolaire", mefstat });
 
     if (!mefData) {
       const continuumData = await getContinuumData({
@@ -72,10 +71,9 @@ export const [importIndicateurSortieApprentissage] = inject({ createIndicateurSo
     millesime: string;
     cfd: string;
   }) => {
-    const ijData = await deps.getUaiData({ millesime, uai });
-    const mefData = ijData?.apprentissage[cfd];
+    const cfdData = await deps.getUaiData({ uai, millesime, voie: "apprentissage", cfd });
 
-    if (!mefData) {
+    if (!cfdData) {
       const continuumData = await getContinuumData({
         cfd,
         codeDispositif: null,
@@ -95,12 +93,12 @@ export const [importIndicateurSortieApprentissage] = inject({ createIndicateurSo
 
     const indicateurSortie = {
       formationEtablissementId,
-      nbInsertion6mois: mefData?.nb_en_emploi_6_mois,
-      nbInsertion12mois: mefData.nb_en_emploi_12_mois,
-      nbInsertion24mois: mefData?.nb_en_emploi_24_mois,
-      effectifSortie: mefData?.nb_annee_term,
-      nbPoursuiteEtudes: mefData?.nb_poursuite_etudes,
-      nbSortants: mefData?.nb_sortant,
+      nbInsertion6mois: cfdData?.nb_en_emploi_6_mois,
+      nbInsertion12mois: cfdData.nb_en_emploi_12_mois,
+      nbInsertion24mois: cfdData?.nb_en_emploi_24_mois,
+      effectifSortie: cfdData?.nb_annee_term,
+      nbPoursuiteEtudes: cfdData?.nb_poursuite_etudes,
+      nbSortants: cfdData?.nb_sortant,
       millesimeSortie: millesime,
     };
 

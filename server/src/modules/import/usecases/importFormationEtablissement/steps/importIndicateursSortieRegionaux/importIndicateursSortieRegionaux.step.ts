@@ -21,11 +21,11 @@ export const [importIndicateursRegionSortie] = inject(
     async ({ cfd, codeDispositif, mefstat }: { cfd: string; codeDispositif: string; mefstat: string }) => {
       for (const [_crij, codeRegion] of Object.entries(regionAcademiqueMapping))
         for (const millesimeSortie of MILLESIMES_IJ_REG) {
-          const ijRegData = await deps.findRawData({
-            type: "ij_reg",
-            filter: { millesime: millesimeSortie, codeRegion },
+
+          const mefstatData = await deps.findRawData({
+            type: "ij_region_data",
+            filter: { millesime: millesimeSortie, code_region: codeRegion, cfd, voie: "scolaire", mefstat11: mefstat },
           });
-          const mefstatData = ijRegData?.scolaire[mefstat];
 
           if (!mefstatData) {
             const continuumData = await getContinuumData({
@@ -73,13 +73,12 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
     async ({ cfd }: { cfd: string }) => {
       for (const [_crij, codeRegion] of Object.entries(regionAcademiqueMapping))
         for (const millesimeSortie of MILLESIMES_IJ_REG) {
-          const data = await deps.findRawData({
-            type: "ij_reg",
-            filter: { millesime: millesimeSortie, codeRegion },
+          const ijRegionData = await deps.findRawData({
+            type: "ij_region_data",
+            filter: { millesime: millesimeSortie, code_region_ij: codeRegion, voie: "apprentissage", cfd },
           });
-          const cfdData = data?.apprentissage[cfd];
 
-          if (!cfdData) {
+          if (!ijRegionData) {
             const continuumData = await getContinuumData({
               cfd,
               codeDispositif: null,
@@ -103,12 +102,12 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
             voie: "apprentissage",
             codeRegion,
             millesimeSortie,
-            effectifSortie: cfdData.nb_annee_term ?? null,
-            nbSortants: cfdData.nb_sortant ?? null,
-            nbPoursuiteEtudes: cfdData.nb_poursuite_etudes ?? null,
-            nbInsertion6mois: cfdData.nb_en_emploi_6_mois ?? null,
-            nbInsertion12mois: cfdData.nb_en_emploi_12_mois ?? null,
-            nbInsertion24mois: cfdData.nb_en_emploi_24_mois ?? null,
+            effectifSortie: ijRegionData.nb_annee_term ?? null,
+            nbSortants: ijRegionData.nb_sortant ?? null,
+            nbPoursuiteEtudes: ijRegionData.nb_poursuite_etudes ?? null,
+            nbInsertion6mois: ijRegionData.nb_en_emploi_6_mois ?? null,
+            nbInsertion12mois: ijRegionData.nb_en_emploi_12_mois ?? null,
+            nbInsertion24mois: ijRegionData.nb_en_emploi_24_mois ?? null,
           });
         }
     }

@@ -36,7 +36,7 @@ fileignoreconfig:
 - filename: server/seed/seed_schema.dump
   checksum: 8eb032b7bc0013ec5dbba6e69fc07a74a5c1ea8c95ff619281106498c263b691
 - filename: server/src/modules/core/usecases/editUser/__tests__/editUser.spec.ts
-  checksum: 94afe67554abf21f7bb1dd5720e3ad5c24f348835086595e5a2c5bb4f6bbc194
+  checksum: ea40e69e23f457533a15ea6d14c9cd8e71b096187b5e82a8c0c5b3195aad3d0f
 - filename: server/src/modules/core/usecases/login/__tests__/login.test.ts
   checksum: 28cdc80f0d836857ee9a802bff5a72a3ff3addad70a31b1ad4b7e98bc8db447c
 - filename: server/src/modules/core/usecases/login/login.test.ts
@@ -126,15 +126,17 @@ fileignoreconfig:
 - filename: ui/app/(wrapped)/cgu/page.tsx
   checksum: d42601745f99f191e3fb865ed61ef829e4c7e82a5d157a544deb8f4986717fef
 - filename: ui/app/(wrapped)/changelog/const.ts
-  checksum: 1ebf1d5b005c756d9240f9cd3b3ed794169782eb105228ea32d73174aa25f1e6
+  checksum: 1b0663f31bb14845964a65bce8dbaf9016c94568601f555a2dbf31eef3ba363f
 - filename: ui/app/(wrapped)/demandes/perdir/synthese/[numero]/actions/const.ts
   checksum: d2802537bd9b064191f47c0b697ae683b4077d82ed86d99e094c184c6efb92da
 - filename: ui/app/(wrapped)/demandes/utils/__tests__/messageAccompagneUtils.test.ts
   checksum: 5e613e7713acca04787d983d04eecaeda58676dd82ef17ce7139a5cd4de55a5d
+- filename: ui/app/(wrapped)/demandes/utils/__tests__/messageAccompagnementUtils.test.ts
+  checksum: b061bff0271e257cc2712811981446c1babc0582a52c5c247c3564ea4c379503
 - filename: ui/app/(wrapped)/demandes/utils/__tests__/permissionsDemandeUtils.test.ts
   checksum: b3b68b225af36b8a4aa34ec83ac8bfe45db6f610e92a501de62f998222c941d4
 - filename: ui/app/(wrapped)/demandes/utils/__tests__/statutUtils.test.ts
-  checksum: dc2a297780c6ed1ec68c05d2535e0747380eb77045b2b397c42e88a09bf8acd6
+  checksum: 74019c066c2f2b920ff51a048132365f16fe807cbddf2a9a3c711743a8af7e03
 - filename: ui/app/(wrapped)/documentation/page.tsx
   checksum: 50bc89c2ce7e01f8b8ff7381b44abb68ed2979230dc7252009e2e77b85c11558
 - filename: ui/app/(wrapped)/glossaire/GlossaireEntries.ts
@@ -160,7 +162,7 @@ fileignoreconfig:
 - filename: ui/utils/__tests__/isPartOfSaisieDemande.test.ts
   checksum: a9edcc318486f4d65e1d748e650eb7243f387075f093d9568d6f26d4cc03a5b6
 - filename: ui/utils/__tests__/permissionsDemandeUtils.test.ts
-  checksum: be0fe006a8ba22785eae0b72ad24c396ab61f1621550b515f5137fc2401da1e7
+  checksum: e813726f41ea9ab4686b39c14228db602e48df1e1a9ec9b308c39873c8d5a158
 - filename: ui/utils/__tests__/permissionsOldDemandeUtils.test.ts
   checksum: 4143cc02a050869ae63aa3c4f787e11e995e219fd910e7112e0db54abfe34839
 - filename: ui/utils/security/__tests__/GuardSaisieDemande.test.tsx
