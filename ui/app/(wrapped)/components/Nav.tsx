@@ -17,6 +17,7 @@ import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisContext } from "@/app/uaiContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
+import { getDocumentationPath } from "@/utils/getDocumentationPath";
 import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 import { isPerdirPartOfSaisieDemande } from "@/utils/isPartOfSaisieDemande";
 import { canCreateDemande } from "@/utils/permissionsDemandeUtils";
@@ -25,35 +26,35 @@ import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 const DOCUMENTATION_LINKS = {
   // Panorama
-  ["panorama/region"]: "/documentation/co/000_-_Panorama_Region_-_Departement.html",
-  ["panorama/departement"]: "/documentation/co/000_-_Panorama_Region_-_Departement.html",
-  ["panorama/etablissement"]: "/documentation/co/000_-_Panorama_Etablissement.html",
-  ["panorama/domaine-de-formation"]: "/documentation/co/000_-_Panorama_Domaine_de_formation.html",
-  ["panorama/lien-metier-formation"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
-  ["panorama/lien-metier-formation/metier"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
-  ["panorama/lien-metier-formation/formation"]: "/documentation/co/000_-_Panorama_Lien_Metier_Formation.html",
+  ["panorama/region"]: getDocumentationPath("000_-_Panorama_Region_-_Departement.html"),
+  ["panorama/departement"]: getDocumentationPath("000_-_Panorama_Region_-_Departement.html"),
+  ["panorama/etablissement"]: getDocumentationPath("000_-_Panorama_Etablissement.html"),
+  ["panorama/domaine-de-formation"]: getDocumentationPath("000_-_Panorama_Domaine_de_formation.html"),
+  ["panorama/lien-metier-formation"]: getDocumentationPath("000_-_Panorama_Lien_Metier_Formation.html"),
+  ["panorama/lien-metier-formation/metier"]: getDocumentationPath("000_-_Panorama_Lien_Metier_Formation.html"),
+  ["panorama/lien-metier-formation/formation"]: getDocumentationPath("000_-_Panorama_Lien_Metier_Formation.html"),
   // Console
-  ["console/formations"]: "/documentation/co/000_-_Consoles.html",
-  ["console/etablissements"]: "/documentation/co/000_-_Consoles.html",
+  ["console/formations"]: getDocumentationPath("000_-_Consoles.html"),
+  ["console/etablissements"]: getDocumentationPath("000_-_Consoles.html"),
   // Demandes
-  ["demandes/saisie"]: "/documentation/co/000_-_Gestion_des_demandes.html",
-  ["demandes/saisie/"]: "/documentation/co/001_-_Saisie_dans_le_formulaire.html",
-  ["demandes/restitution"]: "/documentation/co/002_-_Restitution_des_demandes.html",
-  ["demandes/corrections"]: "/documentation/co/006_-_Restitution_des_corrections.html",
-  ["demandes/pilotage"]: "/documentation/co/002_-_Comprendre_et_utiliser_les_projections_de_transformation.html",
+  ["demandes/saisie"]: getDocumentationPath("000_-_Gestion_des_demandes.html"),
+  ["demandes/saisie/"]: getDocumentationPath("001_-_Saisie_dans_le_formulaire.html"),
+  ["demandes/restitution"]: getDocumentationPath("002_-_Restitution_des_demandes.html"),
+  ["demandes/corrections"]: getDocumentationPath("006_-_Restitution_des_corrections.html"),
+  ["demandes/pilotage"]: getDocumentationPath("002_-_Comprendre_et_utiliser_les_projections_de_transformation.html"),
   // Suivi de l'impact
-  ["suivi-impact"]: "/documentation/co/007_-_Suivi_de_l3impact.html",
+  ["suivi-impact"]: getDocumentationPath("007_-_Suivi_de_l3impact.html"),
   // Admin
-  ["admin/users"]: "/documentation/co/000_-_Gestion_des_utilisateurs_dans_Orion.html",
-  ["admin/roles"]: "/documentation/co/000_-_Comprendre_les_roles__permissions_et_responsabilites_dans_Orion_.html",
-  ["admin/campagnes/national"]: "/documentation/co/001_-_Gestion_des_campagnes_et_temporalite.html",
-  ["admin/campagnes/regional"]: "/documentation/co/001_-_Gestion_des_campagnes_et_temporalite.html",
+  ["admin/users"]: getDocumentationPath("000_-_Gestion_des_utilisateurs_dans_Orion.html"),
+  ["admin/roles"]: getDocumentationPath("000_-_Comprendre_les_roles__permissions_et_responsabilites_dans_Orion_.html"),
+  ["admin/campagnes/national"]: getDocumentationPath("001_-_Gestion_des_campagnes_et_temporalite.html"),
+  ["admin/campagnes/regional"]: getDocumentationPath("001_-_Gestion_des_campagnes_et_temporalite.html"),
 };
 
 const getDocumentationLink = (segment?: string) => {
-  if(segment === "") return "/documentation";
-  if(segment?.startsWith("demandes/saisie/")) return DOCUMENTATION_LINKS["demandes/saisie/"] ?? "/documentation";
-  return DOCUMENTATION_LINKS[segment as keyof typeof DOCUMENTATION_LINKS] ?? "/documentation";
+  if(segment === "") return getDocumentationPath("Manuel_utilisateur_Orion.html");
+  if(segment?.startsWith("demandes/saisie/")) return DOCUMENTATION_LINKS["demandes/saisie/"] ?? getDocumentationPath("Manuel_utilisateur_Orion.html");
+  return DOCUMENTATION_LINKS[segment as keyof typeof DOCUMENTATION_LINKS] ?? getDocumentationPath("Manuel_utilisateur_Orion.html");
 };
 
 const shouldDisplayDemandesMenu = ({ user, campagne }: {user?: UserType, campagne?: CampagneType}) => {

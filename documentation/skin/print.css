@@ -1,0 +1,124 @@
+/* GUIDE PRINT CSS */
+html{
+	overflow: scroll;
+	position: unset;
+}
+#header::before,
+#outline,
+#menu,
+#stack,
+#footer,
+.toolLayer,
+.titleLayer menu,
+.searchFra,
+.showMenu{
+	display: none !important;
+}
+#header{
+	position: relative;
+	border-block-end: 0;
+}
+.titleLayer{
+	margin-block-end: 0.5em;
+}
+.menuActive #main main {
+	margin-inline-start: 0;
+}
+#main {
+	margin-block: 0 !important;
+}
+#content {
+	max-width:unset;
+	padding: 0;
+}
+#main main{
+	overflow-y: visible;
+	position: relative;
+}
+
+/* CONTENT */
+.screenZone_end,
+.scImgAnmCtrl,
+.scrTools,
+.stepScreenTools,
+.slpTools,
+.toolbar,
+.secOutFra{
+	display: none !important;
+}
+h2, h3, h4, h5, h6,
+.cbk_closed{
+	page-break-after: avoid;
+}
+li.screenZone{
+	page-break-inside: avoid;
+}
+.scrFraInt > ol.screenZones > li.screenZone.scrZneHide, .scrFraAct > ol.screenZones > li.screenZone.scrZneHide {
+	visibility: unset;
+	position: unset;
+	left: unset;
+	top: unset;
+}
+.screenSeqFra{
+	position: unset !important;
+	height: unset !important;
+	width: unset !important;
+}
+.screenSeqFra > div{
+	visibility: unset !important;
+	position: unset !important;
+	top: unset !important;
+	left: unset !important;
+	width: unset !important;
+	margin-top: unset !important;
+}
+.screenSeqFra .caption {
+	margin-block: revert;
+}
+.stepListPlayer,
+.stepList .desc.simple,
+.scrFra,
+.stepScreen,
+.screenSeq > .caption_co {
+	border:0;
+	background:none;
+	padding:0;
+	border-inline-start: 2pt solid var(--accentColor);
+	padding-inline-start: 0.5em;
+}
+ol.steps li.step{
+	visibility: unset !important;
+	position: relative !important;
+	height: unset !important;
+	width: unset !important;
+	left: unset !important;
+	top: unset !important;
+}
+.stepScreen.showSteps_false ol.steps{
+	display:block;
+}
+section.condensedChild,
+div.cbk_co,
+:not(.block).cbk-closed {
+	background-color: transparent;
+	border:0;
+}
+.collBlk_closed{
+	display:block !important;
+}
+.nodeChildren_hide > .nodeChildren{
+	opacity: 1;
+	height: unset !important;
+}
+.treeRoot{
+	background-color: transparent;
+}
+.nodeChildren_hide > .nodeChildren > .nodeChild {
+	display: unset;
+}
+.nodeRoot, .nodeLbl, .nodeLblCo{
+	page-break-inside: avoid;
+}
+.nodeTi {
+	page-break-after: avoid;
+}
