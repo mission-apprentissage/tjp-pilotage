@@ -65,8 +65,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
         <Flex align="center" as={Container} py={2} maxWidth={"container.xl"}>
           <HStack spacing={1} align="center">
             <Flex direction={"row"} gap={6}>
-              <Img height="70px" src="/logo_gouvernement.svg" alt="Logo république Française 1" />
-              <Img height="60px" src="/logo_orion.svg" alt="Logo Orion" my={"auto"} />
+              <Img height="80px" src="/logo_MENESR.png" alt="Ministère de l'Éducation Nationale, de l'Enseignement Supérieur et de la Recherche" />
             </Flex>
             <Heading as={"h1"} size={"md"}>
               <Box as="span" display={["none", null, "unset"]}>
