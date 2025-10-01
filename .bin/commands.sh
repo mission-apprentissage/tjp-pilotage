@@ -20,8 +20,7 @@ function Help() {
    echo "  vault:edit                                 Edit vault file"
    echo "  vault:password                             Show vault password"
    echo "  vault:renew                                Renew vault file"
-   echo "  seed:update                                Update seed using a database"
-   echo "  seed:apply                                 Apply seed to a database"
+   echo "  generate:seed                              Generate a seed database for test purposes"
    echo "  deploy:log:encrypt                         Encrypt Github ansible logs"
    echo "  deploy:log:dencrypt                        Decrypt Github ansible logs"
    echo
@@ -97,14 +96,6 @@ function vault:renew() {
   "${SCRIPT_DIR}/renew-vault.sh" "$@"
 }
 
-function seed:update() {
-  "${SCRIPT_DIR}/seed-update.sh" "$@"
-}
-
-function seed:apply() {
-  "${SCRIPT_DIR}/seed-apply.sh" "$@"
-}
-
 function deploy:log:encrypt() {
   (cd "$ROOT_DIR" && "${SCRIPT_DIR}/deploy-log-encrypt.sh" "$@")
 }
@@ -113,3 +104,6 @@ function deploy:log:decrypt() {
   (cd "$ROOT_DIR" && "${SCRIPT_DIR}/deploy-log-decrypt.sh" "$@")
 }
 
+function seed:generate() {
+  "${SCRIPT_DIR}/generate-seed.sh"
+}
