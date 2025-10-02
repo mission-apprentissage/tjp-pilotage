@@ -1,3 +1,4 @@
+import { parse } from "date-fns";
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/db";
@@ -35,14 +36,7 @@ const findNatureCfd = async({ cfd } : { cfd : string }) => {
 const parseDate = (value?: string | null): Date => {
   if (!value) return new Date("9999-12-31");
 
-  const parts = value.split("/").map(Number);
-  if (parts.length !== 3) return new Date("9999-12-31");
-
-  const [jour, mois, annee] = parts;
-  if (!jour || !mois || !annee) return new Date("9999-12-31");
-
-  // JS : mois 0-indexé
-  const d = new Date(annee, mois - 1, jour);
+  const d = parse(value, "dd/MM/yyyy", new Date());
   return isNaN(d.getTime()) ? new Date("9999-12-31") : d;
 };
 
@@ -95,9 +89,6 @@ const updateCfdFamille = async({ cfdFamille, groupe }: { cfdFamille: string, gro
     const isOpenSimultaneous =
       cfdFamilleDetail.start <= rowCfdDetail.end &&
       rowCfdDetail.start <= cfdFamilleDetail.end;
-
-    // Debug : affiche le CFD du groupe et le CFD famille
-    // console.log({cfdFamille, cfdFamilleDetail, rowCfd: row.cfd, rowCfdDetail, isOpenSimultaneous});
 
     if (isOpenSimultaneous) {
       await kbdClient
