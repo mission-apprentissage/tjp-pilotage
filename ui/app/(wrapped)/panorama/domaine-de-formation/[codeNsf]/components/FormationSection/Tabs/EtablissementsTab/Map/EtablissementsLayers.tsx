@@ -180,6 +180,7 @@ export const EtablissementsLayers = ({
         });
       });
     }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [
     map,
     onSinglePointOver,

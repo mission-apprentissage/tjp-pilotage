@@ -3,8 +3,7 @@
 import { Flex, Text } from "@chakra-ui/react";
 import _ from "lodash";
 import { useId, useRef } from "react";
-import type { GroupBase, SelectInstance, SingleValueProps } from "react-select";
-import { components } from "react-select";
+import type { GroupBase, SelectInstance } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
@@ -18,38 +17,6 @@ interface AsyncFormationSearchProps {
 
 type Option = FormationOption | string;
 type Options = (typeof client.infer)["[GET]/nsf-diplome/search/:search"];
-
-const OptionLabel = ({ option }: { option: FormationOption }) => {
-  return (
-    <Flex gap={2} justifyContent="space-between" width="100%">
-      <Text overflow={"hidden"} textOverflow="ellipsis">
-        {option?.label}
-      </Text>
-    </Flex>
-  );
-};
-
-const SingleValue = ({
-  reactSelectProps,
-  formation,
-}: {
-  reactSelectProps: SingleValueProps<Option>;
-  formation: Option;
-}) => {
-  if (typeof formation === "string") {
-    return (
-      <components.SingleValue {...reactSelectProps}>
-        <Text></Text>
-      </components.SingleValue>
-    );
-  }
-
-  return (
-    <components.SingleValue {...reactSelectProps}>
-      <OptionLabel option={formation} />
-    </components.SingleValue>
-  );
-};
 
 const AsyncFormationSearch = ({ codeNsf, formation, onSelectFormation }: AsyncFormationSearchProps) => {
   const selectElementRef = useRef<SelectInstance<Option, false, GroupBase<Option>>>(null);
@@ -70,7 +37,7 @@ const AsyncFormationSearch = ({ codeNsf, formation, onSelectFormation }: AsyncFo
   }, 300);
 
   return (
-    <>
+    <Flex direction="column" gap={1}>
       <Text as="label" onClick={openSelect} pb="4px" cursor="pointer" htmlFor="select-diplome">
         Formation
       </Text>
@@ -81,16 +48,6 @@ const AsyncFormationSearch = ({ codeNsf, formation, onSelectFormation }: AsyncFo
         name={"select-diplome"}
         components={{
           IndicatorSeparator: () => null,
-          SingleValue: ({ ...props }) => (
-            <SingleValue reactSelectProps={{ ...props } as SingleValueProps<Option>} formation={formation ?? ""} />
-          ),
-        }}
-        formatOptionLabel={(option: FormationOption | string) => {
-          if (typeof option !== "string") {
-            return <OptionLabel option={option} />;
-          }
-
-          return <Text>{option}</Text>;
         }}
         defaultOptions={defaultFormations ?? []}
         value={formation ?? ""}
@@ -107,7 +64,7 @@ const AsyncFormationSearch = ({ codeNsf, formation, onSelectFormation }: AsyncFo
         }
         placeholder="Libellé formation"
       />
-    </>
+    </Flex>
   );
 };
 

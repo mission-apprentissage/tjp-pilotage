@@ -144,7 +144,7 @@ export function productCommands(cli: Command) {
       }: {
         type: string;
         year?: string;
-        schema: Zod.Schema<unknown>;
+        schema: z.Schema<unknown>;
       }) => {
         const filePath = year ? `${basepath}/files/${year}/${type}_${year}.csv` : `${basepath}/files/${type}.csv`;
         return await importRawFile({
@@ -161,7 +161,7 @@ export function productCommands(cli: Command) {
       }: {
         type: keyof LineTypes;
         years?: string[];
-        schema: Zod.Schema<unknown>;
+        schema: z.Schema<unknown>;
       }) => {
         if (!years) {
           return { [type]: async () => getImport({ type, schema }) };
