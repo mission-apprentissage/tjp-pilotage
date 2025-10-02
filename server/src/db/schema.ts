@@ -313,9 +313,11 @@ export interface Etablissement {
 export interface FamilleMetier {
   id: Generated<string>;
   libelleFamille: string;
-  codeMinistereTutelle: string;
+  codeMinistereTutelle: string | null;
   cfdFamille: string;
   cfd: string;
+  groupe: string | null;
+  typeGroupe: string | null;
 }
 
 export interface Formation {
