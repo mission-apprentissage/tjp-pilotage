@@ -12,7 +12,7 @@ readonly VAULT_DIR="${ROOT_DIR}/.infra/vault"
 vault_password_file="${VAULT_DIR}/.vault-password-previous.gpg"
 
 if [ ! -f "$vault_password_file" ]; then
-    echo "Veuillez télécharger le fichier de mot de passe du coffre fort et le placer dans chemin d'accès suivant : ${selected_password_file}"
+    echo "Veuillez télécharger le fichier de mot de passe du coffre fort et le placer dans chemin d'accès suivant : ${vault_password_file}"
     exit 0
 fi
 
