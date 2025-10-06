@@ -196,7 +196,7 @@ TEOverflowCtrl.prototype = {
 		var self = this;
 
 		if (this.update) {
-			var iE = navigator.userAgent.match("Trident");
+			var iE = navigator.userAgent.match('Trident');
 			self.updateDisabled = this.update.disabledClasses && this.update.disabledClasses.some(function(classNames) {
 				return ctrl.container.classList.contains(classNames);
 			});
@@ -239,7 +239,7 @@ TEOverflowCtrl.prototype = {
 					self.prevClassList = newClassList;
 				}
 			});
-			this.observer.observe(ctrl.container, {"attributes": true, "attributeFilter": ["class"]});
+			this.observer.observe(ctrl.container, {'attributes': true, 'attributeFilter': ['class']});
 
 			if (self.update.transition && !iE) ctrl.container.addEventListener('transitionend', function (event) {
 				if (self.transitionStarted && event.target == self.update.target) {
@@ -296,14 +296,17 @@ TEOverflowCtrl.prototype = {
 		if (!parseInt(style.width) && !parseInt(style.height)) return;
 
 		element.style.alignSelf = 'center';
+		element.parentElement.overflow = 'hidden';
 		var height = element.scrollHeight + parseInt(style.marginTop) + parseInt(style.marginBottom);
 		var width = element.scrollWidth + parseInt(style.marginLeft) + parseInt(style.marginRight);
-		var scale = Math.min(element.parentNode.clientHeight / height, element.parentNode.clientWidth / width);
+		const { height: parentClientHeight, width: parentClientWidth  } = element.parentElement.getBoundingClientRect();
+		var scale = Math.min(parentClientHeight / height, parentClientWidth / width);
 		if (scale < 1) {
 			self.onOverflow(element, scale);
 		} else {
 			element.style.alignSelf = '';
 		}
+		element.parentElement.overflow = '';
 	},
 
 	testActivesOverflow: function(unhide) {
@@ -342,18 +345,20 @@ TEOverflowTransformCtrl.prototype = Object.create(TEOverflowCtrl.prototype);
 TEOverflowTransformCtrl.prototype.onOverflow = function (element, scale) {
 	if (scale <= this.scrollThreshold) TEOverflowScrollCtrl.prototype.onOverflow.call(this, element, scale);
 	else {
+		const { height: clientHeight } = element.getBoundingClientRect();
 		element.classList.add('teOverflowTransform');
 		element.style.transform = 'scale(' + scale + ')';
 		element.style.transformOrigin = '50% 0';
 		element.style.alignSelf = 'flex-start';
 		element.style.overflow = 'visible';
+		element.style.marginBottom = ((clientHeight * scale) - clientHeight) + 'px';
 	}
 };
 
 TEOverflowTransformCtrl.prototype.endOverflow = function (element) {
 	element.classList.remove('teOverflowTransform');
 	TEOverflowScrollCtrl.prototype.endOverflow.call(this, element);
-	element.style.transform = element.style.transformOrigin = element.style.overflow = element.style.alignSelf = '';
+	element.style.transform = element.style.transformOrigin = element.style.overflow = element.style.alignSelf = element.style.marginBottom = '';
 };
 
 /**
@@ -512,7 +517,7 @@ TEActiveMouse.prototype = {
 			timeout = setTimeout(inactive, self.delay);
 		}
 		function validTarget(event) {
-			if (event.type == "focus") return true;
+			if (event.type == 'focus') return true;
 			var targetName = event.target.localName;
 			if (targetName == 'a' || targetName == 'button' || targetName == 'input') return false;
 			return true;
@@ -531,7 +536,7 @@ TEActiveMouse.prototype = {
 					supportsPassive = true;
 				}
 			});
-			window.addEventListener("test", null, opts);
+			window.addEventListener('test', null, opts);
 		} catch (e) {}
 
 		var touchStart;
@@ -587,18 +592,21 @@ TESwipeCtrl.prototype = {
  *
  * Fonctionne avec les iframes en stockant le controller courant dans window.top
  *
- * TODO vérifier le comportement sur une iframe avec sécurité restreinte
- *
  */
 TEOnlyOnePlayingCtrl = function() { };
 TEOnlyOnePlayingCtrl.prototype = {
 	init: function (ctrl) {
-		ctrl.media.addEventListener('play', function() {
-			if (top.teCurrentCtrl && top.teCurrentCtrl != ctrl && !top.teCurrentCtrl.media.paused) {
-				top.teCurrentCtrl.playPause();
-			}
-			top.teCurrentCtrl = ctrl;
-		});
+		let rootWin = window;
+		try {
+			// Test des restrictions d'accès à la top window
+			window.top.document;
+			rootWin = window.top;
+		} catch (e) {
+		}
+		if (rootWin.teCurrentCtrl && rootWin.teCurrentCtrl != ctrl && !rootWin.teCurrentCtrl.media.paused) {
+			rootWin.teCurrentCtrl.playPause();
+		}
+		rootWin.teCurrentCtrl = ctrl;
 	}
 };
 
@@ -612,6 +620,7 @@ TEFullscreenCtrl.prototype = {
 		var self = this;
 		this.container = ctrl.container;
 		this.media = ctrl.media;
+		this.target = this.options.onMedia ? ctrl.media : ('target' in this.options ? document.querySelector(this.options.target) : ctrl.container)
 
 		const buttons = ctrl.container.querySelectorAll(this.options.buttons || '.teFullscreen');
 
@@ -680,8 +689,7 @@ TEFullscreenCtrl.prototype = {
 	},
 
 	enter: function () {
-		if (this.options.onMedia) this.media.requestFullscreen();
-		else this.container.requestFullscreen();
+		this.target.requestFullscreen();
 	},
 
 	exit: function () {
@@ -763,3 +771,86 @@ TESessionCurrentSubtitle.prototype = {
 		}
 	}
 };
+
+/**
+ * Raccourcis claviers (en dehors du plein-écran)
+ */
+TEShortcutsCtrl = function(options) {
+	this.options = Object.assign({}, {
+		global: false,
+		playPause: true,
+		smallSeek: true,
+		chapterSeek: 'Alt',
+		volume: true,
+		mute: true,
+		fadeDuration: 500
+	}, options);
+};
+TEShortcutsCtrl.prototype = {
+	ready: function (ctrl) {
+		const listener = (ev) => {
+			if (ev.target.localName == 'input' && ev.target.localName == 'textarea') return;
+			let handled = false;
+			const { playPause, smallSeek, chapterSeek, volume, mute, fadeDuration } = this.options;
+			if (ev.code == 'Space') {
+				if (playPause === true || ev.getModifierState(playPause)) {
+					ctrl.videoPlayPause();
+					handled = true;
+				}
+			} else if (ev.code == 'ArrowRight') {
+				if (smallSeek === true || ev.getModifierState(smallSeek)) {
+					ctrl.media.currentTime += 10;
+					handled = 'teVideoForward';
+				} else if (chapterSeek === true || ev.getModifierState(chapterSeek)) {
+					ctrl.nextTime();
+					handled = 'teVideoNextTime';
+				}
+			} else if (ev.code == 'ArrowLeft') {
+				if (smallSeek === true || ev.getModifierState(smallSeek)) {
+					ctrl.media.currentTime -= 10;
+					handled = 'teVideoBackward';
+				} else if (chapterSeek === true || ev.getModifierState(chapterSeek)) {
+					ctrl.previousTime();
+					handled = 'teVideoPrevTime';
+				}
+			} else if (ev.code == 'ArrowUp' && ctrl.media.volume < 1) {
+				if ((volume === true || ev.getModifierState(volume)) && ctrl.media.volume < 1) {
+					handled = true;
+					ctrl.media.volume += .1;
+					handled = 'teVideoVolumeUp';
+				}
+			} else if (ev.code == 'ArrowDown' && ctrl.media.volume > 0) {
+				if ((volume === true || ev.getModifierState(volume)) && ctrl.media.volume > 0) {
+					ctrl.media.volume -= .1;
+					handled = 'teVideoVolumeDown';
+				}
+			} else if (ev.key == 'm' || ev.key == 'M') {
+				if ((mute === true || ev.getModifierState(mute)) && ctrl.media.volume > 0) {
+					if (ctrl.media.muted) {
+						ctrl.media.muted = false;
+						handled = 'teVideoUnmute';
+					} else {
+						ctrl.media.muted = true;
+						handled = 'teVideoMute';
+					}
+				}
+			}
+
+			if (handled) {
+				ev.stopPropagation();
+				ev.stopImmediatePropagation();
+				ev.preventDefault();
+				if (typeof handled == 'string') {
+					ctrl.container.classList.add(handled);
+					setTimeout(function () {
+						ctrl.container.classList.remove(handled);
+					}, fadeDuration);
+				}
+			}
+		}
+
+		if (this.options.global) document.body.addEventListener('keydown', listener, true);
+		else ctrl.container.addEventListener('keydown', listener);
+	}
+};
+

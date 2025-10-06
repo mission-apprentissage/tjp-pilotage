@@ -1,7 +1,7 @@
 
 
 
-var scPaLib = {};
+window.scPaLib = {};
 
 
 scPaLib.findNode= function(pPath, pFrom) {
@@ -11,18 +11,18 @@ scPaLib.findNode= function(pPath, pFrom) {
 
 
 scPaLib.findNodes = function(pPath, pFrom) {
-	var vResult = [];
+	const vResult = [];
 	this.xFindNodes(pPath.scPath ? pPath : this.compilePath(pPath), pFrom || document, 0, vResult);
 	return vResult;
 }
 
 
 scPaLib.checkNode = function(pFilter, pNode){
-	var vFilter = pFilter.scFilter ? pFilter : this.compileFilter(pFilter);
-	if (vFilter.scFilter == 1) return this.xCheckNode(vFilter,pNode);
+	const vFilter = pFilter.scFilter ? pFilter : this.compileFilter(pFilter);
+	if (vFilter.scFilter === 1) return this.xCheckNode(vFilter,pNode);
 	else {
-		var vMatch = false;
-		for(var i = 0; i < vFilter.length; i++) {
+		let vMatch = false;
+		for(let i = 0; i < vFilter.length; i++) {
 			if (vMatch = this.xCheckNode(vFilter[i],pNode)) break; 
 		}	
 		return vMatch;
@@ -32,10 +32,10 @@ scPaLib.checkNode = function(pFilter, pNode){
 
 scPaLib.containWord = function(pString, pWord, pMaxCharSep){
 	pMaxCharSep = pMaxCharSep || 48;
-	var vIdx = pString.indexOf(pWord);
+	let vIdx = pString.indexOf(pWord);
 	while(vIdx >= 0) {
-		var vEnd = vIdx+pWord.length;
-		if( (vIdx == 0 || pString.charCodeAt(vIdx-1) < pMaxCharSep) && (vEnd==pString.length || pString.charCodeAt(vEnd) < pMaxCharSep) ) return true;
+		const vEnd = vIdx + pWord.length;
+		if( (vIdx === 0 || pString.charCodeAt(vIdx-1) < pMaxCharSep) && (vEnd===pString.length || pString.charCodeAt(vEnd) < pMaxCharSep) ) return true;
 		vIdx = pString.indexOf(pWord, vEnd);
 	}
 	return false;
@@ -43,12 +43,12 @@ scPaLib.containWord = function(pString, pWord, pMaxCharSep){
 
 
 scPaLib.compilePath = function(pPath){
-	var vPath = pPath.split("/");
-	for(var i=0; i<vPath.length; i++) {
-		var vPart = vPath[i] = new String(vPath[i]);
-		var vAxisCd = vPart.substring(0, 3);
+	const vPath = pPath.split("/");
+	for(let i=0; i<vPath.length; i++) {
+		const vPart = vPath[i] = new String(vPath[i]);
+		const vAxisCd = vPart.substring(0, 3);
 		vPart.axis = this.xAxis[vAxisCd];
-		if(vAxisCd == "ide") {
+		if(vAxisCd === "ide") {
 			if(vPart.length>4) vPart.filterId = vPart.substring(4);
 		} else {
 			if(vPart.length>4) vPart.filter = this.compileFilter(vPart.substring(4));
@@ -60,9 +60,9 @@ scPaLib.compilePath = function(pPath){
 
 
 scPaLib.compileFilter = function(pFilter){
-	var vFilter = pFilter.split("|");
+	let vFilter = pFilter.split("|");
 	if(vFilter.length>1){
-		for(var i = 0; i < vFilter.length; i++) {
+		for(let i = 0; i < vFilter.length; i++) {
 			vFilter[i] = vFilter[i].split(".");
 
 			if(vFilter[i].length>0 && vFilter[i][0].length>0) vFilter[i][0] = new RegExp("^(.*:)?"+vFilter[i][0]+"$", "i");
@@ -108,8 +108,8 @@ scPaLib.xAxis= {
 		next:function(pFrom, pOri){
 			if(pFrom.hasChildNodes()) return pFrom.firstChild;
 			if(pFrom.nextSibling) return pFrom.nextSibling;
-			while(pFrom != pOri && (pFrom = pFrom.parentNode) != null && pFrom != pOri) {
-				var vNext = pFrom.nextSibling;
+			while(pFrom !== pOri && (pFrom = pFrom.parentNode) != null && pFrom !== pOri) {
+				const vNext = pFrom.nextSibling;
 				if(vNext) return vNext;
 			}
 			return null;
@@ -148,12 +148,12 @@ scPaLib.xAxis= {
 scPaLib.xAxis.init();
 
 scPaLib.xFindNode= function(pPath, pFrom, pOffset) {
-	var vPart = pPath[pOffset++];
-	var vCurr = vPart.axis.first(pFrom, vPart);
+	const vPart = pPath[pOffset++];
+	let vCurr = vPart.axis.first(pFrom, vPart);
 	while(vCurr) {
 		if( ! vPart.filter || this.checkNode(vPart.filter, vCurr)) {
 			if(pOffset < pPath.length) {
-				var vRes = this.xFindNode(pPath, vCurr, pOffset);
+				const vRes = this.xFindNode(pPath, vCurr, pOffset);
 				if(vRes) return vRes;
 			} else {
 				return vCurr;
@@ -165,8 +165,8 @@ scPaLib.xFindNode= function(pPath, pFrom, pOffset) {
 }
 
 scPaLib.xFindNodes = function(pPath, pFrom, pOffset, pArrayRes) {
-	var vPart = pPath[pOffset++];
-	var vCurr = vPart.axis.first(pFrom, vPart);
+	const vPart = pPath[pOffset++];
+	let vCurr = vPart.axis.first(pFrom, vPart);
 	while(vCurr) {
 		if( ! vPart.filter || this.checkNode(vPart.filter, vCurr)) {
 			if(pOffset < pPath.length) {
@@ -180,14 +180,14 @@ scPaLib.xFindNodes = function(pPath, pFrom, pOffset, pArrayRes) {
 }
 
 scPaLib.xCheckNode = function(pFilter, pNode){
-	var vLen = pFilter.length;
-	if(vLen==0) return true;
-	var vStep0 = pFilter[0];
+	const vLen = pFilter.length;
+	if(vLen===0) return true;
+	const vStep0 = pFilter[0];
 	if(vStep0.test && ! vStep0.test(pNode.nodeName)) return false;
 	if(vLen>1) {
-		var vClasses = pNode.nodeType==1 ? pNode.className : null;
+		const vClasses = pNode.nodeType === 1 ? pNode.className : null;
 		if(typeof vClasses != "string") return false;
-		for(var i = 1; i < vLen; i++) if( ! this.containWord(vClasses, pFilter[i], 33)) return false;
+		for(let i = 1; i < vLen; i++) if( ! this.containWord(vClasses, pFilter[i], 33)) return false;
 	}
 	return true;
 }

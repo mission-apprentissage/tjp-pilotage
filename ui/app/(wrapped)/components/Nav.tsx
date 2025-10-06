@@ -38,6 +38,7 @@ const DOCUMENTATION_LINKS = {
   ["console/etablissements"]: getDocumentationPath("000_-_Consoles.html"),
   // Demandes
   ["demandes/saisie"]: getDocumentationPath("000_-_Gestion_des_demandes.html"),
+  ["demandes/synthese/"]: getDocumentationPath("000_-_Gestion_des_demandes.html"),
   ["demandes/saisie/"]: getDocumentationPath("001_-_Saisie_dans_le_formulaire.html"),
   ["demandes/restitution"]: getDocumentationPath("002_-_Restitution_des_demandes.html"),
   ["demandes/corrections"]: getDocumentationPath("006_-_Restitution_des_corrections.html"),
@@ -53,7 +54,8 @@ const DOCUMENTATION_LINKS = {
 
 const getDocumentationLink = (segment?: string) => {
   if(segment === "") return getDocumentationPath("Manuel_utilisateur_Orion.html");
-  if(segment?.startsWith("demandes/saisie/")) return DOCUMENTATION_LINKS["demandes/saisie/"] ?? getDocumentationPath("Manuel_utilisateur_Orion.html");
+  if(segment?.startsWith("demandes/saisie/")) return DOCUMENTATION_LINKS["demandes/saisie/"];
+  if(segment?.startsWith("demandes/synthese/")) return DOCUMENTATION_LINKS["demandes/synthese/"];
   return DOCUMENTATION_LINKS[segment as keyof typeof DOCUMENTATION_LINKS] ?? getDocumentationPath("Manuel_utilisateur_Orion.html");
 };
 
@@ -253,13 +255,13 @@ export const Nav = () => {
               </NavMenuLink>
             </MenuItem>
             <MenuItem p="0">
-              <NavMenuLink href="/panorama/lien-metier-formation" segment="panorama/lien-metier-formation">
-                Lien métier formation
+              <NavMenuLink href="/panorama/domaine-de-formation" segment="panorama/domaine-de-formation">
+                Domaine de formation
               </NavMenuLink>
             </MenuItem>
             <MenuItem p="0">
-              <NavMenuLink href="/panorama/domaine-de-formation" segment="panorama/domaine-de-formation">
-                Domaine de formation
+              <NavMenuLink href="/panorama/lien-metier-formation" segment="panorama/lien-metier-formation">
+                Lien métier formation
               </NavMenuLink>
             </MenuItem>
           </MenuList>
