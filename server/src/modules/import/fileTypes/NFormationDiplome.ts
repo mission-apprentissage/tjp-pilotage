@@ -14,6 +14,7 @@ export const NFormationDiplomeSchema = z
     ANCIEN_DIPLOME_5: z.string().optional(),
     ANCIEN_DIPLOME_6: z.string().optional(),
     ANCIEN_DIPLOME_7: z.string().optional(),
+    NATURE_FORMATION_DIPLOME: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (typeof data.DATE_OUVERTURE === "undefined" && typeof data.DATE_FERMETURE === "undefined") {
