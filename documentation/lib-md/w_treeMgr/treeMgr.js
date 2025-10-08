@@ -15,9 +15,9 @@ treeMgr.fStrings = ["Ouvrir","Ouvrir tous les nœuds",
 /*02*/              "Fermer","Fermer tous les nœuds",
 /*04*/              "Chercher","Activer/désactiver la recherche de nœuds",
 /*06*/              "Chercher un nœud :","Tapez votre recherche",
-/*08*/              "Recherche textuelle dans les titres des nœuds (trois caractères minimum)","Veuillez précisez votre recherche.",
+/*08*/              "Recherche textuelle dans les titres des nœuds (trois caractères minimum)","Veuillez préciser votre recherche.",
 /*10*/              "Veuillez taper votre recherche dans la barre d\'outils.","%s nœud(s) trouvé(s).",
-/*12*/              "Prev.","Nœud précedent",
+/*12*/              "Prev.","Nœud précédent",
 /*14*/              "Suiv.","Nœud suivant",
 /*16*/              "Cacher le contenu de \'%s\'","Afficher le contenu de \'%s\'"];
 
@@ -178,12 +178,10 @@ treeMgr.previous = function(pTree){
 /* === Internal ============================================================== */
 /** treeMgr.sToggle. */
 treeMgr.sToggle = function(pEvt){
-	var pEvt = pEvt || window.event;
 	return treeMgr.toggle(this,pEvt.ctrlKey);
 }
 /** treeMgr.sKeyUp. */
 treeMgr.sKeyUp = function(pEvt){
-	var pEvt = pEvt || window.event;
 	const vTree = this.fObj;
 	treeMgr.xResetSearchResults(vTree);
 	if (this.value.length>2) treeMgr.xSearch(vTree, this.value);

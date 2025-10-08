@@ -1,7 +1,5 @@
 /** SKIN OVERLOADS ************************************************************/
 
-/** SKIN OVERLOADS ************************************************************/
-
 :root{
   --fontSize: 1em;
   --fontStyle: 'Marianne';
@@ -40,7 +38,6 @@
   --scrollbar-thumb-color:#000091;
   --scrollbar-bgcolor:#f5f5ff;
 }
-
 
 
 /**======== Gestion icônes blocs ========**/
@@ -130,6 +127,10 @@ h1,h2{
     font-weight: bold;
 }
 
+.block_ti:before {
+  background-color: white;
+}
+
 /**======== Gestion contenu blocs ========**/
 
 .block_co {
@@ -141,6 +142,31 @@ h1,h2{
 /**======== Gestion blocs ========**/
 
 .block {
+  border: 1px solid var(--block-color);
+  border-left: 18px solid var(--block-color);
+  
+}
+
+.warning.block, .advice.block, .tip.block, .example.block, .note.block, .legal.block, .complement.block, .typed.important.block, .typed.focus.block, .typed.discrete.block {
+  border-inline-start: 18px solid var(--block-color);
+}
+
+.warning.block > .block_ti::before,
+.advice.block > .block_ti::before,
+.tip.block > .block_ti::before,
+.example.block > .block_ti::before,
+.note.block > .block_ti::before,
+.legal.block > .block_ti::before,
+.complement.block > .block_ti::before,
+.complement.block a.block_btn_closed::before,
+.complement.block a.block_btn_open::before {
+  font-family: "fontello";
+    color: var(--block-color);
+    text-align: center;
+    padding: 5px;
+    background-color: white;
+  padding: 1px;
+  
 }
 
 /**======== Gestion format noms activités (option menu) ========**/
@@ -156,7 +182,7 @@ h1,h2{
                 background-color:transparent;
                 border:none;}
 
-/**======== Gestion blocs (couleur fond et bordure ========**/
+/**======== Gestion blocs (couleur fond et bordure ========
 .tip.block{
   background-color:#fef5e8;
 }
@@ -176,6 +202,10 @@ h1,h2{
 .note.block{
   background-color:#FFF8F6;
 }
+
+.block_ti:before {
+  background-color: white;
+}**/
 
 
 /**======== Gestion hauteur max imagettes ========**/
@@ -202,7 +232,6 @@ h1,h2{
 
 #outline li > .mnu_sel_yes{
 	background-color: var(--accentLightColor);
-	border-right: 2px solid var(--accentColor);
 }
 
 /**======== Gestion Titre header par rapport au logo ========**/
@@ -251,4 +280,50 @@ button.showMenu{
 .txt table td {
   border: 1px var(--contentFG) solid;
   vertical-align: middle;
+}
+:root{
+  --menuWidth: 20rem;
+  --schBG: #fff;
+  --schFG: #000;
+}       
+
+/**======== Cacher le "A propos" ========**/
+a.btnAbout {
+  display: none;
+}
+
+/**======== Cacher le bouton vers le site de Dokiel ========**/
+a.btnSc {
+  display: none;
+}
+
+/**======== Cacher la navigation vers Guide, Plan, etc. en haut à droite ========**/
+#menu {
+  display: none;
+}
+
+/**======== Cacher le menu Accesibilité (menu non fonctionnel pour le moment) ========**/
+#accessibility {
+  position: absolute;
+  right: -500px;
+}
+
+#accessibility:focus {
+  position: absolute;
+  right: 0px;
+}
+
+/**======== Choix du mode de lecture des procédures ========**/
+.slpTools a.disabled_true {
+  background-color: var(--accentColor);
+}
+
+/**======== Choix du mode de lecture des descriptions d'écrans ========**/
+.scrTools a[aria-selected="true"] {
+  background-color: var(--accentColor);
+}
+
+/**======== Titre "Procédure" ========**/
+.proc_ti {
+  color: var(--accentColor);
 }

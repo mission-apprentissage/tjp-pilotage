@@ -2,6 +2,7 @@ import { ListItem, TabPanel, Text, UnorderedList, VStack } from "@chakra-ui/reac
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { ShortLink } from "@/components/ShortLink";
+import { getDocumentationPath } from "@/utils/getDocumentationPath";
 
 export const TabInformations = ({
   nbFormationsAffichee,
@@ -62,19 +63,19 @@ export const TabInformations = ({
             label={"Pourquoi certaines formations n'apparaissent pas dans le quadrant ?"}
             iconLeft="ri:share-box-line"
             target="_blank"
-            href="https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/comprendre-le-quadrant-6bko2t/"
+            href={getDocumentationPath("002_-__Comprendre_les_donnees_dans_les_pages_publiques_15.html")}
           />
           <ShortLink
             label={"Pourquoi une formation qui mène vers un métier d'avenir est-elle en Q4 du quadrant ?"}
             iconLeft={"ri:share-box-line"}
             target="_blank"
-            href="https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/pourquoi-une-formation-qui-mene-vers-un-metier-davenir-est-elle-en-q4-du-quadrant-tnlpgw/?bust=1720087401234"
+            href={getDocumentationPath("002_-__Comprendre_les_donnees_dans_les_pages_publiques_28.html")}
           />
           <ShortLink
             label={"Voir toutes les questions"}
             iconRight="ri:arrow-right-line"
             fontWeight={"bold"}
-            href="https://aide.orion.inserjeunes.beta.gouv.fr/"
+            href={getDocumentationPath("002_-__Comprendre_les_donnees_dans_les_pages_publiques.html")}
             target="_blank"
           />
         </VStack>
