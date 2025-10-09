@@ -3,7 +3,6 @@
 import { Box, Flex, HStack, Img, Link, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
-import { usePlausible } from "next-plausible";
 
 import { publicConfig } from "@/config.public";
 
@@ -22,8 +21,6 @@ const LinkWithIcon = ({ children, href }: LinkWithIconProps) => {
 };
 
 export const LandingFooter = () => {
-  const trackEvent = usePlausible();
-
   return (
     <VStack mt={"auto"} borderTop="1px" borderTopColor={"grey.900"}>
       <Stack
@@ -95,12 +92,12 @@ export const LandingFooter = () => {
           justifyContent={"center"}
         >
           <Box>
-            <Link as={NextLink} href="/mentions-legales" onClick={() => trackEvent("footer:mentions-legales")}>
+            <Link as={NextLink} href="/mentions-legales">
               Mentions légales
             </Link>
           </Box>
           <Box>
-            <Link as={NextLink} href="/cgu" onClick={() => trackEvent("footer:cgu")}>
+            <Link as={NextLink} href="/cgu">
               CGU
             </Link>
           </Box>
@@ -108,18 +105,17 @@ export const LandingFooter = () => {
             <Link
               as={NextLink}
               href="/politique-de-confidentialite"
-              onClick={() => trackEvent("footer:politique-de-confidentialite")}
             >
               Politique de confidentialité
             </Link>
           </Box>
           <Box>
-            <Link as={NextLink} href="/changelog" onClick={() => trackEvent("footer:journal-des-mises-a-jour")}>
+            <Link as={NextLink} href="/changelog">
               Journal des mises à jour
             </Link>
           </Box>
           <Box>
-            <Link as={NextLink} href="/statistiques" onClick={() => trackEvent("footer:statistiques")}>
+            <Link as={NextLink} href="/statistiques">
               Statistiques
             </Link>
           </Box>
@@ -127,7 +123,6 @@ export const LandingFooter = () => {
             <Link
               as={NextLink}
               href="/declaration-accessibilite"
-              onClick={() => trackEvent("footer:declaration-accessibilite")}
             >
               Accessibilité : non conforme
             </Link>
@@ -137,13 +132,12 @@ export const LandingFooter = () => {
               as={NextLink}
               href="https://beta.gouv.fr/accessibilite/schema-pluriannuel"
               target="_blank"
-              onClick={() => trackEvent("footer:schéma-pluriannuel-accessibilite")}
             >
               Schéma pluriannuel d’accessibilité
             </Link>
           </Box>
           <Box>
-            <Link as={NextLink} href="/ressources" onClick={() => trackEvent("footer:ressources")}>
+            <Link as={NextLink} href="/ressources">
               Ressources
             </Link>
           </Box>

@@ -1,8 +1,6 @@
 import { Box, Divider, Flex, SimpleGrid, Text } from "@chakra-ui/react";
-import { usePlausible } from "next-plausible";
 
 import { InfoCard } from "@/app/(wrapped)/panorama/components/InfoCard";
-import type { Filters } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import type { AnalyseDetailleeType } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
 import { liensDares } from "@/utils/liensDares";
 
@@ -14,13 +12,6 @@ export const LiensUtiles = ({ analyseDetaillee }: { analyseDetaillee: AnalyseDet
   const codeDepartement = formatCodeDepartement(analyseDetaillee.etablissement.codeDepartement);
   const codeRegion = analyseDetaillee.etablissement.codeRegion;
 
-  const trackEvent = usePlausible();
-
-  const linkTracker = (filterName: keyof Filters | string) => () => {
-    trackEvent("analyse-detailee-etablissement:liens-utile", {
-      props: { filter_name: filterName },
-    });
-  };
 
   return (
     <Flex direction={"column"} gap={8} mt={8} maxW={"100%"} id={"liens-utiles"}>
@@ -46,7 +37,6 @@ export const LiensUtiles = ({ analyseDetaillee }: { analyseDetaillee: AnalyseDet
             }}
             img="/looking_man.png"
             sourceText="* Source: France Travail"
-            linkTracker={linkTracker}
           />
           <InfoCard
             title="Data emploi : les secteurs"
@@ -60,7 +50,6 @@ export const LiensUtiles = ({ analyseDetaillee }: { analyseDetaillee: AnalyseDet
             }}
             img="/dashboard_girl.png"
             sourceText="* Source: France Travail"
-            linkTracker={linkTracker}
           />
           {codeRegion && liensDares[codeRegion] && (
             <InfoCard
@@ -69,7 +58,6 @@ export const LiensUtiles = ({ analyseDetaillee }: { analyseDetaillee: AnalyseDet
               links={{ href: (codeRegion && liensDares[codeRegion]) ?? "" }}
               img="/graphs_statistics2.png"
               sourceText="* Source: DARES"
-              linkTracker={linkTracker}
             />
           )}
         </SimpleGrid>

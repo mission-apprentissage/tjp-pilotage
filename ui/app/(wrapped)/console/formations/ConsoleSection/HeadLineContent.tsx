@@ -1,6 +1,5 @@
 import { Box, chakra, IconButton,Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
 
 import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
@@ -156,10 +155,8 @@ export const HeadLineContent = ({
   setStickyColonnes: React.Dispatch<React.SetStateAction<FORMATION_COLUMNS_KEYS[]>>;
   getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
 }) => {
-  const trackEvent = usePlausible();
 
   const handleOrder = (column: Order["orderBy"]) => {
-    trackEvent("formations:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
       return;

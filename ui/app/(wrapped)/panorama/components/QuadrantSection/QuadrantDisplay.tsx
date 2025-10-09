@@ -17,7 +17,6 @@ import {
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { useEffect, useMemo, useState } from "react";
 
 import { FormationTooltipContent } from "@/app/(wrapped)/panorama/components/FormationTooltipContent";
@@ -79,7 +78,6 @@ const useQuadrantDisplay = ({
     if (typeVue === "quadrant") setTypeVue("tableau");
     else setTypeVue("quadrant");
   };
-  const trackEvent = usePlausible();
   const [currentFormationId, setCurrentFormationId] = useState<string | undefined>();
 
   useEffect(() => {
@@ -107,7 +105,6 @@ const useQuadrantDisplay = ({
   return {
     typeVue,
     toggleTypeVue,
-    trackEvent,
     segment,
     currentFormationId,
     setCurrentFormationId,

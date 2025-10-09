@@ -1,7 +1,4 @@
 export interface PublicConfig {
-  crisp: {
-    token: string;
-  };
   host: string;
   baseUrl: string;
   apiEndpoint: string;
@@ -18,9 +15,6 @@ function getProductionIJPublicConfig(): PublicConfig {
   const host = "orion.inserjeunes.beta.gouv.fr";
 
   return {
-    crisp: {
-      token: "cf473a68-afeb-4611-9d38-55ff6144b9b8",
-    },
     host,
     baseUrl: `https://${host}`,
     env: "production",
@@ -34,9 +28,6 @@ function getPreProductionPublicConfig(): PublicConfig {
   const host = "pp.orion.education.gouv.fr";
 
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `https://${host}`,
     env: "preproduction",
@@ -50,9 +41,6 @@ function getDiffusionPublicConfig(): PublicConfig {
   const host = "qp.orion.education.gouv.fr";
 
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `https://${host}`,
     env: "diffusion",
@@ -66,9 +54,6 @@ function getQualificationPublicConfig(): PublicConfig {
   const host = "qa.orion.education.gouv.fr";
 
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `https://${host}`,
     env: "qualification",
@@ -82,9 +67,6 @@ function getProductionPublicConfig(): PublicConfig {
   const host = "orion.education.gouv.fr";
 
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `https://${host}`,
     env: "production",
@@ -97,9 +79,6 @@ function getProductionPublicConfig(): PublicConfig {
 function getLocalPublicConfig(): PublicConfig {
   const host = "localhost";
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `http://${host}:3000`,
     env: "local",

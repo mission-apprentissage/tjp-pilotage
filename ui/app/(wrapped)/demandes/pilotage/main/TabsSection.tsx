@@ -1,5 +1,4 @@
 import { Button, Flex, Img, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
-import { usePlausible } from "next-plausible";
 
 import { DisplayTypeEnum } from "./displayTypeEnum";
 
@@ -12,7 +11,6 @@ export const TabsSection = ({
   displayRepartition: () => void;
   displayQuadrant: () => void;
 }) => {
-  const trackEvent = usePlausible();
   const getTabIndex = () => {
     if (displayType === DisplayTypeEnum.repartition) return 0;
     if (displayType === DisplayTypeEnum.quadrant) return 1;
@@ -24,9 +22,6 @@ export const TabsSection = ({
   const setDisplayType = (
     displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.quadrant | DisplayTypeEnum.repartition>
   ) => {
-    trackEvent("pilotage-transformation:quadrant-repartition-tabs", {
-      props: { type: displayType },
-    });
     if (displayType === DisplayTypeEnum.repartition) {
       displayRepartition();
     } else {

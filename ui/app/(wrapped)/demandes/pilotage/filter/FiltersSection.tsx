@@ -8,7 +8,6 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 import { TooltipDefinitionDomaineDeFormation } from '@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation';
 import type {
   FiltersPilotage,
-  FilterTracker,
   Pilotage,
 } from "@/app/(wrapped)/demandes/pilotage/types";
 import { getDefaultRentreeScolaireForAnneeCampagne } from "@/app/(wrapped)/demandes/pilotage/utils";
@@ -22,14 +21,12 @@ export const FiltersSection = ({
   filters,
   setFilters,
   setDefaultFilters,
-  filterTracker,
   data,
   isLoading
 }: {
   filters: FiltersPilotage;
   setFilters: (filters: FiltersPilotage) => void;
   setDefaultFilters: () => void;
-  filterTracker: FilterTracker;
   data?: Pilotage;
   isLoading?: boolean;
 }) => {
@@ -43,8 +40,6 @@ export const FiltersSection = ({
     selected?: string | number | Array<string | number> ;
   }) => {
     let value = undefined;
-
-    filterTracker(key, { value });
 
     if (selected !== null && selected !== undefined) {
       value = selected ;

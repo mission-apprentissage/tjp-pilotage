@@ -1,15 +1,10 @@
 "use client";
 
-import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Crisp } from "crisp-sdk-web";
-import { useSearchParams } from "next/navigation";
-import PlausibleProvider from "next-plausible";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
-import { publicConfig } from "@/config.public";
 import { theme } from "@/theme/theme";
 
 import SSOInfo from "./(wrapped)/components/SSOInfo";
@@ -32,37 +27,6 @@ interface RootLayoutClientProps {
   readonly uais?: Array<string>;
 }
 
-const useCrisp = () => {
-  useEffect(() => {
-    const token = publicConfig.crisp.token;
-    if (publicConfig.env == "production" && token && !publicConfig.host.includes("education.gouv.fr")) {
-      Crisp.configure(token);
-    } else {
-      console.log("Crisp disabled");
-    }
-  }, []);
-};
-
-const useTracking = () => {
-  const searchParams = useSearchParams();
-  const param = searchParams.get("notracking");
-  const noTracking = useRef(
-    param !== "reset" &&
-      (!!param || (typeof localStorage !== "undefined" && localStorage.getItem("notracking") === "true"))
-  );
-  useEffect(() => {
-    if (param === "reset") {
-      localStorage.removeItem("notracking");
-      return;
-    }
-    if (param) {
-      localStorage.setItem("notracking", "true");
-    }
-  }, [param]);
-  if (publicConfig.env !== "production") return false;
-  return !noTracking.current;
-};
-
 export default function RootLayoutClient({
   children,
   auth: initialAuth,
@@ -72,9 +36,6 @@ export default function RootLayoutClient({
   codeRegion: initialCodeRegion,
   uais: initialUais,
 }: RootLayoutClientProps) {
-  useCrisp();
-  const tracking = useTracking();
-  console.log("tr", tracking);
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -108,12 +69,10 @@ export default function RootLayoutClient({
   return (
     <html lang="fr" data-theme="light">
       <head>
-        <PlausibleProvider trackLocalhost={false} enabled={tracking} domain={publicConfig.host} />
       </head>
       <body suppressHydrationWarning={true}>
         <SSOInfo />
         <QueryClientProvider client={queryClient}>
-          <CacheProvider>
             <ChakraProvider theme={theme}>
               <AuthContext.Provider value={{ auth, setAuth }}>
                 <UaisContext.Provider value={{uais, setUais}}>
@@ -144,7 +103,6 @@ export default function RootLayoutClient({
                 </UaisContext.Provider>
               </AuthContext.Provider>
             </ChakraProvider>
-          </CacheProvider>
         </QueryClientProvider>
       </body>
     </html>

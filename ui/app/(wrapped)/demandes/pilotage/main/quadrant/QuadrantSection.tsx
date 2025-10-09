@@ -25,7 +25,6 @@ import {
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import NextLink from "next/link";
-import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
@@ -115,7 +114,6 @@ export const QuadrantSection = ({
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const bluefrance113 = useToken("colors", "bluefrance.113");
-  const trackEvent = usePlausible();
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
   const toggleTypeVue = () => {
@@ -136,9 +134,6 @@ export const QuadrantSection = ({
   );
 
   const handleOrder = (column: OrderFormationsPilotage["orderByFormations"]) => {
-    trackEvent("pilotage-transformation:formations-ordre", {
-      props: { colonne: column },
-    });
     if (orderFormations?.orderByFormations !== column) {
       setOrderFormations({ orderFormations: "desc", orderByFormations: column });
       return;
@@ -226,7 +221,6 @@ export const QuadrantSection = ({
             },
           })}
           color={"bluefrance.113"}
-          onClick={() => trackEvent("pilotage-transformation:quadrant-link-restitution")}
         >
           Voir la liste des demandes de transformation correspondantes
           <ArrowForwardIcon ms={2} />
@@ -300,13 +294,6 @@ export const QuadrantSection = ({
                 maxW={250}
                 value={filters.type ?? ""}
                 onChange={(item) => {
-                  trackEvent("pilotage-transformation:quadrant-filter", {
-                    props: {
-                      type: "type",
-                      value: item.target.value,
-                    },
-                  });
-
                   setFilters({
                     ...filters,
                     type: (item.target.value ?? undefined) as typeof filters.type,
@@ -339,13 +326,6 @@ export const QuadrantSection = ({
                 <RadioGroup
                   as={Stack}
                   onChange={(value) => {
-                    trackEvent("pilotage-transformation:quadrant-filter", {
-                      props: {
-                        type: "tauxPression",
-                        value,
-                      },
-                    });
-
                     setFilters({
                       ...filters,
                       tauxPression: (value ?? undefined) as "eleve" | "faible",
@@ -545,7 +525,6 @@ export const QuadrantSection = ({
                     rel="noreferrer"
                     href={generateRestitutionUrl({ filters, ...formation })}
                     mb={4}
-                    onClick={() => trackEvent("pilotage-transformation:quadrant-link-restitution-from-selection")}
                   >
                     Voir le détail des demandes
                   </Button>

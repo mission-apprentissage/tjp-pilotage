@@ -1,26 +1,11 @@
 "use client";
 
 import { Box, Container, Divider, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
-import { usePlausible } from "next-plausible";
 import { ScopeEnum } from "shared";
 
 import { InfoCard } from "@/app/(wrapped)/panorama/components/InfoCard";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import { liensDares } from "@/utils/liensDares";
-
-const useLiensUtilesSection = () => {
-  const trackEvent = usePlausible();
-
-  const linkTracker = (filterName: string) => () => {
-    trackEvent("panorama-formation:liens-utile", {
-      props: { filter_name: filterName },
-    });
-  };
-
-  return {
-    linkTracker,
-  };
-};
 
 function formatCodeDepartement(codeDepartement: string | undefined): string {
   if (!codeDepartement) {
@@ -33,7 +18,6 @@ function formatCodeDepartement(codeDepartement: string | undefined): string {
 export const LiensUtilesSection = () => {
   const { currentFilters, scope } = useFormationContext();
   const { codeRegion, codeDepartement } = currentFilters;
-  const { linkTracker } = useLiensUtilesSection();
 
   return (
     <Container maxW={"container.xl"} as="section">
@@ -68,7 +52,6 @@ export const LiensUtilesSection = () => {
               }}
               img="/looking_man.png"
               sourceText="* Source: France Travail"
-              linkTracker={linkTracker}
             />
             <InfoCard
               title="Data emploi : les secteurs"
@@ -92,7 +75,6 @@ export const LiensUtilesSection = () => {
               }}
               img="/dashboard_girl.png"
               sourceText="* Source: France Travail"
-              linkTracker={linkTracker}
             />
             {codeRegion && liensDares[codeRegion] && (
               <InfoCard
@@ -101,7 +83,6 @@ export const LiensUtilesSection = () => {
                 links={{ href: (codeRegion && liensDares[codeRegion]) ?? "" }}
                 img="/graphs_statistics2.png"
                 sourceText="* Source: DARES"
-                linkTracker={linkTracker}
               />
             )}
           </SimpleGrid>

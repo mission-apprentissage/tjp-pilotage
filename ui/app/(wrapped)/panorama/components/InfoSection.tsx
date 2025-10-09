@@ -1,5 +1,4 @@
 import { Box, Heading, SimpleGrid } from "@chakra-ui/react";
-import { usePlausible } from "next-plausible";
 
 import { InfoCard } from "./InfoCard";
 
@@ -21,21 +20,6 @@ const lienDares: Record<string, string> = {
 
 export const InfoSection = ({ codeRegion, codeDepartement }: { codeRegion?: string; codeDepartement?: string }) => {
   codeDepartement = codeDepartement?.startsWith("0") ? codeDepartement.substring(1) : codeDepartement;
-
-  const trackEvent = usePlausible();
-
-  const linkTracker = (filterName: string) => () => {
-    if (codeDepartement) {
-      trackEvent("panorama-departement:liens-utile", {
-        props: { filter_name: filterName },
-      });
-    }
-    if (codeRegion) {
-      trackEvent("panorama-region:liens-utile", {
-        props: { filter_name: filterName },
-      });
-    }
-  };
 
   return (
     <>
@@ -69,7 +53,6 @@ export const InfoSection = ({ codeRegion, codeDepartement }: { codeRegion?: stri
             }}
             img="/looking_man.png"
             sourceText="* Source: France Travail"
-            linkTracker={linkTracker}
           />
           <InfoCard
             title="Data emploi : les secteurs"
@@ -83,7 +66,6 @@ export const InfoSection = ({ codeRegion, codeDepartement }: { codeRegion?: stri
             }}
             img="/dashboard_girl.png"
             sourceText="* Source: France Travail"
-            linkTracker={linkTracker}
           />
           {codeRegion && lienDares[codeRegion] && (
             <InfoCard
@@ -92,7 +74,6 @@ export const InfoSection = ({ codeRegion, codeDepartement }: { codeRegion?: stri
               links={{ href: (codeRegion && lienDares[codeRegion]) ?? "" }}
               img="/graphs_statistics2.png"
               sourceText="* Source: DARES"
-              linkTracker={linkTracker}
             />
           )}
         </SimpleGrid>

@@ -14,8 +14,6 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
-import { usePlausible } from "next-plausible";
-import { useEffect } from "react";
 import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
 
@@ -121,8 +119,6 @@ const RenderGlossaireEntrySkeleton = () => {
 };
 
 const useGlossaireEntryContentHook = (slug: string) => {
-  const trackEvent = usePlausible();
-
   const { data, isLoading, isError, error } = client.ref("[GET]/glossaire/:slug").useQuery(
     {
       params: {
@@ -134,12 +130,6 @@ const useGlossaireEntryContentHook = (slug: string) => {
       staleTime: 10000000,
     }
   );
-
-  useEffect(() => {
-    if (data) {
-      trackEvent("glossaire", { props: { name: data.title } });
-    }
-  }, [data, trackEvent]);
 
   return {
     isLoading,

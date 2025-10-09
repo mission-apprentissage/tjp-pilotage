@@ -48,7 +48,6 @@ const Loader = () => (
 export const HeaderSection = ({
   activeFilters,
   handleFilters,
-  filterTracker,
   resetFilters,
   isLoading,
   data,
@@ -59,7 +58,6 @@ export const HeaderSection = ({
     type: keyof FiltersDemandesRestitution,
     value: FiltersDemandesRestitution[keyof FiltersDemandesRestitution]
   ) => void;
-  filterTracker: (filterName: keyof FiltersDemandesRestitution) => () => void;
   resetFilters: () => void;
   isLoading: boolean;
   data?: DemandesRestitution;
@@ -74,7 +72,6 @@ export const HeaderSection = ({
           <PrimaryFiltersSection
             activeFilters={activeFilters}
             handleFilters={handleFilters}
-            filterTracker={filterTracker}
             isLoading={isLoading}
             data={data}
           />
@@ -82,7 +79,6 @@ export const HeaderSection = ({
             <ModeComptabilisationSection
               activeFilters={activeFilters}
               handleFilters={handleFilters}
-              filterTracker={filterTracker}
             />
             <CountersSection countData={countData} />
           </Flex>
@@ -90,7 +86,6 @@ export const HeaderSection = ({
         <SecondaryFiltersSection
           activeFilters={activeFilters}
           handleFilters={handleFilters}
-          filterTracker={filterTracker}
           resetFilters={resetFilters}
           data={data}
         />

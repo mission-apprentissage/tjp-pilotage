@@ -3,7 +3,6 @@
 import { Box, Button, Divider, HStack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 
 import type { client } from "@/api.client";
@@ -23,7 +22,6 @@ const DashboardFormation = () => {
   const searchParams = useSearchParams();
   const [selectedNsf, setSelectedNsf] = useState<NsfOption | undefined>();
   const [selectedFormation, setSelectedFormation] = useState<FormationOption | undefined>();
-  const trackEvent = usePlausible();
 
   useEffect(() => {
     const nsfSearchParam = searchParams.get("domaine_formation");
@@ -52,7 +50,6 @@ const DashboardFormation = () => {
   }, [searchParams]);
 
   const onUpdateNsf = (nsf?: NsfOption) => {
-    trackEvent("lien-metier-formation/formation:select-nsf");
     router.replace(
       createParameterizedUrl(location.pathname, {
         domaine_formation: nsf ? encodeURI(nsf.label) : undefined,
@@ -64,7 +61,6 @@ const DashboardFormation = () => {
   };
 
   const onUpdateFormation = (formation?: FormationOption) => {
-    trackEvent("lien-metier-formation/formation:select-formation");
     if (formation) {
       router.replace(
         createParameterizedUrl(location.pathname, {
@@ -101,7 +97,6 @@ const DashboardFormation = () => {
   };
 
   const clear = () => {
-    trackEvent("lien-metier-formation/formation:clear-filters");
     router.replace(location.pathname);
   };
 

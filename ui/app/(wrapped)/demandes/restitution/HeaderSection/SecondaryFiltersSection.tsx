@@ -23,7 +23,6 @@ import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibel
 export const SecondaryFiltersSection = ({
   activeFilters,
   handleFilters,
-  filterTracker,
   resetFilters,
   data,
 }: {
@@ -32,7 +31,6 @@ export const SecondaryFiltersSection = ({
     type: keyof FiltersDemandesRestitution,
     value: FiltersDemandesRestitution[keyof FiltersDemandesRestitution]
   ) => void;
-  filterTracker: (filterName: keyof FiltersDemandesRestitution) => () => void;
   resetFilters: () => void;
   data?: DemandesRestitution;
 }) => {
@@ -46,7 +44,6 @@ export const SecondaryFiltersSection = ({
               <TooltipDefinitionDomaineDeFormation />
             </Text>
             <Multiselect
-              onClose={filterTracker("codeNsf")}
               width={"64"}
               size="md"
               variant={"newInput"}
@@ -62,7 +59,6 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <Text fontWeight={500} mb={1}>Formation</Text>
             <Multiselect
-              onClose={filterTracker("cfd")}
               width={"48"}
               size="md"
               variant={"newInput"}
@@ -77,7 +73,6 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <Text fontWeight={500} mb={1}>Diplôme</Text>
             <Multiselect
-              onClose={filterTracker("codeNiveauDiplome")}
               width={"48"}
               size="md"
               variant={"newInput"}
@@ -92,7 +87,6 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <Text fontWeight={500} mb={1}>Département</Text>
             <Multiselect
-              onClose={filterTracker("codeDepartement")}
               width={"48"}
               size="md"
               variant={"newInput"}
@@ -113,7 +107,6 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <Text fontWeight={500} mb={1}>Établissement</Text>
             <Multiselect
-              onClose={filterTracker("uai")}
               width={"48"}
               size="md"
               variant={"newInput"}
@@ -168,7 +161,6 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <Text fontWeight={500} mb={1}>Statut</Text>
             <Multiselect
-              onClose={filterTracker("statut")}
               width={"64"}
               size="md"
               variant={"newInput"}
@@ -184,7 +176,6 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <Text fontWeight={500} mb={1}>Type de demande</Text>
             <Multiselect
-              onClose={filterTracker("typeDemande")}
               width={"48"}
               size="md"
               variant={"newInput"}

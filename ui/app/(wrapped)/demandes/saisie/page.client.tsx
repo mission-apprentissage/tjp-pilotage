@@ -3,7 +3,6 @@
 import { Button, Center, chakra, Flex, MenuButton,Text, Tooltip, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
-import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 import { hasPermission } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
@@ -53,12 +52,10 @@ const ColonneFilterSection = chakra(
     colonneFilters,
     forcedColonnes,
     handleColonneFilters,
-    trackEvent,
   }: {
     colonneFilters: Array<DEMANDES_COLUMNS_KEYS>;
     forcedColonnes?: Array<DEMANDES_COLUMNS_KEYS>;
     handleColonneFilters: (value: Array<DEMANDES_COLUMNS_KEYS>) => void;
-    trackEvent: (name: string, params?: Record<string, unknown>) => void;
   }) =>
     <Flex justifyContent={"start"} direction="row">
       <GroupedMultiselect
@@ -100,7 +97,6 @@ const ColonneFilterSection = chakra(
             variant={"externalLink"}
             leftIcon={<Icon icon={"ri:table-line"} />}
             color="bluefrance.113"
-            onClick={() => trackEvent("demandes:affichage-colonnes")}
           >
             Modifier les colonnes
           </MenuButton>
@@ -141,14 +137,6 @@ export const PageClient = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notFound]);
 
-  const trackEvent = usePlausible();
-
-  const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("demandes:filtre", {
-      props: { filter_name: filterName },
-    });
-  };
-
   const handleFilters = (type: keyof Filters, value: Filters[keyof Filters]) => {
     setSearchParams({
       ...searchParams,
@@ -157,8 +145,6 @@ export const PageClient = () => {
   };
 
   const handleOrder = (column: Order["orderBy"]) => {
-    trackEvent("demandes:ordre", { props: { colonne: column } });
-
     const newOrder = {
       order: order?.orderBy === column && order?.order === "asc" ? "desc" : ("asc" as "asc" | "desc"),
       orderBy: column,
@@ -198,7 +184,6 @@ export const PageClient = () => {
     });
   };
   const onExportCsv = async (isFiltered?: boolean) => {
-    trackEvent("saisie_demandes:export");
     const data = await client.ref("[GET]/demandes").query({
       query: isFiltered ? getDemandesQueryParameters() : {},
     });
@@ -226,7 +211,6 @@ export const PageClient = () => {
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
-    trackEvent("saisie_demandes:export-excel");
     const data = await client.ref("[GET]/demandes").query({
       query: isFiltered ? getDemandesQueryParameters() : {},
     });
@@ -279,7 +263,6 @@ export const PageClient = () => {
         activeFilters={filters}
         setSearchParams={setSearchParams}
         campagne={data?.campagne}
-        filterTracker={filterTracker}
         academies={data?.filters.academies ?? []}
         departements={data?.filters.departements ?? []}
         communes={data?.filters.communes ?? []}
@@ -291,7 +274,6 @@ export const PageClient = () => {
         <SideSection
           isNouvelleDemandeDisabled={isNouvelleDemandeDisabled}
           isRecapView
-          filterTracker={filterTracker}
           diplomes={data?.filters.diplomes ?? []}
           domaines={data?.filters.domaines ?? []}
           formations={data?.filters.formations ?? []}
@@ -334,7 +316,6 @@ export const PageClient = () => {
                           colonneFilters={colonneFilters}
                           handleColonneFilters={handleColonneFilters}
                           forcedColonnes={["libelleFormation"]}
-                          trackEvent={trackEvent}
                         />
                       }
                       onExportCsv={onExportCsv}

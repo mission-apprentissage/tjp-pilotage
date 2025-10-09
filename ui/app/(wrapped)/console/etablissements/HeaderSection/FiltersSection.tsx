@@ -1,7 +1,6 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Portal, Select, Tag, Text, VisuallyHidden,Wrap} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
-import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
@@ -87,10 +86,7 @@ export const FiltersSection = ({
   requeteEnregistreeActuelle: { nom: string; couleur?: string };
   setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
-  const trackEvent = usePlausible();
-
   const resetFilters = () => {
-    trackEvent("etablissements:filtre", { props: { filter_name: "reset" } });
     setSearchParams({
       filters: {
         ...searchParams.filters,

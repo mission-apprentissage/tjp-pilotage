@@ -1,5 +1,3 @@
-import { usePlausible } from "next-plausible";
-
 import { client } from "@/api.client";
 import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
 import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
@@ -10,8 +8,6 @@ import { formatCommuneLibelleWithCodeDepartement, formatLibelleFormationWithDisp
 import { formatArray } from "@/utils/formatUtils";
 
 export const ExportList = () => {
-  const trackEvent = usePlausible();
-
   const { uai } = useEtablissementContext();
   const { bbox, cfdFilter } = useEtablissementMapContext();
 
@@ -34,7 +30,6 @@ export const ExportList = () => {
 
   const onExportCsv = async () => {
     if (!etablissementsProches) return;
-    trackEvent("panorama-etablissement-liste-carte:export");
     downloadCsv(
       formatExportFilename("etablissements_proches"),
 
@@ -67,7 +62,6 @@ export const ExportList = () => {
 
   const onExportExcel = async () => {
     if (!etablissementsProches) return;
-    trackEvent("panorama-etablissement-liste-carte:export-excel");
     downloadExcel(
       formatExportFilename("etablissements_proches"),
       etablissementsProches.map((etablissement) => ({
