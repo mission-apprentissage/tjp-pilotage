@@ -17,8 +17,7 @@ const BodySchema = z.object({
         label: z.string().optional(),
         commune: z.string().optional(),
       })
-    )
-  .nullable()
+    ).nullable()
 });
 
 export type BodySchema = z.infer<typeof BodySchema>;

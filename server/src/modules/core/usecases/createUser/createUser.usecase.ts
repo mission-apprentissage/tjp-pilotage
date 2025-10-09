@@ -1,7 +1,7 @@
 import * as Boom from "@hapi/boom";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
-import { emailRegex } from "shared";
+import { emailRegex, RoleEnum } from "shared";
 import type { BodySchema } from "shared/routes/schemas/post.users.userId.schema";
 
 import config from "@/config";
@@ -37,6 +37,10 @@ export const [createUser, createUserFactory] = inject(
 
       if (existingUser) {
         throw Boom.badRequest(`${email} est déjà éxistant dans l'application.`);
+      }
+
+      if(role === RoleEnum["perdir"] && (!uais || uais?.length === 0)) {
+        throw Boom.badRequest("Un utilisateur avec le rôle perdir doit avoir au moins un établissement.");
       }
 
       await deps.insertUserQuery({

@@ -99,7 +99,7 @@ export function productCommands(cli: Command) {
       for (const user of users) {
         try {
           await createUser({
-            body: user,
+            body: { ...user, uais: [] },
           });
           console.log(`${user.email} created successfuly`);
         } catch (e) {
@@ -128,7 +128,7 @@ export function productCommands(cli: Command) {
         uai?: string;
         fonction?: UserFonction
     }) => {
-        await createUser({ body: options });
+        await createUser({ body: { ...options, uais: options.uai ? [{ value: options.uai }] : [] } });
         await createJob({ name: "createUser" });
       }
     );
