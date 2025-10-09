@@ -11,6 +11,14 @@ const BodySchema = z.object({
   codeRegion: z.string().min(1).nullable(),
   enabled: z.boolean(),
   fonction: UserFonctionZodType.nullable(),
+  uais: z.array(
+      z.object({
+        value: z.string(),
+        label: z.string().optional(),
+        commune: z.string().optional(),
+      })
+    )
+  .nullable()
 });
 
 export type BodySchema = z.infer<typeof BodySchema>;

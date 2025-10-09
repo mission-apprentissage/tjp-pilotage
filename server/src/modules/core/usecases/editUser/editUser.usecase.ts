@@ -29,6 +29,9 @@ export const [editUser, editUserFactory] = inject(
         }
       }
 
-      return await deps.updateUser({ userId, data });
+      return await deps.updateUser({ userId, data: {
+        ...data,
+        uais: data.uais?.map((etablissement) => etablissement.value) ?? null
+      } });
     }
 );
