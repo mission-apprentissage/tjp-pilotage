@@ -18,7 +18,6 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { randomUUID } from "crypto";
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { Controller,useForm } from "react-hook-form";
@@ -54,7 +53,8 @@ export const EditUser = ({
     reset,
     handleSubmit,
     watch,
-    control
+    control,
+    setValue
   } = useForm<IUserForm>({
     shouldUseNativeValidation: false,
     defaultValues: {
@@ -142,7 +142,12 @@ export const EditUser = ({
   const newUserRole = watch("role") as Role;
   const shouldShowUaiSelect = newUserRole === RoleEnum["perdir"];
 
-  console.log("etablissements", etablissements);
+  useEffect(() => {
+    if(!shouldShowUaiSelect) {
+      setValue("uais", null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredRegions, newUserRole]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -232,7 +237,7 @@ export const EditUser = ({
                   rules={{ required: "Ce champ est obligatoire" }}
                   render={({ field: { onChange, name } }) => (
                     <AsyncSelect
-                      instanceId={randomUUID()}
+                      instanceId={_.random(10000, 99999).toString()}
                       name={name}
                       styles={selectStyle}
                       components={{

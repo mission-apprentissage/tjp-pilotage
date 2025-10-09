@@ -16,7 +16,6 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { randomUUID } from "crypto";
 import _ from "lodash";
 import { useEffect } from "react";
 import { Controller,useForm } from "react-hook-form";
@@ -125,8 +124,11 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     if (isAdminRegion && filteredRegions && filteredRegions.length > 0) {
       setValue("codeRegion", filteredRegions[0].value);
     }
+    if(!shouldShowUaiSelect) {
+      setValue("uais", null);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filteredRegions]);
+  }, [filteredRegions, newUserRole]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -210,7 +212,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                   rules={{ required: "Ce champ est obligatoire" }}
                   render={({ field: { onChange, name } }) => (
                     <AsyncSelect
-                      instanceId={randomUUID()}
+                      instanceId={_.random(10000, 99999).toString()}
                       name={name}
                       styles={selectStyle}
                       components={{
