@@ -2,8 +2,8 @@
 window.searchMgr = {
 	fPathRoot: "bod:",
 	fPathHighlight: "ide:content",
-	fPathSchBoxParent: "ide:header",
-	fPathResBoxParent: "ide:header",
+	fPathSchBoxParent: "des:.searchFra",
+	fPathResBoxParent: "ide:page",
 	fOpt: {searchType: 'treeResults'},
 	fMaxFilterDisplay: 100,
 	fOverflowMethod: "",
@@ -12,16 +12,15 @@ window.searchMgr = {
 	fStrings: ["Annuler", "Annuler la recherche",
 		/*02*/      "Rechercher dans le contenu", "Aucun résultat.",
 		/*04*/      "1 page trouvée", "%s pages trouvées",
-		/*06*/      "Précisez votre recherche...", "Termes recherchés :",
+		/*06*/      "Précisez votre recherche...", "Termes recherchés :",
 		/*08*/      "Précédent", "Occurrence précédente",
 		/*10*/      "Suivant", "Occurrence suivante",
 		/*12*/      "Page précédente", "Page suivante",
 		/*14*/      "Liste", "Afficher/cacher la liste des pages trouvées",
-		/*16*/      "%s occurrences", "1 occurrence",
-		/*18*/      "plus de 8 occurrences", "%s",
-		/*20*/      "Pas de résultat de recherche", "Pages orphelines",
-		/*22*/      "Rechercher", "Ouvrir le menu",
-		/*24*/      "Fermer le menu", "Lancer la recherche"],
+		/*16*/      "Pas de résultat de recherche", "Pages orphelines",
+		/*18*/      "Rechercher", "Ouvrir le menu",
+		/*20*/      "Fermer le menu", "Lancer la recherche",
+	  /*22*/      "Pertinence : %s/10", ""],
 
 	/* ========== Public functions ============================================== */
 
@@ -39,20 +38,8 @@ window.searchMgr = {
 				if (typeof pOpt.searchType != "undefined") this.fOpt.searchType = pOpt.searchType;
 			}
 			this.fRoot = scPaLib.findNode(this.fPathRoot);
-			this.initBoxes();
-
-			if (!Function.prototype.bind) {
-				Function.prototype.bind = function (oThis) {
-					if (typeof this !== "function") throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-					const aArgs = Array.prototype.slice.call(arguments, 1), fToBind = this, fNOP = function () {}, fBound = function () {
-						return fToBind.apply(this instanceof fNOP && oThis ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
-					};
-					fNOP.prototype = this.prototype;
-					fBound.prototype = new fNOP();
-					return fBound;
-				};
-			}
-			scOnLoads[scOnLoads.length] = this;
+			if (!this.initBoxes()) return;
+			scCoLib.addEventsHandler(this);
 		} catch (e) {
 			console.error("ERROR - searchMgr.init : " + e)
 		}
@@ -61,30 +48,48 @@ window.searchMgr = {
 	onLoad: function () {
 		try {
 			this.initSearchElements();
-			this.getLastResults();
-			let vCnt = 0;
-			for (let i in this.fResult) if (this.fResult[i].url === tplMgr.fPageCurrent) vCnt++;
-			if (vCnt === 0) scServices.scSearch.resetLastQuery();
-			else {
-				this.declareManager();
-				this.xUpdateUi();
-				if (this.fUnifiedNav && this.fTextHits) {
-					if (tplMgr.fStore && tplMgr.fStore.get("gotoLastHit") === "true" && this.fTextHits.length > 1) {
-						this.fCurrHit = this.fTextHits.length - 2
-						this.sNxtHit();
-					} else this.sNxtHit();
-					if (tplMgr.fStore && tplMgr.fStore.get("gotoLastHit") === "true") tplMgr.fStore.set("gotoLastHit", false);
+			let vParams = new URL(document.location).searchParams;
+			if (vParams.get("search")){
+				this.fSearchInput.value = vParams.get("search");
+				window.history.pushState({}, document.title, window.location.pathname);
+				this.find();
+				return;
+			} else if (vParams.get("highlight")){
+				window.history.pushState({}, document.title, window.location.pathname);
+				this.find(vParams.get("highlight"));
+				return;
+			} else this.getLastResults().then(function(){
+				if (!searchMgr.fResult) return;
+				let vCnt = 0;
+				for (let i in searchMgr.fResult) if (searchMgr.fResult[i].url === tplMgr.fPageCurrent) vCnt++;
+				if (vCnt === 0) scServices.scSearch.resetLastQuery();
+				else {
+					searchMgr.declareManager().then(function (){
+						searchMgr.xUpdateUi();
+						if (searchMgr.fUnifiedNav && searchMgr.fTextHits) {
+							if (tplMgr.fStore && tplMgr.fStore.get("gotoLastHit") === "true" && searchMgr.fTextHits.length > 1) {
+								searchMgr.fCurrHit = searchMgr.fTextHits.length - 2
+								searchMgr.sNxtHit();
+							} else searchMgr.sNxtHit();
+							if (tplMgr.fStore && tplMgr.fStore.get("gotoLastHit") === "true") tplMgr.fStore.set("gotoLastHit", false);
+						}
+					});
 				}
-			}
+			});
 		} catch (e) {
 			console.error("ERROR - searchMgr.onLoad : " + e)
 		}
 	},
 
 	initBoxes: function () {
-		const vSchBox = scDynUiMgr.addElement("div", scPaLib.findNode(this.fPathSchBoxParent), "searchFra");
-		this.fSearchCmds = scDynUiMgr.addElement("div", vSchBox, "schCmds");
-		this.fSearchRes = scDynUiMgr.addElement("div", scPaLib.findNode(this.fPathResBoxParent), "searchResults");
+		try{
+			this.fSearchCmds = scDynUiMgr.addElement("div", scPaLib.findNode(this.fPathSchBoxParent), "schCmds");
+			this.fSearchRes = scDynUiMgr.addElement("div", scPaLib.findNode(this.fPathResBoxParent), "searchResults");
+			return true;
+		} catch (e) {
+			console.error("ERROR - searchMgr.initBoxes : " + e)
+			return false;
+		}
 	},
 
 	initSearchElements: function () {
@@ -92,17 +97,17 @@ window.searchMgr = {
 		vSearchForm.setAttribute("role", "search");
 		vSearchForm.setAttribute("autocomplete", "off");
 		const vSearchLabel = scDynUiMgr.addElement("label", vSearchForm, "schLabel");
-		vSearchLabel.innerHTML = this.fStrings[22];
-		vSearchLabel.setAttribute("for", this.fStrings[22]);
+		vSearchLabel.innerHTML = this.fStrings[18];
+		vSearchLabel.setAttribute("for", this.fStrings[18]);
 		this.fSearchInput = scDynUiMgr.addElement("input", vSearchForm, "schInput");
 		this.fSearchInput.type = "text";
-		this.fSearchInput.id = this.fSearchInput.name = this.fSearchInput.placeholder = this.fStrings[22];
+		this.fSearchInput.id = this.fSearchInput.name = this.fSearchInput.placeholder = this.fStrings[18];
 		this.fSearchInput.title = this.fStrings[2];
 		this.fSearchInput.onkeyup = this.sKeyUp;
 		this.fSearchLaunch = scDynUiMgr.addElement("input", vSearchForm, "schBtnLaunch");
 		this.fSearchLaunch.type = "submit";
 		this.fSearchLaunch.value = "?";
-		this.fSearchLaunch.title = this.fStrings[25];
+		this.fSearchLaunch.title = this.fStrings[21];
 		this.fSearchLaunch.onclick = this.sFind;
 		this.fSearchPropose = scDynUiMgr.addElement("div", this.fSearchCmds, "schPropose schProp_no");
 
@@ -137,10 +142,10 @@ window.searchMgr = {
 		if (this.fSearchInput) this.fSearchInput.focus();
 	},
 
-	propose: function () {
+	propose: async function () {
 		try {
 			const vStr = this.fSearchInput.value;
-			const vWds = scServices.scSearch.propose(this.fIdxUrl, vStr, {async: true});
+			const vWds = await scServices.scSearch.propose(this.fIdxUrl, vStr);
 			const vShowProp = !vWds || (vWds && vWds.length === 0 && vStr.length < 3) || vWds && vWds.length > 0;
 			this.xSwitchClass(this.fSearchPropose, "schProp_" + (vShowProp ? "no" : "yes"), "schProp_" + (vShowProp ? "yes" : "no"), true);
 			this.fSearchPropose.fShown = !!vShowProp;
@@ -153,7 +158,7 @@ window.searchMgr = {
 					vProp.onclick = this.sProp;
 					vProp.onkeyup = this.sPropKeyUp;
 				}
-			} else if (scServices.scSearch.isLoadable(this.fIdxUrl) === false) {
+			} else if (await scServices.scSearch.isLoadable(this.fIdxUrl) === false) {
 				this.xDisable();
 			} else if (!vWds || (vWds && vWds.length === 0 && vStr.length < 3)) {
 				scDynUiMgr.addElement("span", this.fSearchPropose, "schProposeExceeded").innerHTML = this.fStrings[6];
@@ -163,16 +168,21 @@ window.searchMgr = {
 		}
 	},
 
-	find: function () {
+	find: async function (pStr) {
+		const vStr = pStr || this.fSearchInput.value;
+		if (!vStr) return;
 		this.xResetHighlight();
 		this.xSwitchClass(this.fSearchPropose, "schProp_yes", "schProp_no", true);
 		this.fSearchPropose.fShown = false;
 		this.fSearchPropose.innerHTML = "";
-		scServices.scSearch.query({id: this.fIdxUrl, str: this.fSearchInput.value});
-		this.declareManager();
-		this.getLastResults();
-		this.xUpdateUi();
-		this.xListTgle(true);
+		await scServices.scSearch.query({id: this.fIdxUrl, str: vStr});
+		await this.declareManager();
+		await this.getLastResults();
+		await this.xUpdateUi();
+		if (!pStr) {
+			this.xListTgle(true);
+			this.fResultScroll.focus();
+		}
 	},
 
 	reset: function () {
@@ -181,15 +191,15 @@ window.searchMgr = {
 		searchMgr.xResetUi();
 	},
 
-	declareManager: function () {
+	declareManager: async function () {
 		if (!this.fResultMgr) {
-			const vOutline = outMgr.xGetOutline();
+			const vOutline = await outMgr.xGetOutline();
 			const vSrcMenu = {};
 			vSrcMenu.children = vOutline.menu;
 			// Ajout orphans
 			if (vOutline.orphans) vSrcMenu.children = this.fOpt.searchType !== "listResults" ? vSrcMenu.children.concat([{
 				"children": vOutline.orphans,
-				"label": this.fStrings[21],
+				"label": this.fStrings[17],
 				"url": "null"
 			}]) : vSrcMenu.children.concat(vOutline.orphans);
 			vSrcMenu.url = null;
@@ -197,10 +207,37 @@ window.searchMgr = {
 		}
 	},
 
-	getLastResults: function () {
-		const vResultSet = scServices.scSearch.getLastQueryResults();
-		if (vResultSet) this.fResult = vResultSet.list;
-		else this.fResult = null;
+	getLastResults: async function () {
+		const vResultSet = await scServices.scSearch.getLastQueryResults();
+		if (!vResultSet) {
+			this.fResult = null;
+			return;
+		}
+		const vRes = vResultSet.list;
+		this.fResult = [];
+		const vCoefs = await scServices.scSearch.getCategories(this.fIdxUrl);
+		let vCoefSum = 0;
+		for (let i = 0; i < vCoefs.length; i++) {
+			vCoefs[i] = scCoLib.toInt(vCoefs[i]);
+			vCoefSum += vCoefs[i];
+		}
+		let vMinCoef = 9, vMaxCoef = 0;
+		for (let i = 0; i < vRes.length; i++) {
+			const vPageUrl = vRes[i].url;
+			const vPageCoefs = vRes[i].cat.split("");
+			let vPageCoef = 0;
+			for (let j = 0; j < vPageCoefs.length; j++) {
+				vPageCoef += scCoLib.toInt(vPageCoefs[j]);
+			}
+			vPageCoef = vPageCoef / vCoefSum;
+			vMinCoef = Math.min(vMinCoef, vPageCoef);
+			vMaxCoef = Math.max(vMaxCoef, vPageCoef);
+			this.fResult.push({url : vPageUrl, cat : vRes[i].cat, coef : vPageCoef});
+		}
+		for (let i = 0; i < this.fResult.length; i++) {
+			if (vMaxCoef === vMinCoef) this.fResult[i].coef = "";
+			else this.fResult[i].coef = ((this.fResult[i].coef - vMinCoef) / (vMaxCoef - vMinCoef) * 9).toFixed(1);
+		}
 	},
 
 	/* === Callback functions =================================================== */
@@ -226,9 +263,8 @@ window.searchMgr = {
 	},
 
 	sPropKeyUp: function (pEvt) {
-		const vEvt = pEvt || window.event;
 		let vNode;
-		switch (vEvt.keyCode) {
+		switch (pEvt.keyCode) {
 			case 40:
 				vNode = scPaLib.findNode("nsi:a", this);
 				break;
@@ -239,25 +275,23 @@ window.searchMgr = {
 		if (vNode) vNode.focus();
 	},
 
-	sKeyUp: function (pEvt) {
-		const vEvt = pEvt || window.event;
+	sKeyUp: async function (pEvt) {
 		if (this.value.length > 0) searchMgr.xSwitchClass(searchMgr.fSearchCmds, "schCmds_noact", "schCmds_act", true);
 		else searchMgr.xSwitchClass(searchMgr.fSearchCmds, "schCmds_act", "schCmds_noact", true);
 
 		if (this.value.length === 0) searchMgr.xResetUi();
-		if (this.value.length > 0) searchMgr.propose();
+		if (this.value.length > 0) await searchMgr.propose();
 		else {
 			searchMgr.xSwitchClass(searchMgr.fSearchPropose, "schProp_yes", "schProp_no", true);
 			searchMgr.fSearchPropose.fShown = false;
 			searchMgr.fSearchPropose.innerHTML = "";
 		}
-		if (this.value.length > 2 && vEvt.keyCode === 13) searchMgr.find();
-		if (searchMgr.fSearchPropose.fShown && vEvt.keyCode === 40) {
+		if (this.value.length > 2 && pEvt.keyCode === 13) await searchMgr.find();
+		if (searchMgr.fSearchPropose.fShown && pEvt.keyCode === 40) {
 			const vProp = scPaLib.findNode("chi.a", searchMgr.fSearchPropose);
 			if (vProp) vProp.focus();
 		}
-		if (vEvt.stopPropagation) vEvt.stopPropagation();
-		else vEvt.cancelBubble = true;
+		pEvt.stopPropagation();
 	},
 
 	sPrv: function () {
@@ -341,7 +375,7 @@ window.searchMgr = {
 		this.xResetHighlight();
 	},
 
-	xUpdateUi: function () {
+	xUpdateUi: async function () {
 		if (this.fSearchInput.value.length > 0) searchMgr.xSwitchClass(this.fSearchCmds, "schCmds_noact", "schCmds_act", true);
 		else searchMgr.xSwitchClass(this.fSearchCmds, "schCmds_act", "schCmds_noact", true);
 		if (!this.fResult) return;
@@ -357,12 +391,12 @@ window.searchMgr = {
 			searchMgr.xSwitchClass(searchMgr.fSearchRes, "schDisplay_", "schDisplay_" + (this.fResult.length === 1 ? "one" : "many"), true, false);
 			const vRoot = scPaLib.findNode(this.fPathHighlight);
 			if (!vRoot) return;
-			this.xHighlight(vRoot, scServices.scSearch.getLastSearch(this.fIdxUrl));
+			await this.xHighlight(vRoot, await scServices.scSearch.getLastSearch(this.fIdxUrl));
 			searchMgr.xUpdateResUi();
 		} else {
 			this.fSearchLbl.innerHTML = this.fStrings[3];
 			const vNoResult = scDynUiMgr.addElement("div", this.fResultScroll, "schNoRes");
-			vNoResult.innerHTML = this.fStrings[20];
+			vNoResult.innerHTML = this.fStrings[16];
 			this.xSwitchClass(this.fSearchRes, "schDisplay_", "schDisplay_none", true, false);
 			this.xResetHighlight();
 		}
@@ -400,9 +434,9 @@ window.searchMgr = {
 		else this.fHitCnt.innerHTML = "";
 	},
 
-	xHighlight: function (pRoot, pStr) {
+	xHighlight: async function (pRoot, pStr) {
 		const vTextNodes = [];
-		const vNoIdxFilter = scPaLib.compileFilter(".noIndex|.footNotes|script|noscript|object");
+		const vNoIdxFilter = scPaLib.compileFilter(".noIndex|.outOfView|script|noscript|object|.CodeMirror-linenumber");
 		const textNodeWalker = function (pNde) {
 			while (pNde) {
 				if (pNde.nodeType === 3) vTextNodes.push(pNde);
@@ -412,12 +446,12 @@ window.searchMgr = {
 		};
 		textNodeWalker(pRoot.firstChild);
 		let i, j, k, vTxtNode, vTxtVal, vTxtNorm, vTxtMached, vHolder, vToken, vHits, vHit, vReg, vOffset, vIsOldOffset;
-		const vTokens = scServices.scSearch.buildTokens(this.fIdxUrl, pStr);
+		const vTokens = await scServices.scSearch.buildTokens(this.fIdxUrl, pStr);
 		for (i = 0; i < vTokens.length; i++) vTokens[i].fCount = 0;
 		for (i = 0; i < vTextNodes.length; i++) {
 			vHits = [];
 			vTxtNode = vTextNodes[i];
-			vTxtNorm = scServices.scSearch.normalizeString(this.fIdxUrl, vTxtNode.nodeValue);
+			vTxtNorm = await scServices.scSearch.normalizeString(this.fIdxUrl, vTxtNode.nodeValue);
 			for (j = 0; j < vTokens.length; j++) {
 				vToken = vTokens[j];
 				if (!vToken.neg && vTxtNorm.length >= vToken.wrd.length) {
@@ -472,7 +506,7 @@ window.searchMgr = {
 			vToken = vTokens[i];
 			if (!vToken.neg) vDispTokens.push((vToken.exact ? '"' : '') + vToken.wrd + (vToken.exact ? '"' : '') + " <em>(" + vToken.fCount + ")</em>");
 		}
-		this.fHitLbl.innerHTML = this.fStrings[7] + ' <span class="schTerm">' + this.fStrings[19].replace("%s", vDispTokens.join(", ")) + '</span>';
+		this.fHitLbl.innerHTML = this.fStrings[7] + ' <span class="schTerm">' + vDispTokens.join(", ") + '</span>';
 		this.fCurrHit = -1;
 		this.xUpdateHitUi();
 	},
@@ -520,7 +554,7 @@ searchMgr.ListResultManager = function (pRoot,pOutline) {
 			for (let i = 0; i < pItem.children.length; i++) {
 				const vItem = pItem.children[i];
 				const vUrl = vItem.url;
-				vPagesList[vUrl] = {title: vItem.label, source: vItem.source, id: vItem.id, parent: pParent};
+				vPagesList[vUrl] = {title: vItem.label, id: vItem.id, parent: pParent};
 				let vParent = {url: vUrl, label: vItem.label};
 				const vPagesParent = pParent ? pParent.concat([vParent]) : [vParent];
 				if (pItem.children[i].children) iOutlineWalker(pItem.children[i], vPagesParent);
@@ -567,11 +601,12 @@ searchMgr.ListResultManager.prototype = {
 				// Création d'un tableau dédoublonné
 				this.fDedupeResults.push(vResult);
 				// Création du premier lien
-				vPageRes.fLbl = scDynUiMgr.addElement("li",vRoot,"schPgeBk mnu_sel_no schPgeRank_"+vResult.cat);
-				const vRankText = vResult.cat > 1 ? (vResult.cat >= 9 ? searchMgr.fStrings[18] : searchMgr.fStrings[16].replace("%s", vResult.cat)) : searchMgr.fStrings[17];
-				const vPgeBtn = searchMgr.xAddBtn(vPageRes.fLbl, "schPgeBtn schPgeSource_" + vPageRes.source, vPageRes.title, vPageRes.title + " (" + vRankText + ")");
+				vPageRes.fLbl = scDynUiMgr.addElement("li",vRoot,"schPgeBk mnu_sel_no coef_"+Math.round(vResult.coef));
+				const vPgeBtn = searchMgr.xAddBtn(vPageRes.fLbl, "schPgeBtn", vPageRes.title);
 				vPgeBtn.href = scServices.scLoad.getPathFromRoot(vPageUrl);
-				scDynUiMgr.addElement("span",vPgeBtn,"schPgeRank").innerHTML = "<span>" + vRankText + "</span>";
+				const vCoef = scDynUiMgr.addElement("span",vPgeBtn,"mnu_coef")
+				vCoef.innerHTML = "<span>" + vResult.coef + "</span>";
+				vCoef.title = searchMgr.fStrings[22].replace("%s", Math.round(scCoLib.toInt(vResult.coef) + 1));
 				// Affiche un fil d'ariane si doublons (si la variable urls existe)
 				if(vPageRes.urls.length > 1) {
 					vPageRes.fLbl.className = vPageRes.fLbl.className + " mnu_b"
@@ -685,7 +720,7 @@ searchMgr.TreeResultManager.prototype = {
 		if (vRes && vRes.length > 0){
 			for (let i = 0; i < vRes.length; i++){
 				const vPageUrl = vRes[i].url;
-				this.fPageList.ctrl[vPageUrl] = vRes[i].cat;
+				this.fPageList.ctrl[vPageUrl] = vRes[i].coef;
 				this.fPageList.list.push(vPageUrl);
 			}
 			this.fMenu.applyFilter(this.fPageList.list);
@@ -697,13 +732,14 @@ searchMgr.TreeResultManager.prototype = {
 		if (!pItem.act) return;
 		const vLbl = pItem.fLbl;
 		const vLnk = pItem.fLnk;
-		const vCat = this.fPageList.ctrl[pItem.url];
-		const vCatText = vCat > 1 ? (vCat >= 9 ? searchMgr.fStrings[18] : searchMgr.fStrings[16].replace("%s", vCat)) : searchMgr.fStrings[17];
+		const vCoef = this.fPageList.ctrl[pItem.url];
 		if (!vLbl.fClass) vLbl.fClass = vLbl.className;
 		if (!vLnk.fContent) vLnk.fContent = vLnk.innerHTML;
-		vLbl.className = vLbl.fClass + " schPgeBk schPgeRank_"+vCat;
-		vLnk.title = vLnk.title = pItem.label+" ("+vCatText+")";
-		vLnk.innerHTML = vLnk.fContent+'<span class="schPgeRank"><span>'+vCatText+'</span></span>';
+		vLbl.className = vLbl.fClass + " coef_"+Math.round(vCoef);
+		vLnk.innerHTML = vLnk.fContent
+		const vCoefElt = scDynUiMgr.addElement("span",vLnk,"mnu_coef");
+		vCoefElt.innerHTML = "<span>" + vCoef + "</span>";
+		vCoefElt.title = searchMgr.fStrings[22].replace("%s", Math.round(scCoLib.toInt(vCoef) + 1));
 	},
 
 	/** TreeResultManager.hasNextPage */
@@ -875,7 +911,7 @@ searchMgr.MenuManager.prototype = {
 				vTyp = vChi.children ? "b" : "l";
 				this.buildMenuEntry(pRoot, vChi, pHidden);
 				if (vTyp === "b"){
-					vBtn = searchMgr.xAddBtn(vChi.fLbl,"mnu_tgle_c",">",searchMgr.fStrings[23]);
+					vBtn = searchMgr.xAddBtn(vChi.fLbl,"mnu_tgle_c",">",searchMgr.fStrings[19]);
 					vBtn.onclick = this.sToggleMnuItem;
 					vUl = scDynUiMgr.addElement("ul",vChi.fLi,"mnu_sub mnu_sub_c",null,{"display":"none"});
 					vChi.fLbl.fTglBtn = vBtn;
@@ -896,7 +932,7 @@ searchMgr.MenuManager.prototype = {
 	buildMenuEntry : function(pParent, pSrc, pHidden) {
 		let vLi, vDiv, vLnk, vTyp, vCls;
 		vTyp = pSrc.children ? "b" : "l";
-		vCls = "mnu_sel_no mnu_"+vTyp+" mnu_src_"+pSrc.source+" mnu_dpt_"+(scPaLib.findNodes("anc:ul.mnu_sub", pParent).length + 1)+" "+pSrc.className+" mnu_sch_"+(this.fFilter && pSrc.act ? "yes" : "no");
+		vCls = "mnu_sel_no mnu_"+vTyp+" mnu_dpt_"+(scPaLib.findNodes("anc:ul.mnu_sub", pParent).length + 1)+" "+pSrc.className+" mnu_sch_"+(this.fFilter && pSrc.act ? "yes" : "no");
 		vLi = scDynUiMgr.addElement("li",pParent,vCls);//pHidden ??
 		vDiv = scDynUiMgr.addElement("div",vLi, "mnuLbl "+vCls);
 		vLnk = scDynUiMgr.addElement("a",vDiv,"mnu_i mnu_lnk");
@@ -967,10 +1003,12 @@ searchMgr.MenuManager.prototype = {
 			pItem.fLbl = null;
 			pItem.fUl = null;
 			pItem.fLi = null;
+			pItem.fCoef = null;
 			if (!vMgr.fFilter) {
 				pItem.act = false;
 				pItem.vis = false;
 				pItem.cnt = null;
+				pItem.coef = "";
 			}
 			if (pItem.children) for (let i = 0; i < pItem.children.length; i++) iResetMenu(pItem.children[i]);
 		};
@@ -1035,7 +1073,7 @@ searchMgr.MenuManager.prototype = {
 		}
 		return (vCurrItem ? vCurrItem.cnt : null);
 	},
-	/** MenuManager.applyFilter - apply a filter on the menu based on the given array of vidible pages. */
+	/** MenuManager.applyFilter - apply a filter on the menu based on the given array of visible pages. */
 	applyFilter : function(pPageList, pCallBack) {
 		let i;
 		if (this.fOpt.neverFilter) return;
@@ -1150,7 +1188,7 @@ searchMgr.MenuManager.prototype = {
 		if(vStatus === "mnu_tgle_c") {
 			pBtn.className = "mnu_tgle_o";
 			pBtn.innerHTML = "<span>v</span>";
-			pBtn.title = searchMgr.fStrings[24];
+			pBtn.title = searchMgr.fStrings[20];
 			vUl.className = vUl.className.replace("mnu_sub_c", "mnu_sub_o");
 			if (scCoLib.isIE) this.fRoot.style.visibility = "hidden"; // controunement bug ie7
 			vUl.style.display = "";
@@ -1159,7 +1197,7 @@ searchMgr.MenuManager.prototype = {
 		} else {
 			pBtn.className = "mnu_tgle_c";
 			pBtn.innerHTML = "<span>></span>";
-			pBtn.title = searchMgr.fStrings[23];
+			pBtn.title = searchMgr.fStrings[19];
 			vUl.className = vUl.className.replace("mnu_sub_o", "mnu_sub_c");
 			vUl.style.display = "none";
 			vUl.fClosed = true;

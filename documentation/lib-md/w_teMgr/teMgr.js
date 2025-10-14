@@ -3,17 +3,21 @@ teMgr = {
 
 	initControllers: function (elements, subControllers) {
 		var self = this;
-		if (document.readyState == 'loading') {
-			document.addEventListener('DOMContentLoaded', function () {
-				self.initControllers(elements, subControllers);
-			});
-		} else {
-			if (elements instanceof Element) elements = [elements];
-			else if (!(Array.isArray(elements)) && !(elements instanceof NodeList)) elements = this.queryAll(elements);
-			Array.prototype.forEach.call(elements, function (element) {
-				self.initController(element, subControllers);
-			});
-		}
+		return new Promise((resolve) => {
+			if (document.readyState == 'loading') {
+				document.addEventListener('DOMContentLoaded', function () {
+					self.initControllers(elements, subControllers);
+					resolve();
+				});
+			} else {
+				if (elements instanceof Element) elements = [elements];
+				else if (!(Array.isArray(elements)) && !(elements instanceof NodeList)) elements = this.queryAll(elements);
+				Array.prototype.forEach.call(elements, function (element) {
+					self.initController(element, subControllers);
+					resolve();
+				});
+			}
+		});
 	},
 
 	initController: function (element, subControllers) {
@@ -45,6 +49,11 @@ teMgr = {
 		return [];
 	},
 
+	addSubController: function(element, subCtrl) {
+		var ctrl = this.getController(element);
+		if (ctrl) ctrl.addSubController(subCtrl);
+	},
+
 	query: function (classNames, context) {
 		var context = context || document;
 		return context.querySelector(classNames);
@@ -73,7 +82,6 @@ teMgr = {
 		options: {
 			prefix: 'native_scportal'
 		},
-		credentials: "same-origin",
 
 		canPlayType: function (type) {
 			return ['video/x-scportal', 'audio/x-scportal'].indexOf(type.toLowerCase()) > -1
@@ -88,6 +96,7 @@ teMgr = {
 				mediaElement.renderer.show();
 			}
 
+			var settings = (options && options.scportal) || {};
 			var renderer = {
 				hide: () => {
 					if (subRenderer) subRenderer.hide();
@@ -107,7 +116,7 @@ teMgr = {
 						const mediaManifestUrl = new URL(src);
 						mediaManifestUrl.pathname +=  "/:api:/v1/media";
 						mediaManifestUrl.search = mediaManifestUrl.hash = "";
-						const mediaManifestResp = await fetch(mediaManifestUrl.href, {credentials: this.credentials, cache: "no-cache"});
+						const mediaManifestResp = await fetch(mediaManifestUrl.href, {credentials: settings.credentials || "same-origin", cache: "no-cache"});
 						const mediaManifest = await mediaManifestResp.json();
 
 						var adaptStreamSrc;
@@ -216,44 +225,47 @@ teMgr = {
 		return new Promise(function (resolve, reject) {
 			trackElem.addEventListener('load', function () {
 				var currentVoice = null;
-				var currentPara = fragment.appendChild(document.createElement('p'));
-				var cues = Array.from(trackElem.track.cues);
 				var url = frameElement && frameElement.fWin ? new URL(window.parent.location) : window.location;
+				for (const cue of trackElem.track.cues) {
+					var cueFragment = cue.getCueAsHTML();
 
-				cues.forEach(function (cue) {
-					var cueElt = cue.getCueAsHTML();
-					while (cueElt.firstChild) {
-						var cuePartLinkElt = document.createElement('a');
-						if (ctrl.getSubController(win.TEHashCtrl)) {
-							url.hash = '#t=' + cue.startTime;
-							cuePartLinkElt.href = url.toString();
-							if (frameElement && frameElement.fWin) cuePartLinkElt.target = '_parent';
-						} else {
-							cuePartLinkElt.href = '#';
-							cuePartLinkElt.onclick = function (event) {
-								ctrl.media.currentTime = cue.startTime;
-								event.preventDefault();
-							}
+					var voice = cueFragment.firstChild.localName == 'span' ? cueFragment.firstChild.getAttribute('title') : null;
+					if (voice != currentVoice) {
+						const voicePara = fragment.appendChild(document.createElement('p'));
+						if (voice) {
+							voicePara.appendChild(document.createTextNode(voice));
+							voicePara.className = 'voice';
+							voicePara.dataset.teStart = cue.startTime;
+							voicePara.dataset.teEnd = cue.endTime;
 						}
-						cuePartLinkElt.className = 'txt_tcLink';
-
-						var voice = cueElt.firstChild.localName == 'span' ? cueElt.firstChild.getAttribute('title') : null;
-						if (voice != currentVoice) {
-							currentPara = fragment.appendChild(document.createElement('p'));
-							if (voice) {
-								currentPara.appendChild(document.createTextNode(voice));
-								currentPara.className = 'voice';
-								currentPara = fragment.appendChild(document.createElement('p'));
-							}
-							currentVoice = voice;
-						}
-						cuePartLinkElt.appendChild(cueElt.firstChild);
-						currentPara.appendChild(cuePartLinkElt);
-						currentPara.appendChild(document.createTextNode(' '));
-						resolve(fragment);
+						currentVoice = voice;
 					}
-				});
+
+					var cueLinkElt = document.createElement('a');
+					if (ctrl.getSubController(win.TEHashCtrl)) {
+						url.hash = '#t=' + cue.startTime;
+						cueLinkElt.href = url.toString();
+						if (frameElement && frameElement.fWin) cueLinkElt.target = '_parent';
+					} else {
+						cueLinkElt.href = '#';
+						cueLinkElt.onclick = function (event) {
+							ctrl.media.currentTime = cue.startTime;
+							event.preventDefault();
+						}
+					}
+
+					cueLinkElt.appendChild(cueFragment);
+					cueLinkElt.className = 'txt_tcLink';
+
+					const para = fragment.appendChild(document.createElement('p'));
+					para.dataset.teStart = cue.startTime;
+					para.dataset.teEnd = cue.endTime;
+					para.appendChild(cueLinkElt);
+				}
 				targetElem.appendChild(fragment);
+				ctrl.updateSegments();
+				ctrl.updateStates();
+				resolve(fragment);
 			});
 
 			(ctrl.media.originalNode || ctrl.media).appendChild(trackElem);
@@ -342,53 +354,8 @@ TEController = function (element, subControllers) {
 		self.bind(media, event, self.updatePlayingState);
 	});
 
-	var segments = teMgr.queryAll(this.element.dataset.teSegments || '[data-te-start],[data-te-segment-target]', this.container);
-	this.segmentsData = new Map();
-	for (var segment, i = 0; i < segments.length, segment = segments[i]; i++) {
-		var target = segment.dataset.teSegmentTarget;
-		var targetSegment, start, end;
-		if (target) {
-			targetSegment = document.getElementById(target);
-			start = parseFloat(targetSegment.dataset.teStart);
-			end = parseFloat(targetSegment.dataset.teEnd);
-		} else {
-			start = parseFloat(segment.dataset.teStart);
-			end = parseFloat(segment.dataset.teEnd);
-		}
-		this.segmentsData.set(segment, {start: start, end: end});
-	}
-	this.segments = segments.sort(function (segment1, segment2) {
-		var data1 = self.segmentsData.get(segment1);
-		var data2 = self.segmentsData.get(segment2);
-		return data1.start - data2.start;
-	});
-
-	var points = teMgr.queryAll(this.element.dataset.tePause || '[data-te-position],[data-te-point-target]', this.container);
-	this.pointsData = new Map();
-	for (var point, i = 0; i < points.length, point = points[i]; i++) {
-		var target = point.dataset.tePointTarget;
-		var targetPoint, position;
-		if (target) {
-			targetPoint = document.getElementById(target);
-			position = parseFloat(targetPoint.dataset.tePosition);
-		} else {
-			position = parseFloat(point.dataset.tePosition);
-		}
-		var interactive = point.localName == 'a' || point.localName == 'button' || point.localName == 'input';
-		this.pointsData.set(point, {position: position, interactive: interactive});
-
-		if (interactive) {
-			point.addEventListener('click', function (event) {
-				media.currentTime = self.pointsData.get(this).position;
-				event.preventDefault();
-			})
-		}
-	}
-	this.points = points.sort(function (point1, point2) {
-		var data1 = self.pointsData.get(point1);
-		var data2 = self.pointsData.get(point2);
-		return data1.position - data2.position;
-	});
+	this.updateSegments();
+	this.updatePoints();
 
 	this.timelines = teMgr.queryAll(this.element.dataset.teTimelines || this.selector('timeline'), this.element);
 	this.previousTimelineBtn = this.query('previousTimeline');
@@ -463,6 +430,22 @@ TEController.prototype = {
 		return subCtrls;
 	},
 
+	addSubController: function (subCtrl) {
+		try {
+			if (subCtrl.init) subCtrl.init(self);
+		} catch (e) {
+			console.error(subCtrl.constructor.name + '.init:', e);
+		}
+		if (this.media.readyState >= HTMLMediaElement.HAVE_METADATA) {
+			try {
+				if (subCtrl.ready) subCtrl.ready(self);
+			} catch (e) {
+				console.error(subCtrl.constructor.name + '.ready:', e);
+			}
+		}
+		this.subControllers.push(subCtrl);
+	},
+
 	selector: function (className) {
 		return this.queryPrefix + className[0].toUpperCase() + className.substr(1);
 	},
@@ -501,6 +484,60 @@ TEController.prototype = {
 				}
 			}
 		}
+	},
+
+	updateSegments: function () {
+		var self = this;
+		var segments = teMgr.queryAll(this.element.dataset.teSegments || '[data-te-start],[data-te-segment-target]', this.container);
+		this.segmentsData = new Map();
+		for (var segment, i = 0; i < segments.length, segment = segments[i]; i++) {
+			var target = segment.dataset.teSegmentTarget;
+			var targetSegment, start, end;
+			if (target) {
+				targetSegment = document.getElementById(target);
+				start = parseFloat(targetSegment.dataset.teStart);
+				end = parseFloat(targetSegment.dataset.teEnd);
+			} else {
+				start = parseFloat(segment.dataset.teStart);
+				end = parseFloat(segment.dataset.teEnd);
+			}
+			this.segmentsData.set(segment, {start: start, end: end});
+		}
+		this.segments = segments.sort(function (segment1, segment2) {
+			var data1 = self.segmentsData.get(segment1);
+			var data2 = self.segmentsData.get(segment2);
+			return data1.start - data2.start;
+		});
+	},
+
+	updatePoints: function () {
+		var self = this;
+		var points = teMgr.queryAll(this.element.dataset.tePause || '[data-te-position],[data-te-point-target]', this.container);
+		this.pointsData = new Map();
+		for (var point, i = 0; i < points.length, point = points[i]; i++) {
+			var target = point.dataset.tePointTarget;
+			var targetPoint, position;
+			if (target) {
+				targetPoint = document.getElementById(target);
+				position = parseFloat(targetPoint.dataset.tePosition);
+			} else {
+				position = parseFloat(point.dataset.tePosition);
+			}
+			var interactive = point.localName == 'a' || point.localName == 'button' || point.localName == 'input';
+			this.pointsData.set(point, {position: position, interactive: interactive});
+
+			if (interactive) {
+				point.addEventListener('click', function (event) {
+					media.currentTime = self.pointsData.get(this).position;
+					event.preventDefault();
+				})
+			}
+		}
+		this.points = points.sort(function (point1, point2) {
+			var data1 = self.pointsData.get(point1);
+			var data2 = self.pointsData.get(point2);
+			return data1.position - data2.position;
+		});
 	},
 
 	updateTime: function () {
@@ -753,7 +790,7 @@ TEController.prototype = {
 	},
 
 	videoPlayPause: function (event) {
-		if (event.target !== this.media) return;
+		if (event && event.target !== this.media) return;
 
 		// Pas sur le double clic
 		if (event && event.detail > 1) {
@@ -960,6 +997,7 @@ TEController.prototype = {
 	pressedObserver: new MutationObserver(function (records) {
 		records.forEach(function (record) {
 			var btn = record.target;
+			let dispatchChange = false;
 			if (record.attributeName == 'aria-pressed') {
 				var pressed = btn.getAttribute('aria-pressed');
 				if (record.oldValue == pressed) return;
@@ -967,13 +1005,19 @@ TEController.prototype = {
 					if (btn.dataset.pressedTitle) {
 						if (!btn.dataset.title) btn.dataset.title = btn.title;
 						btn.title = btn.dataset.pressedTitle;
+						btn.ariaLabel = btn.dataset.pressedTitle;
 					}
 				} else {
-					if (btn.dataset.title) btn.title = btn.dataset.title;
+					if (btn.dataset.title) {
+						btn.title = btn.dataset.title;
+						btn.ariaLabel = btn.dataset.title;
+					}
 				}
-				var event = document.createEvent('Events');
-				event.initEvent('change', false, false);
-				btn.dispatchEvent(event);
+				dispatchChange = true;
+			} else if (record.attributeName == 'aria-expanded') {
+				var expanded = btn.getAttribute('aria-expanded');
+				if (record.oldValue == expanded) return;
+				dispatchChange = true;
 			} else if (record.attributeName == 'checked') {
 				if (btn.checked) {
 					btn.title = btn.dataset.checkedTitle;
@@ -981,12 +1025,15 @@ TEController.prototype = {
 					btn.title = btn.dataset.title;
 				}
 			}
+			if (dispatchChange) {
+				btn.dispatchEvent(new CustomEvent("change"));
+			}
 		});
 	}),
 
 	initPressButtons: function () {
 		var self = this;
-		var buttons = this.element.querySelectorAll('[aria-pressed]');
+		var buttons = this.element.querySelectorAll('[aria-pressed],[aria-expanded]');
 		Array.prototype.forEach.call(buttons, function (btn) {
 			self.initPressButton(btn);
 		});
@@ -994,15 +1041,25 @@ TEController.prototype = {
 
 	initPressButton: function (btn) {
 		var self = this;
-		btn.addEventListener('click', function () {
+		btn.addEventListener('click', function (ev) {
 			var pressed = this.getAttribute('aria-pressed');
-			if (pressed == 'true') {
-				this.setAttribute('aria-pressed', 'false');
+			if (pressed) {
+				if (pressed == 'true') {
+					this.setAttribute('aria-pressed', 'false');
+				} else {
+					this.setAttribute('aria-pressed', 'true');
+				}
 			} else {
-				this.setAttribute('aria-pressed', 'true');
+				var expanded = this.getAttribute('aria-expanded');
+				if (expanded == 'true') {
+					this.setAttribute('aria-expanded', 'false');
+				} else {
+					this.setAttribute('aria-expanded', 'true');
+				}
 			}
+
 		});
-		self.pressedObserver.observe(btn, {attributes: true, attributeFilter: ['aria-pressed'], attributeOldValue: true});
+		self.pressedObserver.observe(btn, {attributes: true, attributeFilter: ['aria-pressed', 'checked', 'aria-expanded'], attributeOldValue: true});
 	},
 
 

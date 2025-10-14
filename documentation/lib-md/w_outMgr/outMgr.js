@@ -113,10 +113,10 @@ window.outMgr = {
 	},
 
 	/* === Private functions ==================================================== */
-	xToggleItem: function (pBtn) {
+	xToggleItem: async function (pBtn) {
 		if (!pBtn) return;
 		const vStatus = pBtn.className;
-		if (!pBtn.fUl) this.xBuildSub(pBtn);
+		if (!pBtn.fUl) await this.xBuildSub(pBtn);
 		const vUl = pBtn.fUl;
 		if (!vUl) return;
 		if (vStatus === "mnu_tgle_c") {
@@ -139,8 +139,8 @@ window.outMgr = {
 		this.scrollTask.checkBtn();
 	},
 
-	xBuildSub: function (pBtn) {
-		if (!this.fOutline) this.xInitOutline();
+	xBuildSub: async function (pBtn) {
+		if (!this.fOutline) await this.xInitOutline();
 		const vLbl = pBtn.fLbl;
 		pBtn.fUl = scDynUiMgr.addElement("ul", vLbl.parentNode, "mnu_sub mnu_sub_o");
 		pBtn.fUl.fTglBtn = pBtn;
@@ -149,7 +149,7 @@ window.outMgr = {
 		for (let i = 0; i < pBtn.fLbl.fSrc.children.length; i++) {
 			const vChi = vChildren[i];
 			vType = vChi.children ? "b" : "l";
-			vCls = "mnu_sel_no mnu_" + vType + " mnu_src_" + vChi.source + " mnu_dpt_" + (scPaLib.findNodes("anc:ul.mnu_sub", pBtn).length + 1) + " " + vChi.className;
+			vCls = "mnu_sel_no mnu_" + vType + " mnu_dpt_" + (scPaLib.findNodes("anc:ul.mnu_sub", pBtn).length + 1) + " " + vChi.className;
 			vLi = scDynUiMgr.addElement("li", pBtn.fUl, vCls);
 			vDiv = scDynUiMgr.addElement("div", vLi, "mnuLbl " + vCls);
 			vDiv.fSrc = vChi;
@@ -169,12 +169,11 @@ window.outMgr = {
 		pParent.fTglBtn.fLblText = pLabel;
 	},
 
-	xInitOutline: function () {
+	xInitOutline: async function () {
 		try {
-			const vReq = this.xGetHttpRequest();
-			vReq.open("GET", this.fUrlOutline + "?id=" + scServices.id, false);
-			vReq.send();
-			this.fOutline = {children: this.xDeserialiseObjJs(vReq.responseText).menu};
+			const vReq = await fetch(this.fUrlOutline + "?id=" + scServices.id);
+			if (!vReq.ok) throw new Error(`Status: ${vReq.status}`);
+			this.fOutline = {children: JSON.parse(await vReq.text()).menu};
 			const iOutlineWalker = function (pNode, pSrc) {
 				const vChildren = scPaLib.findNodes("chi:li/chi:div.mnuLbl", pNode);
 				for (let i = 0; i < vChildren.length; i++) {
@@ -190,12 +189,11 @@ window.outMgr = {
 		}
 	},
 
-	xGetOutline: function () {
+	xGetOutline: async function () {
 		try {
-			const vReq = this.xGetHttpRequest();
-			vReq.open("GET", this.fUrlOutline, false);
-			vReq.send();
-			return this.xDeserialiseObjJs(vReq.responseText);
+			const vReq = await fetch(this.fUrlOutline + "?id=" + scServices.id);
+			if (!vReq.ok) throw new Error(`Status: ${vReq.status}`);
+			return JSON.parse(await vReq.text());
 		} catch (e) {
 			console.error("ERROR - outMgr.xGetOutline : " + e);
 			if (e.code === 19) tplMgr.setNoAjax();
@@ -210,23 +208,18 @@ window.outMgr = {
 		vBtn.fName = pClassName;
 		vBtn.href = "#";
 		vBtn.target = "_self";
+		vBtn.setAttribute("role", "button");
+		vBtn.onkeydown = function (pEvent) {
+			scDynUiMgr.handleBtnKeyDwn(pEvent);
+		}
+		vBtn.onkeyup = function (pEvent) {
+			scDynUiMgr.handleBtnKeyUp(pEvent);
+		}
 		if (pTitle) vBtn.setAttribute("title", pTitle);
 		if (pCapt) vBtn.innerHTML = "<span>" + pCapt + "</span>"
 		if (pNxtSib) pParent.insertBefore(vBtn, pNxtSib)
 		else pParent.appendChild(vBtn);
 		return vBtn;
-	},
-
-	xGetHttpRequest: function () {
-		if (window.XMLHttpRequest && (!this.fIsLocal || !window.ActiveXObject)) return new XMLHttpRequest();
-		else if (window.ActiveXObject) return new ActiveXObject("Microsoft.XMLHTTP");
-	},
-
-	xDeserialiseObjJs: function (pStr) {
-		if (!pStr) return {};
-		let vVal;
-		eval("vVal=" + pStr);
-		return vVal;
 	},
 
 	/* === Tasks ============================================================== */
