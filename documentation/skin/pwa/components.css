@@ -1,0 +1,244 @@
+/* Available CSS variables :
+pwa-indicator label :
+--pwa-ok-color
+--pwa-nok-color
+--pwa-ukn-color
+
+pwa-indicator tooltip :
+--pwa-tooltip-color
+--pwa-tooltip-bgcolor
+--pwa-tooltip-border
+
+pwa-indicator popup :
+--pwa-popup-color
+--pwa-popup-bgcolor
+--pwa-popup-border
+--pwa-popup-button-color
+--pwa-popup-button-bgcolor
+--pwa-popup-button-radius
+--pwa-popup-button-inv-bgcolor
+--pwa-popup-button-inv-color
+
+pwa-controller buttons :
+--pwa-button-size
+--pwa-button-border-size
+--pwa-button-border-color
+--pwa-button-color
+--pwa-button-bgcolor
+--pwa-button-radius
+--pwa-button-fontsize
+*/
+
+:host(pwa-indicator) {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+:host(pwa-indicator) #status{
+	color: var(--pwa-ok-color, green);
+	cursor: pointer;
+	user-select: none;
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+}
+
+:host(pwa-indicator) #status:hover{
+	filter: opacity(85%);
+}
+
+:host(pwa-indicator) {
+	@media (max-width: 700px) {
+		#status-message {
+			display: none;
+		}
+	}
+	@media (min-width: 701px) {
+		#status-message {
+			display: block;
+		}
+	}
+	.newVersionAvailable, .distantNotFound, .notAuthenticatedRedirectedToLogin, .notAuthenticatedError, .forbiddenAccessError, .unknownState, .redirect, .unexpectedError {
+		color: var(--pwa-nok-color, orangered) !important;
+	}
+	.noNetwork {
+		color: var(--pwa-ukn-color, gray) !important;
+	}
+	.online::before, .synchronized::before {
+		font-family: "pwa";
+		content: '\e801';
+		margin-inline-end: 0.2rem;
+	}
+	.loading::before, .downloadingCaches::before, .redirect::before {
+		font-family: "pwa";
+		content: '\e832';
+		margin-inline-end: 0.2rem;
+	}
+	.newVersionAvailable::before, .distantNotFound::before, .notAuthenticatedRedirectedToLogin::before, .notAuthenticatedError::before, .forbiddenAccessError::before, .unknownState::before, .redirect::before {
+		font-family: "pwa";
+		content: '\e802';
+		margin-inline-end: 0.2rem;
+	}
+	.noNetwork::before {
+		font-family: "pwa";
+		content: '\F1E6';
+		margin-inline-end: 0.2rem;
+	}
+	.unexpectedError::before {
+		font-family: "pwa";
+		content: '\E800';
+		margin-inline-end: 0.2rem;
+	}
+	#popup-content p {
+		margin-block: 0.5rem 1rem;
+	}
+	#popup {
+		position: fixed;
+		bottom: 2.5rem;
+		transform: translateX(calc(-50% + 0.5em));
+		color: var(--pwa-tooltip-color, black);
+		background-color: var(--pwa-tooltip-bgcolor, white);
+		border: 1px solid var(--pwa-tooltip-border, #ccc);
+		height: fit-content;
+		width: fit-content;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		z-index: 1000;
+		border-radius: 0.5rem;
+	}
+	#popup-arrow {
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0;
+		height: 0;
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		border-top: 10px solid var(--pwa-tooltip-bgcolor, white);
+	}
+	#popup-content {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		justify-items: center;
+		flex-direction: column;
+		padding: 1rem;
+	}
+	#popup-controls {
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+	}
+}
+:host(pwa-indicator.popupInlineCenter) {
+	#popup {
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	#popup-arrow{
+		display: none;
+	}
+}
+
+:host(pwa-cache-controller),
+:host(pwa-install-controller) {
+	#cache-controls button,
+	#install-controls button {
+		height: var(--pwa-button-size, 1.5rem);
+		width: var(--pwa-button-size, 1.5rem);
+		padding: 0;
+		border: var(--pwa-button-border-size, 1px) solid var(--pwa-button-border-color, transparent);
+		background-color: var(--pwa-button-bgcolor, #D9D9D9);
+		cursor: pointer;
+		margin: 0 0.2rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: var(--pwa-button-radius, 1.5rem);
+	}
+	#cache-controls button:hover,
+	#install-controls button:hover {
+		filter: opacity(0.8);
+	}
+	svg {
+		width: 50%;
+		height: 50%;
+	}
+}
+
+:host(pwa-cache-controller) {
+	#cache-dialog {
+		color: var(--pwa-popup-color, black);
+		background-color: var(--pwa-popup-bgcolor, white);
+		border: 1px solid var(--pwa-popup-border, #ccc);
+		border-radius: 0.5rem;
+		padding: 1rem;
+		backdrop-filter: drop-shadow(0 0 8px #000000);
+	}
+	#cache-dialog p{
+		margin-block: 0.5rem 1rem;
+	}
+	#cache-dialog-controls {
+		display: flex;
+		justify-content: flex-end;
+		gap: 1rem;
+	}
+}
+
+:host(pwa-cache-controller),
+:host(pwa-indicator) {
+	#cache-dialog-controls > button,
+	#popup-controls > button {
+		cursor: pointer;
+		border: none;
+		color: var(--pwa-popup-button-color, black);
+		background-color: var(--pwa-popup-button-bgcolor, #D9D9D9);
+		border-radius: var(--pwa-popup-button-radius, 0.3rem);
+		padding: 0.5rem 1.5rem;
+		font-size: 1em;
+	},
+}
+
+:host(pwa-cache-controller),
+:host(pwa-indicator),
+:host(pwa-install-controller) {
+	#cache-dialog-controls > button:hover,
+	#popup-controls > button:hover{
+		filter: brightness(95%);
+	}
+}
+
+:host(pwa-cache-controller),
+:host(pwa-indicator) {
+	#cache-dialog-controls > #consent-yes,
+	#popup-controls > #popup-action{
+		background-color: var(--pwa-popup-button-inv-bgcolor, #41A9FF) !important;
+		color: var(--pwa-popup-button-inv-color, white);
+	}
+}
+
+:host(pwa-cache-controller) #btn-download-cache::before {
+	font-family: "pwa";
+	content: '\f0ed';
+	font-size: var(--pwa-button-fontsize, 100%);
+	color: var(--pwa-button-color, black);
+}
+
+:host(pwa-cache-controller) #btn-clear-cache::before {
+	font-family: "pwa";
+	content: '\e804';
+	font-size: var(--pwa-button-fontsize, 100%);
+	color: var(--pwa-button-color, black);
+}
+
+:host(pwa-cache-controller) #btn-clear-cache:hover::before {
+	content: '\e800' !important;
+}
+
+:host(pwa-install-controller) #btn-install-app::before {
+	font-family: "pwa";
+	content: '\e803';
+	font-size: var(--pwa-button-fontsize, 100%);
+	color: var(--pwa-button-color, black);
+}

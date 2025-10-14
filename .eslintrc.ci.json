@@ -35,7 +35,7 @@
     "simple-import-sort/imports": "error",
     "no-extra-semi": "error",
     "semi": ["error", "always"],
-    "indent": ["warn", 2],
+    "indent": "off",
     "no-prototype-builtins": "error",
     "no-trailing-spaces": "error",
     "import/no-cycle": ["error", { "ignoreExternal": true }],

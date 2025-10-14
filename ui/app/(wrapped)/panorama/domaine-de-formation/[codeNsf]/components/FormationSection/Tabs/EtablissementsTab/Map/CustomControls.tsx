@@ -86,6 +86,7 @@ export const CustomControls = ({
 
       setMap(map);
     }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [map, loadImageOnMap, setMap, onZoomEnd]);
 
   return <></>;

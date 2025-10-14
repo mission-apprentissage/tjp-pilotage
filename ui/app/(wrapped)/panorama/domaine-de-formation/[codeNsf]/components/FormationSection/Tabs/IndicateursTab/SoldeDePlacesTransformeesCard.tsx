@@ -68,6 +68,7 @@ export const SoldeDePlacesTransformeesCard = ({ scope, data }: { scope: ScopeZon
     }
 
     return s;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
   return (
     <DashboardCard

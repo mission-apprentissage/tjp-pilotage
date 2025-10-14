@@ -1,6 +1,7 @@
 import { pipeline, Writable } from "node:stream";
 
 import fs from "fs";
+import type { z } from "zod";
 import { ZodError, ZodIssueCode } from "zod";
 
 import batchCreate from "@/modules/import/utils/batchCreate";
@@ -15,7 +16,7 @@ import { deleteRawData } from "./deleteRawData.dep";
 const sanitizeLine = (line: RawDataLine): RawDataLine => {
   const sanitizedLine: RawDataLine = {};
 
-  Object.entries(line).map(([key, value]) => {
+  Object.entries(line).forEach(([key, value]) => {
     if (value.startsWith('"') && value.endsWith('"')) {
       sanitizedLine[key] = value.slice(1, -1);
     } else {
@@ -50,7 +51,7 @@ export const [importRawFile, importRawFileFactory] = inject(
     deleteRawData,
   },
   (deps) =>
-    async ({ type, path, schema }: { type: string; path: string; schema: Zod.Schema<unknown> }) => {
+    async ({ type, path, schema }: { type: string; path: string; schema: z.Schema<unknown> }) => {
       const errors: Array<ImportFileError> = [];
 
       try {

@@ -68,7 +68,7 @@ export default defineWorkspace([
       root: "./ui",
       include: ["./**/*.test.{ts,tsx}"],
       clearMocks: true,
-      environment: "jsdom",
+      environment: "happy-dom",
       globals: true,
       setupFiles: ["./vitest.config.js"],
       poolOptions: {

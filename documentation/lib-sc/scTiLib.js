@@ -1,7 +1,7 @@
 
 
 
-var scTiLib = {
+window.scTiLib = {
 	fStep : 50,
 	fProcess : -1,
 	fCurr : null,
@@ -10,7 +10,7 @@ var scTiLib = {
 		if(this.fCurr == null) {
 			this.fCurr = pTask;
 		} else {
-			var vLast = this.fCurr;
+			let vLast = this.fCurr;
 			if(vLast === pTask) { this.xRun(); return;}
 			while(vLast._ParalTask) {
 				vLast = vLast._ParalTask;
@@ -25,7 +25,7 @@ var scTiLib = {
 		if(this.fCurr==null) {
 			this.fCurr = pTask;
 		} else {
-			var vLast = this.fCurr;
+			let vLast = this.fCurr;
 			while(vLast._NextTask) vLast = vLast._NextTask;
 			vLast._NextTask = pTask;
 		}
@@ -33,17 +33,18 @@ var scTiLib = {
 	},
 	
 	stopAll : function() {
+		let vNext;
 		window.clearTimeout(this.fProcess);
 		this.fProcess = -1;
-		var vT = this.fCurr;
+		let vT = this.fCurr;
 		while(vT && vT._ParalTask) {
-			var vNext = vT._ParalTask;
+			vNext = vT._ParalTask;
 			delete vT._ParalTask;
 			vT = vNext;
 		}
-		var vT = this.fCurr;
+		vT = this.fCurr;
 		while(vT && vT._NextTask) {
-			var vNext = vT._NextTask;
+			vNext = vT._NextTask;
 			delete vT._NextTask;
 			vT = vNext;
 		}
@@ -51,16 +52,16 @@ var scTiLib = {
 	},
 	
 	xRun : function() {
-		if(this.fProcess==-1) this.fProcess = window.setTimeout(scTiExecProcess, 0);
+		if(this.fProcess===-1) this.fProcess = window.setTimeout(scTiExecProcess, 0);
 	}
 }
 
 
 function scTiExecProcess () {
-	var vTask = scTiLib.fCurr;
-	var vPrevTask = null;
+	let vTask = scTiLib.fCurr;
+	let vPrevTask = null;
 	while(vTask) {
-		var vAlive = false;
+		let vAlive = false;
 		try{ vAlive = vTask.execTask(); } catch(e){}
 		if( ! vAlive) {
 
@@ -104,11 +105,11 @@ function ScTiGroupTask(pTaskArrray){
 	this.fTasks = pTaskArrray;
 }
 ScTiGroupTask.prototype.execTask = function() {
-	var vAlive = false;
-	if(this.fTasks) for (var i = 0; i < this.fTasks.length; i++) {
-		var vTask = this.fTasks[i];
+	let vAlive = false;
+	if(this.fTasks) for (let i = 0; i < this.fTasks.length; i++) {
+		const vTask = this.fTasks[i];
 		if(vTask != null) {
-			var vTaskAlive = false;
+			let vTaskAlive = false;
 			try { vTaskAlive = vTask.execTask(); } catch(e){}
 			vAlive |= vTaskAlive;
 		}
@@ -125,11 +126,11 @@ function ScTiSequenceTask(pTaskArrray){
 	this.fTasks = pTaskArrray;
 }
 ScTiSequenceTask.prototype.execTask = function() {
-	var vAlive = false;
-	if(this.fTasks) for (var i = 0; i < this.fTasks.length; i++) {
-		var vTask = this.fTasks[i];
+	let vAlive = false;
+	if(this.fTasks) for (let i = 0; i < this.fTasks.length; i++) {
+		const vTask = this.fTasks[i];
 		if(vTask != null) {
-			var vTaskAlive = false;
+			let vTaskAlive = false;
 			try { vTaskAlive = vTask.execTask(); } catch(e){}
 			vAlive = vTaskAlive || i < this.fTasks.length - 1;
 			break;

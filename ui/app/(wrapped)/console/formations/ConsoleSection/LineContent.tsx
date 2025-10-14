@@ -266,7 +266,10 @@ export const FormationLineContent = ({
         {formation.effectifEntree ?? "-"}
         {
           getEvolutionIcon({
-            data: getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, key: "effectif"}),
+            data: getEvolutionTauxEntreeData({
+              evolutions: formation.evolutionTauxEntree,
+              key: "effectif"
+            }),
             keys: getEvolutionTauxEntreeKeys({ rentreeScolaire: filters?.rentreeScolaire })
           })
         }
@@ -292,7 +295,11 @@ export const FormationLineContent = ({
     >
       <Flex gap={1} justify={"center"}>
         <TableBadge sx={
-          getTauxPressionStyle(formation.tauxPression !== undefined ? formatNumber(formation.tauxPression, 2) : undefined)
+          getTauxPressionStyle(
+            formation.tauxPression !== undefined ?
+              formatNumber(formation.tauxPression, 2) :
+              undefined
+          )
         }>
           {formatNumberToString(formation.tauxPression, 2, "-")}
         </TableBadge>
