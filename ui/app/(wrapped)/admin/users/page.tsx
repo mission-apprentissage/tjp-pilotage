@@ -102,11 +102,17 @@ const Page = () => {
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
-    downloadCsv(formatExportFilename("users_export", isFiltered ? filters : undefined), data?.users ?? [], Columns);
+    const usersExport = await client.ref("[GET]/users").query({
+      query: isFiltered ? { ...filters, ...order } : {},
+    });
+    downloadCsv(formatExportFilename("users_export", isFiltered ? filters : undefined), usersExport?.users ?? [], Columns);
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
-    downloadExcel(formatExportFilename("users_export", isFiltered ? filters : undefined), data?.users ?? [], Columns);
+    const usersExport = await client.ref("[GET]/users").query({
+        query: isFiltered ? { ...filters, ...order } : {},
+    });
+    downloadExcel(formatExportFilename("users_export", isFiltered ? filters : undefined), usersExport?.users ?? [], Columns);
   };
 
   return (

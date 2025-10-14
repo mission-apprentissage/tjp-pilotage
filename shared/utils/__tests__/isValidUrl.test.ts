@@ -5,8 +5,8 @@ import { isValidUrl } from "../isValidUrl";
 describe("isValidUrl", () => {
   describe("Étant donné des URLs valides", () => {
     const validUrls = [
-      "https://orion.inserjeunes.beta.gouv.fr/",
-      "https://orion.inserjeunes.beta.gouv.fr/glossaire",
+      "https://orion.education.gouv.fr/",
+      "https://orion.education.gouv.fr/glossaire",
       "https://example.com",
       "http://example.com",
       "https://sub.example.com",

@@ -2,25 +2,12 @@ export interface PublicConfig {
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" |  "qualification" | "diffusion" | "preproduction" | "production" | "productionij";
+  env: "local" |  "qualification" | "diffusion" | "preproduction" | "production";
   version: string;
   productMeta: {
     brandName: "orion";
     productName: string;
     repoName: string;
-  };
-}
-
-function getProductionIJPublicConfig(): PublicConfig {
-  const host = "orion.inserjeunes.beta.gouv.fr";
-
-  return {
-    host,
-    baseUrl: `https://${host}`,
-    env: "production",
-    apiEndpoint: `https://${host}/api`,
-    version: getVersion(),
-    productMeta: getProductMeta(),
   };
 }
 
@@ -122,7 +109,6 @@ function getEnv(): PublicConfig["env"] {
   case "preproduction":
   case "production":
   case "local":
-  case "productionij":
     return env;
   default:
     throw new Error(`Invalid NEXT_PUBLIC_ENV env-vars ${env}`);
@@ -141,12 +127,9 @@ function getPublicConfig(): PublicConfig {
     return getProductionPublicConfig();
   case "local":
     return getLocalPublicConfig();
-  case "productionij":
-    return getProductionIJPublicConfig();
   }
 }
 
 export const isProduction = getEnv() === "production";
-export const isOldProduction = getEnv() === "productionij";
 
 export const publicConfig: PublicConfig = getPublicConfig();
