@@ -60,7 +60,7 @@ function createTransporter(smtp: SMTPTransport & { secure: boolean }) {
 
 export const [shootEmail] = inject(
   //@ts-ignore
-  { transporter: createTransporter({ ...config.smtp, secure: false }) },
+  { transporter: createTransporter({ ...config.smtp, secure: true }) },
   (deps) =>
     async ({ to, subject, html }: { to: string; subject: string; html: string }) => {
       const { messageId } = await deps.transporter.sendMail({
