@@ -70,8 +70,6 @@ export const [shootEmail] = inject(
         html,
       });
 
-      console.log(config.smtp);
-
       return messageId;
     }
 );
