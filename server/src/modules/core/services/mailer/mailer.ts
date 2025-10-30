@@ -58,9 +58,13 @@ function createTransporter(smtp: SMTPTransport & { secure: boolean }) {
   return transporter;
 }
 
+function shouldUseSecureConnection() {
+  return config.env === "production" || config.env === "preproduction";
+}
+
 export const [shootEmail] = inject(
   //@ts-ignore
-  { transporter: createTransporter({ ...config.smtp, secure: true }) },
+  { transporter: createTransporter({ ...config.smtp, secure: shouldUseSecureConnection() }) },
   (deps) =>
     async ({ to, subject, html }: { to: string; subject: string; html: string }) => {
       const { messageId } = await deps.transporter.sendMail({
