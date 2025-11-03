@@ -1,0 +1,48 @@
+.node_setup:
+  image: docker:latest
+  services:
+    - docker:dind
+    - node:22
+  before_script:
+    - apk update && apk add bash
+    - apk add --no-cache nodejs npm
+    - npm install -g yarn
+    - yarn set version 3.6.1
+    - yarn install
+    - yarn dedupe --check
+    - echo "Node setup complete"
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules/
+      - .yarn/install-state.gz
+      - .yarn/cache/
+
+# Stage lint
+lint:
+  extends: .node_setup
+  stage: ci
+  script:
+    - yarn lint:ci
+    - echo "Lint passed"
+  timeout: 10 minutes
+
+# Stage test
+typecheck:
+  extends: .node_setup
+  stage: ci
+  script:
+    - yarn typecheck:ci
+    - echo "Typecheck passed"
+  timeout: 15 minutes
+
+tests:
+  extends: .node_setup
+  stage: ci
+  script:
+    - docker compose up -d --wait postgres
+    - yarn test:ci
+    - echo "Tests passed"
+  timeout: 10 minutes

@@ -1,0 +1,95 @@
+.release_base:
+  image: docker:latest
+  services:
+    - docker:dind
+    - node:22
+  stage: release
+  before_script:
+    - |
+      [ -z "$CI_TOKEN_ORION" ] && echo "CI_TOKEN_ORION is not set" && exit 1
+    - apk add --no-cache git
+    - git remote set-url origin "https://token_orion:${CI_TOKEN_ORION}@gitlab.forge.education.gouv.fr/${CI_PROJECT_PATH}.git"
+    - |
+      # Login to GitHub Container Registry
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin registry.gitlab.forge.education.gouv.fr
+    - apk update && apk add bash
+    - apk add --no-cache nodejs npm
+    - npm install -g yarn
+    - yarn set version 3.6.1
+    - yarn install
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules/
+      - .yarn/install-state.gz
+      - .yarn/cache/
+
+release_auto:
+  extends: .release_base
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375
+  script:
+    - yarn release
+    - |
+      # Retrieve new version
+      export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
+      echo "VERSION=$VERSION" >> release.env
+  artifacts:
+    reports:
+      dotenv: release.env
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE != "web"
+  needs:
+    - lint
+    - typecheck
+    - tests
+
+release_candidate:
+  extends: .release_base
+  allow_failure: true
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375
+  script:
+    - yarn release:candidate patch
+    - |
+      # Retrieve new version
+      export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
+      echo "VERSION=$VERSION" >> release.env
+  artifacts:
+    reports:
+      dotenv: release.env
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+  needs:
+    - lint
+    - typecheck
+    - tests
+
+release_manual:
+  extends: .release_base
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375
+  script:
+    - yarn release:manual
+    - |
+      # Retrieve new version
+      export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
+      echo "VERSION=$VERSION" >> release.env
+  artifacts:
+    reports:
+      dotenv: release.env
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: manual
+  needs:
+    - lint
+    - typecheck
+    - tests

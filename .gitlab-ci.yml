@@ -1,0 +1,23 @@
+stages:
+  - ci
+  - release
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+
+workflow:
+  rules:
+    # Pipeline automatique sur merge request
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # Pipeline automatique sur develop et main
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "main"
+    # Pipeline manuel avec inputs
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+include:
+  - local: '.gitlab/ci/ci.yml'
+  - local: '.gitlab/ci/release.yml'
+  - local: '.gitlab/ci/deploy.yml'
