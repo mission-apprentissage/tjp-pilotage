@@ -11,18 +11,6 @@ const findAttractiviteCapaciteHorsBTS = async ({
   uai: string;
   rentreeScolaire: string;
 }) => {
-  if (
-    await rawDataRepository.findRawData({
-      type: "lyceesACCE",
-      filter: {
-        secteur_public_prive: "PR",
-        numero_uai: uai,
-      },
-    })
-  ) {
-    return [];
-  }
-
   return rawDataRepository.findRawDatas({
     type: "attractivite_capacite",
     year: rentreeScolaire,

@@ -53,10 +53,10 @@ const DOCUMENTATION_LINKS = {
 };
 
 const getDocumentationLink = (segment?: string) => {
-  if(segment === "") return getDocumentationPath("Manuel_utilisateur_Orion.html");
+  if(segment === "") return getDocumentationPath("Aide_en_ligne_Orion.html");
   if(segment?.startsWith("demandes/saisie/")) return DOCUMENTATION_LINKS["demandes/saisie/"];
   if(segment?.startsWith("demandes/synthese/")) return DOCUMENTATION_LINKS["demandes/synthese/"];
-  return DOCUMENTATION_LINKS[segment as keyof typeof DOCUMENTATION_LINKS] ?? getDocumentationPath("Manuel_utilisateur_Orion.html");
+  return DOCUMENTATION_LINKS[segment as keyof typeof DOCUMENTATION_LINKS] ?? getDocumentationPath("Aide_en_ligne_Orion.html");
 };
 
 const shouldDisplayDemandesMenu = ({ user, campagne }: {user?: UserType, campagne?: CampagneType}) => {
