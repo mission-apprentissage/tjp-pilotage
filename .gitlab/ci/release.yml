@@ -15,7 +15,6 @@
     - apk update && apk add bash
     - apk add --no-cache nodejs npm
     - npm install -g yarn
-    - yarn set version 3.6.1
     - yarn install
   cache:
     key:
@@ -25,6 +24,7 @@
       - node_modules/
       - .yarn/install-state.gz
       - .yarn/cache/
+      - .yarn/releases/
 
 release_auto:
   extends: .release_base
