@@ -21,12 +21,23 @@ variables:
   before_script:
     - corepack enable
     - yarn install
+    - yarn dedupe --check
+
+# Stage lint
+lint:
+  extends: .node_setup
+  stage: ci
+  script:
+    - yarn lint:ci
+    - echo "Lint passed"
+  timeout: 10 minutes
 
 typecheck:
   extends: .node_setup
   stage: ci
   script:
     - yarn typecheck:ci
+    - echo "Typecheck passed"
   timeout: 10 minutes
 
 tests:
@@ -34,12 +45,8 @@ tests:
   stage: ci
   services:
     - docker:dind
-  before_script:
-    - corepack enable
-    - yarn install
-    - yarn dedupe --check
   script:
-    - yarn lint:ci
     - docker compose up -d --wait postgres
     - yarn test:ci
+    - echo "Tests passed"
   timeout: 10 minutes
