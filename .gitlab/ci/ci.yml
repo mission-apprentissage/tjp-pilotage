@@ -1,15 +1,14 @@
+stages:
+  - ci
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  FF_USE_FASTZIP: "true"
+  CACHE_COMPRESSION_LEVEL: "fast"
+
 .node_setup:
-  image: docker:latest
-  services:
-    - docker:dind
-    - node:22
-  before_script:
-    - apk update && apk add bash
-    - apk add --no-cache nodejs npm
-    - npm install -g yarn
-    - yarn install
-    - yarn dedupe --check
-    - echo "Node setup complete"
+  image: node:22
   cache:
     key:
       files:
@@ -18,31 +17,29 @@
       - node_modules/
       - .yarn/install-state.gz
       - .yarn/cache/
-      - .yarn/releases/
+    policy: pull-push
+  before_script:
+    - corepack enable
+    - yarn install
 
-# Stage lint
-lint:
-  extends: .node_setup
-  stage: ci
-  script:
-    - yarn lint:ci
-    - echo "Lint passed"
-  timeout: 10 minutes
-
-# Stage test
 typecheck:
   extends: .node_setup
   stage: ci
   script:
     - yarn typecheck:ci
-    - echo "Typecheck passed"
-  timeout: 15 minutes
+  timeout: 10 minutes
 
 tests:
   extends: .node_setup
   stage: ci
+  services:
+    - docker:dind
+  before_script:
+    - corepack enable
+    - yarn install
+    - yarn dedupe --check
   script:
+    - yarn lint:ci
     - docker compose up -d --wait postgres
     - yarn test:ci
-    - echo "Tests passed"
   timeout: 10 minutes
