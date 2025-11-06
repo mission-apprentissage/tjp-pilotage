@@ -257,24 +257,6 @@ export const EditUser = ({
                       }
                       defaultValue={
                         etablissements
-                        // user.uais?.map((uai) => ({
-                        //   value: uai,
-                        //   label: uai,
-                        //   commune: undefined
-                        // })) ?? undefined
-
-                        // [
-                        //   {
-                        //     value: "UAIAIAI",
-                        //     label: "Établissement de test",
-                        //     commune: "Commune de test"
-                        //   },
-                        //   {
-                        //     value: "UAIAIA2",
-                        //     label: "Établissement de test 2",
-                        //     commune: "Commune de test 2"
-                        //   }
-                        // ]
                       }
                       placeholder="UAI, nom de l'établissement ou commune"
                       isMulti={true}
