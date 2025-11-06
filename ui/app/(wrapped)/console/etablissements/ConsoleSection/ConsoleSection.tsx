@@ -1,4 +1,4 @@
-import { Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
+import { Box, Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
 import { Fragment, useRef, useState } from "react";
 import type { UserType } from "shared/schema/userSchema";
 
@@ -40,35 +40,59 @@ export const ConsoleSection = ({
   const tableRef = useRef<HTMLDivElement>(null);
 
   return (
-    <TableContainer overflowY="auto" flex={1} ref={tableRef} pb={6} m={0}>
-      <Table variant="simple" size={"sm"}>
-        <HeadLineContent
-          order={order}
-          setSearchParams={setSearchParams}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          stickyColonnes={stickyColonnes}
-          setStickyColonnes={setStickyColonnes}
-          user={user}
-          filters={filters}
-        />
-        <Tbody>
-          {data?.etablissements.map((line) => (
-            <Fragment key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}>
-              <Tr h="12" bg={"white"} role="group">
-                <EtablissementLineContent
-                  stickyColonnes={stickyColonnes}
-                  line={line}
-                  colonneFilters={colonneFilters}
-                  filters={filters}
-                  getCellBgColor={getCellBgColor}
-                  user={user}
-                />
-              </Tr>
-            </Fragment>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
+    <Box
+      sx={{
+        // On applique la rotation seulement au conteneur de scroll
+        '& > div': {
+          transform: 'scaleY(-1)', // Inverse uniquement l'axe Y
+        },
+      }}
+      overflowY="auto"
+      bgColor={"white"}
+      mb={6}
+    >
+      <TableContainer
+        flex={1}
+        position="relative"
+        ref={tableRef}
+        pb={4}
+        m={0}
+        sx={{
+          // On remet le tableau à l'endroit
+          '& table': {
+            transform: 'scaleY(-1)',
+          },
+        }}
+      >
+        <Table variant="simple" size={"sm"}>
+          <HeadLineContent
+            order={order}
+            setSearchParams={setSearchParams}
+            colonneFilters={colonneFilters}
+            getCellBgColor={getCellBgColor}
+            stickyColonnes={stickyColonnes}
+            setStickyColonnes={setStickyColonnes}
+            user={user}
+            filters={filters}
+          />
+          <Tbody>
+            {data?.etablissements.map((line) => (
+              <Fragment key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}>
+                <Tr h="12" bg={"white"} role="group">
+                  <EtablissementLineContent
+                    stickyColonnes={stickyColonnes}
+                    line={line}
+                    colonneFilters={colonneFilters}
+                    filters={filters}
+                    getCellBgColor={getCellBgColor}
+                    user={user}
+                  />
+                </Tr>
+              </Fragment>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
