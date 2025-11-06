@@ -1,4 +1,5 @@
 import * as Boom from "@hapi/boom";
+import { RoleEnum } from "shared";
 import type { BodySchema } from "shared/routes/schemas/put.users.userId.schema";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -22,6 +23,10 @@ export const [editUser, editUserFactory] = inject(
         throw Boom.notFound("Utilisateur inconnu dans l'application");
       }
 
+      if(data.role === RoleEnum["perdir"] && (!data.uais || data.uais?.length === 0)) {
+        throw Boom.badRequest("Un utilisateur avec le rôle perdir doit avoir au moins un établissement.");
+      }
+
       if(user.email !== data.email) {
         const differentUserWithSameEmail = await deps.findDifferentUserWithSameEmail({ email: data.email, userId });
         if(differentUserWithSameEmail) {
@@ -29,6 +34,9 @@ export const [editUser, editUserFactory] = inject(
         }
       }
 
-      return await deps.updateUser({ userId, data });
+      return await deps.updateUser({ userId, data: {
+        ...data,
+        uais: data.uais?.map((etablissement) => etablissement.value) ?? null
+      } });
     }
 );

@@ -327,3 +327,13 @@ a.btnSc {
 .proc_ti {
   color: var(--accentColor);
 }
+
+/**======== Pastille numérotée des descriptions d'écran ========**/
+a.screenZoneLnk::before {
+  top: 0px;
+  left: 0px;
+  border-radius:0em;
+  border: 0px solid;
+  background-color: var(--accentColor);
+  color: white;
+}

@@ -7,6 +7,7 @@ export const searchEtablissementSchema = {
   querystring: z.object({
     filtered: z.coerce.boolean().optional(),
     isFormulaire: z.coerce.boolean().optional(),
+    codeRegion: z.string().optional(),
   }),
   response: {
     200: z.array(

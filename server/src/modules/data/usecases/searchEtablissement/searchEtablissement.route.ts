@@ -16,12 +16,12 @@ export const searchEtablissementRoute = (server: Server) => {
       ...props,
       handler: async (request, response) => {
         const { search } = request.params;
-        const { filtered, isFormulaire } = request.query;
+        const { filtered, isFormulaire, codeRegion } = request.query;
         const result = await searchEtablissement({
           search,
           isFormulaire,
           filtered,
-          user: request.user,
+          codeRegion: codeRegion ?? request.user?.codeRegion,
         });
         response.status(200).send(result);
       },

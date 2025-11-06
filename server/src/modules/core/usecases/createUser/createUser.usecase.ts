@@ -1,7 +1,7 @@
 import * as Boom from "@hapi/boom";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
-import { emailRegex } from "shared";
+import { emailRegex, RoleEnum } from "shared";
 import type { BodySchema } from "shared/routes/schemas/post.users.userId.schema";
 
 import config from "@/config";
@@ -22,7 +22,7 @@ export const [createUser, createUserFactory] = inject(
   },
   (deps) =>
     async ({ body, requestUser }: { body: BodySchema; requestUser?: RequestUser }) => {
-      const { email, firstname, lastname, role, codeRegion, fonction, uai } = body;
+      const { email, firstname, lastname, role, codeRegion, fonction, uais } = body;
 
       if (!email.match(emailRegex)) throw Boom.badRequest(`L'email est invalide`);
 
@@ -39,6 +39,10 @@ export const [createUser, createUserFactory] = inject(
         throw Boom.badRequest(`${email} est déjà éxistant dans l'application.`);
       }
 
+      if(role === RoleEnum["perdir"] && (!uais || uais?.length === 0)) {
+        throw Boom.badRequest("Un utilisateur avec le rôle perdir doit avoir au moins un établissement.");
+      }
+
       await deps.insertUserQuery({
         email,
         firstname,
@@ -47,7 +51,7 @@ export const [createUser, createUserFactory] = inject(
         codeRegion,
         enabled: true,
         fonction,
-        uais: uai ? [uai] : undefined,
+        uais: uais?.map((etablissement) => etablissement.value) ?? null,
       });
 
       const activationToken = jwt.sign({ email }, config.auth.activationJwtSecret, {
