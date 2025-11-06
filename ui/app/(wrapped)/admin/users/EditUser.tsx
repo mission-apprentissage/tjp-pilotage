@@ -262,7 +262,7 @@ export const EditUser = ({
                       isMulti={true}
                     />
                   )} />
-                {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
+                {!!errors.uais && <FormErrorMessage>{errors.uais.message}</FormErrorMessage>}
               </FormControl>
             )
           }
