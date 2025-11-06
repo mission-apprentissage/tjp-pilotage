@@ -80,17 +80,24 @@ export const ConsoleSection = ({
   }, []);
 
   return (
-    <Box overflowY="auto">
+    <Box display="flex" flexDirection="column" height="100%" overflowY="hidden">
       <Box
         ref={topScrollRef}
         overflowX="auto"
         overflowY="hidden"
         p={1}
-        height="10px"
+        height="15px"
+        bgColor={"white"}
+        position={"sticky"}
+        top={0}
+        zIndex={2}
       >
         <Box height="1px" width={`${scrollWidth}px`} />
       </Box>
-      <TableContainer flex={1} position="relative" ref={tableRef} pb={6} m={0}>
+      <TableContainer flex={1} position="relative" ref={tableRef} pb={6} m={0}
+        overflowX="auto"
+        overflowY="visible"
+        maxH="none">
         <Table variant="simple" size={"sm"}>
           <HeadLineContent
             stickyColonnes={stickyColonnes}
