@@ -16,8 +16,11 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
+import _ from "lodash";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import type { CSSObjectWithLabel } from "react-select";
+import AsyncSelect from "react-select/async";
 import { getHierarchy, hasRole } from "shared";
 import type { Role} from 'shared/enum/roleEnum';
 import { RoleEnum } from 'shared/enum/roleEnum';
@@ -25,6 +28,7 @@ import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
 
 import { client } from "@/api.client";
+import type { Etablissements } from "@/app/(wrapped)/demandes/types";
 import { getErrorMessage } from "@/utils/apiError";
 import {formatRole} from '@/utils/formatLibelle';
 import { useAuth } from "@/utils/security/useAuth";
@@ -37,7 +41,8 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     handleSubmit,
     reset,
     setValue,
-    watch
+    watch,
+    control
   } = useForm<(typeof client.inferArgs)["[POST]/users/:userId"]["body"]>({
     shouldUseNativeValidation: false,
     defaultValues: {
@@ -46,13 +51,29 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       firstname: "",
       lastname: "",
       role: undefined,
+      uais: undefined,
       fonction: null,
     },
   });
+  const selectStyle = {
+    control: (styles: CSSObjectWithLabel) => ({
+      ...styles,
+      borderColor: errors.uais ? "red" : undefined,
+    }),
+  };
 
   useEffect(() => reset(undefined, { keepDefaultValues: true }), [isOpen, reset]);
 
   const { data: regions } = client.ref("[GET]/regions").useQuery({});
+  const codeRegion = watch("codeRegion");
+  const searchEtablissement = _.debounce((inputValue: string, callback: (options: Etablissements) => void) => {
+    if (inputValue.length >= 3) {
+      client
+        .ref("[GET]/etablissement/search/:search")
+        .query({ params: { search: inputValue }, query: { isFormulaire: false, codeRegion} })
+        .then(options => callback(options));
+    }
+  }, 300);
 
   const queryClient = useQueryClient();
 
@@ -69,7 +90,13 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   });
 
   const onSubmit = (v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]) =>
-    createUser({ body: { ...v, codeRegion: v.codeRegion ?? undefined, fonction: v.fonction ?? null } });
+    createUser({ body: {
+      ...v,
+      codeRegion: v.codeRegion ?? undefined,
+      fonction: v.fonction ?? null,
+      uais: v.uais ?? null
+    }
+  });
 
   const roles = getHierarchy(role);
   const isAdminRegion = hasRole({user, role: RoleEnum["admin_region"]});
@@ -91,12 +118,17 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     newUserRole === RoleEnum["invite"] ||
     newUserRole === RoleEnum["perdir"];
 
+  const shouldShowUaiSelect = newUserRole === RoleEnum["perdir"];
+
   useEffect(() => {
     if (isAdminRegion && filteredRegions && filteredRegions.length > 0) {
       setValue("codeRegion", filteredRegions[0].value);
     }
+    if(!shouldShowUaiSelect) {
+      setValue("uais", null);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filteredRegions]);
+  }, [filteredRegions, newUserRole]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -167,6 +199,42 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                   ))}
                 </Select>
                 {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
+              </FormControl>
+            )
+          }
+          {
+            shouldShowUaiSelect && (
+              <FormControl mb="4" isInvalid={!!errors.uais} isRequired={true}>
+                <FormLabel>Établissement(s)</FormLabel>
+                <Controller
+                  name="uais"
+                  control={control}
+                  rules={{ required: "Ce champ est obligatoire" }}
+                  render={({ field: { onChange, name } }) => (
+                    <AsyncSelect
+                      instanceId={_.random(10000, 99999).toString()}
+                      name={name}
+                      styles={selectStyle}
+                      components={{
+                        DropdownIndicator: () => null,
+                        IndicatorSeparator: () => null,
+                      }}
+                      onChange={(selected) => {
+                        onChange(selected ?? undefined);
+                      }}
+                      loadOptions={searchEtablissement}
+                      loadingMessage={({ inputValue }) =>
+                        inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
+                      }
+                      isClearable={true}
+                      noOptionsMessage={({ inputValue }) =>
+                        inputValue ? "Pas d'établissement correspondant à votre recherche" : "Commencez à écrire..."
+                      }
+                      placeholder="UAI, nom de l'établissement ou commune"
+                      isMulti={true}
+                    />
+                  )} />
+                {!!errors.uais && <FormErrorMessage>{errors.uais.message}</FormErrorMessage>}
               </FormControl>
             )
           }
