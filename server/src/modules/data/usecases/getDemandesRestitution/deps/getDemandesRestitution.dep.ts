@@ -3,7 +3,7 @@ import { CURRENT_RENTREE } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { TypeFamille } from "shared/enum/typeFamilleEnum";
+import type { TypeFamille} from "shared/enum/typeFamilleEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
@@ -218,7 +218,7 @@ export const getDemandesRestitutionQuery = async ({
     })
     .$call((eb) => {
       if (positionQuadrant)
-        return eb.where("positionFormationRegionaleQuadrant.positionQuadrant", "=", positionQuadrant);
+        return eb.where(wb => wb(selectPositionQuadrant(wb).$castTo<string>(), "=", positionQuadrant));
       return eb;
     })
     .$call((eb) => {
@@ -338,6 +338,7 @@ export const getDemandesRestitutionQuery = async ({
     .limit(limit)
     .execute()
     .then(cleanNull);
+
 
   return {
     demandes: demandes.map((demande) => ({
