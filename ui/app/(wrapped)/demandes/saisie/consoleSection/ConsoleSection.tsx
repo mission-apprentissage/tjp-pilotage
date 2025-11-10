@@ -1,8 +1,8 @@
 import { ArrowForwardIcon,ChevronDownIcon } from "@chakra-ui/icons";
-import { Button, Collapse, Flex, Highlight, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Table, TableContainer, Tbody, Text, Tr, useDisclosure, useToast } from "@chakra-ui/react";
+import { Box, Button, Collapse, Flex, Highlight, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Table, TableContainer, Tbody, Text, Tr, useDisclosure, useToast } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useRef,useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import type { UserType } from "shared/schema/userSchema";
 
@@ -122,6 +122,47 @@ export const ConsoleSection = ({
     },
   });
 
+  const topScrollRef = useRef<HTMLDivElement>(null);
+  const bottomScrollRef = useRef<HTMLDivElement>(null);
+
+  const [scrollWidth, setScrollWidth] = useState(0);
+
+  useEffect(() => {
+    const topScroll = topScrollRef.current;
+    const bottomScroll = bottomScrollRef.current;
+
+    if (!topScroll || !bottomScroll) return;
+
+    // Récupère la largeur réelle du contenu scrollable
+    const updateScrollWidth = () => {
+      setScrollWidth(bottomScroll.scrollWidth);
+    };
+
+    updateScrollWidth();
+    window.addEventListener('resize', updateScrollWidth);
+
+    const syncTopToBottom = () => {
+      if (bottomScroll) {
+        bottomScroll.scrollLeft = topScroll.scrollLeft;
+      }
+    };
+
+    const syncBottomToTop = () => {
+      if (topScroll) {
+        topScroll.scrollLeft = bottomScroll.scrollLeft;
+      }
+    };
+
+    topScroll.addEventListener('scroll', syncTopToBottom);
+    bottomScroll.addEventListener('scroll', syncBottomToTop);
+
+    return () => {
+      topScroll.removeEventListener('scroll', syncTopToBottom);
+      bottomScroll.removeEventListener('scroll', syncBottomToTop);
+      window.removeEventListener('resize', updateScrollWidth);
+    };
+  }, []);
+
   return (
     <>
       <Collapse in={checkedDemandes !== undefined && checkedDemandes.demandes.length > 0}>
@@ -200,48 +241,60 @@ export const ConsoleSection = ({
           isSubmittingDemandeStatut={isSubmittingDemandeStatut}
         />
       )}
-      <TableContainer overflowY="auto" flex={1} position="relative">
-        <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
-          <HeadLineContent
-            campagne={data?.campagne}
-            handleOrder={handleOrder}
-            order={order}
-            canCheckDemandes={canCheckDemandes}
-            checkedDemandes={checkedDemandes}
-            setCheckedDemandes={setCheckedDemandes}
-            colonneFilters={colonneFilters}
-            stickyColonnes={stickyColonnes}
-            setStickyColonnes={setStickyColonnes}
-            getCellBgColor={getCellBgColor}
-          />
-          <Tbody>
-            {data?.demandes.map((demande: Demande) => {
-              return (
-                <Tr
-                  height={"60px"}
-                  key={demande.numero}
-                  whiteSpace={"pre"}
-                  fontWeight={demande.alreadyAccessed ? "400" : "700"}
-                  bg={demande.alreadyAccessed ? "grey.975" : "white"}
-                >
-                  <LineContent
-                    user={user}
-                    demande={demande}
-                    campagne={data?.campagne}
-                    canCheckDemandes={canCheckDemandes}
-                    checkedDemandes={checkedDemandes}
-                    onChangeCheckedDemandes={onChangeCheckedDemandes}
-                    isLoading={isLoading}
-                    setStatut={setStatut}
-                    colonneFilters={colonneFilters}
-                    stickyColonnes={stickyColonnes}
-                    getCellBgColor={getCellBgColor}
-                  />
-                </Tr>
-              );})}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      <Box display="flex" flexDirection="column" height="100%" overflowY="hidden">
+        <Box
+          ref={topScrollRef}
+          overflowX="auto"
+          overflowY="hidden"
+          p={1}
+          height="15px"
+          bgColor={"white"}
+        >
+          <Box height="1px" width={`${scrollWidth}px`} />
+        </Box>
+        <TableContainer overflowY="auto" flex={1} position="relative" ref={bottomScrollRef}>
+          <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
+            <HeadLineContent
+              campagne={data?.campagne}
+              handleOrder={handleOrder}
+              order={order}
+              canCheckDemandes={canCheckDemandes}
+              checkedDemandes={checkedDemandes}
+              setCheckedDemandes={setCheckedDemandes}
+              colonneFilters={colonneFilters}
+              stickyColonnes={stickyColonnes}
+              setStickyColonnes={setStickyColonnes}
+              getCellBgColor={getCellBgColor}
+            />
+            <Tbody>
+              {data?.demandes.map((demande: Demande) => {
+                return (
+                  <Tr
+                    height={"60px"}
+                    key={demande.numero}
+                    whiteSpace={"pre"}
+                    fontWeight={demande.alreadyAccessed ? "400" : "700"}
+                    bg={demande.alreadyAccessed ? "grey.975" : "white"}
+                  >
+                    <LineContent
+                      user={user}
+                      demande={demande}
+                      campagne={data?.campagne}
+                      canCheckDemandes={canCheckDemandes}
+                      checkedDemandes={checkedDemandes}
+                      onChangeCheckedDemandes={onChangeCheckedDemandes}
+                      isLoading={isLoading}
+                      setStatut={setStatut}
+                      colonneFilters={colonneFilters}
+                      stickyColonnes={stickyColonnes}
+                      getCellBgColor={getCellBgColor}
+                    />
+                  </Tr>
+                );})}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </Box>
     </>
   );
 };
