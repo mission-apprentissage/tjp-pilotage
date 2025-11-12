@@ -1,7 +1,6 @@
 "use client";
 
 import { Box, Container, useDisclosure, VStack } from "@chakra-ui/react";
-import { usePlausible } from "next-plausible";
 import { ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
@@ -15,7 +14,6 @@ import { DisplayTypeEnum } from "./main/displayTypeEnum";
 import { MainSection } from "./main/MainSection";
 import type {
   FiltersPilotage,
-  FilterTracker,
   OrderFormationsPilotage,
   OrderPilotage
 } from './types';
@@ -23,7 +21,6 @@ import { getDefaultRentreeScolaireForAnneeCampagne } from './utils';
 
 export const PageClient = () => {
   const { campagne } = useCurrentCampagne();
-  const trackEvent = usePlausible();
   const [searchParams, setSearchParams] = useStateParams<{
     filters?: FiltersPilotage;
     displayTypes: Array<DisplayTypeEnum>;
@@ -49,12 +46,6 @@ export const PageClient = () => {
   };
   const order = searchParams.order ?? { order: "asc" };
   const orderFormations = searchParams.orderFormations ?? { orderFormations: "asc" };
-
-  const filterTracker: FilterTracker = (filterName, options = {}) => {
-    trackEvent("pilotage-transformation:filtre", {
-      props: { filter_name: filterName, options },
-    });
-  };
 
   const setFilters = (filters: FiltersPilotage) => {
     setSearchParams({
@@ -136,14 +127,8 @@ export const PageClient = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const tauxTransfoDefinitionModalTracker = (open: boolean) => {
-    trackEvent("pilotage-transformation:definition-modal", {
-      props: { open },
-    });
-  };
 
   const onOpenTauxTransfoDefinition = () => {
-    tauxTransfoDefinitionModalTracker(true);
     onOpen();
   };
 
@@ -156,7 +141,6 @@ export const PageClient = () => {
             data={data}
             filters={filters}
             setFilters={setFilters}
-            filterTracker={filterTracker}
             setDefaultFilters={() => setDefaultFilters()}
             isLoading={isLoading}
           />
@@ -164,7 +148,6 @@ export const PageClient = () => {
             data={data}
             filters={filters}
             setFilters={setFilters}
-            filterTracker={filterTracker}
             onOpenTauxTransfoDefinition={onOpenTauxTransfoDefinition}
             isLoading={isLoading}
           />

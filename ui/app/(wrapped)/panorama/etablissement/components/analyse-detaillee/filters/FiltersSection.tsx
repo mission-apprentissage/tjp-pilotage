@@ -1,5 +1,4 @@
 import { Flex, Select, Text } from "@chakra-ui/react";
-import { usePlausible } from "next-plausible";
 import type { VoieType } from "shared";
 import { VoieEnum } from "shared";
 
@@ -28,23 +27,13 @@ export const FiltersSection = ({
   filtersData,
   filters,
   handleFilters,
-  filterTracker,
 }: {
   filtersData?: FiltersData;
   filters: Filters;
   handleFilters: (key: keyof Filters, value: string[]) => void;
-  filterTracker: (filterName: keyof Filters) => () => void;
 }) => {
-  const trackEvent = usePlausible();
-
   const onChangeFilter = (type: keyof Filters, value: string[]) => {
     handleFilters(type, value);
-    trackEvent("analyse-detailee-etablissement:interaction", {
-      props: {
-        type: "filter",
-        value: value,
-      },
-    });
   };
 
   return (
@@ -54,7 +43,6 @@ export const FiltersSection = ({
           Diplôme
         </Text>
         <Multiselect
-          onClose={filterTracker("codeNiveauDiplome")}
           width="24rem"
           variant={"newInput"}
           onChange={(selected) => onChangeFilter("codeNiveauDiplome", selected)}

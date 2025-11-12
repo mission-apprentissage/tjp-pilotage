@@ -37,9 +37,9 @@ const Page = () =>
               textDecoration: "underline",
             }}
             as={NextLink}
-            href="https://orion.inserjeunes.beta.gouv.fr/"
+            href="https://orion.education.gouv.fr/"
           >
-            https://orion.inserjeunes.beta.gouv.fr/
+            https://orion.education.gouv.fr/
           </Link>
           )
         </span>
@@ -68,9 +68,9 @@ const Page = () =>
             style={{
               textDecoration: "underline",
             }}
-            href="https://aide.orion.inserjeunes.beta.gouv.fr"
+            href="https://orion.education.gouv.fr/documentation"
           >
-            https://aide.orion.inserjeunes.beta.gouv.fr
+            https://orion.education.gouv.fr/documentation
           </Link>
         </ListItem>
       </UnorderedList>

@@ -11,7 +11,6 @@ on:
           - diffusion
           - preproduction
           - production
-          - productionij
   workflow_call:
     inputs:
       environment:
@@ -48,7 +47,6 @@ jobs:
 
       - name: Get env ip
         run: echo "IP_ADDRESS=$(awk '/^\[${{ inputs.environment }}\]/{getline; print}' .infra/env.ini)" >> $GITHUB_ENV
-      
+
       - name: uptime over SSH
         run: ssh deploy@$IP_ADDRESS "uptime"
-

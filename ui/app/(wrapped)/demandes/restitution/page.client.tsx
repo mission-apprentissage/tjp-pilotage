@@ -4,7 +4,6 @@ import { Button, chakra, Container, Flex, MenuButton } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
@@ -157,15 +156,7 @@ export const PageClient = () => {
   const [displayPilotageColumns, setDisplayPilotageColumns] = useState(false);
   const [allowPilotageColumnsToBeSelected, setAllowPilotageColumnsToBeSelected] = useState(false);
 
-  const trackEvent = usePlausible();
-  const filterTracker = (filterName: keyof FiltersDemandesRestitution) => () => {
-    trackEvent("restitution-demandes:filtre", {
-      props: { filter_name: filterName },
-    });
-  };
-
   const handleOrder = (column: OrderDemandesRestitution["orderBy"]) => {
-    trackEvent("restitution-demandes:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
       return;
@@ -322,7 +313,6 @@ export const PageClient = () => {
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
-    trackEvent("restitution-demandes:export");
     const data = await client.ref("[GET]/restitution/demandes").query({
       query: isFiltered ? getStatsQueryParameters() : {},
     });
@@ -336,7 +326,6 @@ export const PageClient = () => {
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
-    trackEvent("restitution-demandes:export-excel");
     const data = await client.ref("[GET]/restitution/demandes").query({
       query: isFiltered ? getStatsQueryParameters() : {},
     });
@@ -377,7 +366,6 @@ export const PageClient = () => {
         countData={countData}
         activeFilters={filters}
         handleFilters={handleFilters}
-        filterTracker={filterTracker}
         resetFilters={resetFilters}
         isLoading={(isLoading || isLoadingCount)}
         data={data}

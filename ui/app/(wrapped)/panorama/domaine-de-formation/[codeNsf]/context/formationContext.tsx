@@ -1,7 +1,6 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { createContext, useContext, useEffect } from "react";
 import type {ScopeZone} from "shared";
 
@@ -93,7 +92,6 @@ type FormationContextProps = {
 export const FormationContext = createContext<FormationContextType>({} as FormationContextType);
 
 export function FormationContextProvider({ children, value }: Readonly<FormationContextProps>) {
-  const trackEvent = usePlausible();
   const { cfd } = useDomaineDeFormationSearchParams();
   const searchParams = useSearchParams();
   const selectedCfd = searchParams.get("selection[cfd]");
@@ -127,10 +125,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   }, [cfd, setCurrentFilters, selectedCfd, formations, formationsByLibelleNiveauDiplome]);
 
   const handleResetFilters = () => {
-    trackEvent("domaine-de-formation:filtre", {
-      props: { filter_name: "reset" },
-    });
-
     setCurrentFilters((prev) => ({
       ...prev,
       codeRegion: "",
@@ -140,10 +134,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   };
 
   const handleRegionChange = (codeRegion: string) =>{
-    trackEvent("domaine-de-formation:filtre", {
-      props: { filter_name: "codeRegion" },
-    });
-
     setCurrentFilters((prev) => ({
       ...prev,
       codeRegion,
@@ -156,10 +146,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
     }));};
 
   const handleAcademieChange = (codeAcademie: string) => {
-    trackEvent("domaine-de-formation:filtre", {
-      props: { filter_name: "codeAcademie" },
-    });
-
     const academie = value.academies?.find((a) => a.value === codeAcademie);
 
     if (academie) {
@@ -187,10 +173,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   };
 
   const handleDepartementChange = (codeDepartement: string) => {
-    trackEvent("domaine-de-formation:filtre", {
-      props: { filter_name: "codeDepartement" },
-    });
-
     const departement = value.departements?.find((d) => d.value === codeDepartement);
 
     if (departement) {
@@ -217,10 +199,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   };
 
   const handlePresenceChange = (presence: Presence) => {
-    trackEvent("domaine-de-formation:filtre", {
-      props: { filter_name: "presence" },
-    });
-
     setCurrentFilters((prev) => ({
       ...prev,
       presence,
@@ -228,10 +206,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   };
 
   const handleVoieChange = (voie: Voie) => {
-    trackEvent("domaine-de-formation:filtre", {
-      props: { filter_name: "voie" },
-    });
-
     setCurrentFilters((prev) => ({
       ...prev,
       voie,
@@ -239,10 +213,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   };
 
   const handleTabFormationChange = (formationTab: FormationTab) => {
-    trackEvent("domaine-de-formation:filtre", {
-      props: { filter_name: "formationTab" },
-    });
-
     setCurrentFilters((prev) => ({
       ...prev,
       formationTab,
@@ -257,10 +227,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   };
 
   const handleViewChange = (view: EtablissementsView) => {
-    trackEvent("domaine-de-formation:etablissements:view", {
-      props: { view },
-    });
-
     setCurrentFilters((prev) => ({
       ...prev,
       etab: { ...prev.etab, view },
@@ -275,10 +241,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   };
 
   const handleCfdChange = ({ cfd }: { cfd: string }) => {
-    trackEvent("domaine-de-formation:cfd", {
-      props: { cfd },
-    });
-
     setCurrentFilters((prev) => ({
       ...prev,
       selection: {

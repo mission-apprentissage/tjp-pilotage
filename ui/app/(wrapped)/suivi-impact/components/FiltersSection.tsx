@@ -5,13 +5,11 @@ import type { Filters, PilotageReformeStats } from "@/app/(wrapped)/suivi-impact
 export const FiltersSection = ({
   activeFilters,
   handleFilters,
-  filterTracker,
   isLoading,
   data,
 }: {
   activeFilters: Filters;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  filterTracker: (filterName: keyof Filters) => () => void;
   isLoading: boolean;
   data?: PilotageReformeStats;
 }) => {
@@ -35,7 +33,6 @@ export const FiltersSection = ({
                 value={activeFilters.codeNiveauDiplome ?? ""}
                 onChange={(e) => {
                   handleFilters("codeNiveauDiplome", e.target.value);
-                  filterTracker("codeNiveauDiplome");
                 }}
                 placeholder="TOUS"
               >
@@ -57,7 +54,6 @@ export const FiltersSection = ({
                 value={activeFilters.codeRegion ?? ""}
                 onChange={(e) => {
                   handleFilters("codeRegion", e.target.value);
-                  filterTracker("codeRegion");
                 }}
                 placeholder="TOUTES"
               >

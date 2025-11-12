@@ -3,7 +3,6 @@
 import {Button, chakra, Container, Flex, MenuButton} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
 import {SecteurEnum} from 'shared/enum/secteurEnum';
@@ -108,15 +107,7 @@ export const PageClient = () => {
   const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
   const { campagne } = useContext(PreviousCampagneContext);
 
-  const trackEvent = usePlausible();
-  const filterTracker = (filterName: keyof FiltersCorrections) => () => {
-    trackEvent("restitution-correction:filtre", {
-      props: { filter_name: filterName },
-    });
-  };
-
   const handleOrder = (column: OrderCorrections["orderBy"]) => {
-    trackEvent("restitution-correction:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
       return;
@@ -244,7 +235,6 @@ export const PageClient = () => {
   }
 
   const onExportCsv = async (isFiltered?: boolean) => {
-    trackEvent("restitution-correction:export");
     const data = await client.ref("[GET]/corrections").query({
       query: isFiltered ? getCorrectionsQueryParameters(EXPORT_LIMIT) : { limit: EXPORT_LIMIT },
     });
@@ -268,7 +258,6 @@ export const PageClient = () => {
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
-    trackEvent("restitution-correction:export-excel");
     const data = await client.ref("[GET]/corrections").query({
       query: isFiltered ? getCorrectionsQueryParameters(EXPORT_LIMIT) : { limit: EXPORT_LIMIT },
     });
@@ -296,7 +285,6 @@ export const PageClient = () => {
         countData={data?.stats}
         activeFilters={filters}
         handleFilters={handleFilters}
-        filterTracker={filterTracker}
         resetFilters={resetFilters}
         isLoading={isLoading}
         data={data}

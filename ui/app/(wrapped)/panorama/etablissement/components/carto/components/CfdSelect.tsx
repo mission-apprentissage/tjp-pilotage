@@ -1,7 +1,6 @@
 import { Flex, Skeleton, Stack, Text } from "@chakra-ui/react";
 import _ from "lodash";
 import { useSearchParams } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { useEffect, useMemo, useState } from "react";
 import type { GroupBase } from "react-select";
 import AsyncSelect from "react-select/async";
@@ -65,17 +64,9 @@ export const CfdSelect = () => {
   const analyseDetailleeOffre = analyseDetaillee && offre ? analyseDetaillee?.formations[offre] : undefined;
   const [selected, setSelected] = useState<Option>();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const trackEvent = usePlausible();
 
   const onChange = (newValue: Option) => {
     setSelected(newValue);
-
-    trackEvent("cartographie-etablissement:interaction", {
-      props: {
-        type: "cartographie-cfd-select",
-        value: newValue,
-      },
-    });
   };
 
   const isDefaultSelected = analyseDetailleeOffre?.cfd === selected?.value;

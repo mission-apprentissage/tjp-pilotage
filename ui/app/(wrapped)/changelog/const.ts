@@ -82,7 +82,6 @@ export const CHANGELOG: IChangelog[] = [
     "types": [ChangelogTypeEnum.BANDEAU],
     "date": new Date("2025-06-04"),
     "description": "Attention : sur les panoramas régional et départemental, les chiffres sont désormais affichés par niveau de diplôme (Bac Pro par défaut). Vous pouvez choisir le diplôme que vous souhaitez.",
-    "document": "https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/experimentation-occitanie-auvergne-rhone-alpes-visio-chefs-detablissement-1apg5m6/",
   },
   {
     "id": "b34ab1a26e394c46b893e973e60ff68f",
@@ -92,7 +91,6 @@ export const CHANGELOG: IChangelog[] = [
     "types": [ChangelogTypeEnum["Fonctionnalité"]],
     "date": new Date("2024-05-14"),
     "description": "L'accès en mode public permet de découvrir les données sur la formation professionnelle selon les régions, départements, établissements. Un accès en mode connecté est réservé aux Recteur et DRAFPIC (d'autres accès seront fournis directement par les RA dans quelques semaines). L'accès pour les chefs d'établissement se fait par le portail Arena. Ils peuvent donner délégation à d’autres personnels (adjoint, DDFTP…). N'hésitez pas à nous contacter si vous avez besoin de renseignements.",
-    "document": "https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/acceder-a-orion-rmfohn/",
   },
   {
     "id": "176d0d8ec01580a0bbd7db7856c53f56",

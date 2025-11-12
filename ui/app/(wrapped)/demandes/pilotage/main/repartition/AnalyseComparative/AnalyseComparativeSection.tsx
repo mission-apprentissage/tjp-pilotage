@@ -14,7 +14,6 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { usePlausible } from "next-plausible";
 import { ScopeEnum } from "shared";
 
 import { DisplayTypeEnum } from "@/app/(wrapped)/demandes/pilotage/main/displayTypeEnum";
@@ -99,14 +98,9 @@ export const AnalyseComparativeSection = ({
   displayZonesGeographiques: () => void;
   displayDomaines: () => void;
 }) => {
-  const trackEvent = usePlausible();
-
   const setDisplayType = (
     displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine>
   ) => {
-    trackEvent("pilotage-transformation:analyse-comparative-tabs", {
-      props: { type: displayType },
-    });
     if (displayType === DisplayTypeEnum.zone_geographique) {
       displayZonesGeographiques();
     } else {
@@ -164,9 +158,6 @@ export const AnalyseComparativeSection = ({
   };
 
   const handleOrder = (column: OrderPilotage["orderBy"]) => {
-    trackEvent("pilotage-transformation:formations-ordre", {
-      props: { colonne: column },
-    });
     if (order?.orderBy !== column) {
       setOrder({ order: "desc", orderBy: column });
       return;
@@ -183,9 +174,6 @@ export const AnalyseComparativeSection = ({
         <ExportMenuButton
           color={"bluefrance.113"}
           onExportCsv={async () => {
-            trackEvent("pilotage-transformation:analyse-comparative-export", {
-              props: { type: "csv" },
-            });
             downloadCsv(
               `analyse_comparative_${isZoneGeographiqueSelected ? filters?.scope : "domaine"}`,
               Object.values(dataToDisplay),
@@ -205,9 +193,6 @@ export const AnalyseComparativeSection = ({
             );
           }}
           onExportExcel={async () => {
-            trackEvent("pilotage-transformation:analyse-comparative-export", {
-              props: { type: "xslx" },
-            });
             downloadExcel(
               `analyse_comparative_${isZoneGeographiqueSelected ? filters?.scope : "domaine"}`,
               Object.values(dataToDisplay),

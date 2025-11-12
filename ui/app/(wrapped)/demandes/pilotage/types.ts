@@ -51,8 +51,3 @@ export type FormationsPilotage = (typeof client.infer)["[GET]/pilotage/formation
 export type StatsSortiePilotage = (typeof client.infer)["[GET]/pilotage/formations"]["stats"];
 
 export type OrderFormationsPilotage = Pick<FormationsPilotageQuery, "orderFormations" | "orderByFormations">;
-
-export type FilterTracker = (
-  filterName: keyof FiltersPilotage,
-  options?: { value?: unknown; context?: string }
-) => void;
