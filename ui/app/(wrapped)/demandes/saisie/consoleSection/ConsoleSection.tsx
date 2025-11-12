@@ -2,7 +2,7 @@ import { ArrowForwardIcon,ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, Button, Collapse, Flex, Highlight, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Table, TableContainer, Tbody, Text, Tr, useDisclosure, useToast } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { useEffect, useRef,useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import type { UserType } from "shared/schema/userSchema";
 
@@ -11,7 +11,7 @@ import { StatutTag } from "@/app/(wrapped)/demandes/components/StatutTag";
 import { GROUPED_DEMANDES_COLUMNS_OPTIONAL } from "@/app/(wrapped)/demandes/saisie/GROUPED_DEMANDES_COLUMNS";
 import type { CheckedDemandesType } from "@/app/(wrapped)/demandes/saisie/page.client";
 import type { DataDemande, Demande, DEMANDES_COLUMNS_KEYS,Order } from "@/app/(wrapped)/demandes/saisie/types";
-import { formatStatut,getPossibleNextStatuts } from "@/app/(wrapped)/demandes/utils/statutUtils";
+import { formatStatut, getPossibleNextStatuts } from "@/app/(wrapped)/demandes/utils/statutUtils";
 import type { DetailedApiError} from "@/utils/apiError";
 import { getDetailedErrorMessage } from "@/utils/apiError";
 
@@ -139,7 +139,7 @@ export const ConsoleSection = ({
     };
 
     updateScrollWidth();
-    window.addEventListener('resize', updateScrollWidth);
+    window.addEventListener("resize", updateScrollWidth);
 
     const syncTopToBottom = () => {
       if (bottomScroll) {
@@ -153,13 +153,13 @@ export const ConsoleSection = ({
       }
     };
 
-    topScroll.addEventListener('scroll', syncTopToBottom);
-    bottomScroll.addEventListener('scroll', syncBottomToTop);
+    topScroll.addEventListener("scroll", syncTopToBottom);
+    bottomScroll.addEventListener("scroll", syncBottomToTop);
 
     return () => {
-      topScroll.removeEventListener('scroll', syncTopToBottom);
-      bottomScroll.removeEventListener('scroll', syncBottomToTop);
-      window.removeEventListener('resize', updateScrollWidth);
+      topScroll.removeEventListener("scroll", syncTopToBottom);
+      bottomScroll.removeEventListener("scroll", syncBottomToTop);
+      window.removeEventListener("resize", updateScrollWidth);
     };
   }, [colonneFilters]);
 

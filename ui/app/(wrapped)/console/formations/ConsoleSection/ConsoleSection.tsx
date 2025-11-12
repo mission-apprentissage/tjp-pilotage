@@ -55,7 +55,7 @@ export const ConsoleSection = ({
     };
 
     updateScrollWidth();
-    window.addEventListener('resize', updateScrollWidth);
+    window.addEventListener("resize", updateScrollWidth);
 
     const syncTopToBottom = () => {
       if (bottomScroll) {
@@ -69,13 +69,13 @@ export const ConsoleSection = ({
       }
     };
 
-    topScroll.addEventListener('scroll', syncTopToBottom);
-    bottomScroll.addEventListener('scroll', syncBottomToTop);
+    topScroll.addEventListener("scroll", syncTopToBottom);
+    bottomScroll.addEventListener("scroll", syncBottomToTop);
 
     return () => {
-      topScroll.removeEventListener('scroll', syncTopToBottom);
-      bottomScroll.removeEventListener('scroll', syncBottomToTop);
-      window.removeEventListener('resize', updateScrollWidth);
+      topScroll.removeEventListener("scroll", syncTopToBottom);
+      bottomScroll.removeEventListener("scroll", syncBottomToTop);
+      window.removeEventListener("resize", updateScrollWidth);
     };
   }, []);
 

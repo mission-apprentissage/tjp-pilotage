@@ -1,10 +1,10 @@
 import { Box, Center, Flex, Skeleton, Table, TableContainer, Tbody, Td, Text, Tr } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { Fragment, useEffect, useRef,useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/GROUPED_STATS_DEMANDES_COLUMN";
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
-import type { DEMANDES_COLUMNS_KEYS,DemandesRestitution, FiltersDemandesRestitution, OrderDemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
+import type { DEMANDES_COLUMNS_KEYS, DemandesRestitution, FiltersDemandesRestitution, OrderDemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
 
 import { HeadLineContent } from "./HeadLineContent";
 import { LineContent } from "./LineContent";
@@ -89,7 +89,7 @@ export const ConsoleSection = ({
     };
 
     updateScrollWidth();
-    window.addEventListener('resize', updateScrollWidth);
+    window.addEventListener("resize", updateScrollWidth);
 
     const syncTopToBottom = () => {
       if (bottomScroll) {
@@ -103,13 +103,13 @@ export const ConsoleSection = ({
       }
     };
 
-    topScroll.addEventListener('scroll', syncTopToBottom);
-    bottomScroll.addEventListener('scroll', syncBottomToTop);
+    topScroll.addEventListener("scroll", syncTopToBottom);
+    bottomScroll.addEventListener("scroll", syncBottomToTop);
 
     return () => {
-      topScroll.removeEventListener('scroll', syncTopToBottom);
-      bottomScroll.removeEventListener('scroll', syncBottomToTop);
-      window.removeEventListener('resize', updateScrollWidth);
+      topScroll.removeEventListener("scroll", syncTopToBottom);
+      bottomScroll.removeEventListener("scroll", syncBottomToTop);
+      window.removeEventListener("resize", updateScrollWidth);
     };
   }, [isLoading, colonneFilters]);
 
