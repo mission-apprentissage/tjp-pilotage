@@ -219,7 +219,13 @@ const Page = () => {
                       {user.enabled ? <Badge variant="success">Actif</Badge> : <Badge variant="error">Désactivé</Badge>}
                     </Td>
                     <Td>{user.libelleRegion}</Td>
-                    <Td>{user.uais}</Td>
+                    <Td>
+                      {
+                        user.uais?.map((uai) => (
+                          <Tag key={`${user.email}${uai}`} mx={1}>{uai}</Tag>
+                        ))
+                      }
+                    </Td>
                     <Td>{user.createdAt && formatDate({ date: user.createdAt })}</Td>
                     <Td isNumeric>
                       {canEditUser(user) && (

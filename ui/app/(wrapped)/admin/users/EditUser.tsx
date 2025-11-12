@@ -18,8 +18,11 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import _ from "lodash";
+import { useEffect, useMemo, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import type { CSSObjectWithLabel } from "react-select";
+import AsyncSelect from "react-select/async";
 import type { Role } from "shared";
 import { getHierarchy, hasRole } from 'shared';
 import { RoleEnum } from 'shared/enum/roleEnum';
@@ -28,6 +31,7 @@ import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
 
 import { client } from "@/api.client";
+import type { Etablissements } from "@/app/(wrapped)/demandes/types";
 import { getErrorMessage } from '@/utils/apiError';
 import { useAuth } from "@/utils/security/useAuth";
 
@@ -48,6 +52,9 @@ export const EditUser = ({
     formState: { errors },
     reset,
     handleSubmit,
+    watch,
+    control,
+    setValue
   } = useForm<IUserForm>({
     shouldUseNativeValidation: false,
     defaultValues: {
@@ -57,15 +64,47 @@ export const EditUser = ({
       lastname: user.lastname ?? "",
       role: user.role ?? RoleEnum["gestionnaire_region"],
       enabled: user.enabled ?? true,
+      uais: user.uais?.map((uai) => ({
+        value: uai,
+        label: undefined,
+        commune: undefined
+      })) ?? null
     },
   });
+  const selectStyle = {
+    control: (styles: CSSObjectWithLabel) => ({
+      ...styles,
+      borderColor: errors.uais ? "red" : undefined,
+    }),
+  };
 
   useEffect(() => {
-    reset(user, { keepDefaultValues: true });
+    reset({
+      ...user,
+      uais: user.uais?.map((uai) => ({
+        value: uai,
+        label: undefined,
+        commune: undefined
+      })) ?? null
+    }, { keepDefaultValues: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, reset]);
 
   const { data: regions, isLoading: isLoadingRegions } = client.ref("[GET]/regions").useQuery({});
+  const [isLoadingEtablissements, setIsLoadingEtablissements] = useState(user.uais && user.uais.length > 0);
+  const etablissements = user.uais && user.uais
+    .map(
+      (uai) => client.ref("[GET]/etablissement/:uai")
+        .useQuery({ params: { uai } },
+          { enabled: !!uai, onSuccess: () => setIsLoadingEtablissements(false) }))
+        .map(res => res.data)
+        .reduce((acc, curr) => {
+          if (curr) {
+            acc.push(curr);
+          }
+          return acc;
+        }, [] as Etablissements
+      );
 
   const queryClient = useQueryClient();
 
@@ -80,6 +119,15 @@ export const EditUser = ({
       onClose();
     },
   });
+  const codeRegion = watch("codeRegion");
+  const searchEtablissement = _.debounce((inputValue: string, callback: (options: Etablissements) => void) => {
+    if (inputValue.length >= 3) {
+      client
+        .ref("[GET]/etablissement/search/:search")
+        .query({ params: { search: inputValue }, query: { isFormulaire: false, codeRegion: codeRegion ?? undefined} })
+        .then(options => callback(options));
+    }
+  }, 300);
 
   const roles = getHierarchy(auth?.user?.role as Role);
   const isAdminRegion = hasRole({user: auth?.user, role: RoleEnum["admin_region"]});
@@ -90,6 +138,16 @@ export const EditUser = ({
     }
     return regions;
   }, [regions, isAdminRegion, auth?.user?.codeRegion]);
+
+  const newUserRole = watch("role") as Role;
+  const shouldShowUaiSelect = newUserRole === RoleEnum["perdir"];
+
+  useEffect(() => {
+    if(!shouldShowUaiSelect) {
+      setValue("uais", null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredRegions, newUserRole]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -102,6 +160,7 @@ export const EditUser = ({
               ...v,
               codeRegion: v.codeRegion === "" ? null : v.codeRegion,
               fonction: v.fonction === "" ? null : v.fonction,
+              uais: v.uais ?? null
             },
             params: { userId: user?.id },
           });
@@ -167,6 +226,45 @@ export const EditUser = ({
               {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
             </FormControl>
             ) : <Skeleton mb="4" height="40px" />
+          }
+          {
+            shouldShowUaiSelect && !isLoadingEtablissements && (
+              <FormControl mb="4" isInvalid={!!errors.uais} isRequired={true}>
+                <FormLabel>Établissement(s)</FormLabel>
+                <Controller
+                  name="uais"
+                  control={control}
+                  rules={{ required: "Ce champ est obligatoire" }}
+                  render={({ field: { onChange, name } }) => (
+                    <AsyncSelect
+                      instanceId={_.random(10000, 99999).toString()}
+                      name={name}
+                      styles={selectStyle}
+                      components={{
+                        DropdownIndicator: () => null,
+                        IndicatorSeparator: () => null,
+                      }}
+                      onChange={(selected) => {
+                        onChange(selected ?? undefined);
+                      }}
+                      loadOptions={searchEtablissement}
+                      loadingMessage={({ inputValue }) =>
+                        inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
+                      }
+                      isClearable={true}
+                      noOptionsMessage={({ inputValue }) =>
+                        inputValue ? "Pas d'établissement correspondant à votre recherche" : "Commencez à écrire..."
+                      }
+                      defaultValue={
+                        etablissements
+                      }
+                      placeholder="UAI, nom de l'établissement ou commune"
+                      isMulti={true}
+                    />
+                  )} />
+                {!!errors.uais && <FormErrorMessage>{errors.uais.message}</FormErrorMessage>}
+              </FormControl>
+            )
           }
           <FormControl mb="4" isInvalid={!!errors.fonction}>
             <FormLabel>Fonction de l'utilisateur</FormLabel>

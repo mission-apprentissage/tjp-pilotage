@@ -8,7 +8,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: 7ab5ff7ad3bd99f49ee1d0a79ee5bca2b96769b0671ce599145bf96c6f4f92fe
+  checksum: 498ac89e7eacf96eb40c85c7768d39f3381365a20ecf00a720d44c005ee2fe44
 - filename: .yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
   checksum: a663e9955c2825bee3af55be1ebd6e26cd0a17fe7c614a13d726ddd4c7959b82
 - filename: README.md
@@ -53,6 +53,8 @@ fileignoreconfig:
   checksum: 8eb032b7bc0013ec5dbba6e69fc07a74a5c1ea8c95ff619281106498c263b691
 - filename: server/src/modules/core/usecases/editUser/__tests__/editUser.spec.ts
   checksum: 94afe67554abf21f7bb1dd5720e3ad5c24f348835086595e5a2c5bb4f6bbc194
+- filename: server/src/modules/core/usecases/editUser/__tests__/editUser.test.ts
+  checksum: a6ed11a47733683fcd7a8e131a3bacb4f842335e794949a4788e734a567283f8
 - filename: server/src/modules/core/usecases/login/__tests__/login.test.ts
   checksum: 28cdc80f0d836857ee9a802bff5a72a3ff3addad70a31b1ad4b7e98bc8db447c
 - filename: server/src/modules/core/usecases/login/login.test.ts
