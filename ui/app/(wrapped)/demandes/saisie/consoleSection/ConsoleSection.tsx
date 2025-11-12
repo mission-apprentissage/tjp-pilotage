@@ -161,7 +161,7 @@ export const ConsoleSection = ({
       bottomScroll.removeEventListener('scroll', syncBottomToTop);
       window.removeEventListener('resize', updateScrollWidth);
     };
-  }, []);
+  }, [colonneFilters]);
 
   return (
     <>

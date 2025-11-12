@@ -111,7 +111,7 @@ export const ConsoleSection = ({
       bottomScroll.removeEventListener('scroll', syncBottomToTop);
       window.removeEventListener('resize', updateScrollWidth);
     };
-  }, []);
+  }, [isLoading, colonneFilters]);
 
   if (isLoading) return <Loader />;
   if (colonneFilters.length === 0)
