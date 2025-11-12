@@ -60,3 +60,22 @@ export const isLastStickyColonne = ({
   stickyColonnes.includes(colonne) &&
   stickyColonnes.indexOf(colonne) === stickyColonnes.length - 1;
 
+export const nomColonneConsoleFormation = ({
+  colonne,
+  aliasColonne,
+  isRegionFiltered = false
+}: {
+  colonne: string,
+  aliasColonne: string,
+  isRegionFiltered?: boolean
+}): string => {
+  const tauxIJ = ["tauxDevenirFavorable", "tauxInsertion", "tauxPoursuite"];
+
+  if (tauxIJ.includes(colonne) && !isRegionFiltered) {
+    return aliasColonne.replace(" régional", "");
+  } else {
+    return aliasColonne;
+  }
+};
+
+
