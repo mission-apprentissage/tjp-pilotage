@@ -18,3 +18,6 @@ Le taux de poursuite d’études est publié dans Orion dès publication des ind
 
 >💡 **A noter**  
 >Les dénominateurs n’étant pas les mêmes pour les **taux d’emploi et de taux de poursuite d’études**, la somme de ces deux taux est parfois supérieure à 100% **.** Le taux d’emploi est calculé sur base des sortants du système scolaire uniquement (cf. ci-dessus). C’est le **taux de devenir favorable** qui permet d’analyser conjointement ces 2 paramètres.
+
+>💡 **Dans la console formation**  
+Le taux « Toutes les régions » est calculé en faisant une **moyenne pondérée des taux régionaux**, ces derniers étant calculés sur 2 cohortes successives ([millésime](millesime)). Sa valeur est différente du [taux **national** calculé dans Inserjeunes](https://www.education.gouv.fr/inserjeunes-l-insertion-des-jeunes-apres-une-formation-en-voie-professionnelle-307956#edugouv-summary-item-7) qui est pour **une seule cohorte**.
