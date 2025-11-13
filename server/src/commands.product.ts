@@ -179,17 +179,17 @@ export function productCommands(cli: Command) {
         ...getImports({ type: "regroupements", schema: Schemas.regroupements }),
         ...getImports({
           type: "attractivite_capacite",
-          years: ["2021", "2022", "2023", "2024"],
+          years: ["2021", "2022", "2023", "2024", "2025"],
           schema: Schemas.attractivite_capacite,
         }),
         ...getImports({
           type: "BTS_attractivite_capacite",
-          years: ["2022", "2023", "2024"],
+          years: ["2022", "2023", "2024", "2025"],
           schema: Schemas.BTS_attractivite_capacite,
         }),
         ...getImports({
           type: "constat",
-          years: ["2020", "2021", "2022", "2023", "2024"],
+          years: ["2020", "2021", "2022", "2023", "2024", "2025"],
           schema: Schemas.constat,
         }),
         ...getImports({ type: "nMef", schema: Schemas.nMef }),
