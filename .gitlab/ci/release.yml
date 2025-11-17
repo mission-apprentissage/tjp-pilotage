@@ -11,7 +11,7 @@
     - git remote set-url origin "https://token_orion:${CI_TOKEN_ORION}@gitlab.forge.education.gouv.fr/${CI_PROJECT_PATH}.git"
     - |
       # Login to GitHub Container Registry
-      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin registry.gitlab.forge.education.gouv.fr
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin harbor.forge.education.gouv.fr
     - apk update && apk add bash
     - apk add --no-cache nodejs npm
     - npm install -g yarn

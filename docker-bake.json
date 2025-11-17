@@ -36,7 +36,7 @@
       "dockerfile": "Dockerfile",
       "platforms": ["linux/amd64"],
       "labels": {
-        "org.opencontainers.image.source": "https://github.com/mission-apprentissage/${REPO_NAME}",
+        "org.opencontainers.image.source": "https://gitlab.forge.education.gouv.fr/orion/${REPO_NAME}",
         "org.opencontainers.image.licenses": "MIT"
       },
       "cache-from": ["type=gha,scope=${DEPS_ID}"],
@@ -45,8 +45,8 @@
     "server": {
       "inherits": ["common"],
       "tags": [
-        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_server:${VERSION}",
-        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_server:${CHANNEL}"
+        "harbor.forge.education.gouv.fr/orion-orion/ij_${PRODUCT_NAME}_server:${VERSION}",
+        "harbor.forge.education.gouv.fr/orion-orion/ij_${PRODUCT_NAME}_server:${CHANNEL}"
       ],
       "labels": {
         "org.opencontainers.image.description": "Server"
@@ -63,8 +63,8 @@
         "PUBLIC_ENV": "${ENV}"
       },
       "tags": [
-        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_ui:${VERSION}-${ENV}",
-        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_ui:${CHANNEL}-${ENV}"
+        "harbor.forge.education.gouv.fr/orion-orion/ij_${PRODUCT_NAME}_ui:${VERSION}-${ENV}",
+        "harbor.forge.education.gouv.fr/orion-orion/ij_${PRODUCT_NAME}_ui:${CHANNEL}-${ENV}"
       ],
       "labels": {
         "org.opencontainers.image.description": "Ui"
