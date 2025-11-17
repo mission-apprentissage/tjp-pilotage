@@ -1,1 +1,1 @@
-export const CURRENT_RENTREE = '2025';
+export const CURRENT_RENTREE = "2025";
