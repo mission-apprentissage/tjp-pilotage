@@ -14,7 +14,9 @@
       echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin harbor.forge.education.gouv.fr
     - apk update && apk add bash
     - apk add --no-cache nodejs npm
+    - npm config set https-proxy=http://proxy.tec.in.phm.education.gouv.fr:3128
     - npm install -g yarn
+    - yarn config set https-proxy http://proxy.tec.in.phm.education.gouv.fr:3128
     - yarn install
   cache:
     key:

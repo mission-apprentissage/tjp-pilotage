@@ -8,6 +8,7 @@
       [ -z "$DEPLOY_SSH_PRIVATE_KEY" ] && echo "DEPLOY_SSH_PRIVATE_KEY is not set" && exit 1
       [ -z "$VAULT_PWD" ] && echo "VAULT_PWD is not set" && exit 1
     - apk add --no-cache openssh-client ansible bash
+    - yarn config set https-proxy http://proxy.tec.in.phm.education.gouv.fr:3128
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - eval $(ssh-agent -s)

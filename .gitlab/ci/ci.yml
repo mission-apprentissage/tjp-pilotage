@@ -20,6 +20,7 @@ variables:
     policy: pull-push
   before_script:
     - corepack enable
+    - yarn config set https-proxy http://proxy.tec.in.phm.education.gouv.fr:3128
     - yarn install
     - yarn dedupe --check
 
