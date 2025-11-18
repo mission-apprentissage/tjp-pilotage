@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": [
+    "**/node_modules",
+    "coverage",
+    "dist",
+    "static",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/tests/**/*"
+  ]
+}

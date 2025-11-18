@@ -1,8 +1,29 @@
-# Temporary solution freeze NodeJs version https://github.com/vercel/next.js/discussions/69326
-# https://github.com/vercel/next.js/issues/69150
-FROM node:22 AS builder_root
+# Configuration proxy globale - valeurs par défaut overridées par docker-bake.json
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+
+# Utiliser le registry mirror Nexus interne
+FROM docker-group-global-nexus3.forge.education.gouv.fr/node:25-slim AS builder_root
+
+# Réimporter les ARG proxy dans ce stage
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+ENV HTTP_PROXY=$HTTP_PROXY \
+    HTTPS_PROXY=$HTTPS_PROXY \
+    NO_PROXY=$NO_PROXY
+
 WORKDIR /app
-RUN yarn set version 3.3.1
+
+RUN yarn config set networkConcurrency 1 && \
+  yarn config set enableGlobalCache true && \
+  yarn config set compressionLevel 0 && \
+  yarn config set httpTimeout 600000 && \
+  yarn config set enableProgressBars true && \
+  yarn config set httpsProxy "${HTTPS_PROXY}" && \
+  yarn config set httpProxy "${HTTP_PROXY}"
+
 COPY .yarn /app/.yarn
 COPY package.json package.json
 COPY yarn.lock yarn.lock
@@ -22,6 +43,8 @@ WORKDIR /app
 
 # Rebuild the source code only when needed
 FROM root AS builder_server
+
+# Proxy hérité du parent
 WORKDIR /app
 
 COPY ./server ./server
@@ -34,12 +57,25 @@ RUN --mount=type=cache,target=/app/.yarn/cache yarn workspaces focus --all --pro
 RUN mkdir -p /app/shared/node_modules && mkdir -p /app/server/node_modules
 
 # Production image, copy all the files and run next
-FROM node:22-slim AS server
+FROM docker-group-global-nexus3.forge.education.gouv.fr/node:25-slim AS server
+
+# Proxy nécessaire uniquement pour apt-get
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+ENV HTTP_PROXY=$HTTP_PROXY \
+    HTTPS_PROXY=$HTTPS_PROXY \
+    NO_PROXY=$NO_PROXY
+
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y ca-certificates curl && update-ca-certificates && apt-get clean
 
-ENV NODE_ENV=production
+# Nettoyer les variables proxy pour le runtime
+ENV HTTP_PROXY= \
+    HTTPS_PROXY= \
+    NO_PROXY= \
+    NODE_ENV=production
 
 ARG PUBLIC_PRODUCT_NAME
 ENV PUBLIC_PRODUCT_NAME=$PUBLIC_PRODUCT_NAME
@@ -66,6 +102,8 @@ CMD ["node", "dist/index.js", "start"]
 
 # Rebuild the source code only when needed
 FROM root AS builder_ui
+
+# Proxy hérité du parent
 WORKDIR /app
 COPY ./ui ./ui
 COPY ./shared ./shared
@@ -73,7 +111,7 @@ COPY ./shared ./shared
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 ARG PUBLIC_REPO_NAME
 ENV NEXT_PUBLIC_PRODUCT_REPO=$PUBLIC_REPO_NAME
@@ -88,17 +126,28 @@ ARG PUBLIC_ENV
 ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 
 RUN yarn workspace ui build
-# RUN --mount=type=cache,target=/app/ui/.next/cache yarn --cwd ui build
 
 # Production image, copy all the files and run next
-FROM node:22-slim AS ui
+FROM docker-group-global-nexus3.forge.education.gouv.fr/node:25-slim AS ui
+
+# Proxy nécessaire uniquement pour apt-get
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+ENV HTTP_PROXY=$HTTP_PROXY \
+    HTTPS_PROXY=$HTTPS_PROXY \
+    NO_PROXY=$NO_PROXY
+
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y ca-certificates curl && update-ca-certificates && apt-get clean
 
-ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-ENV NEXT_TELEMETRY_DISABLED 1
+# Nettoyer les variables proxy dans l'image finale (pas besoin au runtime)
+ENV HTTP_PROXY= \
+    HTTPS_PROXY= \
+    NO_PROXY= \
+    NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1
 
 ARG PUBLIC_REPO_NAME
 ENV NEXT_PUBLIC_PRODUCT_REPO=$PUBLIC_REPO_NAME
@@ -112,15 +161,15 @@ ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
 ARG PUBLIC_ENV
 ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs & \
+    adduser --system --uid 1001 nextjs
 
 # You only need to copy next.config.js if you are NOT using the default configuration
 COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/next.config.js /app/
 COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/public /app/ui/public
 COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/package.json /app/ui/package.json
 
-# Automatically leverage output traces to reduce image size 
+# Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/.next/standalone /app/
 COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/.next/static /app/ui/.next/static

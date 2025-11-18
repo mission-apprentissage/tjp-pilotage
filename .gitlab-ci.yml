@@ -7,6 +7,8 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: "/certs"
+  HTTP_PROXY: "http://proxy.tec.in.phm.education.gouv.fr:3128"
+  HTTPS_PROXY: "http://proxy.tec.in.phm.education.gouv.fr:3128"
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
@@ -21,7 +23,7 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "web"
 
 include:
-  - local: '.gitlab/ci/sonarqube.yml'
-  - local: '.gitlab/ci/ci.yml'
+  # - local: '.gitlab/ci/sonarqube.yml'
+  # - local: '.gitlab/ci/ci.yml'
   - local: '.gitlab/ci/release.yml'
   - local: '.gitlab/ci/deploy.yml'

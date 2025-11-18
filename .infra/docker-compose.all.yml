@@ -25,7 +25,7 @@ x-default: &default
 services:
   server:
     <<: *default
-    image: ghcr.io/mission-apprentissage/ij_{{product_name}}_server:{{app_version}}
+    image: harbor.forge.education.gouv.fr/orion-orion/ij_{{product_name}}_server:{{app_version}}
     deploy:
       <<: *deploy-default
       resources:
@@ -51,7 +51,7 @@ services:
 
   ui:
     <<: *default
-    image: ghcr.io/mission-apprentissage/ij_{{product_name}}_ui:{{app_version}}-{{env_name}}
+    image: harbor.forge.education.gouv.fr/orion-orion/ij_{{product_name}}_ui:{{app_version}}-{{env_name}}
     deploy:
       <<: *deploy-default
       resources:

@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-read -p "[ghcr.io] user ? : " u
-read -p "[ghcr.io] GH personnal token ? : " p
+read -p "[harbor] Harbor user ? : " u
+read -p "[harbor] Harbor pass ? : " p
 
 echo "Login sur le registry ..."
-echo $p | docker login ghcr.io -u "$u" --password-stdin
+echo $p | docker login harbor.forge.education.gouv.fr -u "$u" --password-stdin
 echo "Logged!"

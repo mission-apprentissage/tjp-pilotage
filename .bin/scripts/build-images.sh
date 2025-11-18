@@ -23,9 +23,26 @@ if [[ $# == "0" ]]; then
   exit 1;
 fi;
 
-set +e
-docker buildx create --name "ij-${PRODUCT_NAME}" --driver docker-container --config "$SCRIPT_DIR/buildkitd.toml" 2> /dev/null
-set -e
+# Vérifier la connexion au Docker distant
+echo "Test de connexion Docker..."
+if ! docker info > /dev/null 2>&1; then
+  echo "ERREUR: Impossible de se connecter au daemon Docker"
+  exit 1
+fi
+echo "✓ Connexion Docker OK"
+
+# Vérifier que le login Harbor est effectif
+echo "Vérification authentification Harbor..."
+if ! docker login harbor.forge.education.gouv.fr --username "$HARBOR_USER" --password-stdin <<< "$HARBOR_PASS" 2>/dev/null; then
+  echo "ERREUR: Authentification Harbor échouée"
+  exit 1
+fi
+echo "✓ Authentification Harbor OK"
+
+# Utiliser le builder par défaut (docker driver ne supporte pas de builders multiples)
+echo "Utilisation du builder par défaut..."
+docker buildx use default
+echo "✓ Builder par défaut sélectionné"
 
 if [[ ! -z "${CI:-}" ]]; then
   export DEPS_ID=($(md5sum $ROOT_DIR/yarn.lock))
@@ -35,7 +52,26 @@ fi
 
 export CHANNEL=$(get_channel $VERSION)
 
-# "$@" is the list of environements
-docker buildx bake --builder "ij-${PRODUCT_NAME}" --${mode} "$@"
-docker builder prune --builder "ij-${PRODUCT_NAME}" --keep-storage 20GB --force
-docker buildx stop --builder "ij-${PRODUCT_NAME}"
+# S'assurer que les variables proxy sont exportées pour docker buildx bake
+export HTTP_PROXY="${HTTP_PROXY:-}"
+export HTTPS_PROXY="${HTTPS_PROXY:-}"
+export NO_PROXY="${NO_PROXY:-}"
+
+echo "Configuration proxy:"
+echo "  HTTP_PROXY=$HTTP_PROXY"
+echo "  HTTPS_PROXY=$HTTPS_PROXY"
+echo "  NO_PROXY=$NO_PROXY"
+
+# Build avec docker buildx bake
+echo "Démarrage du build..."
+docker buildx bake \
+  --provenance=false \
+  --sbom=false \
+  --${mode} \
+  "$@"
+
+# Nettoyage du cache Docker
+echo "Nettoyage du cache..."
+docker builder prune --keep-storage 20GB --force
+
+echo "✓ Build terminé avec succès"

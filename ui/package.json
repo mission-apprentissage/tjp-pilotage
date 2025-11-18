@@ -11,6 +11,7 @@
     "dev": "next dev --turbo",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' next build --no-lint",
     "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc -noEmit",
+    "typecheck:ci": "NODE_OPTIONS='--max-old-space-size=4096' tsc --noEmit",
     "theme": "chakra-cli tokens theme/theme.ts"
   },
   "dependencies": {

@@ -4,7 +4,16 @@
     "REPO_NAME": {},
     "VERSION": {},
     "CHANNEL": {},
-    "DEPS_ID": {}
+    "DEPS_ID": {},
+    "HTTP_PROXY": {
+      "default": ""
+    },
+    "HTTPS_PROXY": {
+      "default": ""
+    },
+    "NO_PROXY": {
+      "default": "localhost,127.0.0.1,docker"
+    }
   },
   "group": {
     "qualification": {
@@ -31,16 +40,18 @@
       "args": {
         "PUBLIC_VERSION": "${VERSION}",
         "PUBLIC_PRODUCT_NAME": "${PRODUCT_NAME}",
-        "PUBLIC_REPO_NAME": "${REPO_NAME}"
+        "PUBLIC_REPO_NAME": "${REPO_NAME}",
+        "HTTP_PROXY": "${HTTP_PROXY}",
+        "HTTPS_PROXY": "${HTTPS_PROXY}",
+        "REGISTRY": "docker-group-global-nexus3.forge.education.gouv.fr",
+        "NO_PROXY": "${NO_PROXY}"
       },
       "dockerfile": "Dockerfile",
       "platforms": ["linux/amd64"],
       "labels": {
         "org.opencontainers.image.source": "https://gitlab.forge.education.gouv.fr/orion/${REPO_NAME}",
         "org.opencontainers.image.licenses": "MIT"
-      },
-      "cache-from": ["type=gha,scope=${DEPS_ID}"],
-      "cache-to": ["type=gha,mode=max,scope=${DEPS_ID}"]
+      }
     },
     "server": {
       "inherits": ["common"],

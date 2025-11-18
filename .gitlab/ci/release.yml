@@ -1,21 +1,55 @@
 .release_base:
-  image: docker:latest
-  services:
-    - docker:dind
-    - node:22
+  # Utiliser une image avec le client Docker uniquement
+  image: docker:27-cli
   stage: release
+  variables:
+    # NE PAS surcharger DOCKER_HOST - utiliser celui pré-configuré
+    # DOCKER_HOST est déjà défini par le runner
+    DOCKER_DRIVER: overlay2
+    DOCKER_BUILDKIT: 1
+    # Configuration proxy
+    HTTP_PROXY: http://proxy.tec.in.phm.education.gouv.fr:3128
+    HTTPS_PROXY: http://proxy.tec.in.phm.education.gouv.fr:3128
+    NO_PROXY: "docker,localhost,127.0.0.1,harbor.forge.education.gouv.fr,gitlab.forge.education.gouv.fr,*.forge.in.phm.education.gouv.fr,docker-group-global-nexus3.forge.education.gouv.fr"
   before_script:
-    - |
-      [ -z "$CI_TOKEN_ORION" ] && echo "CI_TOKEN_ORION is not set" && exit 1
-    - apk add --no-cache git
-    - git remote set-url origin "https://token_orion:${CI_TOKEN_ORION}@gitlab.forge.education.gouv.fr/${CI_PROJECT_PATH}.git"
-    - |
-      # Login to GitHub Container Registry
-      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin harbor.forge.education.gouv.fr
-    - apk update && apk add bash
+    # Installer les dépendances système
+    - apk add --no-cache git bash curl
+
+    # Configuration Git
+    - git remote set-url origin "https://CI_TOKEN_ORION:${CI_TOKEN_ORION}@gitlab.forge.education.gouv.fr/${CI_PROJECT_PATH}.git"
+
+    # Vérification connexion Docker
+    - echo "Test connexion Docker..."
+    - docker info
+
+    # Login Harbor AVANT tout build
+    - echo "Login Harbor..."
+    - echo "$HARBOR_PASS" | docker login -u "$HARBOR_USER" --password-stdin harbor.forge.education.gouv.fr
+    - echo "✓ Login Harbor OK"
+
+    # Installer Node.js et Yarn
     - apk add --no-cache nodejs npm
+    - node --version
+    - npm --version
     - npm install -g yarn
+    - yarn --version
+
+    # Configuration Yarn avec proxy
+    - yarn config set networkConcurrency 1
+    - yarn config set enableGlobalCache true
+    - yarn config set compressionLevel 0
+    - yarn config set httpTimeout 600000
+    - yarn config set enableProgressBars true
+    - yarn config set httpsProxy ${HTTPS_PROXY}
+    - yarn config set httpProxy ${HTTP_PROXY}
+
+    # Installer les dépendances
     - yarn install
+
+    # Exporter les variables pour les scripts
+    - export HARBOR_USER="${HARBOR_USER}"
+    - export HARBOR_PASS="${HARBOR_PASS}"
+
   cache:
     key:
       files:
@@ -28,68 +62,73 @@
 
 release_auto:
   extends: .release_base
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://docker:2375
   script:
+    # Récupérer la version précédente
+    - export PREV_VERSION=$(git describe --tags --abbrev=0 2>/dev/null | cut -c2- || echo "0.0.0")
+    - echo "Version précédente $PREV_VERSION"
+
+    # Vérifier la connexion au Docker distant
+    - echo "Connexion au Docker distant via DOCKER_HOST=$DOCKER_HOST"
+    - docker version
+    - docker info
+
+    # Exécuter le release
     - yarn release
-    - |
-      # Retrieve new version
-      export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
-      echo "VERSION=$VERSION" >> release.env
+
+    # Récupérer la nouvelle version
+    - export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
+    - echo "Nouvelle version $VERSION"
+    - echo "VERSION=$VERSION" >> release.env
+    - echo "PREV_VERSION=$PREV_VERSION" >> release.env
   artifacts:
     reports:
       dotenv: release.env
   rules:
     - if: $CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE != "web"
-  needs:
-    - lint
-    - typecheck
-    - tests
 
 release_candidate:
   extends: .release_base
   allow_failure: true
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://docker:2375
   script:
+    # Récupérer la version précédente
+    - export PREV_VERSION=$(git describe --tags --abbrev=0 2>/dev/null | cut -c2- || echo "0.0.0")
+    - echo "Version précédente $PREV_VERSION"
+
+    # Exécuter le release candidate
     - yarn release:candidate patch
-    - |
-      # Retrieve new version
-      export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
-      echo "VERSION=$VERSION" >> release.env
+
+    # Récupérer la nouvelle version
+    - export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
+    - echo "Nouvelle version $VERSION"
+    - echo "VERSION=$VERSION" >> release.env
+    - echo "PREV_VERSION=$PREV_VERSION" >> release.env
   artifacts:
     reports:
       dotenv: release.env
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"
-      when: manual
+      # when: manual
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
-  needs:
-    - lint
-    - typecheck
-    - tests
+      # when: manual
 
 release_manual:
   extends: .release_base
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://docker:2375
   script:
+    # Récupérer la version précédente
+    - export PREV_VERSION=$(git describe --tags --abbrev=0 2>/dev/null | cut -c2- || echo "0.0.0")
+    - echo "Version précédente $PREV_VERSION"
+
+    # Exécuter le release manuel
     - yarn release:manual
-    - |
-      # Retrieve new version
-      export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
-      echo "VERSION=$VERSION" >> release.env
+
+    # Récupérer la nouvelle version
+    - export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
+    - echo "Nouvelle version $VERSION"
+    - echo "VERSION=$VERSION" >> release.env
+    - echo "PREV_VERSION=$PREV_VERSION" >> release.env
   artifacts:
     reports:
       dotenv: release.env
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"
       when: manual
-  needs:
-    - lint
-    - typecheck
-    - tests

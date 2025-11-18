@@ -7,7 +7,7 @@ function Help() {
    echo "Commands"
    echo "  bin:setup                                  Installs ${PRODUCT_NAME} binary with zsh completion on system"
    echo "  init:env                                   Update local env files using values from vault file"
-   echo "  docker:login                               Login to ghcr.io"
+   echo "  docker:login                               Login to harbor docker registry"
    echo "  release:interactive                        Build & Push Docker image releases"
    echo "  release:manual                             Build & Push Docker image releases in a new release"
    echo "  release:candidate                          Build & Push Docker image releases in a release candidate"
