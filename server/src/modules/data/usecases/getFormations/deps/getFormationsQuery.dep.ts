@@ -312,6 +312,7 @@ export const getFormationsQuery = async ({
       "formationView.dateFermeture",
       "formationView.cpc",
       "formationView.cpcSecteur",
+      "formationView.codeNsf",
       "formationView.isTransitionDemographique",
       "formationView.isTransitionEcologique",
       "formationView.isTransitionNumerique",
