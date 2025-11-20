@@ -73,7 +73,6 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
   libelleNsf: "Domaine de formation (NSF)",
-  codeNsf: "Code NSF",
   // Effectifs
   nbEtablissement: "Nb Étab",
   effectif1: "Année 1",
