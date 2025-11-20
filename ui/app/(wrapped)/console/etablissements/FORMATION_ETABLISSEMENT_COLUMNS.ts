@@ -25,6 +25,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
   libelleNsf: "Domaine de formation (NSF)",
+  codeNsf: "Code NSF",
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   codeDispositif: "Code dispositif",
@@ -104,6 +105,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
   libelleNsf: "Domaine de formation (NSF)",
+  codeNsf: "Code NSF",
   "continuum.libelleFormation": "Diplôme historique",
   // Effectifs
   evolutionEffectif: "Évolution des effectifs en entrée",
