@@ -153,6 +153,7 @@ export const getFormationsQuery = async ({
       "formationView.typeFamille",
       "formationView.cpc",
       "formationView.cpcSecteur",
+      "formationView.codeNsf",
       "nsf.libelleNsf",
       "familleMetier.libelleFamille",
       sql<string>`COALESCE("dispositif"."libelleDispositif","niveauDiplome"."libelleNiveauDiplome" || ' SANS DISPOSITIF')`.as("libelleDispositif"),

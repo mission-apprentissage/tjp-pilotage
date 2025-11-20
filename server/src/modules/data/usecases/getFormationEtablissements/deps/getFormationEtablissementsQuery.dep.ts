@@ -204,6 +204,7 @@ export const getFormationEtablissementsQuery = async ({
       "formationView.codeNiveauDiplome",
       "formationView.cpc",
       "formationView.cpcSecteur",
+      "formationView.codeNsf",
       "nsf.libelleNsf",
       "departement.libelleDepartement",
       "departement.codeDepartement",
