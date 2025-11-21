@@ -1,6 +1,6 @@
 import { getKbdClient } from "@/db/db";
 
-export const getBoundaries = ({
+export const getBoundaries = async ({
   codeRegion,
   codeDepartement,
   codeAcademie,

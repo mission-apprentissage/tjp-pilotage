@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
-export const findOneChangementStatut = (id: string) =>
+export const findOneChangementStatut = async (id: string) =>
   getKbdClient()
     .selectFrom("changementStatut")
     .selectAll()

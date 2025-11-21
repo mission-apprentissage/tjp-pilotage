@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import { isInPerimetreIJDepartement } from "@/modules/data/utils/isInPerimetreIJ";
 
-export const getDepartements = () => {
+export const getDepartements = async () => {
   return getKbdClient()
     .selectFrom("departement")
     .innerJoin("etablissement", "etablissement.codeDepartement", "departement.codeDepartement")

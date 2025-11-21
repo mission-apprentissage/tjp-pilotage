@@ -1,5 +1,4 @@
 import * as Boom from "@hapi/boom";
-/* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 import { passwordRegex } from "shared/utils/passwordRegex";
 

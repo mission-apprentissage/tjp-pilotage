@@ -5,7 +5,7 @@ import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 import {cleanNull} from '@/utils/noNull';
 
-const getCampagneRegionByCampagneId = ({
+const getCampagneRegionByCampagneId = async ({
   campagneId,
   user
 } : {

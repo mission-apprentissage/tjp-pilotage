@@ -1,6 +1,6 @@
 import { getKbdClient } from "@/db/db";
 
-export const getCodeRegionFromDepartement = (codeDepartement: string | string[]) => {
+export const getCodeRegionFromDepartement = async (codeDepartement: string | string[]) => {
   return getKbdClient()
     .selectFrom("departement")
     .where((w) => {

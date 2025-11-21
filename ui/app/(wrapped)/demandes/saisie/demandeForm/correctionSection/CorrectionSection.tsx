@@ -149,7 +149,7 @@ export const CorrectionSection = ({
         <Box
           as="form"
           noValidate
-          onSubmit={handleSubmit((correction) =>
+          onSubmit={handleSubmit(async (correction) =>
             submitCorrection({
               body: {
                 correction
@@ -187,7 +187,7 @@ export const CorrectionSection = ({
                     isLoading={isSubmitting}
                     variant="secondary"
                     color="bluefrance.113"
-                    onClick={handleSubmit((correction) => {
+                    onClick={handleSubmit(async (correction) => {
                       if (raison === RaisonCorrectionEnum["modification_capacite"]) {
                         return submitCorrection({
                           body: {

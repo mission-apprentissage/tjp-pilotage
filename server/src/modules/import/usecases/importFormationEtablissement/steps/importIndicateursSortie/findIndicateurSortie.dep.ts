@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
-export const findIndicateurSortie = ({
+export const findIndicateurSortie = async ({
   cfd,
   codeDispositif,
   uai,

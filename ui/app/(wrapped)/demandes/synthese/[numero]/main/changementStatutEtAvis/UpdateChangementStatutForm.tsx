@@ -57,7 +57,7 @@ export const UpdateChangementStatutForm = chakra(
           gap={2}
           as="form"
           noValidate
-          onSubmit={handleSubmit((values) =>
+          onSubmit={handleSubmit(async (values) =>
             submitChangementStatut({
               body: { changementStatut: values },
             })
@@ -80,7 +80,7 @@ export const UpdateChangementStatutForm = chakra(
           <Button
             isLoading={isSubmitting}
             variant="primary"
-            onClick={handleSubmit((values) =>
+            onClick={handleSubmit(async (values) =>
               submitChangementStatut({
                 body: {
                   changementStatut: values,

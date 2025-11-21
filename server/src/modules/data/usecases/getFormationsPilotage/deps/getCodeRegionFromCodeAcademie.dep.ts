@@ -1,6 +1,6 @@
 import { getKbdClient } from "@/db/db";
 
-export const getCodeRegionFromAcademieQuery = (codeAcademie: string | string[]) => {
+export const getCodeRegionFromAcademieQuery = async (codeAcademie: string | string[]) => {
   return getKbdClient()
     .selectFrom("academie")
     .where((w) => {

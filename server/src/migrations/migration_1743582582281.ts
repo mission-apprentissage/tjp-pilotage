@@ -44,7 +44,7 @@ export const up = async (db: Kysely<unknown>) => {
 
   await getKbdClient()
     .transaction()
-    .execute((transaction) =>  transaction.schema
+    .execute(async (transaction) =>  transaction.schema
       .alterTable("demande")
       .addColumn("partenairesEconomiquesImpliques", "boolean")
       .addColumn("partenaireEconomique1", "varchar")
@@ -207,7 +207,7 @@ export const down = async (db: Kysely<unknown>) => {
 
   await getKbdClient()
     .transaction()
-    .execute((transaction) =>  transaction.schema
+    .execute(async (transaction) =>  transaction.schema
       .createTable("intention")
       .addColumn("id", "uuid", (c) => c.primaryKey().defaultTo(db.fn("uuid_generate_v4")))
       .addColumn("numero", "varchar", (c) => c.notNull())

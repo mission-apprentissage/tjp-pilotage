@@ -11,7 +11,7 @@ import { LDAP_GROUP_ROLES_DNE_CORRESPONDANCE, ROLE_DNE_FONCTION_ORION_CORRESPOND
 
 import type { ExtraUserInfo, UserCommunicationArguments } from "./types";
 
-// eslint-disable-next-line import/no-named-as-default-member
+
 dayjs.extend(customParseFormat);
 
 export const generateUserCommunication =

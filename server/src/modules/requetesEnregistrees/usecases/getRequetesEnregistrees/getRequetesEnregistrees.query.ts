@@ -11,7 +11,10 @@ import type { RequestUser } from "@/modules/core/model/User";
 type FormationFiltresType = z.infer<typeof FiltresFormationSchema>;
 type FormationEtablissementFiltresType = z.infer<typeof FiltresFormationEtablissementSchema>;
 
-export const getRequetesEnregistrees = ({ user, page }: { user: RequestUser; page: PageRequeteEnregistreeType }) => {
+export const getRequetesEnregistrees = async (
+  { user, page }:
+  { user: RequestUser; page: PageRequeteEnregistreeType }
+) => {
   return getKbdClient()
     .selectFrom("requeteEnregistree")
     .selectAll()

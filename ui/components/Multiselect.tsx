@@ -133,7 +133,7 @@ export const Multiselect = chakra(
           return [val, (options.find(({ value }) => val === value)?.label) ?? val];
         })
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [value, options]);
 
     const [search, setSearch] = useState("");

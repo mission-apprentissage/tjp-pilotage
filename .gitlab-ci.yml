@@ -25,5 +25,5 @@ workflow:
 include:
   # - local: '.gitlab/ci/sonarqube.yml'
   # - local: '.gitlab/ci/ci.yml'
-  - local: '.gitlab/ci/release.yml'
+  # - local: '.gitlab/ci/release.yml'
   - local: '.gitlab/ci/deploy.yml'

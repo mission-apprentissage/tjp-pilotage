@@ -57,7 +57,7 @@ export const [importFormations] = inject(
       console.log(`Début de l'import des données sur les ${total} formations`);
 
       await streamIt(
-        (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
+        async (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
           const voie = item.voie;
@@ -76,7 +76,7 @@ export const [importFormations] = inject(
       );
 
       await streamIt(
-        (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
+        async (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
           console.log("--", "cfd famille", cfd, `-- (${Math.round((count+nbDiplomesProfessionnels)/total * 10000)/100}%)`);

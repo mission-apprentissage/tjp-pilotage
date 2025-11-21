@@ -30,7 +30,7 @@ const getAllEtablisementNsfs = ({ uai }: { uai: string }) =>
     .distinct()
     .orderBy(["nbFormations desc", "nsf.libelleNsf"]);
 
-export const getNsfs = ({ uai }: { uai: string }) =>
+export const getNsfs = async ({ uai }: { uai: string }) =>
   getKbdClient()
     .selectFrom(getAllEtablisementNsfs({ uai }).as("nsfs"))
     .where((w) =>

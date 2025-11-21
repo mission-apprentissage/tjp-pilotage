@@ -392,7 +392,7 @@ export const Quadrant = function <
   );
 };
 
-// eslint-disable-next-line react/display-name
+
 export const FormationTooltipWrapper = forwardRef<HTMLDivElement, { children: ReactNode; clickOutside: () => void }>(
   ({ clickOutside, children, ...props }, ref) => {
     const cardRef = useRef<HTMLDivElement>(null);

@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
-export const findDiplomesProfessionnels = ({ offset, limit }: { offset: number; limit: number }) => {
+export const findDiplomesProfessionnels = async ({ offset, limit }: { offset: number; limit: number }) => {
   return getKbdClient()
     .selectFrom("diplomeProfessionnel")
     .select(["cfd", "voie"])

@@ -1,21 +1,21 @@
 .deploy_base:
   stage: deploy
-  image: alpine:latest
+  image: alpine:3.19
   before_script:
+    - VERSION=1.16.5-rc.6
     - |
       [ -z "$VERSION" ] && echo "VERSION is not set" && exit 1
       [ -z "$DEPLOY_PASS" ] && echo "DEPLOY_PASS is not set" && exit 1
       [ -z "$DEPLOY_SSH_PRIVATE_KEY" ] && echo "DEPLOY_SSH_PRIVATE_KEY is not set" && exit 1
       [ -z "$VAULT_PWD" ] && echo "VAULT_PWD is not set" && exit 1
-    - apk add --no-cache openssh-client ansible bash
+    - apk add --no-cache openssh-client ansible bash bind-tools netcat-openbsd iputils
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - eval $(ssh-agent -s)
-    - echo "$DEPLOY_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-add ~/.ssh/id_rsa
+    # Add SSH key to agent
+    - echo "$DEPLOY_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - ssh-add -l
-    - echo "Private key added"
+    - echo "Private key added to ssh-agent"
     - echo "$VAULT_PWD" > .infra/.vault_pwd.txt
     - echo "Vault password file created"
 
@@ -28,15 +28,19 @@ deploy_qualification:
     ANSIBLE_REMOTE_USER: deploy
     ANSIBLE_BECOME_PASS: $DEPLOY_PASS
     ENVIRONMENT: qualification
-    ANSIBLE_HOST_KEY_CHECKING: "False"  # Add this to disable host key checking in Ansible
+    ANSIBLE_HOST_KEY_CHECKING: "False"
   before_script:
     - !reference [.deploy_base, before_script]
-    - ssh-keyscan -H 'qa.orion.education.gouv.fr' >> ~/.ssh/known_hosts
+    - echo "=== Testing network connectivity to qa.orion.education.gouv.fr ==="
+    - ping -c 3 qa.orion.education.gouv.fr || echo "Ping failed (may be blocked by firewall)"
+    - nslookup qa.orion.education.gouv.fr || echo "DNS lookup failed"
+    - nc -zv qa.orion.education.gouv.fr 22 2>&1 || echo "Port 22 not reachable"
+    - echo "=== Attempting ssh-keyscan ==="
+    - ssh-keyscan -T 10 -H qa.orion.education.gouv.fr >> ~/.ssh/known_hosts 2>&1 || echo "ssh-keyscan failed with code $?"
     - chmod 644 ~/.ssh/known_hosts
-    - ls -la ~/.ssh
     - cat ~/.ssh/known_hosts
-    - echo "Testing SSH connection..."
-    - ssh -v -o StrictHostKeyChecking=no deploy@qa.orion.education.gouv.fr "echo 'SSH connection successful'" || echo "SSH test failed"
+    - echo "=== Testing SSH connection ==="
+    - ssh -v -o ConnectTimeout=10 -o StrictHostKeyChecking=no deploy@qa.orion.education.gouv.fr "echo 'SSH connection successful'" 2>&1 || echo "SSH test failed"
   script:
     - |
       # Retrieve new version
@@ -61,15 +65,19 @@ deploy_diffusion:
     ANSIBLE_REMOTE_USER: deploy
     ANSIBLE_BECOME_PASS: $DEPLOY_PASS
     ENVIRONMENT: diffusion
-    ANSIBLE_HOST_KEY_CHECKING: "False"  # Add this to disable host key checking in Ansible
+    ANSIBLE_HOST_KEY_CHECKING: "False"
   before_script:
     - !reference [.deploy_base, before_script]
-    - ssh-keyscan -H 'qp.orion.education.gouv.fr' >> ~/.ssh/known_hosts
+    - echo "=== Testing network connectivity to qp.orion.education.gouv.fr ==="
+    - ping -c 3 qp.orion.education.gouv.fr || echo "Ping failed (may be blocked by firewall)"
+    - nslookup qp.orion.education.gouv.fr || echo "DNS lookup failed"
+    - nc -zv qp.orion.education.gouv.fr 22 2>&1 || echo "Port 22 not reachable"
+    - echo "=== Attempting ssh-keyscan ==="
+    - ssh-keyscan -T 10 -H qp.orion.education.gouv.fr >> ~/.ssh/known_hosts 2>&1 || echo "ssh-keyscan failed with code $?"
     - chmod 644 ~/.ssh/known_hosts
-    - ls -la ~/.ssh
     - cat ~/.ssh/known_hosts
-    - echo "Testing SSH connection..."
-    - ssh -v -o StrictHostKeyChecking=no deploy@qp.orion.education.gouv.fr "echo 'SSH connection successful'" || echo "SSH test failed"
+    - echo "=== Testing SSH connection ==="
+    - ssh -v -o ConnectTimeout=10 -o StrictHostKeyChecking=no deploy@qp.orion.education.gouv.fr "echo 'SSH connection successful'" 2>&1 || echo "SSH test failed"
   script:
     - |
       # Retrieve new version
@@ -94,15 +102,19 @@ deploy_preproduction:
     ANSIBLE_REMOTE_USER: deploy
     ANSIBLE_BECOME_PASS: $DEPLOY_PASS
     ENVIRONMENT: preproduction
-    ANSIBLE_HOST_KEY_CHECKING: "False"  # Add this to disable host key checking in Ansible
+    ANSIBLE_HOST_KEY_CHECKING: "False"
   before_script:
     - !reference [.deploy_base, before_script]
-    - ssh-keyscan -H 'pp.orion.education.gouv.fr' >> ~/.ssh/known_hosts
+    - echo "=== Testing network connectivity to pp.orion.education.gouv.fr ==="
+    - ping -c 3 pp.orion.education.gouv.fr || echo "Ping failed (may be blocked by firewall)"
+    - nslookup pp.orion.education.gouv.fr || echo "DNS lookup failed"
+    - nc -zv pp.orion.education.gouv.fr 22 2>&1 || echo "Port 22 not reachable"
+    - echo "=== Attempting ssh-keyscan ==="
+    - ssh-keyscan -T 10 -H pp.orion.education.gouv.fr >> ~/.ssh/known_hosts 2>&1 || echo "ssh-keyscan failed with code $?"
     - chmod 644 ~/.ssh/known_hosts
-    - ls -la ~/.ssh
     - cat ~/.ssh/known_hosts
-    - echo "Testing SSH connection..."
-    - ssh -v -o StrictHostKeyChecking=no deploy@pp.orion.education.gouv.fr "echo 'SSH connection successful'" || echo "SSH test failed"
+    - echo "=== Testing SSH connection ==="
+    - ssh -v -o ConnectTimeout=10 -o StrictHostKeyChecking=no deploy@pp.orion.education.gouv.fr "echo 'SSH connection successful'" 2>&1 || echo "SSH test failed"
   script:
     - |
       # Retrieve new version
@@ -127,15 +139,19 @@ deploy_production:
     ANSIBLE_REMOTE_USER: deploy
     ANSIBLE_BECOME_PASS: $DEPLOY_PASS
     ENVIRONMENT: production
-    ANSIBLE_HOST_KEY_CHECKING: "False"  # Add this to disable host key checking in Ansible
+    ANSIBLE_HOST_KEY_CHECKING: "False"
   before_script:
     - !reference [.deploy_base, before_script]
-    - ssh-keyscan -H 'orion.education.gouv.fr' >> ~/.ssh/known_hosts
+    - echo "=== Testing network connectivity to orion.education.gouv.fr ==="
+    - ping -c 3 orion.education.gouv.fr || echo "Ping failed (may be blocked by firewall)"
+    - nslookup orion.education.gouv.fr || echo "DNS lookup failed"
+    - nc -zv orion.education.gouv.fr 22 2>&1 || echo "Port 22 not reachable"
+    - echo "=== Attempting ssh-keyscan ==="
+    - ssh-keyscan -T 10 -H orion.education.gouv.fr >> ~/.ssh/known_hosts 2>&1 || echo "ssh-keyscan failed with code $?"
     - chmod 644 ~/.ssh/known_hosts
-    - ls -la ~/.ssh
     - cat ~/.ssh/known_hosts
-    - echo "Testing SSH connection..."
-    - ssh -v -o StrictHostKeyChecking=no deploy@orion.education.gouv.fr "echo 'SSH connection successful'" || echo "SSH test failed"
+    - echo "=== Testing SSH connection ==="
+    - ssh -v -o ConnectTimeout=10 -o StrictHostKeyChecking=no deploy@orion.education.gouv.fr "echo 'SSH connection successful'" 2>&1 || echo "SSH test failed"
   script:
     - |
       # Retrieve new version

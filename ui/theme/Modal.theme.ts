@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+
 import { modalAnatomy as parts } from "@chakra-ui/anatomy";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { createMultiStyleConfigHelpers, defineStyle } from "@chakra-ui/styled-system";

@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
 import type { Router } from '../routes';
 import type { Args, ZodTypeProvider } from "../utils/http-wizard/core";

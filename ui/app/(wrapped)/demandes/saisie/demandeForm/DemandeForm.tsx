@@ -226,11 +226,11 @@ export const DemandeForm = ({
     if (isEditCfdUai) {
       onEditUaiCfdSection();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [isEditCfdUai]);
 
   const customSubmitForm = () => {
-    const validFormCallback: SubmitHandler<DemandeFormType> = (values) =>
+    const validFormCallback: SubmitHandler<DemandeFormType> = async (values) =>
       submitDemande({
         body: {
           demande: {
@@ -245,7 +245,7 @@ export const DemandeForm = ({
         },
       });
 
-    const invalidFormCallback: SubmitErrorHandler<DemandeFormType> = () => {
+    const invalidFormCallback: SubmitErrorHandler<DemandeFormType> = async () => {
       const values = getValues();
       if (isEditCfdUai) {
         return submitDemande({
@@ -275,7 +275,7 @@ export const DemandeForm = ({
         bg="blueecume.925"
         as="form"
         noValidate
-        onSubmit={handleSubmit((values) =>
+        onSubmit={handleSubmit(async (values) =>
           submitDemande({
             body: {
               demande: {
@@ -382,7 +382,7 @@ export const DemandeForm = ({
                             }
                             isLoading={isSubmitting}
                             variant="draft"
-                            onClick={handleSubmit((values) =>
+                            onClick={handleSubmit(async (values) =>
                               submitDemande({
                                 body: {
                                   demande: {

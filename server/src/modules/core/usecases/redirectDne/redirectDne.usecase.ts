@@ -1,4 +1,4 @@
-/* eslint-disable-next-line import/default */
+
 import jwt from "jsonwebtoken";
 import type { Role } from 'shared';
 import { RoleEnum } from 'shared';
