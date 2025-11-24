@@ -1,4 +1,5 @@
 import { dataDI } from "@/modules/import/data.di";
+import { streamIt } from "@/modules/import/utils/streamIt";
 
 import { importFamillesMetiersDeps } from "./importFamillesMetiers.deps";
 
@@ -9,8 +10,7 @@ export const importFamillesMetiersFactory =
     findFamillesMetiers = importFamillesMetiersDeps.findFamillesMetiers,
   }) =>
     async () => {
-
-      console.log(`OLD Import des spécialité de familles de métiers`);
+      console.log(`Import des spécialité de familles de métiers`);
 
       let countFamillesMetier = 0;
       await streamIt(
