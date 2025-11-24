@@ -45,7 +45,10 @@ export const [importConstatRentree] = inject(
               );
             }
 
-            const constatRentree: Insertable<DB["constatRentree"]> = {
+            if (!nMef) {
+              console.error(`Création de la table constatRentree : Pas de cfd associé pour la ligne comportant le mefstat ${constatRentreeLine["Mef Bcp 11"]}.`);
+            } else {
+              const constatRentree: Insertable<DB["constatRentree"]> = {
               uai: constatRentreeLine["UAI"],
               mefstat11: constatRentreeLine["Mef Bcp 11"],
               effectif: Number(constatRentreeLine["Nombre d'élèves : Total"] ?? "0"),
@@ -63,7 +66,12 @@ export const [importConstatRentree] = inject(
               console.log(`An error occured while importing data`, JSON.stringify(constatRentree, null, 2));
               console.error(error);
               errorCount++;
+              }
+
+
             }
+
+
           }
         },
         { parallel: 20 }

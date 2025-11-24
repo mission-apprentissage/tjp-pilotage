@@ -17,7 +17,7 @@ export const importNSFFactory =
     createNSFGroupeSpecialite = importNSFGroupeSpecialite.createNSFGroupeSpecialite,
   }) =>
     async () => {
-      console.log(`Import des spécialité de familles de métiers`);
+      console.log(`Import des NSF`);
 
       let countNSFGroupeSpecialite = 0;
       await streamIt(
