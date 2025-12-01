@@ -30,9 +30,6 @@
     },
     "local": {
       "targets": ["server", "ui-local"]
-    },
-    "productionij": {
-      "targets": ["server", "ui-productionij"]
     }
   },
   "target": {
@@ -67,7 +64,7 @@
     "ui": {
       "inherits": ["common"],
       "matrix": {
-        "ENV": ["qualification", "diffusion", "preproduction", "production", "local", "productionij"]
+        "ENV": ["qualification", "diffusion", "preproduction", "production", "local"]
       },
       "name": "ui-${ENV}",
       "args": {

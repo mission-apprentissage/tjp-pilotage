@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly HABILITATIONS_FILE="${ROOT_DIR}/.infra/products/orion/habilitations.yml"
+readonly HABILITATIONS_FILE="${ROOT_DIR}/.infra/habilitations.yml"
 readonly VAULT_PASSWORD_FILE="${ROOT_DIR}/.infra/vault/.vault-password.gpg"
 
 function create_password_file() {

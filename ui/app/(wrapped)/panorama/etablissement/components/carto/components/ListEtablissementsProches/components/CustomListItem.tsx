@@ -1,6 +1,5 @@
 import { Badge, Box, Divider, HStack, ListItem, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { InlineIcon } from "@iconify/react";
-import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
@@ -20,7 +19,6 @@ interface CustomListItemProps {
 }
 
 export const CustomListItem = ({ etablissement, withDivider, children }: CustomListItemProps) => {
-  const trackEvent = usePlausible();
   const { hoverUai, setHoverUai, map, activeUai, setActiveUai } = useEtablissementMapContext();
   const [hover, setHover] = useState(false);
 
@@ -95,22 +93,10 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
   })();
 
   const onEtablissementHover = () => {
-    trackEvent("cartographie-etablissement:interaction", {
-      props: {
-        type: "cartographie-etablissement-list-hover",
-        uai: etablissement.uai,
-      },
-    });
     setHoverUai(etablissement.uai);
   };
 
   const onEtablissementClick = () => {
-    trackEvent("cartographie-etablissement:interaction", {
-      props: {
-        type: "cartographie-etablissement-list-click",
-        uai: etablissement.uai,
-      },
-    });
     flyToEtablissement();
   };
 

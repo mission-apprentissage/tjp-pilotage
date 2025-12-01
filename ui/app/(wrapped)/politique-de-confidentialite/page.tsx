@@ -237,20 +237,6 @@ const Page = () =>
                 <Th>Garanties</Th>
               </Tr>
             </Thead>
-            <Tbody>
-              <Tr>
-                <Td>Crisp.chat</Td>
-                <Td>France</Td>
-                <Td>Outil de support / Chatbot</Td>
-                <Td>Consentement</Td>
-                <Td>13 mois</Td>
-                <Td>
-                  <Link href="https://help.crisp.chat/en/article/how-to-sign-my-gdpr-data-processing-agreement-dpa-1wfmngo/" color="blue.500" isExternal>
-                    https://help.crisp.chat/en/article/how-to-sign-my-gdpr-data-processing-agreement-dpa-1wfmngo/
-                  </Link>
-                </Td>
-              </Tr>
-            </Tbody>
           </Table>
         </TableContainer>
       </Box>

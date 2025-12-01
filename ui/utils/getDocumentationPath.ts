@@ -4,7 +4,6 @@ export const getDocumentationPath = (path: string) => {
   switch(publicConfig.env) {
   case "local":
     return `http://localhost:8080/co/${path}`;
-  case "productionij":
   case "production":
   case "preproduction":
   case "diffusion":

@@ -4,7 +4,6 @@ import { Button, Center, chakra, Flex, MenuButton, Spinner, Tab, TabList, Tabs, 
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
 import { CURRENT_RENTREE } from "shared";
@@ -127,13 +126,11 @@ const ColonneFilterSection = chakra(
     colonneFilters,
     forcedColonnes,
     handleColonneFilters,
-    trackEvent,
     canShowQuadrantPosition = false,
   }: {
     colonneFilters: Array<FORMATION_COLUMNS_KEYS>;
     forcedColonnes?: Array<FORMATION_COLUMNS_KEYS>;
     handleColonneFilters: (value: Array<FORMATION_COLUMNS_KEYS>) => void;
-    trackEvent: (name: string, params?: Record<string, unknown>) => void;
     canShowQuadrantPosition?: boolean;
   }) =>
     <Flex justifyContent={"start"} direction="row">
@@ -180,7 +177,6 @@ const ColonneFilterSection = chakra(
             variant={"externalLink"}
             leftIcon={<Icon icon={"ri:table-line"} />}
             color="bluefrance.113"
-            onClick={() => trackEvent("formations:affichage-colonnes")}
           >
             Modifier les colonnes
           </MenuButton>
@@ -211,7 +207,6 @@ const Page = () => {
     page?: string;
     displayType?: DisplayTypeEnum;
   } = parse(queryParams.toString(), { arrayLimit: Infinity });
-  const trackEvent = usePlausible();
   const { auth } = useAuth();
 
   const filters = searchParams.filters ?? {};
@@ -235,9 +230,6 @@ const Page = () => {
   const setDisplayType = (
     displayType: DisplayTypeEnum
   ) => {
-    trackEvent("etablissements:vue-tabs", {
-      props: { type: displayType },
-    });
     const columns = getColonnesFromDisplayType(displayType);
 
     handleColonneFilters(columns);
@@ -397,7 +389,6 @@ const Page = () => {
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
-    trackEvent("formations:export");
     const data = await client.ref("[GET]/formations").query({
       query: isFiltered ? getFormationsQueryParameters() : {},
     });
@@ -413,7 +404,6 @@ const Page = () => {
     const data = await client.ref("[GET]/formations").query({
       query: isFiltered ? getFormationsQueryParameters() : {},
     });
-    trackEvent("formations:export-excel");
 
     const { columns, formations } = getDataForExport(data);
 
@@ -449,10 +439,6 @@ const Page = () => {
     if (type === "codeRegion" && value != null) setCodeRegion((value as string[])[0] ?? "");
 
     if (type === "codeDepartement" && value != null) setCodeDepartement((value as string[])[0] ?? "");
-  };
-
-  const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("formations:filtre", { props: { filter_name: filterName } });
   };
 
   const handleFilters = (type: keyof Filters, value: Filters[keyof Filters]) => {
@@ -492,7 +478,6 @@ const Page = () => {
       }
       break;
     }
-    filterTracker(type);
     setSearchParams({
       page: 0,
       filters: { ...filters, ...newFilters },
@@ -580,7 +565,6 @@ const Page = () => {
                   colonneFilters={colonneFilters}
                   handleColonneFilters={handleColonneFilters}
                   forcedColonnes={["libelleFormation"]}
-                  trackEvent={trackEvent}
                   canShowQuadrantPosition={canShowQuadrantPosition}
                 />
               }

@@ -118,14 +118,6 @@ export const InformationDonneeIncompletes = ({
       body={
         <Flex gap={1}>
           <Text>L'établissement ne dispose pas de certaines données pour cette formation</Text>
-          <Link
-            as={NextLink}
-            href="https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/pourquoi-certaines-donnees-sont-indisponibles-dans-orion-puqea5/"
-            target="_blank"
-            textDecoration={"underline"}
-          >
-              (Pourquoi ?).
-          </Link>
         </Flex>
       }
       actionButton={

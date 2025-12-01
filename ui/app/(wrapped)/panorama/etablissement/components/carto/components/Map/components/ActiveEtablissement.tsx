@@ -1,4 +1,3 @@
-import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
 import type { MapGeoJSONFeature, MapMouseEvent, SymbolLayer } from "react-map-gl/maplibre";
 import { Layer, Source, useMap } from "react-map-gl/maplibre";
@@ -10,7 +9,6 @@ import { MAP_IMAGES } from "./CustomControls";
 export const ActiveEtablissement = () => {
   const { current: map } = useMap();
   const { etablissementMap, hoverUai, etablissementsProches, setActiveUai } = useEtablissementMapContext();
-  const trackEvent = usePlausible();
 
   const etablissement = etablissementMap?.etablissement;
   const activeEtablissement =
@@ -79,12 +77,6 @@ export const ActiveEtablissement = () => {
 
       if (features.length > 0 && features[0] !== undefined) {
         setActiveUai(features[0].properties.uai);
-        trackEvent("cartographie-etablissement:interaction", {
-          props: {
-            type: "cartographie-etablissement-click",
-            uai: features[0].properties.uai,
-          },
-        });
       }
     }
   };

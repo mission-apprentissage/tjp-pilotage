@@ -6,14 +6,14 @@ export const [searchEtablissement] = inject(
   { searchEtablissementQuery },
   (deps) =>
     async (
-      { search, isFormulaire, filtered, user }:
-      { search: string; isFormulaire?: boolean; filtered?: boolean; user?: { codeRegion?: string } }
+      { search, isFormulaire, filtered, codeRegion }:
+      { search: string; isFormulaire?: boolean; filtered?: boolean; codeRegion?: string; }
     ) => {
       const etablissements = await deps.searchEtablissementQuery({
         search,
         isFormulaire,
         filtered,
-        codeRegion: user?.codeRegion,
+        codeRegion: codeRegion,
       });
       const suggestions = etablissements.map((etablissement) => ({
         value: etablissement.uai,

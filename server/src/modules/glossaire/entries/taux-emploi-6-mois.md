@@ -22,3 +22,6 @@ Le taux d’emploi affiché dans Orion est **mesuré sur les deux dernières pro
 
 >💡 **A noter**  
 >La DEPP ne fournit pas de données si le nombre d’élèves sortants est inférieur à 20 pour les deux années de référence, 2021 et 2022, quel que soit l’effectif de la classe.
+
+>💡 **Dans la console formation**  
+Le taux « Toutes les régions » est calculé en faisant une **moyenne pondérée des taux régionaux**, ces derniers étant calculés sur 2 cohortes successives ([millésime](millesime)). Sa valeur est différente du [taux **national** calculé dans Inserjeunes](https://www.education.gouv.fr/inserjeunes-l-insertion-des-jeunes-apres-une-formation-en-voie-professionnelle-307956#edugouv-summary-item-7) qui est pour **une seule cohorte**.

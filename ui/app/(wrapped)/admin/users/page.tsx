@@ -21,11 +21,10 @@ import {
   useDisclosure,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import type { Role } from "shared";
 import { hasRightOverRole } from "shared";
-import {PermissionEnum} from 'shared/enum/permissionEnum';
+import { PermissionEnum } from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -55,7 +54,6 @@ const Columns = {
 } satisfies ExportColumns<(typeof client.infer)["[GET]/users"]["users"][number]>;
 
 const Page = () => {
-  const trackEvent = usePlausible();
   const { auth } = useAuth();
   const [filters, setFilters] = useStateParams<{
     page: number;
@@ -104,19 +102,17 @@ const Page = () => {
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
-    trackEvent("users:export");
-    const data = await client.ref("[GET]/users").query({
+    const usersExport = await client.ref("[GET]/users").query({
       query: isFiltered ? { ...filters, ...order } : {},
     });
-    downloadCsv(formatExportFilename("users_export", isFiltered ? filters : undefined), data.users, Columns);
+    downloadCsv(formatExportFilename("users_export", isFiltered ? filters : undefined), usersExport?.users ?? [], Columns);
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
-    trackEvent("users:export-excel");
-    const data = await client.ref("[GET]/users").query({
-      query: isFiltered ? { ...filters, ...order } : {},
+    const usersExport = await client.ref("[GET]/users").query({
+        query: isFiltered ? { ...filters, ...order } : {},
     });
-    downloadExcel(formatExportFilename("users_export", isFiltered ? filters : undefined), data.users, Columns);
+    downloadExcel(formatExportFilename("users_export", isFiltered ? filters : undefined), usersExport?.users ?? [], Columns);
   };
 
   return (
@@ -223,7 +219,13 @@ const Page = () => {
                       {user.enabled ? <Badge variant="success">Actif</Badge> : <Badge variant="error">Désactivé</Badge>}
                     </Td>
                     <Td>{user.libelleRegion}</Td>
-                    <Td>{user.uais}</Td>
+                    <Td>
+                      {
+                        user.uais?.map((uai) => (
+                          <Tag key={`${user.email}${uai}`} mx={1}>{uai}</Tag>
+                        ))
+                      }
+                    </Td>
                     <Td>{user.createdAt && formatDate({ date: user.createdAt })}</Td>
                     <Td isNumeric>
                       {canEditUser(user) && (

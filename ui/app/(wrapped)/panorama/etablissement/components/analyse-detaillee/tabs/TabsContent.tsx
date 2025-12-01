@@ -22,7 +22,6 @@ export const TabsContent = (params: ReturnType<typeof useAnalyseDetaillee>) => {
     statsSortie,
     filters: filtersData,
     handleFilters,
-    filterTracker,
   } = params;
 
   return (
@@ -31,7 +30,6 @@ export const TabsContent = (params: ReturnType<typeof useAnalyseDetaillee>) => {
         filtersData={filtersData}
         filters={activeFilters}
         handleFilters={handleFilters}
-        filterTracker={filterTracker}
       />
       <Divider />
       <Grid templateColumns={"repeat(10, 1fr)"} gap={8}>

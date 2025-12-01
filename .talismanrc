@@ -1,6 +1,4 @@
 fileignoreconfig:
-- filename: .infra/ansible/roles/setup/vars/main/vault.yml
-  checksum: 09990a1239c96bc89535cb2bbd21f2034c6879adf67272fdc8957faf893e2636
 - filename: .infra/ansible/tasks/preview_pr.yml
   checksum: 97cf0bebbc85d48b68230b00b448ec5868c2962e8ac7a176321e3b770829efb9
 - filename: .infra/files/configs/mailpit/auth
@@ -8,7 +6,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: 7ab5ff7ad3bd99f49ee1d0a79ee5bca2b96769b0671ce599145bf96c6f4f92fe
+  checksum: e28b0829cf2d4b166c8be3a138e6eaf4be7d040ba9ad3fd67f175f8f719e2093
 - filename: .gitlab/ci/deploy.yml
   checksum: 64a6e5d07a44ac6d6b660e7f497e18edb8393a70de6725c860371b35253d2ddc
 - filename: .yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
@@ -41,26 +39,12 @@ fileignoreconfig:
   checksum: de09c2a86bdda83e51bbaa56a0869ba57d18282a470d8d6f30f576b77d6b9958
 - filename: documentation/lib-md/w_scImageMgr/scImageMgr.js
   checksum: ba3d1ebb3c6292e4d8a53398c8fe95ae8f6a64fedf4d55a21cfc6139001d9ac3
+- filename: documentation/lib-md/w_stlMgr/stlMgr.js
+  checksum: 085583f6a2a87bf7bfeaa5c5bb09a9a2582eb42c3c125e010073aac6c383154c
 - filename: documentation/skin/font/fontello.json
   checksum: e9488434ed4b47d393c52ec88efb62d20c77d7583d7eb2c01d10b21e25ad2cef
 - filename: documentation/skin/pwa/pwa.json
   checksum: 602aab71745f3452f7c1219be28a49358d8bc6b6c64309b517837e585c551dce
-- filename: documentation/lib-md/w_stlMgr/stlMgr.js
-  checksum: 085583f6a2a87bf7bfeaa5c5bb09a9a2582eb42c3c125e010073aac6c383154c
-- filename: documentation/co/glossary.html
-  checksum: fad006373f0f20ffb39cabfefcc7d55ee2145f6702f1e190fc9413efba248c84
-- filename: documentation/co/003_-_Creer_un_utilisateur.html
-  checksum: e2bbb0023135a5be23becea741ab9687313756c941c389a755433f1b96f66629
-- filename: documentation/co/007_-_Suivi_de_l3impact.html
-  checksum: 74059f830ecff0a13bd0a73deef3d096bffe9b24f4e57cf4750e8241b8fb2872
-- filename: documentation/co/003_-_Haut_de_page_2.html
-  checksum: 42487df0fcfb6b8babec64cfde9ca61d5fb2d6c87eac94ead6e18110469fa7ce
-- filename: documentation/co/003_-_Lire_et_comprendre_la_page.html
-  checksum: 97f4c8af160c7c9b153527b20f70fd411a321698ec230b5463e294a661e3fa4e
-- filename: documentation/co/004_-_Type_de_demande.html
-  checksum: bf348010cc43389897aba7c7c321b624ceb24fbe4a2e8716be87b3cf4a5388d6
-- filename: documentation/co/005_-_Onglet_etablissements.html
-  checksum: f9698624515cde9e84696ba1662f6ceb14d7436d793fb958162d350824841da2
 - filename: server/.env.test
   checksum: df4e0dd70085c1ab9d996395796f6b0bd879653f9866c55ff276579aff84a4ba
 - filename: server/seed/seed_data.dump
@@ -69,6 +53,8 @@ fileignoreconfig:
   checksum: 8eb032b7bc0013ec5dbba6e69fc07a74a5c1ea8c95ff619281106498c263b691
 - filename: server/src/modules/core/usecases/editUser/__tests__/editUser.spec.ts
   checksum: 94afe67554abf21f7bb1dd5720e3ad5c24f348835086595e5a2c5bb4f6bbc194
+- filename: server/src/modules/core/usecases/editUser/__tests__/editUser.test.ts
+  checksum: a6ed11a47733683fcd7a8e131a3bacb4f842335e794949a4788e734a567283f8
 - filename: server/src/modules/core/usecases/login/__tests__/login.test.ts
   checksum: 28cdc80f0d836857ee9a802bff5a72a3ff3addad70a31b1ad4b7e98bc8db447c
 - filename: server/src/modules/core/usecases/login/login.test.ts

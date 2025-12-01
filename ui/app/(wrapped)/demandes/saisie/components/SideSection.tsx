@@ -12,7 +12,6 @@ import { Multiselect } from "@/components/Multiselect";
 export const SideSection = ({
   isRecapView = false,
   isNouvelleDemandeDisabled,
-  filterTracker,
   handleFilters,
   activeFilters,
   domaines,
@@ -23,7 +22,6 @@ export const SideSection = ({
 }: {
   isRecapView?: boolean;
   isNouvelleDemandeDisabled: boolean;
-  filterTracker: (filterName: keyof Filters) => () => void;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   activeFilters: Filters;
   diplomes: OptionType[];
@@ -381,7 +379,6 @@ export const SideSection = ({
             <Divider my={2} />
             <Flex direction={"column"} px={2} gap={2}>
               <Multiselect
-                onClose={filterTracker("codeNiveauDiplome")}
                 width={"64"}
                 size="md"
                 variant={"newInput"}
@@ -394,7 +391,6 @@ export const SideSection = ({
                 Diplôme
               </Multiselect>
               <Multiselect
-                onClose={filterTracker("codeNsf")}
                 width={"64"}
                 size="md"
                 variant={"newInput"}
@@ -407,7 +403,6 @@ export const SideSection = ({
                 Domaine de formation
               </Multiselect>
               <Multiselect
-                onClose={filterTracker("cfd")}
                 width={"64"}
                 size="md"
                 variant={"newInput"}
@@ -420,7 +415,6 @@ export const SideSection = ({
                 Formation
               </Multiselect>
               <Multiselect
-                onClose={filterTracker("nomCmq")}
                 width={"64"}
                 size="md"
                 variant={"newInput"}
@@ -433,7 +427,6 @@ export const SideSection = ({
                 CMQ
               </Multiselect>
               <Multiselect
-                onClose={filterTracker("filiereCmq")}
                 width={"64"}
                 size="md"
                 variant={"newInput"}

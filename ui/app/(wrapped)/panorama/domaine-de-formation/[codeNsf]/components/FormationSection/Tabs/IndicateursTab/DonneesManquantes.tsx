@@ -60,14 +60,6 @@ export const DonneesManquantes = ({
           <Text>
             Certaines données ne sont pas disponibles pour le territoire choisi
           </Text>
-          <Link
-            as={NextLink}
-            href="https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/pourquoi-certaines-donnees-sont-indisponibles-dans-orion-puqea5/"
-            target="_blank"
-            px={1}
-          >
-              (Pourquoi ?).
-          </Link>
         </Flex>
       }
       actionButton={

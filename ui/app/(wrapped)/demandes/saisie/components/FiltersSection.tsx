@@ -21,7 +21,6 @@ export const FiltersSection = ({
   setSearchParams,
   campagne,
   activeFilters,
-  filterTracker,
   handleFilters,
   academies,
   departements,
@@ -34,7 +33,6 @@ export const FiltersSection = ({
   setSearchParams: (params: ISearchParams) => void;
   campagne: CampagneType;
   activeFilters: Filters;
-  filterTracker: (filterName: keyof Filters) => () => void;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   academies: OptionType[];
   departements: OptionType[];
@@ -128,7 +126,6 @@ export const FiltersSection = ({
           <Flex direction={"row"} gap={2} flex={1}>
             <Box justifyContent={"start"}>
               <Multiselect
-                onClose={filterTracker("codeAcademie")}
                 width={"64"}
                 size="md"
                 variant={"newInput"}
@@ -143,7 +140,6 @@ export const FiltersSection = ({
             </Box>
             <Box justifyContent={"start"}>
               <Multiselect
-                onClose={filterTracker("codeDepartement")}
                 width={"64"}
                 size="md"
                 variant={"newInput"}
@@ -158,7 +154,6 @@ export const FiltersSection = ({
             </Box>
             <Box justifyContent={"start"}>
               <Multiselect
-                onClose={filterTracker("commune")}
                 width={"64"}
                 size="md"
                 variant={"newInput"}
@@ -173,7 +168,6 @@ export const FiltersSection = ({
             </Box>
             <Box justifyContent={"start"}>
               <Multiselect
-                onClose={filterTracker("uai")}
                 width={"64"}
                 size="md"
                 variant={"newInput"}

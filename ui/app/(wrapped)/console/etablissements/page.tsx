@@ -4,7 +4,6 @@ import { Button, Center, chakra, Flex, MenuButton, Spinner, Tab, TabList, Tabs, 
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { parse } from "qs";
 import { useContext, useEffect,useState } from "react";
 import { CURRENT_RENTREE } from 'shared';
@@ -204,14 +203,12 @@ const ColonneFilterSection = chakra(
     colonneFilters,
     forcedColonnes,
     handleColonneFilters,
-    trackEvent,
     user,
     className
   }: {
     colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     forcedColonnes?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     handleColonneFilters: (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => void;
-    trackEvent: (name: string, params?: Record<string, unknown>) => void;
     user?: UserType;
     className?: string;
   }) => {
@@ -264,7 +261,6 @@ const ColonneFilterSection = chakra(
               variant={"externalLink"}
               leftIcon={<Icon icon={"ri:table-line"} />}
               color="bluefrance.113"
-              onClick={() => trackEvent("etablissements:affichage-colonnes")}
             >
             Modifier les colonnes
             </MenuButton>
@@ -289,7 +285,6 @@ const getColonnesFromDisplayType = (displayType?: DisplayTypeEnum): FORMATION_ET
 
 const Page = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const trackEvent = usePlausible();
   const router = useRouter();
   const queryParams = useSearchParams();
   const { auth, user } = useAuth();
@@ -323,9 +318,6 @@ const Page = () => {
   const setDisplayType = (
     displayType: DisplayTypeEnum
   ) => {
-    trackEvent("etablissements:vue-tabs", {
-      props: { type: displayType },
-    });
     const columns = getColonnesFromDisplayType(displayType);
 
     handleColonneFilters(columns);
@@ -516,7 +508,6 @@ const Page = () => {
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
-    trackEvent("etablissements:export");
     const data = await client.ref("[GET]/etablissements").query({
       query: isFiltered ? getEtablissementsQueryParameters() : {},
     });
@@ -527,7 +518,6 @@ const Page = () => {
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
-    trackEvent("etablissements:export-excel");
     const data = await client.ref("[GET]/etablissements").query({
       query: isFiltered ? getEtablissementsQueryParameters() : {},
     });
@@ -565,10 +555,6 @@ const Page = () => {
   const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
   const { uais } = useContext(UaisContext);
   const rentreeScolaire = CURRENT_RENTREE;
-
-  const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
-  };
 
   const handleFiltersContext = (type: keyof Filters, value: Filters[keyof Filters]) => {
     if (type === "codeRegion" && value != null) setCodeRegion((value as string[])[0] ?? "");
@@ -637,7 +623,6 @@ const Page = () => {
       break;
     }
 
-    filterTracker(type)();
     setSearchParams({
       page: 0,
       filters: { ...filters, ...newFilters },
@@ -724,7 +709,6 @@ const Page = () => {
                   colonneFilters={colonneFilters}
                   handleColonneFilters={handleColonneFilters}
                   forcedColonnes={["libelleEtablissement", "libelleFormation"]}
-                  trackEvent={trackEvent}
                   user={user}
                 />
               }

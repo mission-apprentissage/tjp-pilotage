@@ -1,11 +1,10 @@
 "use client";
 
-import { Box, chakra, CloseButton, Heading, Stack, Text, VisuallyHidden } from "@chakra-ui/react";
+import { Box, chakra, CloseButton, Heading, Stack, VisuallyHidden } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import Link from "next/link";
 import { useState } from "react";
 
-import { isOldProduction, isProduction, publicConfig } from "@/config.public";
+import { isProduction, publicConfig } from "@/config.public";
 import { themeDefinition } from "@/theme/theme";
 
 export const EnvBandeau = chakra(() => {
@@ -32,13 +31,6 @@ export const EnvBandeau = chakra(() => {
         textAlign={"center"}
       >
         <Icon icon="ri:information-fill" fontSize="24px" style={{ margin: "auto" }} />
-        {isOldProduction ? (
-          <Box flexGrow={1}>
-            <Text>
-              <b><Link href="https://orion.inserjeunes.beta.gouv.fr" target="_blank">https://orion.inserjeunes.beta.gouv.fr</Link></b> va déménager.<br/> À partir du 22 Juillet 2025, merci d'utiliser <b><Link href="https://orion.education.gouv.fr/" target="_blank">https://orion.education.gouv.fr/</Link></b>.
-            </Text>
-          </Box>
-        ) : (
           <Heading as="h1"
             flexGrow={1}
             fontSize="20px"
@@ -51,7 +43,6 @@ export const EnvBandeau = chakra(() => {
           >
             {publicConfig.env}
           </Heading>
-        )}
         <CloseButton
           onClick={() => setOpen(false)}
           variant="inline"

@@ -1,5 +1,3 @@
-import { usePlausible } from "next-plausible";
-
 import type { Etablissement, Formation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import type { ExportColumns } from "@/utils/downloadExport";
@@ -82,12 +80,8 @@ export const ExportListEtablissements = ({
   formation: Formation;
   domaineDeFormation: { codeNsf: string; libelleNsf: string };
 }) => {
-  const trackEvent = usePlausible();
-
   const onExportCsv = async () => {
     if (!etablissements.length) return;
-
-    trackEvent("domaine-de-formation:etablissements:export-csv");
 
     downloadCsv(
       formatExportFilename("domaine-de-formation_etablissements"),
@@ -98,8 +92,6 @@ export const ExportListEtablissements = ({
 
   const onExportExcel = async () => {
     if (!etablissements.length) return;
-
-    trackEvent("domaine-de-formation:etablissements:export-excel");
 
     downloadExcel(
       formatExportFilename("domaine-de-formation_etablissements"),

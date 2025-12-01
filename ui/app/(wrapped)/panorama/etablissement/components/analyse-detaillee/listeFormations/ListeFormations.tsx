@@ -1,6 +1,5 @@
 import { Badge, Box, Flex, List, ListItem, Text, Tooltip } from "@chakra-ui/react";
 import _ from "lodash";
-import { usePlausible } from "next-plausible";
 import { CURRENT_RENTREE } from "shared";
 
 import type { Formation } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
@@ -27,7 +26,6 @@ export const ListeFormations = ({
   offre: string;
   setOffre: (offre: string) => void;
 }) => {
-  const trackEvent = usePlausible();
   const formattedFormations = _.chain(formations)
     .orderBy("ordreFormation", "desc")
     .groupBy("libelleNiveauDiplome")
@@ -35,12 +33,6 @@ export const ListeFormations = ({
 
   const onClick = (selectedOffre: string) => {
     setOffre(selectedOffre);
-    trackEvent("analyse-detailee-etablissement:interaction", {
-      props: {
-        type: "liste-formations-click",
-        selected_offre: selectedOffre,
-      },
-    });
   };
 
   return (

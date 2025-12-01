@@ -7583,13 +7583,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crisp-sdk-web@npm:^1.0.25":
-  version: 1.0.25
-  resolution: "crisp-sdk-web@npm:1.0.25"
-  checksum: 5f2b804a477a84c4059e70b1e406d59d056277af1a6e8b0a9a4e94a261da8a53ad3be5b2484769c05b3979f6a5470e0edfe94c53b3c1feb0dd06562510a50880
-  languageName: node
-  linkType: hard
-
 "cron-parser@npm:^4.9.0":
   version: 4.9.0
   resolution: "cron-parser@npm:4.9.0"
@@ -14275,17 +14268,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-plausible@npm:^3.12.4":
-  version: 3.12.4
-  resolution: "next-plausible@npm:3.12.4"
-  peerDependencies:
-    next: "^11.1.0 || ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 "
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: f8ae32eae3b8f4f45e1bdf1ab1aaf6be9ff184468c90253f4920a0cca01b426610c7ac85d082970e614f6f05b3679b9e68aae13ee5081a3d5bd003baaf11005a
-  languageName: node
-  linkType: hard
-
 "next@npm:14.2.32":
   version: 14.2.32
   resolution: "next@npm:14.2.32"
@@ -18989,7 +18971,6 @@ __metadata:
     axios: ^1.12.2
     chakra-dayzed-datepicker: ^0.3.1
     chakra-ui-markdown-renderer: ^4.1.0
-    crisp-sdk-web: ^1.0.25
     date-fns: ^4.1.0
     dayzed: ^3.2.3
     dotenv: ^16.6.1
@@ -18999,7 +18980,6 @@ __metadata:
     lodash: ^4.17.21
     maplibre-gl: ^4.7.1
     next: 14.2.32
-    next-plausible: ^3.12.4
     qs: ^6.14.0
     react: 18.3.1
     react-dom: 18.3.1
