@@ -2,7 +2,6 @@
   stage: deploy
   image: alpine:3.19
   before_script:
-    - VERSION=1.16.5-rc.7
     - |
       [ -z "$VERSION" ] && echo "VERSION is not set" && exit 1
       [ -z "$DEPLOY_PASS" ] && echo "DEPLOY_PASS is not set" && exit 1

@@ -2,15 +2,6 @@
   # Utiliser une image avec le client Docker uniquement
   image: docker:27-cli
   stage: release
-  variables:
-    # NE PAS surcharger DOCKER_HOST - utiliser celui pré-configuré
-    # DOCKER_HOST est déjà défini par le runner
-    DOCKER_DRIVER: overlay2
-    DOCKER_BUILDKIT: 1
-    # Configuration proxy
-    HTTP_PROXY: http://proxy.tec.in.phm.education.gouv.fr:3128
-    HTTPS_PROXY: http://proxy.tec.in.phm.education.gouv.fr:3128
-    NO_PROXY: "docker,localhost,127.0.0.1,harbor.forge.education.gouv.fr,gitlab.forge.education.gouv.fr,*.forge.in.phm.education.gouv.fr,docker-group-global-nexus3.forge.education.gouv.fr"
   before_script:
     # Installer les dépendances système
     - apk add --no-cache git bash curl
@@ -49,7 +40,6 @@
     # Exporter les variables pour les scripts
     - export HARBOR_USER="${HARBOR_USER}"
     - export HARBOR_PASS="${HARBOR_PASS}"
-
   cache:
     key:
       files:
@@ -85,6 +75,9 @@ release_auto:
       dotenv: release.env
   rules:
     - if: $CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE != "web"
+  needs:
+    - lint
+    - typecheck
 
 release_candidate:
   extends: .release_base
@@ -107,9 +100,12 @@ release_candidate:
       dotenv: release.env
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"
-      # when: manual
+      when: manual
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      # when: manual
+      when: manual
+  needs:
+    - lint
+    - typecheck
 
 release_manual:
   extends: .release_base
@@ -132,3 +128,6 @@ release_manual:
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"
       when: manual
+  needs:
+    - lint
+    - typecheck
