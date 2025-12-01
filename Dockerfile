@@ -4,7 +4,7 @@ ARG HTTPS_PROXY
 ARG NO_PROXY
 
 # Utiliser le registry mirror Nexus interne
-FROM docker-group-global-nexus3.forge.education.gouv.fr/node:25-slim AS builder_root
+FROM docker-group-global-nexus3.forge.education.gouv.fr/node:22-slim AS builder_root
 
 # Réimporter les ARG proxy dans ce stage
 ARG HTTP_PROXY
@@ -57,7 +57,7 @@ RUN --mount=type=cache,target=/app/.yarn/cache yarn workspaces focus --all --pro
 RUN mkdir -p /app/shared/node_modules && mkdir -p /app/server/node_modules
 
 # Production image, copy all the files and run next
-FROM docker-group-global-nexus3.forge.education.gouv.fr/node:25-slim AS server
+FROM docker-group-global-nexus3.forge.education.gouv.fr/node:22-slim AS server
 
 # Proxy nécessaire uniquement pour apt-get
 ARG HTTP_PROXY
@@ -128,7 +128,7 @@ ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 RUN yarn workspace ui build
 
 # Production image, copy all the files and run next
-FROM docker-group-global-nexus3.forge.education.gouv.fr/node:25-slim AS ui
+FROM docker-group-global-nexus3.forge.education.gouv.fr/node:22-slim AS ui
 
 # Proxy nécessaire uniquement pour apt-get
 ARG HTTP_PROXY
