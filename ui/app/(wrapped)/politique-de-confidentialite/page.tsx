@@ -222,9 +222,6 @@ const Page = () =>
             </Link>
           </DSFRParagraph>
         </Box>
-        <DSFRParagraph mb={4}>
-          Nous utilisons Plausible, un outil de mesure d'audience qui ne traite pas de donnée à caractère personnel et ne dépose ni cookies ni traceurs.
-        </DSFRParagraph>
         <TableContainer>
           <Table variant="simple">
             <Thead>

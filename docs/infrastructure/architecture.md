@@ -184,31 +184,6 @@ Il est important de ne pas interrompre les requêtes en cours. Pour cela, il est
 - Adapter la période d'arrêt en douceur ([stop_grace_period](https://docs.docker.com/compose/compose-file/compose-file-v3/#stop_grace_period)) en fonction des services pour laisser suffisamment de temps pour terminer les tâches en cours.
 - Écouter le signal `SIGTERM` dans les différentes applications pour terminer les tâches en cours et s'arrêter correctement.
 
-## Monitoring
-
-### Logs
-
-En raison de la redondance des services, il n'est plus possible de collecter directement les logs des services sur le disque, car cela créerait des conflits entre les différents processus qui écrivent dans le même fichier.
-
-Afin de collecter les logs, nous utilisons [le pilote de logging Docker Fluentd](https://docs.docker.com/config/containers/logging/fluentd/). Les logs `stdout` & `stderr` sont transféré vers le service [Fluentd](https://www.fluentd.org/).
-
-Fluentd est un collecteur de logs configuré comme suit :
-
-- Il collecte tous les logs des différents conteneurs.
-- Il analyse les access logs Nginx pour les structurer.
-- Il persiste les logs au format JSON compressés en GZIP.
-- Les archives sont séparées par date et par service.
-- La rotation des logs est effectuée quotidiennement.
-
-Pour le moment, les logs ne sont accessibles que depuis le serveur sur le disque local. Cependant, il est possible de transférer les logs vers notre serveur de monitoring à l'adresse https://monitoring.inserjeunes.beta.gouv.fr en utilisant le [client Grafana Fluentd](https://grafana.com/docs/loki/latest/clients/fluentd/).
-
-Il est également possible :
-
-- D'enrichir et de structurer les logs à l'aide des multiples plugins de parsing disponibles. Vous pouvez consulter la liste des [persers plugins](https://docs.fluentd.org/parser)
-- De transférer les logs vers de nombreuses destinations différentes en utilisant les différents [output plugins](https://docs.fluentd.org/output).
-
-Ainsi, avec Fluentd, nous avons la flexibilité d'enrichir, structurer et transférer nos logs vers différentes destinations pour une meilleure gestion et analyse des logs de nos services.
-
 ## Recette
 
 La recette est similaire à l'environnement de production excepté que l'environnement intègre un serveur SMTP pour la gestion des emails.
