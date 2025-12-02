@@ -50,7 +50,7 @@ export const [importIJData] = inject(
           await importIJDataForEtablissement({ cfd, voie });
           process.stdout.write(`\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`);
         },
-        { parallel: 20 }
+        { parallel: 10 }
       );
       console.log("\n--- end recueil des UAI à partir des CFD des diplomes professionnels");
 
@@ -68,7 +68,7 @@ export const [importIJData] = inject(
 
           process.stdout.write(`\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`);
         },
-        { parallel: 20 }
+        { parallel: 10 }
       );
       console.log("\n--- end recueil des UAI à partir des CFD des familles métiers");
 
