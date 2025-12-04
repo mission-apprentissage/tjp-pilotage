@@ -22,7 +22,7 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "web"
 
 include:
-  - local: '.gitlab/ci/sonarqube.yml'
-  - local: '.gitlab/ci/ci.yml'
-  - local: '.gitlab/ci/release.yml'
-  - local: '.gitlab/ci/deploy.yml'
+  - local: '.gitlab/sonarqube.yml'
+  - local: '.gitlab/ci.yml'
+  - local: '.gitlab/release.yml'
+  - local: '.gitlab/deploy.yml'

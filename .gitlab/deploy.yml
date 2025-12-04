@@ -1,0 +1,83 @@
+.deploy_base:
+  stage: deploy
+  image: alpine:3.19
+  before_script:
+    - |
+      [ -z "$VERSION" ] && echo "VERSION is not set" && exit 1
+      [ -z "$DEPLOY_PASS" ] && echo "DEPLOY_PASS is not set" && exit 1
+      [ -z "$DEPLOY_SSH_PRIVATE_KEY" ] && echo "DEPLOY_SSH_PRIVATE_KEY is not set" && exit 1
+      [ -z "$VAULT_PWD" ] && echo "VAULT_PWD is not set" && exit 1
+    - apk add --no-cache openssh-client ansible bash bind-tools netcat-openbsd iputils
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - eval $(ssh-agent -s)
+    # Add SSH key to agent
+    - echo "$DEPLOY_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - ssh-add -l
+    - echo "Private key added to ssh-agent"
+    - echo "$VAULT_PWD" > .infra/.vault_pwd.txt
+    - echo "Vault password file created"
+
+deploy_qualification:
+  stage: deploy
+  extends: .deploy_base
+  allow_failure: true
+  variables:
+    ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
+    ANSIBLE_REMOTE_USER: deploy
+    ANSIBLE_BECOME_PASS: $DEPLOY_PASS
+    ENVIRONMENT: qualification
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+  before_script:
+    - !reference [.deploy_base, before_script]
+    - ssh-keyscan -T 10 -H qa.orion.education.gouv.fr >> ~/.ssh/known_hosts 2>&1 || echo "ssh-keyscan failed with code $?"
+    - chmod 644 ~/.ssh/known_hosts
+    - cat ~/.ssh/known_hosts
+    - echo "=== Testing SSH connection ==="
+    - ssh -v -o ConnectTimeout=10 -o StrictHostKeyChecking=no deploy@qa.orion.education.gouv.fr "echo 'SSH connection successful'" 2>&1 || echo "SSH test failed"
+  script:
+    - |
+      # Retrieve new version
+      echo "Deploying version $VERSION"
+      echo "Deployment to $ENVIRONMENT"
+    - .bin/product deploy qualification --extra-vars "app_version=$VERSION"
+  environment:
+    name: qualification
+    deployment_tier: development
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "develop"
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: manual
+
+deploy_diffusion:
+  stage: deploy
+  extends: .deploy_base
+  allow_failure: true
+  variables:
+    ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
+    ANSIBLE_REMOTE_USER: deploy
+    ANSIBLE_BECOME_PASS: $DEPLOY_PASS
+    ENVIRONMENT: diffusion
+    ANSIBLE_HOST_KEY_CHECKING: "False"
+  before_script:
+    - !reference [.deploy_base, before_script]
+    - ssh-keyscan -T 10 -H qp.orion.education.gouv.fr >> ~/.ssh/known_hosts 2>&1 || echo "ssh-keyscan failed with code $?"
+    - chmod 644 ~/.ssh/known_hosts
+    - cat ~/.ssh/known_hosts
+    - echo "=== Testing SSH connection ==="
+    - ssh -v -o ConnectTimeout=10 -o StrictHostKeyChecking=no deploy@qp.orion.education.gouv.fr "echo 'SSH connection successful'" 2>&1 || echo "SSH test failed"
+  script:
+    - |
+      # Retrieve new version
+      echo "Deploying version $VERSION"
+      echo "Deployment to $ENVIRONMENT"
+    - .bin/product deploy diffusion --extra-vars "app_version=$VERSION"
+  environment:
+    name: diffusion
+    deployment_tier: staging
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "develop"
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: manual
