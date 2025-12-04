@@ -20,10 +20,7 @@
 
     # Installer Node.js et Yarn
     - apk add --no-cache nodejs npm
-    - node --version
-    - npm --version
     - npm install -g yarn
-    - yarn --version
 
     # Configuration Yarn avec proxy
     - yarn config set networkConcurrency 1

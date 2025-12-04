@@ -9,7 +9,7 @@ variables:
   DOCKER_BUILDKIT: 1
   HTTP_PROXY: http://proxy.tec.in.phm.education.gouv.fr:3128
   HTTPS_PROXY: http://proxy.tec.in.phm.education.gouv.fr:3128
-  NO_PROXY: "docker,localhost,127.0.0.1,harbor.forge.education.gouv.fr,gitlab.forge.education.gouv.fr,*.forge.in.phm.education.gouv.fr,docker-group-global-nexus3.forge.education.gouv.fr"
+  NO_PROXY: "docker,localhost,127.0.0.1,*.forge.in.phm.education.gouv.fr,*.forge.education.gouv.fr"
 
 workflow:
   rules:

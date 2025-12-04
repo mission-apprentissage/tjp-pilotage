@@ -55,7 +55,7 @@
     "test:watch": "vitest --watch",
     "test:clean": "yarn test --run && yarn cli clean:testdb",
     "typecheck": "yarn foreach:parallel run typecheck",
-    "typecheck:ci": "yarn foreach:ci run typecheck",
+    "typecheck:ci": "NODE_OPTIONS='--max-old-space-size=4000' yarn foreach:ci run typecheck",
     "vault:edit": ".bin/product vault:edit",
     "foreach:seq": "yarn workspaces foreach -Av --exclude orion",
     "foreach:parallel": "yarn foreach:seq -pi",
