@@ -142,20 +142,11 @@ const METADATA_MAP = {
 const getPathnameFromMetadataState = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   state: any
-): string | undefined => {
-  const symbols = Object.getOwnPropertySymbols(state ?? {});
+): string | undefined =>
+  Object.getOwnPropertySymbols(state)
+    .map((item) => state[item])
+    .find((state) => state && Object.hasOwn(state, "url"))?.url?.pathname;
 
-  if (symbols.length === 0) {
-    return undefined;
-  }
-
-  const res = symbols
-    .map((p) => state[p])
-    .filter((state) => state)
-    .find((state) => Object.prototype.hasOwnProperty.call(state, "urlPathname"));
-
-  return res?.urlPathname.replace(/\?.+/, "");
-};
 
 /**
  *

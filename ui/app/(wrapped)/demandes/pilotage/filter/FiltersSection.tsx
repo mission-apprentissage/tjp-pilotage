@@ -164,7 +164,7 @@ export const FiltersSection = ({
                 width={"100%"}
                 size="md"
                 bg={"white"}
-                isLoading={isLoading}
+                isLoading={isLoading || !data}
               >
                 <Flex direction="row" gap={2}>
                   <Text my={"auto"} bgColor="white">

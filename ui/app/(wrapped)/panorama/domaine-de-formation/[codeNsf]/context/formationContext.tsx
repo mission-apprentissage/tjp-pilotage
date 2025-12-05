@@ -114,15 +114,19 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   });
 
   useEffect(() => {
+    // Ne rien faire si pas de formations
+    if (!formations.length) return;
+
     const selection = findDefaultCfd(cfd, selectedCfd, formations, formationsByLibelleNiveauDiplome);
-    if (cfd !== currentFilters.selection.cfd) {
-      setCurrentFilters({
-        ...currentFilters,
+
+    // Ne mettre a jour que si le cfd change reellement
+    if (selection.cfd && selection.cfd !== currentFilters.selection.cfd) {
+      setCurrentFilters((prev) => ({
+        ...prev,
         selection
-      });
+      }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cfd, setCurrentFilters, selectedCfd, formations, formationsByLibelleNiveauDiplome]);
+  }, [cfd, selectedCfd, formations.length]);
 
   const handleResetFilters = () => {
     setCurrentFilters((prev) => ({

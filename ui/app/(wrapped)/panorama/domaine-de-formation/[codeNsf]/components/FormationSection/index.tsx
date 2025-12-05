@@ -45,7 +45,7 @@ export const FormationSection = () => {
   }
 
   return (
-    <Container maxW={"container.xl"} as="section" id="formations" my={"32px"}>
+    <Container maxW={"container.xl"} id="formations" my={"32px"}>
       <Flex direction={"column"} gap={8}>
         <Heading as="h2" fontSize={"24px"} fontWeight={"bold"}>
           Offre de formation dans ce domaine
