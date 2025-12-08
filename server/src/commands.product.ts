@@ -336,11 +336,7 @@ export function productCommands(cli: Command) {
         importDiplomesProfessionnels,
         importIndicateursRegion,
         importIndicateursDepartement,
-        importLienEmploiFormation,
         importDiscipline,
-        importTensionRomeNational,
-        importTensionRomeRegion,
-        importTensionRomeDepartement,
         importActionPrioritaire,
       };
 
@@ -354,6 +350,18 @@ export function productCommands(cli: Command) {
       await refreshViews();
       await createJob({ name: "importTables", sub: usecaseName });
     });
+
+  cli
+    .command("importMetierTension")
+    .description("Import du lien entre les formations et les métiers en tension")
+    .action(async () => {
+      await importLienEmploiFormation().then();
+      await importTensionRomeNational().then();
+      await importTensionRomeRegion().then();
+      await importTensionRomeDepartement().then();
+      await createJob({ name: "importMetierTension" });
+    });
+
 
   cli.command("importIJ").action(async () => {
     await importIJData().then();
