@@ -19,14 +19,6 @@ const METADATA_MAP = {
     title: "Panorama établissement - Orion",
     description: "Panorama des formations enseignées dans votre établissement",
   },
-  "/panorama/lien-metier-formation/formation": {
-    title: "Lien formation-métier - Orion",
-    description: "Liens entre une formation et les métiers qu'elle prépare",
-  },
-  "/panorama/lien-metier-formation/metier": {
-    title: "Lien métier-formation - Orion",
-    description: "Liens entre un métier et les formations qui y mènent",
-  },
   "/console/formations": {
     title: "Console des formations - Orion",
     description: "Console des formations dispensées",
@@ -162,12 +154,6 @@ const extractBasePathname = (pathname: string) => {
   }
   if (pathname.includes("/panorama/etablissement")) {
     return "/panorama/etablissement";
-  }
-  if (pathname.includes("/panorama/lien-metier-formation/formation")) {
-    return "/panorama/lien-metier-formation/formation";
-  }
-  if (pathname.includes("/panorama/lien-metier-formation/metier")) {
-    return "/panorama/lien-metier-formation/metier";
   }
   if (pathname.includes("/demandes/synthese")) {
     return "/demandes/synthese";
