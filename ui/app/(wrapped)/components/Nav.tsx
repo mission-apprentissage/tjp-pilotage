@@ -29,9 +29,6 @@ const DOCUMENTATION_LINKS = {
   ["panorama/departement"]: getDocumentationPath("000_-_Panorama_Region_-_Departement.html"),
   ["panorama/etablissement"]: getDocumentationPath("000_-_Panorama_Etablissement.html"),
   ["panorama/domaine-de-formation"]: getDocumentationPath("000_-_Panorama_Domaine_de_formation.html"),
-  ["panorama/lien-metier-formation"]: getDocumentationPath("000_-_Panorama_Lien_Metier_Formation.html"),
-  ["panorama/lien-metier-formation/metier"]: getDocumentationPath("000_-_Panorama_Lien_Metier_Formation.html"),
-  ["panorama/lien-metier-formation/formation"]: getDocumentationPath("000_-_Panorama_Lien_Metier_Formation.html"),
   // Console
   ["console/formations"]: getDocumentationPath("000_-_Consoles.html"),
   ["console/etablissements"]: getDocumentationPath("000_-_Consoles.html"),
@@ -248,11 +245,6 @@ export const Nav = () => {
             <MenuItem p="0">
               <NavMenuLink href="/panorama/domaine-de-formation" segment="panorama/domaine-de-formation">
                 Domaine de formation
-              </NavMenuLink>
-            </MenuItem>
-            <MenuItem p="0">
-              <NavMenuLink href="/panorama/lien-metier-formation" segment="panorama/lien-metier-formation">
-                Lien métier formation
               </NavMenuLink>
             </MenuItem>
           </MenuList>
