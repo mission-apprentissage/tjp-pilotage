@@ -87,6 +87,7 @@ Cette commande n'est à exécuter que **si les données suivantes en lien avec l
     - à l'échelle **nationale** (`yarn cli importTensionRome importTensionRomeNational`)
     - à l'échelle **régionale** (`yarn cli importTensionRome importTensionRomeRegion`)
     - à l'échelle **départementale** (`yarn cli importTensionRome importTensionRomeDepartement`)
+
 Les tables concernées sont :
 - `domaineProfessionnel`
 - `rome`
