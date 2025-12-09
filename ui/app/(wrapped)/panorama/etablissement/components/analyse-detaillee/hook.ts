@@ -1,5 +1,4 @@
 import { uniq } from "lodash";
-import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 import { CURRENT_IJ_MILLESIME, VoieEnum } from "shared";
 import { CURRENT_RENTREE } from "shared/time/CURRENT_RENTREE";
@@ -101,7 +100,6 @@ function shouldSelectDefaultFormation(params: Params, formations?: Formations) {
 }
 
 export const useAnalyseDetaillee = () => {
-  const trackEvent = usePlausible();
   const { uai, setAnalyseDetaillee } = useEtablissementContext();
   const [filteredDatas, setFilteredDatas] = useState<AnalyseDetaillee | null>();
   const [searchParams, setSearchParams] = useStateParams<Params>({
@@ -134,7 +132,6 @@ export const useAnalyseDetaillee = () => {
   const displayQuadrant = () => setSearchParams({ ...searchParams, displayType: DisplayTypeEnum.quadrant });
 
   const setOffre = (offre: string) => {
-    filterTracker("offre", offre);
     setSearchParams({
       ...searchParams,
       offre,
@@ -145,12 +142,6 @@ export const useAnalyseDetaillee = () => {
     setSearchParams({
       ...searchParams,
       filters: { ...searchParams.filters, [type]: value },
-    });
-  };
-
-  const filterTracker = (filterName: keyof Filters | string, filterValue?: string | number) => () => {
-    trackEvent("analyse-detailee-etablissement:filtre", {
-      props: { filter_name: filterName, filter_value: filterValue },
     });
   };
 
@@ -207,7 +198,6 @@ export const useAnalyseDetaillee = () => {
     offre: searchParams.offre,
     displayType: searchParams.displayType,
     activeFilters: searchParams.filters,
-    filterTracker,
     setOffre,
     uai,
     formationFounds: Object.values(data?.formations ?? {}).length,

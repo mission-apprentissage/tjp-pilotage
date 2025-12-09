@@ -11,6 +11,7 @@ const user = {
   codeRegion: "84",
   enabled: true,
   fonction: null,
+  uais: null,
 } as const;
 
 const requestUser = {
@@ -91,6 +92,41 @@ describe("editUser usecase", () => {
           })
         ).rejects.toThrow("cannot edit user within this scope");
       });
+    });
+
+    it("should edit the user with role perdir and uais", async () => {
+      const deps = {
+        updateUser: vi.fn(async () => {}),
+        findUser: vi.fn(async () => ({id: "test", email: "test@test.fr"})),
+        findDifferentUserWithSameEmail: vi.fn(async () => undefined),
+      };
+      const editUser = editUserFactory(deps);
+      await editUser({ userId: "test", data: {
+        ...user,
+        role: RoleEnum["perdir"],
+        uais: [{value: "1234567A", label: "1234567A - Test"}]
+      }, requestUser });
+      await expect(deps.updateUser).toHaveBeenCalled();
+    });
+
+    it("should throw an error if the user is a perdir and has no uai", async () => {
+        const deps = {
+          updateUser: vi.fn(async () => {}),
+          findUser: vi.fn(async () => ({id: "test", email: "test@test.fr"})),
+          findDifferentUserWithSameEmail: vi.fn(async () => undefined)
+        };
+        const editUser = editUserFactory(deps);
+        await expect(async () =>
+          editUser({
+            userId: "test",
+            data: {
+              ...user,
+              role: RoleEnum["perdir"],
+              uais: null
+            },
+            requestUser
+          })
+        ).rejects.toThrow("Un utilisateur avec le rôle perdir doit avoir au moins un établissement.");
     });
   });
 });

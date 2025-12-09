@@ -11,7 +11,7 @@ const getEtablissementLibelle = (eb: ExpressionBuilder<DB, "etablissement">) =>
     "etablissement.libelleEtablissement"
   )},${sql.lit("Sans libellé")}),' - Lycée',1),' -Lycée',1),',',1),' : ',1))`;
 
-export const getInformations = ({ uai }: { uai: string }) =>
+export const getInformations = async ({ uai }: { uai: string }) =>
   getKbdClient()
     .selectFrom("etablissement")
     .leftJoin("departement", "etablissement.codeDepartement", "departement.codeDepartement")

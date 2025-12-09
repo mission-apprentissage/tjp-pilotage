@@ -20,13 +20,11 @@ import { Multiselect } from "@/components/Multiselect";
 export const PrimaryFiltersSection = ({
   activeFilters,
   handleFilters,
-  filterTracker,
   isLoading,
   data,
 }: {
   activeFilters: FiltersCorrections;
   handleFilters: (type: keyof FiltersCorrections, value: FiltersCorrections[keyof FiltersCorrections]) => void;
-  filterTracker: (filterName: keyof FiltersCorrections) => () => void;
   isLoading: boolean;
   data?: Corrections;
 }) => {
@@ -144,7 +142,6 @@ export const PrimaryFiltersSection = ({
                 <Box justifyContent={"start"} flex={1}>
                   <Text color="white" mb={2} fontWeight={500}>RÉGION</Text>
                   <Multiselect
-                    onClose={filterTracker("codeRegion")}
                     width={["100%", null, "64"]}
                     size="md"
                     variant={"newInput"}
@@ -158,7 +155,6 @@ export const PrimaryFiltersSection = ({
                 <Box justifyContent={"start"}>
                   <Text color="white" mb={2} fontWeight={500}>ACADÉMIE</Text>
                   <Multiselect
-                    onClose={filterTracker("codeAcademie")}
                     width={"64"}
                     size="md"
                     variant={"newInput"}

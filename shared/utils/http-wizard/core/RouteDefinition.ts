@@ -1,4 +1,3 @@
-/* eslint-disable-next-line n/no-extraneous-import */
 import type { AxiosRequestConfig } from 'axios';
 
 import type { SchemaZod } from './providers/ZodProvider';

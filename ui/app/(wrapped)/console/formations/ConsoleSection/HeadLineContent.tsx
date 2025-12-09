@@ -1,6 +1,6 @@
 import { Box, chakra, IconButton,Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { usePlausible } from "next-plausible";
+import { useSearchParams } from "next/navigation";
 import type { CSSProperties } from "react";
 
 import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
@@ -19,7 +19,7 @@ import type { Filters, FORMATION_COLUMNS_KEYS, Order } from "@/app/(wrapped)/con
 import { OrderIcon } from "@/components/OrderIcon";
 
 import { COLUMNS_WIDTH } from "./COLUMNS_WIDTH";
-import { getLeftOffset, isColonneSticky } from "./utils";
+import { getLeftOffset, isColonneSticky, nomColonneConsoleFormation } from "./utils";
 
 const ConditionalTh = chakra(
   ({
@@ -48,6 +48,14 @@ const ConditionalTh = chakra(
     icon?: React.ReactNode;
   }) => {
     const isSticky = isColonneSticky({ colonne, stickyColonnes });
+
+    const searchParams = useSearchParams();
+    const codeRegion = searchParams?.get("filters[codeRegion][0]");
+    const nomColonne = nomColonneConsoleFormation({
+                        colonne: colonne as string,
+                        aliasColonne: FORMATION_COLUMNS[colonne],
+                        isRegionFiltered: !!codeRegion
+                      });
 
     if (colonneFilters.includes(colonne))
       return (
@@ -78,7 +86,7 @@ const ConditionalTh = chakra(
             alignItems: "center",
           }}>
             <Tooltip
-              label={FORMATION_COLUMNS[colonne]}
+              label={nomColonne}
               placement="top"
             >
               <Box
@@ -92,16 +100,16 @@ const ConditionalTh = chakra(
                 whiteSpace="nowrap"
               >
                 {handleOrder && (<OrderIcon {...order} column={colonne} />)}
-                {FORMATION_COLUMNS[colonne]}
+                {nomColonne}
               </Box>
             </Tooltip>
             {icon}
             <Tooltip
-              label={`${isSticky ? "Libérer" : "Figer"} la colonne ${FORMATION_COLUMNS[colonne].toLocaleLowerCase()}`}
+              label={`${isSticky ? "Libérer" : "Figer"} la colonne ${nomColonne.toLocaleLowerCase()}`}
               placement="top"
             >
               <IconButton
-                aria-label={`Figer la colonne ${FORMATION_COLUMNS[colonne].toLocaleLowerCase()}`}
+                aria-label={`Figer la colonne ${nomColonne.toLocaleLowerCase()}`}
                 icon={
                   isSticky ?
                     <Icon icon={"ri:lock-line"} /> :
@@ -156,10 +164,8 @@ export const HeadLineContent = ({
   setStickyColonnes: React.Dispatch<React.SetStateAction<FORMATION_COLUMNS_KEYS[]>>;
   getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
 }) => {
-  const trackEvent = usePlausible();
 
   const handleOrder = (column: Order["orderBy"]) => {
-    trackEvent("formations:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
       return;

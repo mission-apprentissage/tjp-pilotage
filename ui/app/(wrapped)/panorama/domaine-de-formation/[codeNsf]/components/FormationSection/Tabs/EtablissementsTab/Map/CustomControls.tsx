@@ -1,5 +1,4 @@
 import type { MapEventType } from "maplibre-gl";
-import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
 import type { MapRef } from "react-map-gl/maplibre";
 import { useMap } from "react-map-gl/maplibre";
@@ -39,7 +38,6 @@ export const CustomControls = ({
   setMap: (map: MapRef) => void;
 }) => {
   const { current: map } = useMap();
-  const trackEvent = usePlausible();
 
   const loadImageOnMap = async (image: { path: string; name: string }) => {
     if (!map?.isStyleLoaded()) {
@@ -64,11 +62,6 @@ export const CustomControls = ({
         lngMax: bounds.toArray()[1][0],
         latMax: bounds.toArray()[1][1],
       });
-      trackEvent("cartographie-etablissement:interaction", {
-        props: {
-          type: "cartographie-zoom",
-        },
-      });
     }
   };
 
@@ -86,7 +79,7 @@ export const CustomControls = ({
 
       setMap(map);
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+
   }, [map, loadImageOnMap, setMap, onZoomEnd]);
 
   return <></>;

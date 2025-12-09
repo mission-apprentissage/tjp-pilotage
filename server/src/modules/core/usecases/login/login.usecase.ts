@@ -1,5 +1,4 @@
 import * as Boom from "@hapi/boom";
-/* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 import { LoginErrorsEnum } from "shared/enum/loginErrorsEnum";
 

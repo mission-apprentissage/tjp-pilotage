@@ -1,0 +1,130 @@
+.release_base:
+  # Utiliser une image avec le client Docker uniquement
+  image: docker:27-cli
+  stage: release
+  before_script:
+    # Installer les dépendances système
+    - apk add --no-cache git bash curl
+
+    # Configuration Git
+    - git remote set-url origin "https://CI_TOKEN_ORION:${CI_TOKEN_ORION}@gitlab.forge.education.gouv.fr/${CI_PROJECT_PATH}.git"
+
+    # Vérification connexion Docker
+    - echo "Test connexion Docker..."
+    - docker info
+
+    # Login Harbor AVANT tout build
+    - echo "Login Harbor..."
+    - echo "$HARBOR_PASS" | docker login -u "$HARBOR_USER" --password-stdin harbor.forge.education.gouv.fr
+    - echo "✓ Login Harbor OK"
+
+    # Installer Node.js et Yarn
+    - apk add --no-cache nodejs npm
+    - npm install -g yarn
+
+    # Configuration Yarn avec proxy
+    - yarn config set networkConcurrency 1
+    - yarn config set enableGlobalCache true
+    - yarn config set compressionLevel 0
+    - yarn config set httpTimeout 600000
+    - yarn config set enableProgressBars true
+    - yarn config set httpsProxy ${HTTPS_PROXY}
+    - yarn config set httpProxy ${HTTP_PROXY}
+
+    # Installer les dépendances
+    - yarn install
+
+    # Exporter les variables pour les scripts
+    - export HARBOR_USER="${HARBOR_USER}"
+    - export HARBOR_PASS="${HARBOR_PASS}"
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules/
+      - .yarn/install-state.gz
+      - .yarn/cache/
+      - .yarn/releases/
+
+release_auto:
+  extends: .release_base
+  script:
+    # Récupérer la version précédente
+    - export PREV_VERSION=$(git describe --tags --abbrev=0 2>/dev/null | cut -c2- || echo "0.0.0")
+    - echo "Version précédente $PREV_VERSION"
+
+    # Vérifier la connexion au Docker distant
+    - echo "Connexion au Docker distant via DOCKER_HOST=$DOCKER_HOST"
+    - docker version
+    - docker info
+
+    # Exécuter le release
+    - yarn release
+
+    # Récupérer la nouvelle version
+    - export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
+    - echo "Nouvelle version $VERSION"
+    - echo "VERSION=$VERSION" >> release.env
+    - echo "PREV_VERSION=$PREV_VERSION" >> release.env
+  artifacts:
+    reports:
+      dotenv: release.env
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE != "web"
+  needs:
+    - lint
+    - typecheck
+
+release_candidate:
+  extends: .release_base
+  allow_failure: true
+  script:
+    # Récupérer la version précédente
+    - export PREV_VERSION=$(git describe --tags --abbrev=0 2>/dev/null | cut -c2- || echo "0.0.0")
+    - echo "Version précédente $PREV_VERSION"
+
+    # Exécuter le release candidate
+    - yarn release:candidate patch
+
+    # Récupérer la nouvelle version
+    - export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
+    - echo "Nouvelle version $VERSION"
+    - echo "VERSION=$VERSION" >> release.env
+    - echo "PREV_VERSION=$PREV_VERSION" >> release.env
+  artifacts:
+    reports:
+      dotenv: release.env
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+  needs:
+    - lint
+    - typecheck
+
+release_manual:
+  extends: .release_base
+  script:
+    # Récupérer la version précédente
+    - export PREV_VERSION=$(git describe --tags --abbrev=0 2>/dev/null | cut -c2- || echo "0.0.0")
+    - echo "Version précédente $PREV_VERSION"
+
+    # Exécuter le release manuel
+    - yarn release:manual
+
+    # Récupérer la nouvelle version
+    - export VERSION=$(git describe --tags --abbrev=0 | cut -c2-)
+    - echo "Nouvelle version $VERSION"
+    - echo "VERSION=$VERSION" >> release.env
+    - echo "PREV_VERSION=$PREV_VERSION" >> release.env
+  artifacts:
+    reports:
+      dotenv: release.env
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: manual
+  needs:
+    - lint
+    - typecheck

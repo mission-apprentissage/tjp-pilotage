@@ -10,7 +10,6 @@ import logger from "./services/logger";
     await startCLI();
   } catch (err) {
     logger.error({ err }, "startup error");
-    // eslint-disable-next-line n/no-process-exit
     process.exit(1);
   }
 })();

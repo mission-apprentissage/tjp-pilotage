@@ -20,14 +20,12 @@ export const InfoCard = ({
   links,
   img,
   sourceText,
-  linkTracker,
 }: {
   title: string;
   description: string;
   links: { label?: string; href: string } | { label?: string; href: string }[];
   img: string;
   sourceText?: string;
-  linkTracker: (filterName: string) => () => void;
 }) => {
   return (
     <Card bg="grey.1000" padding={2}>
@@ -55,7 +53,6 @@ export const InfoCard = ({
                         key={href}
                         target="_blank"
                         rel="noreferrer"
-                        onClick={linkTracker(title)}
                       >
                         {label}
                       </MenuItem>
@@ -77,7 +74,6 @@ export const InfoCard = ({
                 target="_blank"
                 rel="noreferrer"
                 rightIcon={<ExternalLinkIcon />}
-                onClick={linkTracker(title)}
               >
                 Voir le site
               </Button>

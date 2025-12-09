@@ -1,13 +1,11 @@
 import { Box, Input, InputGroup, InputLeftElement, StackDivider, Text, useToken, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { usePlausible } from "next-plausible";
 import { useEffect, useRef, useState } from "react";
 
 import { GlossaireListContentItem } from "./GlossaireListContentItem";
 import type { GlossaireEntries } from "./types";
 
 const useGlossaireList = (initialEntries: GlossaireEntries) => {
-  const trackEvent = usePlausible();
   const [searchValue, setSearchValue] = useState("");
   const [entries, setEntries] = useState<GlossaireEntries>(initialEntries);
   const [greyColor] = useToken("colors", ["grey.625"]);
@@ -21,9 +19,6 @@ const useGlossaireList = (initialEntries: GlossaireEntries) => {
     );
   }, [searchValue, setEntries, initialEntries]);
 
-  useEffect(() => {
-    trackEvent("glossaire", { props: { name: "Liste" } });
-  }, [trackEvent]);
 
   useEffect(() => {
     // Focus initial sur l'input

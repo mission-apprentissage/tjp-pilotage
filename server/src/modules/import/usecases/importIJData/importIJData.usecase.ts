@@ -38,7 +38,7 @@ export const [importIJData] = inject(
       console.log("--- end fetch IJ regions");
       console.log("--- recueil des UAI à partir des CFD des diplomes professionnels");
       await streamIt(
-        (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
+        async (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
         async (item) => {
           const cfd = item.cfd;
           const voie = item.voie;
@@ -50,13 +50,13 @@ export const [importIJData] = inject(
           await importIJDataForEtablissement({ cfd, voie });
           process.stdout.write(`\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`);
         },
-        { parallel: 20 }
+        { parallel: 10 }
       );
       console.log("\n--- end recueil des UAI à partir des CFD des diplomes professionnels");
 
       console.log("--- recueil des UAI à partir des CFD des familles métiers");
       await streamIt(
-        (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
+        async (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
         async (item) => {
           const cfd = item.cfd;
           if (!cfd) return;
@@ -68,7 +68,7 @@ export const [importIJData] = inject(
 
           process.stdout.write(`\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`);
         },
-        { parallel: 20 }
+        { parallel: 10 }
       );
       console.log("\n--- end recueil des UAI à partir des CFD des familles métiers");
 

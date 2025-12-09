@@ -1,4 +1,4 @@
-/* eslint-disable-next-line import/default */
+
 import jwt from "jsonwebtoken";
 import { RoleEnum } from "shared";
 import { DneSSOErrorsEnum } from "shared/enum/dneSSOErrorsEnum";

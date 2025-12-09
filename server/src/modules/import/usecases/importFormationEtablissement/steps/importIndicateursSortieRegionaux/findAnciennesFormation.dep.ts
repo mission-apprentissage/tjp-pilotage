@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
-export const findAnciennesFormation = ({ cfd, voie }: { cfd: string; voie: string }) =>
+export const findAnciennesFormation = async ({ cfd, voie }: { cfd: string; voie: string }) =>
   getKbdClient()
     .selectFrom("formationHistorique")
     .selectAll()

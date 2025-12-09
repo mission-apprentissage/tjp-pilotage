@@ -6,7 +6,7 @@
   ],
   "plugins": ["zod"],
   "rules": {
-    "@typescript-eslint/no-floating-promises": ["error"],
+    "@typescript-eslint/no-floating-promises": "error",
     "n/no-missing-import": 0,
     "@dword-design/import-alias/prefer-alias": [
       "error",
@@ -34,7 +34,7 @@
     {
       "files": ["**/migrations/**/*.ts", "./src/index.ts", "./src/main.ts"],
       "rules": {
-        "@typescript-eslint/no-floating-promises": ["off"]
+        "@typescript-eslint/no-floating-promises": "off"
       }
     }
   ],

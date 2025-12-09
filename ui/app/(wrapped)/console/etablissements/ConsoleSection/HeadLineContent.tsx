@@ -1,6 +1,5 @@
 import { Box, chakra, IconButton, Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { usePlausible } from "next-plausible";
 import type {CSSProperties} from "react";
 import { CURRENT_IJ_MILLESIME } from "shared";
 import type { UserType } from "shared/schema/userSchema";
@@ -162,10 +161,7 @@ export const HeadLineContent = ({
   user?: UserType;
   filters?: Partial<Filters>;
 }) => {
-  const trackEvent = usePlausible();
-
   const handleOrder = (column: Order["orderBy"]) => {
-    trackEvent("etablissements:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
       return;

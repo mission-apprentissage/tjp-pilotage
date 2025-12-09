@@ -1,4 +1,3 @@
-import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
 import type { CircleLayer, GeoJSONSource, MapGeoJSONFeature, MapMouseEvent, SymbolLayer } from "react-map-gl/maplibre";
 import { Layer, Source, useMap } from "react-map-gl/maplibre";
@@ -20,7 +19,6 @@ export const EtablissementsLayers = ({
   setActiveUai: (uai: string | null) => void;
 }) => {
   const { current: map } = useMap();
-  const trackEvent = usePlausible();
 
   const geojson = {
     type: "FeatureCollection",
@@ -125,12 +123,6 @@ export const EtablissementsLayers = ({
             "coordinates" in features[0].geometry ? (features[0].geometry.coordinates as [number, number]) : [-1, -1],
           zoom: clusterZoom,
         });
-        trackEvent("cartographie-etablissement:interaction", {
-          props: {
-            type: "cartographie-etablissement-cluster-click",
-            uai: features[0].properties.uai,
-          },
-        });
       }
     }
   };
@@ -152,12 +144,6 @@ export const EtablissementsLayers = ({
       if (features.length > 0 && features[0] !== undefined) {
         setHoverUai(features[0].properties.uai);
         setActiveUai(features[0].properties.uai);
-        trackEvent("cartographie-formation:interaction", {
-          props: {
-            type: "cartographie-formation-hover",
-            uai: features[0].properties.uai,
-          },
-        });
       }
     }
   };
@@ -180,7 +166,7 @@ export const EtablissementsLayers = ({
         });
       });
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+
   }, [
     map,
     onSinglePointOver,

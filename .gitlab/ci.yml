@@ -1,0 +1,76 @@
+stages:
+  - ci
+
+variables:
+  FF_USE_FASTZIP: "true"
+  CACHE_COMPRESSION_LEVEL: "fast"
+
+.node_setup:
+  image: docker:latest
+  services:
+    - docker:dind
+    - node:22
+  cache:
+    - key:
+        files:
+          - yarn.lock
+      paths:
+        - node_modules/
+        - .yarn/install-state.gz
+        - .yarn/cache/
+        - .pnp.cjs
+        - .pnp.loader.mjs
+      policy: pull-push
+    - key: typecheck-cache
+      paths:
+        - server/.tsbuildinfo
+        - ui/.next/cache/
+        - shared/.tsbuildinfo
+      policy: pull-push
+  before_script:
+    # Installer Node.js et Yarn
+    - apk update
+    - apk add --no-cache bash nodejs npm icu-data-full
+    - node --version
+    - npm --version
+    - npm install -g yarn
+    - yarn --version
+
+    # Configuration Yarn avec proxy
+    - yarn config set networkConcurrency 1
+    - yarn config set enableGlobalCache true
+    - yarn config set compressionLevel 0
+    - yarn config set httpTimeout 600000
+    - yarn config set enableProgressBars true
+    - yarn config set httpsProxy ${HTTPS_PROXY}
+    - yarn config set httpProxy ${HTTP_PROXY}
+
+    - yarn install
+
+lint:
+  extends: .node_setup
+  stage: ci
+  script:
+    - yarn lint:ci
+    - echo "Lint passed"
+  timeout: 10 minutes
+
+typecheck:
+  extends: .node_setup
+  stage: ci
+  script:
+    - yarn typecheck:ci
+    - echo "Typecheck passed"
+  allow_failure: true
+  timeout: 20 minutes
+
+tests:
+  extends: .node_setup
+  stage: ci
+  script:
+    - docker compose up -d --wait postgres
+    - yarn test
+    - docker compose down postgres
+    - echo "Tests passed"
+  allow_failure: true
+  timeout: 10 minutes

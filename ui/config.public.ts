@@ -1,11 +1,8 @@
 export interface PublicConfig {
-  crisp: {
-    token: string;
-  };
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" |  "qualification" | "diffusion" | "preproduction" | "production" | "productionij";
+  env: "local" |  "qualification" | "diffusion" | "preproduction" | "production";
   version: string;
   productMeta: {
     brandName: "orion";
@@ -14,29 +11,10 @@ export interface PublicConfig {
   };
 }
 
-function getProductionIJPublicConfig(): PublicConfig {
-  const host = "orion.inserjeunes.beta.gouv.fr";
-
-  return {
-    crisp: {
-      token: "cf473a68-afeb-4611-9d38-55ff6144b9b8",
-    },
-    host,
-    baseUrl: `https://${host}`,
-    env: "production",
-    apiEndpoint: `https://${host}/api`,
-    version: getVersion(),
-    productMeta: getProductMeta(),
-  };
-}
-
 function getPreProductionPublicConfig(): PublicConfig {
   const host = "pp.orion.education.gouv.fr";
 
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `https://${host}`,
     env: "preproduction",
@@ -50,9 +28,6 @@ function getDiffusionPublicConfig(): PublicConfig {
   const host = "qp.orion.education.gouv.fr";
 
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `https://${host}`,
     env: "diffusion",
@@ -66,9 +41,6 @@ function getQualificationPublicConfig(): PublicConfig {
   const host = "qa.orion.education.gouv.fr";
 
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `https://${host}`,
     env: "qualification",
@@ -82,9 +54,6 @@ function getProductionPublicConfig(): PublicConfig {
   const host = "orion.education.gouv.fr";
 
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `https://${host}`,
     env: "production",
@@ -97,9 +66,6 @@ function getProductionPublicConfig(): PublicConfig {
 function getLocalPublicConfig(): PublicConfig {
   const host = "localhost";
   return {
-    crisp: {
-      token: "no-token",
-    },
     host,
     baseUrl: `http://${host}:3000`,
     env: "local",
@@ -143,7 +109,6 @@ function getEnv(): PublicConfig["env"] {
   case "preproduction":
   case "production":
   case "local":
-  case "productionij":
     return env;
   default:
     throw new Error(`Invalid NEXT_PUBLIC_ENV env-vars ${env}`);
@@ -162,12 +127,9 @@ function getPublicConfig(): PublicConfig {
     return getProductionPublicConfig();
   case "local":
     return getLocalPublicConfig();
-  case "productionij":
-    return getProductionIJPublicConfig();
   }
 }
 
 export const isProduction = getEnv() === "production";
-export const isOldProduction = getEnv() === "productionij";
 
 export const publicConfig: PublicConfig = getPublicConfig();

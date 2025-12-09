@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-echo "Push les images docker sur le registry github (https://ghcr.io/mission-apprentissage/)"
+echo "Push les images docker sur le registry harbor (https://harbor.forge.education.gouv.fr/orion-orion/)"
 
 readonly VERSION=$("${ROOT_DIR}/.bin/scripts/get-version.sh")
 
@@ -30,7 +30,7 @@ generate_next_patch_version() {
   fi;
 
   local version="$VERSION"
-  
+
   # Extract major version
   local major="${version%%.*}"
   version="${version#*.}"
@@ -105,15 +105,15 @@ if check_git_tag_exists $NEXT_VERSION; then
 fi
 
 echo -e '\n'
-read -p "Do you need to login to ghcr.io registry? [y/N]" RES_LOGIN
+read -p "Do you need to login to harbor registry? [y/N]" RES_LOGIN
 
 case $RES_LOGIN in
   [yY][eE][sS]|[yY])
-    read -p "[ghcr.io] user ? : " u
-    read -p "[ghcr.io] GH personnal token ? : " p
+    read -p "[harbor] Harbor user ? : " u
+    read -p "[harbor] Harbor personnal token ? : " p
 
     echo "Login sur le registry ..."
-    echo $p | docker login ghcr.io -u "$u" --password-stdin
+    echo $p | docker login harbor.forge.education.gouv.fr -u "$u" --password-stdin
     echo "Logged!"
     ;;
 esac

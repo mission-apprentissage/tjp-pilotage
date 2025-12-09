@@ -19,6 +19,18 @@
 
 ## Démarrage
 
+Pour pouvoir lancer l'application, vous avez besoin d'avoir accès au vault et aux valeurs stockées à l'intérieur.
+Pour ce faire vous devez être habilité à le faire via [cette méthode](https://github.com/mission-apprentissage/ij-infra/blob/main/docs/gpg.md) :
+
+Une fois cette procédure suivie, vous devez transmettre votre clé GPG au dev qui va modifier les habilitations :
+
+- Exécutez cette commande sur votre poste ``gpg --list-secret-keys --keyid-format=short``
+- Donnez l'identifiant en 8 caractères au dev
+- Celui-ci va vous envoyer (via 1Password) le vault-password.gpg ainsi que le vault.yml mis à jour.
+- Copiez les dans .infra/vault
+- Vous pouvez décoder/modifier le vault via ``./.bin/product vault:edit``
+- Vous avez désormais accès au vault
+
 Avant de lancer l'application, assurez-vous d'installer toutes les dépendances nécessaires en exécutant la commande suivante :
 
 ```bash
@@ -30,12 +42,7 @@ Cette commande mettra à jour les dépendances du projet.
 
 Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
 
-Il est possible que vous rencontriez un problème avec le fichier `.infra/local/mongo_keyfile` lors du démarrage du container de `mongodb` (vous auriez des erreurs dans les logs du démarrage du container).
-
-Si c'est le cas, vérifiez que les droits du ficher sont bien `440` pour MacOS et `400` pour Linux et que le fichier appartient à l'utilisateur lançant `docker`.
-
 ```bash
-yarn seed
 yarn dev
 ```
 

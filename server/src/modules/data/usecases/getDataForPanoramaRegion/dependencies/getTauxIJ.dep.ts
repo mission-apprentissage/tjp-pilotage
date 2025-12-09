@@ -30,7 +30,7 @@ const getMillesimesSortie = async () => {
     .then((millesimesSortieArray) => millesimesSortieArray.map((millesimeSortie) => millesimeSortie.millesimeSortie));
 };
 
-const selectStatsSortie = ({
+const selectStatsSortie = async ({
   codeRegion,
   codeNiveauDiplome,
   annee = 0,

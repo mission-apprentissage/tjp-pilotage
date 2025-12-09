@@ -1,19 +1,18 @@
 import { usePg } from "@tests/utils/pg.test.utils";
 import { clearUsers, createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
-import type { Insertable } from "kysely";
 import { RoleEnum } from "shared";
 import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
 import type { IResError } from "shared/models/errors";
+import type { BodySchema } from "shared/routes/schemas/put.users.userId.schema";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 import type { Server } from "@/server/server.js";
 import createServer from "@/server/server.js";
 import { cleanNull } from "@/utils/noNull";
 
-type User = Insertable<DB["user"]>
+type User = BodySchema & { id?: string };
 
 usePg();
 
@@ -46,6 +45,7 @@ describe("[PUT]/users/:userId", () => {
       enabled: true,
       codeRegion: null,
       fonction: null,
+      uais: [{ value: "1234567" }]
     };
 
     await fixture.given.currentUserNotAdmin();
@@ -63,6 +63,7 @@ describe("[PUT]/users/:userId", () => {
       enabled: true,
       codeRegion: null,
       fonction: null,
+      uais: [{ value: "1234567" }]
     };
 
     await fixture.given.currentUserAdmin();
@@ -82,6 +83,7 @@ describe("[PUT]/users/:userId", () => {
       enabled: true,
       codeRegion: null,
       fonction: null,
+      uais: [{ value: "1234567" }]
     };
 
     await fixture.given.currentUserAdmin();
@@ -102,6 +104,7 @@ describe("[PUT]/users/:userId", () => {
       enabled: true,
       codeRegion: null,
       fonction: null,
+      uais: [{ value: "1234567" }]
     };
 
     await fixture.given.currentUserAdmin();
@@ -122,6 +125,7 @@ describe("[PUT]/users/:userId", () => {
       enabled: false,
       codeRegion: null,
       fonction: null,
+      uais: [{ value: "1234567" }]
     };
 
     await fixture.given.currentUserAdmin();
@@ -141,6 +145,7 @@ describe("[PUT]/users/:userId", () => {
       enabled: true,
       codeRegion: "84",
       fonction: UserFonctionEnum["CSA"],
+      uais: [{ value: "1234567" }]
     };
 
     await fixture.given.currentUserAdmin();
@@ -168,7 +173,7 @@ describe("[PUT]/users/:userId", () => {
           currentUser = await createUserBuilder().withRole(RoleEnum["admin"]).create();
         },
         existingUser: async (user: User) => {
-          await getKbdClient().insertInto("user").values({...user}).execute();
+          await getKbdClient().insertInto("user").values({...user, uais: user.uais?.map((uai) => uai.value)}).execute();
         }
       },
       when: {
@@ -221,7 +226,7 @@ describe("[PUT]/users/:userId", () => {
           expect(userFromDbClean?.enabled).toEqual(cleanUser.enabled);
           expect(userFromDbClean?.codeRegion).toEqual(cleanUser.codeRegion);
           expect(userFromDbClean?.fonction).toEqual(cleanUser.fonction);
-          expect(userFromDbClean?.uais).toEqual(cleanUser.uais);
+          expect(userFromDbClean?.uais).toEqual(cleanUser.uais?.map((uai) => uai.value) ?? null);
           expect(userFromDbClean?.id).toEqual(cleanUser.id);
         }
       }

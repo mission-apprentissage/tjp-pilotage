@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
-export const findOneDemandeQuery = (numero: string) =>
+export const findOneDemandeQuery = async (numero: string) =>
   getKbdClient()
     .selectFrom("latestDemandeView as demande")
     .selectAll()

@@ -41,7 +41,6 @@ const Loader = () => (
 export const HeaderSection = ({
   activeFilters,
   handleFilters,
-  filterTracker,
   resetFilters,
   isLoading,
   data,
@@ -49,7 +48,6 @@ export const HeaderSection = ({
 }: {
   activeFilters: FiltersCorrections;
   handleFilters: (type: keyof FiltersCorrections, value: FiltersCorrections[keyof FiltersCorrections]) => void;
-  filterTracker: (filterName: keyof FiltersCorrections) => () => void;
   resetFilters: () => void;
   isLoading: boolean;
   data?: Corrections;
@@ -64,7 +62,6 @@ export const HeaderSection = ({
           <PrimaryFiltersSection
             activeFilters={activeFilters}
             handleFilters={handleFilters}
-            filterTracker={filterTracker}
             isLoading={isLoading}
             data={data}
           />
@@ -73,7 +70,6 @@ export const HeaderSection = ({
         <SecondaryFiltersSection
           activeFilters={activeFilters}
           handleFilters={handleFilters}
-          filterTracker={filterTracker}
           resetFilters={resetFilters}
           data={data}
         />

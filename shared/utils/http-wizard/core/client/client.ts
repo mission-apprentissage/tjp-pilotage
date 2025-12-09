@@ -1,4 +1,3 @@
-/* eslint-disable-next-line n/no-extraneous-import */
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 import type { TypeProvider } from '../providers/Provider';

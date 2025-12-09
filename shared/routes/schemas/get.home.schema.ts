@@ -5,7 +5,7 @@ export const getHomeSchema = {
     200: z.object({
       name: z.string(),
       version: z.string(),
-      env: z.enum(["local", "test", "qualification", "diffusion", "preproduction", "production", "productionij" ]),
+      env: z.enum(["local", "test", "qualification", "diffusion", "preproduction", "production" ]),
     }),
   },
 };

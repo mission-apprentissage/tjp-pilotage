@@ -553,7 +553,7 @@ describe("[POST]/demande/submit", () => {
   });
 });
 
-function submitDemande(
+async function submitDemande(
   app: Server,
   demande: Demande,
   user?: RequestUser

@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-/* eslint-disable-next-line import/no-extraneous-dependencies */
+
 import { generateMock } from "@anatine/zod-mock";
 import { describe, expect,it } from "vitest";
 

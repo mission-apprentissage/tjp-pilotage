@@ -4,7 +4,6 @@ import { Box, Button, chakra, Flex, Link, Menu, MenuButton, MenuItem, MenuList, 
 import {Icon} from '@iconify/react';
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import type { HTMLAttributeAnchorTarget, ReactNode } from "react";
 import { useContext } from "react";
 import {hasPermission, hasRole, RoleEnum} from 'shared';
@@ -80,16 +79,13 @@ const NavLink = chakra(
     href,
     className,
     target,
-    plausibleEventName,
   }: {
     children: ReactNode;
     segment: string | null;
     href: string;
     className?: string;
     target?: HTMLAttributeAnchorTarget;
-    plausibleEventName?: string;
   }) => {
-    const trackEvent = usePlausible();
     const segments = useSelectedLayoutSegments();
     const isActive = (!segment && !segments.length) || (segment && segments.join("/").includes(segment));
     return (
@@ -106,11 +102,6 @@ const NavLink = chakra(
         borderColor={isActive ? "bluefrance.113" : "transparent"}
         _hover={{ textDecoration: "unset", bg: "blueecume.925" }}
         target={target ?? "_self"}
-        onClick={() => {
-          if (plausibleEventName !== undefined) {
-            trackEvent(`nav:${plausibleEventName}`);
-          }
-        }}
       >
         {children}
       </Link>

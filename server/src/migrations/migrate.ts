@@ -1,5 +1,3 @@
-/* eslint-disable n/no-process-exit */
-/* eslint-disable no-process-exit */
 import { Migrator } from "kysely";
 
 import { getKbdClient } from "@/db/db";

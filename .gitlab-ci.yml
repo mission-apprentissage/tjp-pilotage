@@ -1,0 +1,28 @@
+stages:
+  - sonarqube
+  - ci
+  - release
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_BUILDKIT: 1
+  HTTP_PROXY: http://proxy.tec.in.phm.education.gouv.fr:3128
+  HTTPS_PROXY: http://proxy.tec.in.phm.education.gouv.fr:3128
+  NO_PROXY: "docker,localhost,127.0.0.1,*.forge.in.phm.education.gouv.fr,*.forge.education.gouv.fr"
+
+workflow:
+  rules:
+    # Pipeline automatique sur merge request
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # Pipeline automatique sur develop et main
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "main"
+    # Pipeline manuel avec inputs
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+include:
+  - local: '.gitlab/sonarqube.yml'
+  - local: '.gitlab/ci.yml'
+  - local: '.gitlab/release.yml'
+  - local: '.gitlab/deploy.yml'

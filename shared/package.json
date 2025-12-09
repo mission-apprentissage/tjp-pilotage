@@ -12,7 +12,8 @@
     "npm": "please-use-yarn"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "typecheck:ci": "NODE_OPTIONS='--max-old-space-size=4096' tsc --noEmit"
   },
   "dependencies": {
     "he": "^1.2.0",

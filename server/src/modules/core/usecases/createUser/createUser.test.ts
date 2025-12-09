@@ -10,6 +10,7 @@ const user = {
   lastname: "lastname",
   password: "password",
   role: RoleEnum["admin"],
+  uais: null,
 } as const;
 
 const requestUser = {
@@ -153,6 +154,39 @@ describe("createUser usecase", () => {
           },
         })
       ).rejects.toThrow("Vous ne pouvez pas créer un utilisateur dans ce périmètre.");
+    });
+  });
+
+  describe("role validation", () => {
+    it("should create the user and send the activation email if the user has a role perdir and uais", async () => {
+      const deps = {
+        insertUserQuery: vi.fn(async () => {}),
+        findUserQuery: vi.fn(async () => undefined),
+        shootTemplate: vi.fn(async () => {}),
+      };
+      const createUser = createUserFactory(deps);
+      await createUser({
+        body: { ...user, codeRegion: "84", role: RoleEnum["perdir"], uais: [{ value: "1234567A", label: "Test" }] },
+        requestUser: { ...requestUser, role: RoleEnum["admin"] },
+      });
+
+      await expect(deps.insertUserQuery).toHaveBeenCalled();
+    });
+
+    it("should throw an error if the user has a role perdir and no uais", async () => {
+      const deps = {
+        insertUserQuery: vi.fn(async () => {}),
+        findUserQuery: vi.fn(async () => undefined),
+        shootTemplate: vi.fn(async () => {}),
+      };
+      const createUser = createUserFactory(deps);
+      await expect(
+        createUser({
+          body: { ...user, codeRegion: "84", role: RoleEnum["perdir"], uais: null },
+          requestUser: { ...requestUser, role: RoleEnum["admin"] },
+        })
+      ).rejects.toThrow("Un utilisateur avec le rôle perdir doit avoir au moins un établissement.");
+      await expect(deps.shootTemplate).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
-export const findOneDataFormationQuery = (cfd: string) =>
+export const findOneDataFormationQuery = async (cfd: string) =>
   getKbdClient()
     .selectFrom("dataFormation")
     .selectAll()

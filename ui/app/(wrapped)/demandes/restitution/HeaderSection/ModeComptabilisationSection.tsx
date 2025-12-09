@@ -13,14 +13,12 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 export const ModeComptabilisationSection = ({
   activeFilters,
   handleFilters,
-  filterTracker,
 }: {
   activeFilters: FiltersDemandesRestitution;
   handleFilters: (
     type: keyof FiltersDemandesRestitution,
     value: FiltersDemandesRestitution[keyof FiltersDemandesRestitution]
   ) => void;
-  filterTracker: (filterName: keyof FiltersDemandesRestitution) => () => void;
 }) => {
   return (
     <Flex bgColor={"blueecume.950"} borderRadius={5} px={4} py={2} mb={2}>
@@ -39,7 +37,6 @@ export const ModeComptabilisationSection = ({
         ms={"auto"}
         defaultValue={activeFilters.modeComptabilisation ?? "capaciteReelle"}
         onChange={(value) => {
-          filterTracker("modeComptabilisation");
           handleFilters("modeComptabilisation", value);
         }}
         gap={4}

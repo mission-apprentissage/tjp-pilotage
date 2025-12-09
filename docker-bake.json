@@ -4,7 +4,16 @@
     "REPO_NAME": {},
     "VERSION": {},
     "CHANNEL": {},
-    "DEPS_ID": {}
+    "DEPS_ID": {},
+    "HTTP_PROXY": {
+      "default": ""
+    },
+    "HTTPS_PROXY": {
+      "default": ""
+    },
+    "NO_PROXY": {
+      "default": "localhost,127.0.0.1,docker"
+    }
   },
   "group": {
     "qualification": {
@@ -21,9 +30,6 @@
     },
     "local": {
       "targets": ["server", "ui-local"]
-    },
-    "productionij": {
-      "targets": ["server", "ui-productionij"]
     }
   },
   "target": {
@@ -31,22 +37,24 @@
       "args": {
         "PUBLIC_VERSION": "${VERSION}",
         "PUBLIC_PRODUCT_NAME": "${PRODUCT_NAME}",
-        "PUBLIC_REPO_NAME": "${REPO_NAME}"
+        "PUBLIC_REPO_NAME": "${REPO_NAME}",
+        "HTTP_PROXY": "${HTTP_PROXY}",
+        "HTTPS_PROXY": "${HTTPS_PROXY}",
+        "REGISTRY": "docker-group-global-nexus3.forge.education.gouv.fr",
+        "NO_PROXY": "${NO_PROXY}"
       },
       "dockerfile": "Dockerfile",
       "platforms": ["linux/amd64"],
       "labels": {
-        "org.opencontainers.image.source": "https://github.com/mission-apprentissage/${REPO_NAME}",
+        "org.opencontainers.image.source": "https://gitlab.forge.education.gouv.fr/orion/${REPO_NAME}",
         "org.opencontainers.image.licenses": "MIT"
-      },
-      "cache-from": ["type=gha,scope=${DEPS_ID}"],
-      "cache-to": ["type=gha,mode=max,scope=${DEPS_ID}"]
+      }
     },
     "server": {
       "inherits": ["common"],
       "tags": [
-        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_server:${VERSION}",
-        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_server:${CHANNEL}"
+        "harbor.forge.education.gouv.fr/orion-orion/ij_${PRODUCT_NAME}_server:${VERSION}",
+        "harbor.forge.education.gouv.fr/orion-orion/ij_${PRODUCT_NAME}_server:${CHANNEL}"
       ],
       "labels": {
         "org.opencontainers.image.description": "Server"
@@ -56,15 +64,15 @@
     "ui": {
       "inherits": ["common"],
       "matrix": {
-        "ENV": ["qualification", "diffusion", "preproduction", "production", "local", "productionij"]
+        "ENV": ["qualification", "diffusion", "preproduction", "production", "local"]
       },
       "name": "ui-${ENV}",
       "args": {
         "PUBLIC_ENV": "${ENV}"
       },
       "tags": [
-        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_ui:${VERSION}-${ENV}",
-        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_ui:${CHANNEL}-${ENV}"
+        "harbor.forge.education.gouv.fr/orion-orion/ij_${PRODUCT_NAME}_ui:${VERSION}-${ENV}",
+        "harbor.forge.education.gouv.fr/orion-orion/ij_${PRODUCT_NAME}_ui:${CHANNEL}-${ENV}"
       ],
       "labels": {
         "org.opencontainers.image.description": "Ui"

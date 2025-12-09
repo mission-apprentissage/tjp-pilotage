@@ -1,5 +1,4 @@
 import { useRouter, useSearchParams } from "next/navigation";
-/* eslint-disable-next-line import/default */
 import { parse } from "qs";
 import type { SetStateAction } from "react";
 import { useEffect, useState } from "react";

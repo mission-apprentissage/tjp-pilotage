@@ -4,7 +4,6 @@ import { ScopeEnum } from "shared";
 
 import type {
   FiltersPilotage,
-  FilterTracker,
   Pilotage,
 } from "@/app/(wrapped)/demandes/pilotage/types";
 import { getScopeCode } from "@/app/(wrapped)/demandes/pilotage/utils";
@@ -23,7 +22,6 @@ export const CartoSection = ({
   handleFilters,
   data,
   isLoading,
-  filterTracker,
 }: {
   indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
@@ -36,7 +34,6 @@ export const CartoSection = ({
   handleFilters: (filters: FiltersPilotage) => void;
   data?: Pilotage;
   isLoading?: boolean;
-  filterTracker: FilterTracker;
 }) => {
   const customPalette = [
     useToken("colors", "pilotage.red"),
@@ -104,24 +101,13 @@ export const CartoSection = ({
         codeAcademie: filters.scope === ScopeEnum["académie"] ? code : undefined,
         codeDepartement: filters.scope === ScopeEnum["département"] ? code : undefined,
       };
-      switch (filters.scope) {
-      case ScopeEnum["région"]:
-        filterTracker("codeRegion", { value: code, context: "carto" });
-        break;
-      case ScopeEnum["académie"]:
-        filterTracker("codeAcademie", { value: code, context: "carto" });
-        break;
-      case ScopeEnum["département"]:
-        filterTracker("codeDepartement", { value: code, context: "carto" });
-        break;
-      }
 
       return handleFilters({
         ...filters,
         ...newFilters,
       });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [handleFilters, filters]
   );
 

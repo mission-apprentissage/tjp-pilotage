@@ -1,4 +1,4 @@
-/* eslint-disable-next-line import/default */
+
 import jwt from "jsonwebtoken";
 
 import config from "@/config";
@@ -12,7 +12,7 @@ export const [getMetabaseDashboardUrl, getMetabaseDashboardUrlFactory] = inject(
   },
   (deps) =>
     async ({ dashboard, filters }: { dashboard: number; filters: { [key: string]: string | null } }) => {
-      const METABASE_SITE_URL = "https://orion.inserjeunes.beta.gouv.fr/metabase";
+      const METABASE_SITE_URL = "https://orion.education.gouv.fr/metabase";
       const METABASE_SECRET_KEY = config.metabase.token;
 
       const payload = {

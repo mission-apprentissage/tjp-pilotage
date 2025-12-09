@@ -1,3 +1,4 @@
+# buildkitd.toml complet
 [worker.oci]
   max-parallelism = 2
 
@@ -5,3 +6,10 @@
   all = true
   keepBytes = "20GB"
   keepDuration = "72h"
+
+# Configuration proxy pour BuildKit
+[http]
+  [http.proxy]
+    http = "http://proxy.tec.in.phm.education.gouv.fr:3128"
+    https = "http://proxy.tec.in.phm.education.gouv.fr:3128"
+    noProxy = "localhost,127.0.0.1,harbor.forge.education.gouv.fr,gitlab.forge.education.gouv.fr,docker-group-global-nexus3.forge.education.gouv.fr"

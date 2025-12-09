@@ -78,7 +78,7 @@ export const UpdateAvisForm = chakra(
           gap={3}
           as="form"
           noValidate
-          onSubmit={handleSubmit((values) =>
+          onSubmit={handleSubmit(async (values) =>
             submitAvis({
               body: { avis: values },
             })

@@ -81,6 +81,7 @@ const FormationEtablissementLineSchema = z.object({
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
   libelleNsf: z.string().optional(),
+  codeNsf: z.string().optional(),
   continuum: z
     .object({
       cfd: z.string(),

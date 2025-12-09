@@ -32,7 +32,7 @@ const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) => eb.fn.count<n
 const selectNbEtablissements = (eb: ExpressionBuilder<DB, "dataEtablissement">) =>
   eb.fn.count<number>("dataEtablissement.uai").distinct();
 
-export const getFormationsQuery = ({ filters }: { filters: Filters }) => {
+export const getFormationsQuery = async ({ filters }: { filters: Filters }) => {
   const partition = (() => {
     if (filters.codeDepartement) return ["dataEtablissement.codeDepartement"] as const;
     if (filters.codeAcademie) return ["dataEtablissement.codeAcademie"] as const;

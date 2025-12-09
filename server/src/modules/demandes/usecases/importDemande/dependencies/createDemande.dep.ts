@@ -12,7 +12,7 @@ const getNextRentreeScolaire = (campagne: { annee: string }) => {
   return Number.parseInt(campagne.annee) + 1;
 };
 
-export const createDemandeQuery = ({
+export const createDemandeQuery = async ({
   demande,
   campagne,
   user,

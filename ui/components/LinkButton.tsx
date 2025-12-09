@@ -7,7 +7,7 @@ interface Props extends ButtonProps {
   children: ReactNode;
 }
 
-// eslint-disable-next-line react/display-name
+
 export const LinkButton = forwardRef<HTMLButtonElement, Props>(({ children, ...props }, ref) => (
   <Button
     ref={ref}

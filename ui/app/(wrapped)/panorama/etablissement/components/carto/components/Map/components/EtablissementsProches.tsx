@@ -1,4 +1,3 @@
-import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
 import type { CircleLayer, GeoJSONSource, MapGeoJSONFeature, MapMouseEvent, SymbolLayer } from "react-map-gl/maplibre";
 import { Layer, Source, useMap } from "react-map-gl/maplibre";
@@ -11,7 +10,6 @@ import { MAP_IMAGES } from "./CustomControls";
 export const EtablissementsProches = () => {
   const { current: map } = useMap();
   const { etablissementsProches, hoverUai, setHoverUai } = useEtablissementMapContext();
-  const trackEvent = usePlausible();
 
   const geojson = {
     type: "FeatureCollection",
@@ -115,12 +113,6 @@ export const EtablissementsProches = () => {
             "coordinates" in features[0].geometry ? (features[0].geometry.coordinates as [number, number]) : [-1, -1],
           zoom: clusterZoom,
         });
-        trackEvent("cartographie-etablissement:interaction", {
-          props: {
-            type: "cartographie-etablissement-cluster-click",
-            uai: features[0].properties.uai,
-          },
-        });
       }
     }
   };
@@ -141,12 +133,6 @@ export const EtablissementsProches = () => {
 
       if (features.length > 0 && features[0] !== undefined) {
         setHoverUai(features[0].properties.uai);
-        trackEvent("cartographie-etablissement:interaction", {
-          props: {
-            type: "cartographie-etablissement-hover",
-            uai: features[0].properties.uai,
-          },
-        });
       }
     }
   };

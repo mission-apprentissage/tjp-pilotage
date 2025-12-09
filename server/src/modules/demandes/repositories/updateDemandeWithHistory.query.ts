@@ -7,7 +7,7 @@ import { getKbdClient } from "@/db/db";
 import { generateId } from "@/modules/utils/generateId";
 import { cleanNull } from "@/utils/noNull";
 
-export const updateDemandeWithHistory = (demande: Insertable<DB["demande"]>) =>
+export const updateDemandeWithHistory = async (demande: Insertable<DB["demande"]>) =>
   getKbdClient()
     .insertInto("demande")
     .values({

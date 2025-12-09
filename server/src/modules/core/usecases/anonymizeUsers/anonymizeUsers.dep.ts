@@ -26,7 +26,7 @@ export const anonymizeUsersQuery = async () => {
   await sql`
     UPDATE ${sql.table("user")}
     SET
-        email = CONCAT('anonyme_', ${sql.ref("user.id")}, '@orion.inserjeunes.beta.gouv.fr'),
+        email = CONCAT('anonyme_', ${sql.ref("user.id")}, '@orion.education.gouv.fr'),
         firstname = 'Utilisateur',
         lastname = 'Anonyme',
         password = NULL,

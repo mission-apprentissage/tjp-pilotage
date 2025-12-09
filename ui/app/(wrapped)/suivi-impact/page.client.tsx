@@ -1,7 +1,6 @@
 "use client";
 
 import { Box, Container, Flex, SimpleGrid, useDisclosure } from "@chakra-ui/react";
-import { usePlausible } from "next-plausible";
 import { useMemo } from "react";
 
 import { client } from "@/api.client";
@@ -28,15 +27,7 @@ export const PageClient = () => {
   const filters = searchParams.filters ?? {};
   const order = searchParams.order ?? { order: "asc", orderBy: 'libelleRegion' };
 
-  const trackEvent = usePlausible();
-  const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("suivi-impact:filtre", {
-      props: { filter_name: filterName },
-    });
-  };
-
   const handleOrder = (column: Order["orderBy"]) => {
-    trackEvent("suivi-impact:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ ...searchParams, order: { order: "desc", orderBy: column } });
       return;
@@ -96,7 +87,6 @@ export const PageClient = () => {
         <FiltersSection
           activeFilters={filters}
           handleFilters={handleFilters}
-          filterTracker={filterTracker}
           isLoading={isLoading}
           data={data}
         />

@@ -1,4 +1,3 @@
-import { usePlausible } from "next-plausible";
 import type { Etablissements } from "shared/routes/schemas/get.formation.cfd.indicators.schema";
 
 import type {
@@ -167,11 +166,8 @@ export const ExportListIndicateurs = ({
   formation: Formation;
   indicateurs: FormationIndicateurs;
 }) => {
-  const trackEvent = usePlausible();
 
   const onExportCsv = async () => {
-    trackEvent("domaine-de-formation:indicateurs:export-csv");
-
     downloadCsv(
       formatExportFilename("domaine-de-formation_etablissements"),
       [extractDatas({ formation, indicateurs })],
@@ -180,8 +176,6 @@ export const ExportListIndicateurs = ({
   };
 
   const onExportExcel = async () => {
-    trackEvent("domaine-de-formation:indicateurs:export-excel");
-
     downloadExcel(
       formatExportFilename("domaine-de-formation_etablissements"),
       [extractDatas({ formation, indicateurs })],
