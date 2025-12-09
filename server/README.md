@@ -39,7 +39,7 @@ Cette commande peut prendre **plusieurs heures** à être exécutée.
 
 
 ## `yarn cli importFormations`
-Cette commande est le coeur de l'import de toutes les autres tables d'analyses d'Orion. Elle itère sur la table `diplomeProfessionnel` (liste de cfd) pour les voies scolaire et apprentissage, et stocke pour chaque formation :
+Cette commande est le coeur de l'import de toutes les autres tables d'analyses d'Orion. Elle itère sur la table `diplomeProfessionnel` (liste de cfd) pour les voies scolaire et apprentissage, et en partant des données en cache dans `rawData`, elle stocke pour chaque formation :
 - les établissements qui l'enseignent dans la table `etablissement` : adresse, département, académie, région, latitude et longitude
 - les **offres de formations** associées (cfd x uai), toutes rentrées scolaires confondues dans la table `formationEtablissement`
 - les indicateurs d'entrée de chaque **offre de formation** (cfd x uai) dans la table `indicateurEntree` pour **chaque rentrée scolaire**: capacités, voeux et effectifs
