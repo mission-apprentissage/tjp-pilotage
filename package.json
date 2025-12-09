@@ -1,7 +1,7 @@
 {
   "name": "orion",
   "description": "[IJ] Orion",
-  "repository": "https://github.com/mission-apprentissage/tjp-pilotage.git",
+  "repository": "https://gitlab.forge.education.gouv.fr/orion/orion.git",
   "version": "0.0.0",
   "author": "IJ",
   "license": "LICENSED",
