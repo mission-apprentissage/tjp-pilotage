@@ -260,6 +260,8 @@ teMgr = {
 					const para = fragment.appendChild(document.createElement('p'));
 					para.dataset.teStart = cue.startTime;
 					para.dataset.teEnd = cue.endTime;
+					para.dataset.teFmtStartTime = teMgr.formatTime(cue.startTime);
+					para.dataset.teFmtEndTime = teMgr.formatTime(cue.endTime);
 					para.appendChild(cueLinkElt);
 				}
 				targetElem.appendChild(fragment);
@@ -528,7 +530,7 @@ TEController.prototype = {
 
 			if (interactive) {
 				point.addEventListener('click', function (event) {
-					media.currentTime = self.pointsData.get(this).position;
+					self.media.currentTime = self.pointsData.get(this).position;
 					event.preventDefault();
 				})
 			}

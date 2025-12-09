@@ -67,10 +67,10 @@ export default function RootLayoutClient({
   });
 
   return (
-    <html lang="fr" data-theme="light">
+    <html lang="fr" data-theme="light" suppressHydrationWarning={true}>
       <head>
       </head>
-      <body suppressHydrationWarning={true}>
+      <body >
         <SSOInfo />
         <QueryClientProvider client={queryClient}>
             <ChakraProvider theme={theme}>

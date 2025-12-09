@@ -2,6 +2,7 @@
 
 import { isAxiosError } from "axios";
 import {useRouter, useSearchParams} from 'next/navigation';
+import { use } from "react";
 
 import { client } from "@/api.client";
 import { DemandeSpinner } from "@/app/(wrapped)/demandes/saisie/components/DemandeSpinner";
@@ -13,12 +14,13 @@ import { GuardSaisieDemande } from "@/utils/security/GuardSaisieDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 export const PageClient = ({
-  params: { numero },
+  params,
 }: {
-  params: {
+  readonly params: Promise<{
     numero: string;
-  };
+  }>;
 }) => {
+  const { numero } = use(params);
   const { push } = useRouter();
   const { user } = useAuth();
   const queryParams = useSearchParams();

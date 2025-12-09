@@ -461,7 +461,7 @@ window.searchMgr = {
 					vOffset = vTxtNorm.search(vReg);
 					while (vOffset >= 0) {
 						vToken.fCount++
-						if (vToken.exact && /\W/.test(vTxtNorm.charAt(vOffset))) vOffset++;
+						if ((vToken.exact || vToken.start) && /\W/.test(vTxtNorm.charAt(vOffset))) vOffset++;
 						vIsOldOffset = false;
 						vHit = {start: vOffset, end: vOffset + vToken.wrd.length};
 						for (k = 0; k < vHits.length; k++) {

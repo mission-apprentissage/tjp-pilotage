@@ -8,9 +8,9 @@ import { PageClient } from "./page.client";
 const SynthesePage = ({
   params,
 }: {
-  params: {
+  readonly params: Promise<{
     numero: string;
-  };
+  }>;
 }) => (
   <GuardPermission permission={PermissionEnum["demande/lecture"]}>
     <GuardAccesDemande>

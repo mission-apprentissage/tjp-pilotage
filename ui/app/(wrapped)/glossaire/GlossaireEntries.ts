@@ -22,7 +22,7 @@ export const GLOSSAIRE_ENTRIES_KEYS = {
   ["taux-de-pression"]: "taux-de-pression",
   ["taux-de-remplissage"]: "taux-de-remplissage",
   ["taux-emploi-6-mois"]: "taux-emploi-6-mois",
-  ["taux-poursuite-etudes"]: "taux-poursuite-d-etudes",
+  ["taux-poursuite-etudes"]: "taux-de-poursuite-d-etudes",
   ["tension-difficulte-de-recrutement"]: "tension-difficulte-de-recrutement",
   ["valeur-ajoutee"]: "valeur-ajoutee",
   ["voeux"]: "voeux",

@@ -25,7 +25,7 @@ import { TypeBadge } from "./TypeBadge";
 
 function isGlossaireId(href?: string): boolean {
   try {
-    new URL(href ?? "");
+    if (href) new URL(href);
     return false;
   } catch (_error) {
     console.error("Invalid URL", _error);

@@ -8,7 +8,7 @@ import { DomaineDeFormationClient } from "./page.client";
 import type { Filters } from "./types";
 
 const fetchDefaultNsfs = async () => {
-  const headersList = Object.fromEntries(headers().entries());
+  const headersList = Object.fromEntries((await headers()).entries());
   try {
     return await serverClient
       .ref("[GET]/domaine-de-formation")

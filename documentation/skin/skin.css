@@ -337,3 +337,9 @@ a.screenZoneLnk::before {
   background-color: var(--accentColor);
   color: white;
 }
+
+/**======== Variables AFFL ========**/
+.affl_gloss{
+  font-size: 24pt;
+  color: #666666;
+}

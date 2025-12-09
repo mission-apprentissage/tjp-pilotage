@@ -90,10 +90,12 @@
                     given index
     * consolidateResults : Parse and consolidate an array of resultSets
     * normalizeString : Normalize a string according to a given index's prefs
+    * tokenizeString : Tokenize a string according to a given index's prefs
     * getPages : Retrieve an object that lists all the pages available in a
                  given index
     * getCategories : Retrieve an array of the categories available in a given
                       index
+    * getRawData : Retrieve the raw data of a given index.
     * hasIntersections : Returns true if any page is referenced more than once
     * isLoadable : Returns false when an exception occurred during loading
  */
@@ -416,6 +418,28 @@ scServices.scSearch = scOnLoads[scOnLoads.length] = {
 		}
 		return vStr;
 	},
+	/* == tokenizeString =========================================================
+	   PUBLIC - Tokenize a string according to a given index's prefs.
+	   pId : index id
+	   pStr : string to tokenize
+	   return : a promise that resolves to an array of tokens found in the input string according to the index's prefs */
+	tokenizeString: async function(pId, pStr){
+		if (!pId) throw new Error("scServices.scSearch.tokenizeString() must be called with an index ID.");
+		const vIdx = await this.xGetIndex(pId);
+		if (!vIdx) return null;
+		const vRegWords = new RegExp(vIdx.fParams.wordPattern, "gm");
+		const vTokens = [];
+		const vWords = pStr.match(vRegWords);
+		if (vWords) {
+			for (j = 0; j < vWords.length; j++) {
+				if (vWords[j].length > 0) {
+					const vWrd = this.xFilterWord(vIdx, vWords[j]);
+					if (vWrd) vTokens.push(vWrd)
+				}
+			}
+		}
+		return vTokens;
+	},
 	/* == getPages ===============================================================
 	   PUBLIC - Retrieve an object listing all the pages in a given index.
 	   pId : index id
@@ -435,6 +459,16 @@ scServices.scSearch = scOnLoads[scOnLoads.length] = {
 		const vIdx = await this.xGetIndex(pId);
 		if (!vIdx) return null;
 		return vIdx.fCatIdx;
+	},
+	/* == getRawData ==========================================================
+	   PUBLIC - Retrieve the raw data of a given index.
+	   pId : index id
+	   return : a promise that resolves to a string containing the index raw data */
+	getRawData: async function(pId){
+		if (!pId) throw new Error("scServices.scSearch.getRawData() must be called with an index ID.");
+		const vIdx = await this.xGetIndex(pId);
+		if (!vIdx) return null;
+		return vIdx.fRaw;
 	},
 	/* == isLoadable =============================================================
 	   PUBLIC - Returns 'null' if index non existant, 'false' if an exception occurred when loading the index and 'true' if the index was loadable.
@@ -523,8 +557,7 @@ scServices.scSearch = scOnLoads[scOnLoads.length] = {
 								vToken.neg = vStr.indexOf("-")===0;
 								vToken.equal = vStr.indexOf("=")===0;
 								vToken.exact = vStr.indexOf("+")===0 || vStr.indexOf("=+")===0;
-								vToken.start = vStr.indexOf("^")===0 || vStr.indexOf("=^")===0;
-								vToken.start = vStr.indexOf("*")===0 || vStr.indexOf("=*")===0;
+								vToken.start = vStr.indexOf("^")===0 || vStr.indexOf("=^")===0 || vStr.indexOf("*")===0 || vStr.indexOf("=*")===0;
 								vToken.depreciated = vStr.indexOf("*")>=0
 								vToken.or = (i < vStrs.length-2 && vRegOr.test(vStrs[i+1]));
 								vTokens.push(vToken);
@@ -649,7 +682,7 @@ scServices.scSearch = scOnLoads[scOnLoads.length] = {
 				console.error(`ERROR : unable de retrieve search index ${pUrl}: ${vReq.status}`);
 				return;
 			}
-			function iSetupIndex(pIdx,pRaw) {
+			async function  iSetupIndex(pIdx,pRaw) {
 				scServices.scSearch.xLog("iSetupIndex");
 				try {
 					const vRegIdx = new RegExp("^([^\\n]*)\\n([^\\n]*)\\n([^\\n]*)");
@@ -659,7 +692,7 @@ scServices.scSearch = scOnLoads[scOnLoads.length] = {
 					pIdx.fCatIdx = JSON.parse(vStrIdx[2].trim());
 					pIdx.fParams = JSON.parse(vStrIdx[3].trim());
 					pIdx.fLoaded = true;
-					for (let i=0; i< scServices.scSearch.fListeners.length; i++) try{scServices.scSearch.fListeners[i](pIdx.id)}catch(e){scServices.scSearch.xLog("iSetupIndex : listener error : "+e)}
+					for (let i=0; i< scServices.scSearch.fListeners.length; i++) try{await scServices.scSearch.fListeners[i](pIdx.id)}catch(e){scServices.scSearch.xLog("iSetupIndex : listener error : "+e)}
 				} catch(e){
 					console.error(`ERROR : unable to process search index ${pIdx.id} : ${e}`);
 					pIdx.fLoadException = true;
@@ -668,7 +701,7 @@ scServices.scSearch = scOnLoads[scOnLoads.length] = {
 				return true;
 			}
 			scServices.scSearch.xLog("xAsyncLoadIndex");
-			if (!vIdx.fLoaded) return iSetupIndex(vIdx, await vReq.text());
+			if (!vIdx.fLoaded) return await iSetupIndex(vIdx, await vReq.text());
 			else return false;
 		} catch (e) {
 			console.error(`ERROR : unable de retrieve search index ${pUrl}: ${e}`);

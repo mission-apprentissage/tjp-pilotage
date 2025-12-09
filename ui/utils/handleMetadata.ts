@@ -19,14 +19,6 @@ const METADATA_MAP = {
     title: "Panorama établissement - Orion",
     description: "Panorama des formations enseignées dans votre établissement",
   },
-  "/panorama/lien-metier-formation/formation": {
-    title: "Lien formation-métier - Orion",
-    description: "Liens entre une formation et les métiers qu'elle prépare",
-  },
-  "/panorama/lien-metier-formation/metier": {
-    title: "Lien métier-formation - Orion",
-    description: "Liens entre un métier et les formations qui y mènent",
-  },
   "/console/formations": {
     title: "Console des formations - Orion",
     description: "Console des formations dispensées",
@@ -142,20 +134,11 @@ const METADATA_MAP = {
 const getPathnameFromMetadataState = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   state: any
-): string | undefined => {
-  const symbols = Object.getOwnPropertySymbols(state ?? {});
+): string | undefined =>
+  Object.getOwnPropertySymbols(state)
+    .map((item) => state[item])
+    .find((state) => state && Object.hasOwn(state, "url"))?.url?.pathname;
 
-  if (symbols.length === 0) {
-    return undefined;
-  }
-
-  const res = symbols
-    .map((p) => state[p])
-    .filter((state) => state)
-    .find((state) => Object.prototype.hasOwnProperty.call(state, "urlPathname"));
-
-  return res?.urlPathname.replace(/\?.+/, "");
-};
 
 /**
  *
@@ -171,12 +154,6 @@ const extractBasePathname = (pathname: string) => {
   }
   if (pathname.includes("/panorama/etablissement")) {
     return "/panorama/etablissement";
-  }
-  if (pathname.includes("/panorama/lien-metier-formation/formation")) {
-    return "/panorama/lien-metier-formation/formation";
-  }
-  if (pathname.includes("/panorama/lien-metier-formation/metier")) {
-    return "/panorama/lien-metier-formation/metier";
   }
   if (pathname.includes("/demandes/synthese")) {
     return "/demandes/synthese";

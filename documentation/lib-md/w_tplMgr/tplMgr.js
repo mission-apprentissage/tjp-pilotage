@@ -194,7 +194,7 @@ window.tplMgr = {
 
 	initDom: function () {
 		let i;
-//Section outline
+		//Section outline
 		this.fSecOutCo = scPaLib.findNode("des:div.secOutFra/chi:div.secOutUi");
 		if (this.fSecOutCo && !scPaLib.checkNode(".static", this.fSecOutCo)) {
 			this.fSecOutBtn = scPaLib.findNode("des:div.secOutFra/chi:div.secOutTi/chi:a");

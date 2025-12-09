@@ -1,7 +1,7 @@
 {
   "name": "orion",
   "description": "[IJ] Orion",
-  "repository": "https://github.com/mission-apprentissage/tjp-pilotage.git",
+  "repository": "https://gitlab.forge.education.gouv.fr/orion/orion.git",
   "version": "0.0.0",
   "author": "IJ",
   "license": "LICENSED",
@@ -107,6 +107,9 @@
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^3.2.4",
     "vitest-canvas-mock": "^0.3.3"
+  },
+  "resolutions": {
+    "rimraf": "^3.0.2"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

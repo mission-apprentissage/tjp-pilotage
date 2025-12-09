@@ -133,6 +133,7 @@ scImageMgr.init = function() {
  *           toolbar : 0 = pas de toolbar / 1 = toolbar flotant / 2 toolbar permanent
  *           auto : true = démarrage auto
  *           loop : true = lecture en boucle
+ *           adaptive : true = taille s'adapte à la largeur disponible
  *           lpBtn : true = bouton ctrl lecture en boucle
  *           speed : vitesse de défilement en ms
  *           spdBtns : true = boutons de contrôle de la vitesse
@@ -144,10 +145,11 @@ scImageMgr.init = function() {
 scImageMgr.registerAnimation = function(pPathAnim, pOpts) {
 	const vAnim = {};
 	vAnim.fPath = pPathAnim;
-	vAnim.fOpts = (typeof pOpts == "undefined" ? {toolbar:1,auto:true,loop:true,lpBtn:false,speed:this.fDefaultStep,spdBtns:false,counter:false,soft:true,extBtns:false,clsPre:this.fTypAnm} : pOpts);
+	vAnim.fOpts = (typeof pOpts == "undefined" ? {toolbar:1,auto:true,loop:true,adaptive:false,lpBtn:false,speed:this.fDefaultStep,spdBtns:false,counter:false,soft:true,extBtns:false,clsPre:this.fTypAnm} : pOpts);
 	vAnim.fOpts.toolbar = (typeof vAnim.fOpts.toolbar == "undefined" ? 1 : vAnim.fOpts.toolbar);
 	vAnim.fOpts.auto = (typeof vAnim.fOpts.auto == "undefined" ? true : vAnim.fOpts.auto);
 	vAnim.fOpts.loop = (typeof vAnim.fOpts.loop == "undefined" ? true : vAnim.fOpts.loop);
+	vAnim.fOpts.adaptive = (typeof vAnim.fOpts.adaptive == "undefined" ? false : vAnim.fOpts.adaptive);
 	vAnim.fOpts.lpBtn = (typeof vAnim.fOpts.lpBtn == "undefined" ? false : vAnim.fOpts.lpBtn);
 	vAnim.fOpts.speed = (typeof vAnim.fOpts.speed == "undefined" ? this.fDefaultStep : vAnim.fOpts.speed);
 	vAnim.fOpts.spdBtns = (typeof vAnim.fOpts.spdBtns == "undefined" ? false : vAnim.fOpts.spdBtns);
@@ -236,7 +238,6 @@ scImageMgr.registerAdaptedImage = function(pPathImage) {
 	vImg.fPath = pPathImage;
 	this.fPathImg[this.fPathImg.length] = vImg;
 }
-
 /** scImageMgr.registerSvg.
  * @param pPathSvg scPaLib path vers les svgs.
  */
@@ -245,7 +246,6 @@ scImageMgr.registerSvg = function(pPathSvg) {
 	vSvg.fPath = pPathSvg;
 	this.fPathSvg[this.fPathSvg.length] = vSvg;
 }
-
 /** register a listener. */
 scImageMgr.registerListener = function(pType, pFunc) {
 	this.fListeners[pType].push(pFunc);
@@ -440,10 +440,6 @@ scImageMgr.xInitImg = function(pImg) {
 	pImg.style.maxWidth = "100%";
 	pImg.style.height = "auto";
 	pImg.fIsAdapted = true;
-
-	/*	if (pImg.width>this.fMaxDeviceWidth){
-			pImg.fIsAdapted = true;
-		}*/
 }
 /* === SVG manager ========================================================== */
 scImageMgr.xInitSvgs = function(pCo) {
@@ -473,9 +469,9 @@ scImageMgr.xInitAnim = function(pAnim,pOpts,pId) {
 			let vMaxWidth = 0;
 			for(i = 0; i<pAnim.fImgs.length; i++) {
 				vImg = pAnim.fImgs[i];
-				vImg.style.position = "absolute";
 				vImg.fHeight = vImg.clientHeight;
 				vImg.fWidth = scPaLib.findNode("des:img",vImg).width;
+				vImg.style.position = "absolute";
 				vMaxHeight = Math.max(vMaxHeight,vImg.fHeight);
 				vMaxWidth = Math.max(vMaxWidth,vImg.fWidth);
 				vImg.style.visibility = "hidden";
@@ -483,12 +479,20 @@ scImageMgr.xInitAnim = function(pAnim,pOpts,pId) {
 				vImg.style.left = "0";
 				vImg.style.width = "100%";
 			}
-			pAnim.style.height = vMaxHeight+0.01*vMaxHeight + "px";
-			pAnim.style.width = vMaxWidth+0.01*vMaxWidth + "px";
-			for(i = 0; i<pAnim.fImgs.length; i++) {
-				vImg = pAnim.fImgs[i];
-				vImg.style.marginTop = (vMaxHeight - vImg.fHeight)/2 + "px";
-			}
+			pAnim.fMaxHeight = vMaxHeight;
+			pAnim.fMaxWidth = vMaxWidth;
+			const vResizer = {
+				onResizedDes: function (pOwnerNode, pEvent) {
+				},
+				onResizedAnc: function (pOwnerNode, pEvent) {
+					if (pEvent.phase === 1) {
+						scImageMgr.xRedrawAnim(pOwnerNode);
+					}
+				}
+			};
+			scSiLib.addRule(pAnim, vResizer);
+			this.xRedrawAnim(pAnim);
+
 			if (!pOpts.auto && pOpts.toolbar<2) {
 				pAnim.fBtnInitPly = scImageMgr.xAddBtn(pAnim,pAnim,this.fTypAnm,"BtnInitPly",scImageMgr.xGetStr(16),scImageMgr.xGetStr(17));
 			}
@@ -562,6 +566,26 @@ scImageMgr.xInitAnim = function(pAnim,pOpts,pId) {
 		}
 	} catch(e){
 		console.error("scImageMgr.xInitAnim::Error : "+e);
+	}
+}
+scImageMgr.xRedrawAnim = function(pAnim) {
+	let vSetWidth = pAnim.fMaxWidth;
+	let vSetHeight = pAnim.fMaxHeight;
+	let vRatio = 1;
+	if (pAnim.fOpts.adaptive){
+		const vAvailableWidth = pAnim.parentElement.clientWidth;
+		if (vAvailableWidth < vSetWidth){
+			vRatio = vAvailableWidth / vSetWidth;
+			vSetWidth = vAvailableWidth;
+			vSetHeight = vSetHeight * vRatio;
+		}
+	}
+	pAnim.style.height = vSetHeight + "px";
+	pAnim.style.width = vSetWidth + "px";
+	for(i = 0; i<pAnim.fImgs.length; i++) {
+		vImg = pAnim.fImgs[i];
+		vImg.style.marginTop = (vSetHeight - vImg.fHeight * vRatio)/2 + "px";
+		scPaLib.findNode("des:img",vImg).width = vImg.fWidth * vRatio;
 	}
 }
 scImageMgr.xAutoAnim = function(pAnim) {
@@ -1083,17 +1107,14 @@ scImageMgr.xInitSliders = function(pCo) {
 		}
 	}
 }
-
 scImageMgr.xSliderGetMaxHeigth = function(pSlider) {
 	return Math.max.apply(Math, pSlider.fImgs.map(function(pImg) { return pImg.height; }));
 }
-
 scImageMgr.xSliderSetImageSize = function(pImg, pSlider) {
 	pImg.width = Math.round(pSlider.fSliderWidth < pImg.fOrigWidth ? pSlider.fSliderWidth : pImg.fNaturalHeight > pSlider.fOrigHeight ? pImg.fNaturalWidth * (pSlider.fSliderHeight / pImg.fNaturalHeight) : pImg.fOrigWidth);
 	pImg.height = Math.round(pImg.width * pImg.fNaturalHeight / pImg.fNaturalWidth);
 	pImg.style.left = pSlider.fSliderWidth + "px";
 }
-
 scImageMgr.xRunSlider = function(pSlider) {
 	const vDuration = pSlider.fOpts.speed;
 	document.body.classList.remove("sliderLoading");
@@ -1129,7 +1150,6 @@ scImageMgr.xRunSlider = function(pSlider) {
 		}, vDuration);
 	}
 }
-
 scImageMgr.xSliderNxt = function(pSlider) {
 	clearTimeout(pSlider.fSliderTimer);
 	clearInterval(pSlider.fImgTimeInterval);
@@ -1144,7 +1164,6 @@ scImageMgr.xSliderNxt = function(pSlider) {
 	pSlider.fPrvBtn.style.display = "";
 	scImageMgr.xRunSlider(pSlider);
 }
-
 scImageMgr.xSliderPrv = function(pSlider) {
 	clearTimeout(pSlider.fSliderTimer);
 	clearInterval(pSlider.fImgTimeInterval);
@@ -1159,7 +1178,6 @@ scImageMgr.xSliderPrv = function(pSlider) {
 	pSlider.fImgs[pSlider.fPrevImageIndex].style.left = -pSlider.fImgs[pSlider.fPrevImageIndex].width + "px";
 	scImageMgr.xRunSlider(pSlider);
 }
-
 scImageMgr.xPauseSlider = function(pSlider) {
 	scImageMgr.isSliderPaused = true;
 	pSlider.fPauseBtn.style.display = "none";
@@ -1168,7 +1186,6 @@ scImageMgr.xPauseSlider = function(pSlider) {
 	clearTimeout(pSlider.fSliderTimer);
 	clearInterval(pSlider.fImgTimeInterval);
 }
-
 scImageMgr.xPlaySlider = function(pSlider) {
 	scImageMgr.isSliderPaused = false;
 	pSlider.fPlayBtn.style.display = "none";
@@ -1247,7 +1264,6 @@ scImageMgr.xInitSqs = function(pCo) {
 		}
 	}
 }
-
 scImageMgr.xRunSeq = function(pSeq) {
 	pSeq.fAncs[pSeq.fCurrentImageIndex].parentNode.style.visibility = "visible";
 	pSeq.fAncs[pSeq.fCurrentImageIndex].parentNode.style.opacity = 1;
@@ -1257,7 +1273,6 @@ scImageMgr.xRunSeq = function(pSeq) {
 		}, 3000);
 	}
 }
-
 scImageMgr.xSeqNxt = function(pSeq) {
 	clearTimeout(pSeq.fSeqTimer);
 	pSeq.fPrevImageIndex = pSeq.fCurrentImageIndex;
@@ -1271,7 +1286,6 @@ scImageMgr.xSeqNxt = function(pSeq) {
 	}
 	scImageMgr.xRunSeq(pSeq);
 }
-
 scImageMgr.xSeqPrv = function(pSeq) {
 	clearTimeout(pSeq.fSeqTimer);
 	pSeq.fPrevImageIndex = pSeq.fCurrentImageIndex;
@@ -1283,14 +1297,12 @@ scImageMgr.xSeqPrv = function(pSeq) {
 	}, 1000);
 	scImageMgr.xRunSeq(pSeq);
 }
-
 scImageMgr.xPauseSeq = function(pSeq) {
 	scImageMgr.isSeqPaused = true;
 	pSeq.fPauseBtn.style.display = "none";
 	pSeq.fPlayBtn.style.display = "";
 	clearTimeout(pSeq.fSeqTimer);
 }
-
 scImageMgr.xPlaySeq = function(pSeq) {
 	scImageMgr.isSeqPaused = false;
 	pSeq.fPlayBtn.style.display = "none";

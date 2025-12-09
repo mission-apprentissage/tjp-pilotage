@@ -7,9 +7,9 @@ import { PageClient } from "./page.client";
 const Page = ({
   params,
 }: {
-  params: {
+  readonly params: Promise<{
     numero: string;
-  };
+  }>;
 }) => (
   <GuardPermission permission={PermissionEnum["demande/lecture"]}>
     <PageClient params={params} />

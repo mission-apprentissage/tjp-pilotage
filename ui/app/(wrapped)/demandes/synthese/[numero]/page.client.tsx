@@ -4,7 +4,7 @@ import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { isAxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { parse } from "qs";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { hasRole, RoleEnum} from 'shared';
 import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
@@ -25,12 +25,13 @@ import { MainSection } from "./main/MainSection";
 import { StepperSection } from "./stepper/StepperSection";
 
 export const PageClient = ({
-  params: { numero },
+  params,
 }: {
-  params: {
+  readonly params: Promise<{
     numero: string;
-  };
+  }>;
 }) => {
+  const { numero } = use(params);
   const { user } = useAuth();
   const { campagne } = useCurrentCampagne();
   const router = useRouter();
