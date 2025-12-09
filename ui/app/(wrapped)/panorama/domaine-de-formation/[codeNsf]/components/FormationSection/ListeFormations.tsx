@@ -112,7 +112,7 @@ export const ListeFormations = () => {
                     >
                       <Tooltip label={formatFamilleMetierLibelle({ formation, withBadge: false })}
                       >
-                        <Text
+                        <Flex
                           my={2}
                           color={getFontColor(formation)}
                           whiteSpace="normal"
@@ -122,7 +122,7 @@ export const ListeFormations = () => {
                           _firstLetter={{ textTransform: "uppercase" }}
                         >
                           {formatFamilleMetierLibelle({ formation, withBadge: false })}
-                        </Text>
+                        </Flex>
                       </Tooltip>
                       <Flex direction="row" gap={1}>
                         <BadgeTypeFamille typeFamille={formation.typeFamille} />

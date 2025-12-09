@@ -108,6 +108,9 @@
     "vitest": "^3.2.4",
     "vitest-canvas-mock": "^0.3.3"
   },
+  "resolutions": {
+    "rimraf": "^3.0.2"
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --cache --fix"

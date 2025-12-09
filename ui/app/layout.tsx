@@ -28,7 +28,7 @@ export async function generateMetadata(
 }
 
 const fetchAuth = async () => {
-  const headersList = Object.fromEntries(headers().entries());
+  const headersList = Object.fromEntries((await headers()).entries());
   try {
     return await serverClient.ref("[GET]/auth/whoAmI").query({}, { headers: headersList });
   } catch (e) {
@@ -38,7 +38,7 @@ const fetchAuth = async () => {
 };
 
 const fetchGlossaire = async () => {
-  const headersList = Object.fromEntries(headers().entries());
+  const headersList = Object.fromEntries((await headers()).entries());
   try {
     return await serverClient.ref("[GET]/glossaire").query({}, { headers: headersList });
   } catch (e) {
@@ -48,7 +48,7 @@ const fetchGlossaire = async () => {
 };
 
 const fetchCampagne = async () => {
-  const headersList = Object.fromEntries(headers().entries());
+  const headersList = Object.fromEntries((await headers()).entries());
   try {
     return await serverClient.ref("[GET]/campagne/current").query({}, { headers: headersList });
   } catch (e) {

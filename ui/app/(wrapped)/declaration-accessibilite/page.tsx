@@ -1,5 +1,4 @@
 import { Box, Container, Heading, Link, ListItem, Text, UnorderedList, VStack } from "@chakra-ui/react";
-import NextLink from "next/link";
 
 const Page = () =>
   <Container maxW="container.xl" py="24px">
@@ -19,7 +18,6 @@ const Page = () =>
             style={{
               textDecoration: "underline",
             }}
-            as={NextLink}
             href="https://beta.gouv.fr/accessibilite/schema-pluriannuel"
           >
             https://beta.gouv.fr/accessibilite/schema-pluriannuel
@@ -36,7 +34,6 @@ const Page = () =>
             style={{
               textDecoration: "underline",
             }}
-            as={NextLink}
             href="https://orion.education.gouv.fr/"
           >
             https://orion.education.gouv.fr/

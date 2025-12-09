@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { parse, stringify } from "qs";
-import { useContext } from "react";
+import { use,useContext } from "react";
 
 import { client } from "@/api.client";
 import { FiltersSection } from "@/app/(wrapped)/panorama/components/FiltersSection";
@@ -14,12 +14,13 @@ import { CodeDepartementContext } from "@/app/codeDepartementContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 export default function Panorama({
-  params: { codeDepartement },
+  params,
 }: {
-  readonly params: {
+  readonly params: Promise<{
     codeDepartement: string;
-  };
+  }>;
 }) {
+  const { codeDepartement } = use(params);
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: Partial<FiltersPanoramaFormation> = parse(queryParams.toString(), { arrayLimit: Infinity });

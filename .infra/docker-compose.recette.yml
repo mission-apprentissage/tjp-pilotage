@@ -44,7 +44,7 @@ services:
     restart: unless-stopped
     ports:
       - "5432:5432"
-    shm_size: 2gb
+    shm_size: 4gb
     networks:
       - ij_network
     volumes:
@@ -58,3 +58,9 @@ services:
         fluentd-address: localhost:24224
         tag: docker.json.{{product_name}}.{{env_name}}.postgres
         fluentd-async: "true"
+    deploy:
+      resources:
+        limits:
+          memory: 4g
+        reservations:
+          memory: 1G

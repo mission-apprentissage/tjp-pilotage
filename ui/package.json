@@ -8,8 +8,8 @@
     "npm": "please-use-yarn"
   },
   "scripts": {
-    "dev": "next dev --turbo",
-    "build": "next build --no-lint",
+    "dev": "next dev",
+    "build": "next build",
     "typecheck": "tsc -noEmit",
     "typecheck:ci": "tsc --noEmit",
     "theme": "chakra-cli tokens theme/theme.ts"
@@ -40,10 +40,10 @@
     "iframe-resizer": "^4.4.5",
     "lodash": "^4.17.21",
     "maplibre-gl": "^4.7.1",
-    "next": "14.2.32",
+    "next": "16.0.7",
     "qs": "^6.14.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
     "react-hook-form": "^7.62.0",
     "react-intersection-observer": "^9.16.0",
     "react-map-gl": "^7.1.9",
