@@ -1,5 +1,5 @@
 @import url("font/font.css");
-@import url("pwa/font.css");
+@import url('pwa/font.css');
 
 /** HTML5 CSS RESET ***********************************************************/
 html {
@@ -15,7 +15,6 @@ blockquote, q {
 blockquote:before, blockquote:after,
 q:before, q:after {
 	content:'';
-	content:none;
 }
 
 .txt_fig_ex .screenSeq img {
@@ -42,10 +41,6 @@ del {
 abbr[title], dfn[title] {
 	border-block-end:1px dotted;
 	cursor:help;
-}
-table {
-	border-collapse:separate;
-	border-spacing:1rem;
 }
 hr {
 	display:block;
@@ -574,7 +569,11 @@ a.btnSc {
 	display: flex;
 	gap: 0.8em;
 }
-
+.tplHomeTitleFrame .tplHomeLogo{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
 .tplHomeTitleFrame .tplHomeTi > *,
 .tplHomeTitleFrame .tplHomeLongTi > * {
 	margin: 0;
@@ -634,7 +633,6 @@ a.btnSc {
 /** Menus : plan **************************************************************/
 ul.sw_outMap_navList{
 	list-style: none;
-	list-style-image:none;
 	margin-block: 0;
 	margin-inline: 10px 0;
 	padding-block: 0;
@@ -642,7 +640,6 @@ ul.sw_outMap_navList{
 }
 ul.sw_outMap_navList ul{
 	list-style: none;
-	list-style-image:none;
 	margin-block: 0;
 	margin-inline: 20px 0;
 	padding-block: 0;
@@ -767,7 +764,6 @@ menu li {
 
 #outline ul{
 	list-style: none;
-	list-style-image:none;
 	padding-block: 1em;
 	padding-inline: 0;
 	margin-block: 0;
@@ -949,7 +945,6 @@ menu li {
 }
 .glossary .idxCallers_co ul{
 	list-style: none;
-	list-style-image:none;
 	margin-block: 0;
 	margin-inline: 0;
 	padding-block: 0;
@@ -966,12 +961,12 @@ menu li {
 	margin-inline-end:10px;
 }
 
-/** Fundamenal units as root **************************************************/
+/** Fundamental units as root **************************************************/
 .home.concept .def_bk{
 	padding-inline-start: 20px;
 }
 .home.stepList .secAloneCo{
-	padding-inline-start: 15px;
+	padding-inline-start: 10px;
 }
 .home.screen .secAloneCo{
 	padding-inline-start: 15px;
@@ -1144,7 +1139,6 @@ i.syn:before{
 }
 .secOutUi ul {
 	list-style: none;
-	list-style-image:none;
 	margin-block: 0;
 	margin-inline: 15px 0;
 	padding-block: 0;
@@ -1152,7 +1146,6 @@ i.syn:before{
 }
 .secOutUi ol {
 	list-style: none;
-	list-style-image:none;
 	margin-block: 0;
 	margin-inline: 0;
 	padding-block: 0;
@@ -1190,7 +1183,6 @@ li.caption_lo.screenSeq_lo {
 ul.links,
 ul.sw_outSubSec_navList{
 	list-style: none;
-	list-style-image:none;
 }
 ul.links a,
 ul.sw_outSubSec_navList a{
@@ -1592,6 +1584,7 @@ span.typed.discrete {
 
 .caption {
 	text-align: center;
+	margin-inline: 0;
 }
 .caption_ti{
 	font-size:1em;
@@ -1722,7 +1715,6 @@ a.slpBtnLst::before {
 }
 ol.steps {
 	list-style: none;
-	list-style-image:none;
 	counter-reset:li;
 	margin: 0;
 	padding: 0.5em;
@@ -1955,8 +1947,8 @@ ol.steps li.step {
 ol.steps li.step.result {
 	padding-block: 0.5em 0;
 	display: flex;
+	flex-direction: column;
 	align-items: baseline;
-	column-gap: 0.3em;
 }
 ol.steps li.step.result .result_ti {
 	margin: 0;
@@ -2037,10 +2029,9 @@ span.slpCountTxt{
 .stepScreenBox{
 	display:flex;
 	justify-content: center;
-	align-items: start;
-	align-content: flex-start;
-	flex-wrap: wrap;
 	background-color: var(--contentBG);
+	flex-direction: column;
+	align-items: center;
 }
 .stepScreenTitles{
 	position:relative;
@@ -2050,20 +2041,16 @@ span.slpCountTxt{
 	padding-inline: 0.3rem;
 	display: flex;
 	flex-direction: column-reverse;
-	max-width: 47%;
+	align-self: stretch;
 }
 .screenImage{
 	flex: 0 0 auto;
 	counter-reset:steps;
 	background-color: var(--contentBG);
-	padding-block: 10px;
-	padding-inline: 10px;
-	max-width: 50%!important;
 }
 .stepScreenTitles,
 .stepScreenBox { /* Must be set on all parent flex items of an overflowing item */
 	min-height:0;
-	/*overflow:hidden;*/
 }
 
 ol.screenSteps{
@@ -2119,10 +2106,6 @@ li.screenStep.active_true a::before {
 span.stepArea{
 	outline: 2px dotted var(--accentColor);
 	border-radius: 5px;
-}
-.screenImage a.screenStepLnk {
-	margin-block: 10px;
-	margin-inline: 10px;
 }
 .screenImage a.screenStepLnk::before {
 	background-color: #ffffff;
@@ -2344,7 +2327,6 @@ a.screenZoneLnk::before,
 .screenTitles ol{
 	counter-reset:zones;
 	list-style: none;
-	list-style-image:none;
 	margin-block: 0;
 	margin-inline: 0;
 	padding-block: 0;
@@ -2397,12 +2379,11 @@ li.screenZone:last-child {
 	margin-inline: 0;
 }
 
-.screenZone_co {
+.screenZone_tall .screenZone_co {
 	display: flex;
 }
 .screenZone_tall .screenZone_desc {
-	margin-block: 0!important;
-	margin-inline: 0!important;
+	flex: 1;
 }
 .scrFraAct .screenZone_end{
 	display:none;
@@ -2639,6 +2620,10 @@ div.text{
 	overflow-y: clip;
 	border-spacing: 0;
 }
+/* Specific .scCommentOn */
+.scCommentOn div.text {
+    overflow: initial;
+}
 
 code::before,
 .txt_cmd_is::before {
@@ -2776,7 +2761,7 @@ span.archive_ico::before {
 }
 .tooltip{
 	background-color: var(--contentBG);
-	box-shadow: 0px 3px 6px rgb(0 0 0 / 20%);
+	box-shadow: 0 3px 6px rgb(0 0 0 / 20%);
 	font-size:0.9em;
 	margin-block: 1rem;
 	margin-inline: 1rem;
@@ -2820,7 +2805,7 @@ span.archive_ico::before {
 	line-height: 30px;
 	border-radius: 50px;
 	font-size: 1.3em;
-	box-shadow: 0px 3px 6px rgb(0 0 0 / 20%);
+	box-shadow: 0 3px 6px rgb(0 0 0 / 20%);
 }
 .tooltip a.tooltip_x:hover {
 	background-color: var(--accentDarkColor);
@@ -2839,7 +2824,6 @@ span.archive_ico::before {
 /* ============= tooltip help ============= */
 .tooltip_a.help {
 	appearance: none;
-	moz-appearance: none;
 	border-radius: 5px;
 	width: 32px;
 	height: 32px;
@@ -2879,7 +2863,7 @@ a.imgZoom{
 .screenSeq > .caption_co{
 	margin-block: 0;
 	margin-inline: auto;
-	border: 1.5rem solid var(--accentLightColor);
+	border: 3px solid var(--accentLightColor);
 	background-color: var(--contentBG);
 	display: flex;
 	flex-direction: column;
@@ -2890,13 +2874,8 @@ a.imgZoom{
 	margin-inline: 0;
 }
 .screenSeqFra{
-	margin-block: 1rem;
 	margin-inline: auto;
 	background-color: #FFF;
-}
-.screenSeqFra div {
-	margin-block: 0!important;
-	margin-inline: 0!important;
 }
 .scImgZmOver {
 	background-color: #000;
@@ -4535,10 +4514,35 @@ button.themeBtn:hover {
 	}
 }
 @media (max-width: 900px){ /* Mode "mobile" (prop responsiveWidth) */
-	.screenImage,
-	.stepScreenTitles {
-		max-width: -webkit-fill-available;
-	}
+    .planClosed #content,
+    .tplNoMenu #content {
+        padding-inline: 0.5em;
+    }
+    .home.stepList .secAloneCo {
+        padding: 0;
+    }
+    .screen > .infoblock,
+    .screen > .block,
+    .screen > div:not(:first-child),
+    .default > .infoblock,
+    .default > .block,
+    .default > div:not(:first-child),
+    .simple > .infoblock,
+    .simple > .block,
+    .simple > div:not(:first-child),
+    .result > .infoblock,
+    .result > .block,
+    .result > div:not(:first-child),
+    .prereq > .infoblock,
+    .prereq > .block,
+    .prereq > div:not(:first-child) {
+    	margin-inline-start: 0;
+    }
+    .stepListPlayer,
+    .stepList .desc.simple,
+    .scrFra {
+        padding: 0.5em;
+    }
 	.secOutFra {
 		display: none;
 	}
@@ -4554,6 +4558,10 @@ button.themeBtn:hover {
 		align-items: stretch;
 		flex-wrap: nowrap;
 	}
+    .screenImage,
+    .stepScreenTitles {
+        max-width: -webkit-fill-available;
+    }
 	.screenTitles {
 		height: auto!important;
 		padding-block: 0.4rem;
@@ -4590,6 +4598,13 @@ button.themeBtn:hover {
 	html {
 		scroll-padding-block-start:250px;
 	}
+	.tplHomeTitleFrame {
+		flex-direction: column;
+	}
+	.tplHomeTitleFrame .tplHomeLogo{
+		align-items: center;
+	}
+
 	.menuActive #stack{
 		display:none;
 	}
@@ -4690,10 +4705,6 @@ button.themeBtn:hover {
 	}
 	.treeToolbar span.treeSearchLabel{
 		flex:100%;
-	}
-	.stepScreenBox {
-		flex-direction: column;
-		align-items: center;
 	}
 	.stepListPlayer{
 		border: 0.5rem solid var(--accentLightColor);

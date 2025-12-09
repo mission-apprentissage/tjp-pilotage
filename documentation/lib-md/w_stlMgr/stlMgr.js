@@ -998,8 +998,8 @@ var stlMgr = {
 		var vStlWidth = pContainer.fWidth = pContainer.getAttribute("data-width");
 		var vStlHeight = pContainer.getAttribute("data-height");
 		pContainer.fRatio = vStlWidth / vStlHeight;
-		var vStlColorFog = parseInt(pContainer.getAttribute("data-color-background"), 16);
-		var vStlColorMaterial = parseInt(pContainer.getAttribute("data-color-material"), 16);
+		var vStlColorFog = parseInt(pContainer.getAttribute("data-color-background").replace("#", "0x"), 16);
+		var vStlColorMaterial = parseInt(pContainer.getAttribute("data-color-material").replace("#", "0x"), 16);
 
 		vCamera = pContainer.fCamera = new THREE.PerspectiveCamera(35, vStlWidth / vStlHeight, 0.1, 30);
 		vCamera.position.set(3, 0.15, 3);
