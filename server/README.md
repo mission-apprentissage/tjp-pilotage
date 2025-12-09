@@ -1,10 +1,25 @@
+# Variables à modifier pour l'import d'une nouvelle rentrée scolaire (RS) et d'un nouveau millésime IJ
+Dans ce qui va suivre, la nouvelle **rentrée scolaire vaut 2025** et le nouveau **millésime vaut 2023_2024**. Il faudra donc adapter les temporalités au fil des années.
+
+- Modifier le fichier `shared/time/CURRENT_RENTREE.ts` : mettre la valeur à **"2025"**
+- Modifier le fichier `shared/time/millesimes.ts` : 
+    - rajouter **"2023_2024"** à la variable `MILLESIMES_IJ`
+    - rajouter **"2023_2024"** à la variable `MILLESIMES_IJ_REG`
+    - rajouter **"2023_2024"** à la variable `MILLESIMES_IJ_REG`
+    - rajouter **"2025"** à la variable `RENTREES_SCOLAIRES`
+- Modifier le fichier `shared/time/CURRENT_IJ_MILLESIME.ts`: mettre la valeur à **"2023_2024"** 
+- Modifier le fichier `server/src/commands.product.ts` : mettre la nouvelle rentrée scolaire **"2025"** parmi les years dans la variable `actions` :
+    - `years` de l'import de `attractivite_capacite`
+    - `years` de l'import de `BTS_attractivite_capacite`
+    - `years` de l'import de `constat`
+
 # Ordre de l'import des données
 
 ## `yarn cli importFiles`
 Cette commande importe les fichiers CSV vers la table cache `rawData`. Cela implique que les fichiers sont formatés comme il faut :
 - encodés en **utf8**
 - séparés par des **points-virgules**
-- **sans des champs commentaires** qui contiennent potentiellement des points-virgules
+- **sans des champs commentaires** qui contiennent potentiellement des **points-virgules** ou des **sauts de lignes**
 - avec les bons **champs d'intérêts** (cf les fichiers dans `server/src/modules/import/fileTypes\`), sans wrap de guillemets
 - placés au **bon endroit dans l'arbordescence des fichiers csv** (`server/static/files`)
 - nommés comme il faut (majuscules, minuscules, tirets)
