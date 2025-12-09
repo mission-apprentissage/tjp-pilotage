@@ -52,10 +52,22 @@ Cette commande permet de calculer les positions quadrant d'une formation région
 - `tauxIJNiveauDiplomeRegion`
 - `positionFormationRegionaleQuadrant`
 
+## `yarn cli importTensionFranceTravail <echelleOptionnelle` (optionnel)
+Cette commande permet de récupérer les données de tensions des métiers à différentes échelles. Si l`echelleOptionnelle` n'est pas donnée, la commande exécute dans cet ordre :
+    - à l'échelle **nationale** (`yarn cli importTensionFranceTravail importTensionFranceTravailNational`)
+    - à l'échelle **régionale** (`yarn cli importTensionFranceTravail importTensionFranceTravailRegion`)
+    - à l'échelle **départementale** (`yarn cli importTensionFranceTravail importTensionFranceTravailDepartement`)
+
+Cela crée respectivement les fichiers CSV suivants :
+- `server/static/files/tension_rome.csv`
+- `server/static/files/tension_rome_region.csv`
+- `server/static/files/tension_rome_departement.csv`
+
+
 ## `yarn cli importMetierTension` (optionnel)
 Cette commande n'est à exécuter que **si les données suivantes en lien avec les métiers** sont à importer :
 - le **lien métier-formation** via certif-info
-- les **tensions des métiers** (déjà importées sous forme de fichiers csv via l'API France Travail) :
+- les **tensions des métiers** (déjà importées par la commande précédente via l'API France Travail) :
     - à l'échelle **nationale**
     - à l'échelle **régionale**
     - à l'échelle **départementale**
