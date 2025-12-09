@@ -34,13 +34,14 @@ C'est le cas par exemple pour l'import des **nouvelles formations** (`yarn cli i
 ## `yarn cli importIJ`
 Cette commande appelle l'API inserjeunes et stocke les données réarrangées dans `rawData`. Il y a 2 types de données IJ récupérées :
 - `ij` pour la maille formation x établissement
-- `ij_reg` pour la maille formation x région
+- `ij_reg` pour la maille formation x région   
+
 Cette commande peut prendre **plusieurs heures** à être exécutée.
 
 
 ## `yarn cli importFormations`
 Cette commande est le coeur de l'import de toutes les autres tables d'analyses d'Orion. Elle itère sur la table `diplomeProfessionnel` (liste de cfd) pour les voies scolaire et apprentissage, et en partant des données en cache dans `rawData`, elle stocke pour chaque formation :
-- les établissements qui l'enseignent dans la table `etablissement` : adresse, département, académie, région, latitude et longitude
+- les établissements qui l'enseignent dans la table `etablissement` : libellé, secteur (public ou privé), adresse, département, académie, région, latitude et longitude
 - les **offres de formations** associées (cfd x uai), toutes rentrées scolaires confondues dans la table `formationEtablissement`
 - les indicateurs d'entrée de chaque **offre de formation** (cfd x uai) dans la table `indicateurEntree` pour **chaque rentrée scolaire**: capacités, voeux et effectifs
 - les indicateurs inserjeunes de chaque **offre de formation** (cfd x uai) dans la table `indicateurSortie` pour **chaque millésime**: effectifs en année terminale, nombre de poursuivants, nombre de personnes en emploi sous 6-12-18 mois, nombre de sortants
@@ -48,15 +49,15 @@ Cette commande est le coeur de l'import de toutes les autres tables d'analyses d
 - la valeur ajoutée de chaque établissement pour **chaque millésime**
 
 ## `yarn cli importPositionsQuadrant`
-Cette commande permet de calculer les positions quadrant d'une formation régionale (cfd x code région) lors de la sortie d'un nouveau millésime. Il alimente les tables suivantes, qui facilitent les requêtes au sein des écrans de l'application :
+Cette commande permet de calculer les positions quadrant d'une formation régionale (cfd x code région) lors de la sortie d'un nouveau millésime. Elle alimente les tables suivantes, ce qui facilite les requêtes au sein des écrans de l'application :
 - `tauxIJNiveauDiplomeRegion`
 - `positionFormationRegionaleQuadrant`
 
-## `yarn cli importTensionFranceTravail <echelleOptionnelle` (optionnel)
-Cette commande permet de récupérer les données de tensions des métiers à différentes échelles. Si l`echelleOptionnelle` n'est pas donnée, la commande exécute dans cet ordre :
-    - à l'échelle **nationale** (`yarn cli importTensionFranceTravail importTensionFranceTravailNational`)
-    - à l'échelle **régionale** (`yarn cli importTensionFranceTravail importTensionFranceTravailRegion`)
-    - à l'échelle **départementale** (`yarn cli importTensionFranceTravail importTensionFranceTravailDepartement`)
+## `yarn cli importTensionFranceTravail <echelleOptionnelle>` (optionnel)
+Cette commande permet de récupérer les données de tensions des métiers à différentes échelles. Si `echelleOptionnelle` n'est pas donnée, la commande exécute dans cet ordre :
+- à l'échelle **nationale** (`yarn cli importTensionFranceTravail importTensionFranceTravailNational`)
+- à l'échelle **régionale** (`yarn cli importTensionFranceTravail importTensionFranceTravailRegion`)
+- à l'échelle **départementale** (`yarn cli importTensionFranceTravail importTensionFranceTravailDepartement`)
 
 Cela crée respectivement les fichiers CSV suivants :
 - `server/static/files/tension_rome.csv`
