@@ -83,7 +83,7 @@ Cela crée respectivement les fichiers CSV suivants :
 ## `yarn cli importTensionRome <echelleOptionnelle>` (optionnel)
 Cette commande n'est à exécuter que **si les données suivantes en lien avec les métiers** sont à importer :
 - le **lien métier-formation** via certif-info
-- les **tensions des métiers** (déjà importées par la commande précédente via l'API France Travail). Si `echelleOptionnelle` n'est pas donnée, la commande exécute dans cet ordre : :
+- les **tensions des métiers** (déjà importées en CSV depuis l'API France Travail par la commande précédente). Si `echelleOptionnelle` n'est pas donnée, la commande exécute dans cet ordre :
     - à l'échelle **nationale** (`yarn cli importTensionRome importTensionRomeNational`)
     - à l'échelle **régionale** (`yarn cli importTensionRome importTensionRomeRegion`)
     - à l'échelle **départementale** (`yarn cli importTensionRome importTensionRomeDepartement`)
