@@ -22,7 +22,6 @@ import { importDataFormations } from "./modules/import/usecases/importDataFormat
 import { importDiplomesProfessionnels } from "./modules/import/usecases/importDiplomesProfessionnels/importDiplomesProfessionnels.usecase";
 import { importDiscipline } from "./modules/import/usecases/importDiscipline/importDiscipline.usecase";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
-import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFamillesMetiersBcn } from "./modules/import/usecases/importFamillesMetiersBcn/importFamillesMetiersBcn.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importIJData } from "./modules/import/usecases/importIJData/importIJData.usecase";
@@ -99,7 +98,7 @@ export function productCommands(cli: Command) {
       for (const user of users) {
         try {
           await createUser({
-            body: { ...user, uais: [] },
+            body: user,
           });
           console.log(`${user.email} created successfuly`);
         } catch (e) {
@@ -128,7 +127,7 @@ export function productCommands(cli: Command) {
         uai?: string;
         fonction?: UserFonction
     }) => {
-        await createUser({ body: { ...options, uais: options.uai ? [{ value: options.uai }] : [] } });
+        await createUser({ body: options });
         await createJob({ name: "createUser" });
       }
     );
@@ -179,17 +178,17 @@ export function productCommands(cli: Command) {
         ...getImports({ type: "regroupements", schema: Schemas.regroupements }),
         ...getImports({
           type: "attractivite_capacite",
-          years: ["2021", "2022", "2023", "2024"],
+          years: ["2021", "2022", "2023", "2024", "2025"],
           schema: Schemas.attractivite_capacite,
         }),
         ...getImports({
           type: "BTS_attractivite_capacite",
-          years: ["2022", "2023", "2024"],
+          years: ["2022", "2023", "2024", "2025"],
           schema: Schemas.BTS_attractivite_capacite,
         }),
         ...getImports({
           type: "constat",
-          years: ["2020", "2021", "2022", "2023", "2024"],
+          years: ["2020", "2021", "2022", "2023", "2024", "2025"],
           schema: Schemas.constat,
         }),
         ...getImports({ type: "nMef", schema: Schemas.nMef }),
@@ -330,7 +329,6 @@ export function productCommands(cli: Command) {
         importNiveauxDiplome,
         importNSF,
         importDispositifs,
-        importFamillesMetiers,
         importFamillesMetiersBcn,
         importDataEtablissements,
         importDataFormations,
@@ -338,11 +336,7 @@ export function productCommands(cli: Command) {
         importDiplomesProfessionnels,
         importIndicateursRegion,
         importIndicateursDepartement,
-        importLienEmploiFormation,
         importDiscipline,
-        importTensionRomeNational,
-        importTensionRomeRegion,
-        importTensionRomeDepartement,
         importActionPrioritaire,
       };
 
@@ -356,6 +350,18 @@ export function productCommands(cli: Command) {
       await refreshViews();
       await createJob({ name: "importTables", sub: usecaseName });
     });
+
+  cli
+    .command("importMetierTension")
+    .description("Import du lien entre les formations et les métiers en tension")
+    .action(async () => {
+      await importLienEmploiFormation().then();
+      await importTensionRomeNational().then();
+      await importTensionRomeRegion().then();
+      await importTensionRomeDepartement().then();
+      await createJob({ name: "importMetierTension" });
+    });
+
 
   cli.command("importIJ").action(async () => {
     await importIJData().then();
