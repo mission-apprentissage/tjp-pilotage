@@ -6,7 +6,7 @@ import { serverClient } from "@/api.client";
 import { PageClient } from "./page.client";
 
 const fetchDefaultNsf = async () => {
-  const headersList = Object.fromEntries(headers().entries());
+  const headersList = Object.fromEntries((await headers()).entries());
   try {
     return await serverClient
       .ref("[GET]/domaine-de-formation")

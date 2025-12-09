@@ -89,8 +89,9 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
               </Button>
             )}
             {!!user && (
-              <Menu autoSelect={false} placement="bottom-end" closeOnBlur  isOpen={isMenuDeconnexionOpen} gutter={0}>
+              <Menu autoSelect={false} placement="bottom-end" closeOnBlur isOpen={isMenuDeconnexionOpen} gutter={0}>
                 <MenuButton
+                  id={"menu-button-deconnexion"}
                   ml="auto"
                   as={Button}
                   fontWeight="light"

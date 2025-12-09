@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { ScopeZone } from "shared";
 import { ScopeEnum } from "shared";
@@ -41,6 +41,7 @@ export function DomaineDeFormationClient(
   { defaultNsfs, nsf }:
   { defaultNsfs: NsfOptions, nsf: NsfOption }) {
   const { value: codeNsf } = nsf;
+  const router = useRouter();
   const [domaineDeFormation, setDomaineDeFormation] = useState<DomaineDeFormationResult>({
     filters: {
       regions: [],
@@ -57,6 +58,7 @@ export function DomaineDeFormationClient(
   const [departements, setDepartements] = useState<Departement[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { codeRegion, codeAcademie, codeDepartement, voie } = useDomaineDeFormationSearchParams();
+
 
   const libelleNsf = defaultNsfs.find((nsf) => nsf.value === codeNsf)?.label ?? "";
 
@@ -103,9 +105,11 @@ export function DomaineDeFormationClient(
     }
   }, [codeRegion, codeAcademie, domaineDeFormation, codeDepartement]);
 
-  if (!isDomaineDeFormationLoading && !results) {
-    return redirect(`/panorama/domaine-de-formation?wrongNsf=${codeNsf}`);
-  }
+  useEffect(() => {
+    if (!isDomaineDeFormationLoading && !results) {
+      router.replace(`/panorama/domaine-de-formation?wrongNsf=${codeNsf}`);
+    }
+  }, [isDomaineDeFormationLoading, results, codeNsf, router]);
 
   return (
     <NsfContextProvider value={{ codeNsf, libelleNsf, defaultNsfs }}>
