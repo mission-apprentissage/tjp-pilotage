@@ -352,16 +352,26 @@ export function productCommands(cli: Command) {
     });
 
   cli
-    .command("importMetierTension")
+    .command("importTensionRome")
     .description("Import du lien entre les formations et les métiers en tension")
-    .action(async () => {
-      await importLienEmploiFormation().then();
-      await importTensionRomeNational().then();
-      await importTensionRomeRegion().then();
-      await importTensionRomeDepartement().then();
-      await createJob({ name: "importMetierTension" });
-    });
+    .argument("[usecase]")
+    .action(async (usecaseName: string) => {
+      const usecases = {
+        importLienEmploiFormation,
+        importTensionRomeNational,
+        importTensionRomeRegion,
+        importTensionRomeDepartement
+      };
 
+      if (usecaseName) {
+        await usecases[usecaseName as keyof typeof usecases]();
+      } else {
+        for (const usecase of Object.values(usecases)) {
+          await usecase();
+        }
+      }
+      await createJob({ name: "importTensionRome", sub: usecaseName });
+    });
 
   cli.command("importIJ").action(async () => {
     await importIJData().then();

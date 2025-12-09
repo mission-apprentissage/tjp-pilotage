@@ -69,7 +69,7 @@ Cette commande permet de calculer les positions quadrant d'une formation région
 - `positionFormationRegionaleQuadrant`
 
 ## `yarn cli importTensionFranceTravail <echelleOptionnelle>` (optionnel)
-Cette commande permet de récupérer les données de tensions des métiers à différentes échelles. Si `echelleOptionnelle` n'est pas donnée, la commande exécute dans cet ordre :
+Cette commande permet de récupérer les données de tensions des métiers à différentes échelles, depuis l'API France Travail vers des fichiers CSV. Si `echelleOptionnelle` n'est pas donnée, la commande exécute dans cet ordre :
 - à l'échelle **nationale** (`yarn cli importTensionFranceTravail importTensionFranceTravailNational`)
 - à l'échelle **régionale** (`yarn cli importTensionFranceTravail importTensionFranceTravailRegion`)
 - à l'échelle **départementale** (`yarn cli importTensionFranceTravail importTensionFranceTravailDepartement`)
@@ -80,13 +80,13 @@ Cela crée respectivement les fichiers CSV suivants :
 - `server/static/files/tension_rome_departement.csv`
 
 
-## `yarn cli importMetierTension` (optionnel)
+## `yarn cli importTensionRome <echelleOptionnelle>` (optionnel)
 Cette commande n'est à exécuter que **si les données suivantes en lien avec les métiers** sont à importer :
 - le **lien métier-formation** via certif-info
-- les **tensions des métiers** (déjà importées par la commande précédente via l'API France Travail) :
-    - à l'échelle **nationale**
-    - à l'échelle **régionale**
-    - à l'échelle **départementale**
+- les **tensions des métiers** (déjà importées par la commande précédente via l'API France Travail). Si `echelleOptionnelle` n'est pas donnée, la commande exécute dans cet ordre : :
+    - à l'échelle **nationale** (`yarn cli importTensionRome importTensionRomeNational`)
+    - à l'échelle **régionale** (`yarn cli importTensionRome importTensionRomeRegion`)
+    - à l'échelle **départementale** (`yarn cli importTensionRome importTensionRomeDepartement`)
 Les tables concernées sont :
 - `domaineProfessionnel`
 - `rome`
