@@ -16,13 +16,5 @@ module.exports = {
         gitlabUrl: "https://gitlab.forge.education.gouv.fr",
       },
     ],
-    [
-      "semantic-release-slack-bot",
-      {
-        notifyOnSuccess: true,
-        notifyOnFail: true,
-        markdownReleaseNotes: true,
-      },
-    ],
   ],
 };
