@@ -24,6 +24,18 @@ Cette commande importe les fichiers CSV vers la table cache `rawData`. Cela impl
 - placés au **bon endroit dans l'arbordescence des fichiers csv** (`server/static/files`)
 - nommés comme il faut (majuscules, minuscules, tirets)
 
+
+Si besoin d'importer qu'**un seul fichier**, on peut exécuter la commande `yarn cli importFiles <nomFichier>` (où `nomFichier` est sans l'extension `.csv`).   
+C'est le cas par exemple en début de nouvelle campagne de saisie du formulaire, pour l'import :
+- des **nouvelles formations** :
+    - `yarn cli importFiles nFormationDiplome_` : détail des cfd en voie scolaire
+    - `yarn cli importFiles vFormationDiplome_` : détail des cfd en voie apprentissage
+    - `yarn cli importFiles nMef` : détail des mefstat11 de chaque cfd, utilex pour basculer lier les sources de données entre elles
+    - `yarn cli importFiles nNiveauFormationDiplome_` : détail des niveaux de diplômes (BAC PRO, CAP, BTS, ...)
+    - `yarn cli importFiles nDispositifFormation_` : détail des dispositifs possibles pour un niveau de diplôme (CAP en 1 an, CAP en 2 ans, ...) 
+
+Ou des **nouveaux établissements** (`yarn cli importFiles lyceesACCE`) .
+
 ## `yarn cli importTables`
 Cette commande importe les données depuis la table cache `rawData` vers les tables de la base de données. Voici les tables alimentées :
 - `diplomeProfessionnel`
