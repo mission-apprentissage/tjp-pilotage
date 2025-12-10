@@ -13,6 +13,8 @@
     - git config --global credential.helper store
     - echo "https://CI_TOKEN_ORION:${CI_TOKEN_ORION}@gitlab.forge.education.gouv.fr" > ~/.git-credentials
     - git remote set-url origin "https://CI_TOKEN_ORION:${CI_TOKEN_ORION}@gitlab.forge.education.gouv.fr/${CI_PROJECT_PATH}.git"
+    - git fetch --tags --force
+    - git fetch origin develop --unshallow || true
 
     # Vérification connexion Docker
     - echo "Test connexion Docker..."
