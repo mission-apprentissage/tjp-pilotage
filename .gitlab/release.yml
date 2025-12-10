@@ -1,12 +1,17 @@
 .release_base:
-  # Utiliser une image avec le client Docker uniquement
   image: docker:27-cli
   stage: release
   before_script:
     # Installer les dépendances système
     - apk add --no-cache git bash curl
 
-    # Configuration Git
+    # Variables pour semantic-release GitLab
+    - export GL_TOKEN="${CI_TOKEN_ORION}"
+    - export GITLAB_TOKEN="${CI_TOKEN_ORION}"
+
+    # Configuration Git credentials
+    - git config --global credential.helper store
+    - echo "https://CI_TOKEN_ORION:${CI_TOKEN_ORION}@gitlab.forge.education.gouv.fr" > ~/.git-credentials
     - git remote set-url origin "https://CI_TOKEN_ORION:${CI_TOKEN_ORION}@gitlab.forge.education.gouv.fr/${CI_PROJECT_PATH}.git"
 
     # Vérification connexion Docker
@@ -72,9 +77,9 @@ release_auto:
       dotenv: release.env
   rules:
     - if: $CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE != "web"
-  needs:
-    - lint
-    - typecheck
+  # needs:
+  #   - lint
+  #   - typecheck
 
 release_candidate:
   extends: .release_base
@@ -100,9 +105,9 @@ release_candidate:
       when: manual
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
-  needs:
-    - lint
-    - typecheck
+  # needs:
+  #   - lint
+  #   - typecheck
 
 release_manual:
   extends: .release_base
@@ -125,6 +130,6 @@ release_manual:
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"
       when: manual
-  needs:
-    - lint
-    - typecheck
+  # needs:
+  #   - lint
+  #   - typecheck

@@ -1,5 +1,6 @@
 module.exports = {
   branches: ["develop", { name: "hotfix", channel: "hotfix", prerelease: "hotfix" }],
+  repositoryUrl: "https://gitlab.forge.education.gouv.fr/orion/orion.git",
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -9,7 +10,12 @@ module.exports = {
         prepareCmd: `.bin/product release:app \${nextRelease.version} push`,
       },
     ],
-    "@semantic-release/github",
+    [
+      "@semantic-release/gitlab",
+      {
+        gitlabUrl: "https://gitlab.forge.education.gouv.fr",
+      },
+    ],
     [
       "semantic-release-slack-bot",
       {
