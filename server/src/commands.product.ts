@@ -22,7 +22,6 @@ import { importDataFormations } from "./modules/import/usecases/importDataFormat
 import { importDiplomesProfessionnels } from "./modules/import/usecases/importDiplomesProfessionnels/importDiplomesProfessionnels.usecase";
 import { importDiscipline } from "./modules/import/usecases/importDiscipline/importDiscipline.usecase";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
-import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFamillesMetiersBcn } from "./modules/import/usecases/importFamillesMetiersBcn/importFamillesMetiersBcn.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importIJData } from "./modules/import/usecases/importIJData/importIJData.usecase";
@@ -330,7 +329,6 @@ export function productCommands(cli: Command) {
         importNiveauxDiplome,
         importNSF,
         importDispositifs,
-        importFamillesMetiers,
         importFamillesMetiersBcn,
         importDataEtablissements,
         importDataFormations,
@@ -338,11 +336,7 @@ export function productCommands(cli: Command) {
         importDiplomesProfessionnels,
         importIndicateursRegion,
         importIndicateursDepartement,
-        importLienEmploiFormation,
         importDiscipline,
-        importTensionRomeNational,
-        importTensionRomeRegion,
-        importTensionRomeDepartement,
         importActionPrioritaire,
       };
 
@@ -355,6 +349,28 @@ export function productCommands(cli: Command) {
       }
       await refreshViews();
       await createJob({ name: "importTables", sub: usecaseName });
+    });
+
+  cli
+    .command("importTensionRome")
+    .description("Import du lien entre les formations et les métiers en tension")
+    .argument("[usecase]")
+    .action(async (usecaseName: string) => {
+      const usecases = {
+        importLienEmploiFormation,
+        importTensionRomeNational,
+        importTensionRomeRegion,
+        importTensionRomeDepartement
+      };
+
+      if (usecaseName) {
+        await usecases[usecaseName as keyof typeof usecases]();
+      } else {
+        for (const usecase of Object.values(usecases)) {
+          await usecase();
+        }
+      }
+      await createJob({ name: "importTensionRome", sub: usecaseName });
     });
 
   cli.command("importIJ").action(async () => {
