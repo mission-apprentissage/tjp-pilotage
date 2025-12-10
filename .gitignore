@@ -183,3 +183,5 @@ tsconfig.tsbuildinfo
 
 # Cursor
 .cursorrules
+
+*.gpg
