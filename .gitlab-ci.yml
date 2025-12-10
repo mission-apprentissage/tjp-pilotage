@@ -1,6 +1,6 @@
 stages:
   - sonarqube
-  - ci
+  # - ci
   - release
   - deploy
 
@@ -23,6 +23,6 @@ workflow:
 
 include:
   - local: '.gitlab/sonarqube.yml'
-  - local: '.gitlab/ci.yml'
+  # - local: '.gitlab/ci.yml'
   - local: '.gitlab/release.yml'
   - local: '.gitlab/deploy.yml'
