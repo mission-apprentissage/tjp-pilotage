@@ -3,7 +3,6 @@ module.exports = {
   repositoryUrl: "https://gitlab.forge.education.gouv.fr/orion/orion.git",
   plugins: [
     "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
     [
       "@semantic-release/exec",
       {
@@ -14,6 +13,8 @@ module.exports = {
       "@semantic-release/gitlab",
       {
         gitlabUrl: "https://gitlab.forge.education.gouv.fr",
+        successComment: false,
+        failComment: false,
       },
     ],
   ],
