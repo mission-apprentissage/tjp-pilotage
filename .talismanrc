@@ -6,7 +6,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: e28b0829cf2d4b166c8be3a138e6eaf4be7d040ba9ad3fd67f175f8f719e2093
+  checksum: d608ebb478135bbc5832b3642acf76de1dc43a679107824a1441cb092ea1affa
 - filename: .gitlab/deploy.yml
   checksum: 58b5558e9cada5a95ca7a6fb2337ac45214579e4b016e8161c24ba82bcf13002
 - filename: .yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
