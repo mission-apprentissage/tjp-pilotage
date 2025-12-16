@@ -2,10 +2,10 @@
  * Récupère les indicateurs de capacité et premiers voeux depuis Affelnet pour les formations hors-BTS.
  *
  * Fichiers rawData utilisés :
- * - "attractivite_capacite" : données Affelnet pour formations générales (MEF STAT 11, Etablissement d'accueil, Statut Offre de formation, Capacité carte scolaire, Demandes vœux 1)
+ * - "attractivite_capacite_[rentreeScolaire]" : données Affelnet pour formations générales (MEF STAT 11, Etablissement d'accueil, Statut Offre de formation, Capacité carte scolaire, Demandes vœux 1)
  *
  * Cette fonction :
- * 1. Recherche les données de capacité Affelnet via rawData type "attractivite_capacite"
+ * 1. Recherche les données de capacité Affelnet via rawData type "attractivite_capacite_[rentreeScolaire]"
  * 2. Filtre par MEFSTAT, UAI et statut ST (offre de formation standard donc scolaire) avec Voeu de recensement = N (non)
  * 3. Agrège les capacités (5-500 valides, autres ignorées) et premiers voeux
  * 4. Gère les valeurs invalides (< 5 ou >= 500 ignorées)

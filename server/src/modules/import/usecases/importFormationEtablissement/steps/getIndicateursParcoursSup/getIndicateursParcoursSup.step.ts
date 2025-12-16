@@ -2,10 +2,10 @@
  * Récupère les indicateurs de capacité et voeux depuis Parcoursup pour les formations BTS.
  *
  * Fichiers rawData utilisés :
- * - "BTS_attractivite_capacite" : données Parcoursup pour BTS (MEFSTAT11, UAI, STATUT, CAPACITEPSUP, NB_VOEUX_CONFIRMES)
+ * - "BTS_attractivite_capacite_[rentreeScolaire]" : données Parcoursup pour BTS (MEFSTAT11, UAI, STATUT, CAPACITEPSUP, NB_VOEUX_CONFIRMES)
  *
  * Cette fonction :
- * 1. Recherche les données de capacité Parcoursup via rawData type "BTS_attractivite_capacite"
+ * 1. Recherche les données de capacité Parcoursup via rawData type "BTS_attractivite_capacite_[rentreeScolaire]"
  * 2. Filtre par MEFSTAT, UAI et statut scolaire
  * 3. Agrège les capacités et voeux si présents
  * 4. Gère les valeurs manquantes (0 ou 999)

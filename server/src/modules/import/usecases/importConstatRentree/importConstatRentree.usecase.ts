@@ -2,12 +2,12 @@
  * Importe les constats de rentrée (effectifs par établissement et MEF) pour chaque rentrée scolaire.
  *
  * Fichiers rawData utilisés :
- * - "constat" : données des constats de rentrée pour chaque rentrée (Mef Bcp 11, UAI, Rentrée scolaire, Nombre d'élèves : Total)
+ * - "constat_[rentreeScolaire]" : données des constats de rentrée pour chaque rentrée (Mef Bcp 11, UAI, Rentrée scolaire, Nombre d'élèves : Total)
  * - "nMef" : données des MEF pour enrichissement des infos (MEF_STAT_11, FORMATION_DIPLOME, DISPOSITIF_FORMATION, ANNEE_DISPOSITIF)
  *
  * Cette fonction :
  * 1. Itère sur chaque rentrée scolaire définie (RENTREES_SCOLAIRES)
- * 2. Récupère les constats de rentrée depuis rawData type "constat" filtrés par rentrée
+ * 2. Récupère les constats de rentrée depuis rawData type "constat_[rentreeScolaire]" filtrés par rentrée
  * 3. Pour chaque constat, recherche le nMef correspondant via MEF_STAT_11
  * 4. Insère ou met à jour une ligne dans la table "constatRentree" avec UAI, effectif, cfd, codeDispositif et année du dispositif
  * 5. Gère les erreurs et compte les lignes importées
