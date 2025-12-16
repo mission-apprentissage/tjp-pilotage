@@ -7,7 +7,7 @@
  * - "diplomesProfessionnels" : enrichissement avec détails professionnels (Code diplôme, Intitulé de la spécialité, Code RNCP, Commission professionnelle consultative, Secteur, Sous-secteur)
  *
  * Données existantes en base consultées :
- * - Tables "2ndeCommune" et "specialite" : données de classification des formations
+ * - Table "familleMetier" : recherche si le CFD est année commune (cfdFamille) ou spécialité (cfd)
  *
  * Cette fonction :
  * 1. Récupère les formations scolaires depuis rawData type "nFormationDiplome_"
