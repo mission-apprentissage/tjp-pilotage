@@ -11,7 +11,8 @@
  * 7. Collecte les erreurs de validation (au niveau fichier ou ligne)
  *
  * Fichier de rapport d'erreurs :
- * - Chemin : `dist/import_files_report.csv` (écrit par le CLI lors de l'exécution des imports de fichiers, relatif au dossier serveur)
+ * - Chemin : `server/dist/import_files_report.csv` (relatif à la racine du projet)
+ * - Créé au runtime lors de l'exécution des commandes CLI d'import via `yarn cli importFiles`
  * - Colonnes : path, type, line, field, message
  * - Les erreurs d'encodage et de validation Zod y sont enregistrées
  *

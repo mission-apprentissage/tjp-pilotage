@@ -16,7 +16,7 @@
  * 6. Gère l'apprentissage séparé de la voie scolaire avec données spécifiques
  *
  * Rapport d'erreurs d'import :
- * - Chemin : `dist/import_files_report.csv` (généré par le CLI lors de l'import des fichiers bruts, relatif au dossier serveur)
+ * - Chemin : `server/dist/import_files_report.csv` (relatif à la racine du projet, créé au runtime)
  * - Les erreurs de validation des fichiers CSV sont enregistrées avec path, type, line, field et message
  *
  * Retourne le nombre total de formations et établissements importés.
