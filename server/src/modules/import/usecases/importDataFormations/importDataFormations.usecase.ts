@@ -17,6 +17,10 @@
  * 5. Insère ou met à jour une ligne dans la table "dataFormation" avec CFD, libellé, RNCP, secteurs, NSF et dates
  * 6. Gère les doublons et les erreurs
  *
+ * Rapport d'erreurs d'import :
+ * - Chemin : `dist/import_files_report.csv` (généré par le CLI lors de l'import des fichiers bruts, relatif au dossier serveur)
+ * - Les erreurs de validation des fichiers CSV sont enregistrées avec path, type, line, field et message
+ *
  * Retourne le nombre total de formations importées (scolaires + apprentissage).
  */
 

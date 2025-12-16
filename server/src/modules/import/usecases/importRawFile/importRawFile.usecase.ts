@@ -10,6 +10,11 @@
  * 6. Insère les lignes en batch dans la table "rawData" avec type et données
  * 7. Collecte les erreurs de validation (au niveau fichier ou ligne)
  *
+ * Fichier de rapport d'erreurs :
+ * - Chemin : `dist/import_files_report.csv` (écrit par le CLI lors de l'exécution des imports de fichiers, relatif au dossier serveur)
+ * - Colonnes : path, type, line, field, message
+ * - Les erreurs d'encodage et de validation Zod y sont enregistrées
+ *
  * Retourne un tableau d'erreurs (vide si succès) contenant détails du fichier/ligne problématique.
  */
 

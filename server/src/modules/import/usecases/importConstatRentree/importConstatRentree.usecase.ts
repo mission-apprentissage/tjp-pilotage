@@ -12,6 +12,10 @@
  * 4. Insère ou met à jour une ligne dans la table "constatRentree" avec UAI, effectif, cfd, codeDispositif et année du dispositif
  * 5. Gère les erreurs et compte les lignes importées
  *
+ * Rapport d'erreurs d'import :
+ * - Chemin : `dist/import_files_report.csv` (généré par le CLI lors de l'import des fichiers bruts, relatif au dossier serveur)
+ * - Les erreurs de validation des fichiers CSV y sont enregistrées
+ *
  * Retourne le nombre total de constats de rentrée importés.
  */
 

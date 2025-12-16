@@ -13,6 +13,10 @@
  * 5. Groupe les constats par établissement (UAI)
  * 6. Enrichit les données avec l'effectif issu du constat de rentrée (si disponible)
  *
+ * Rapport d'erreurs d'import :
+ * - Chemin : `dist/import_files_report.csv` (généré par le CLI lors de l'import des fichiers bruts, relatif au dossier serveur)
+ * - Les erreurs de validation des fichiers CSV y sont enregistrées
+ *
  * Retourne un objet contenant la liste des enseignements avec détails par établissement et année,
  * ou undefined si le dispositif n'existe pas.
  */
