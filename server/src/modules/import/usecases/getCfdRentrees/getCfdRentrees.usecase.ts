@@ -1,3 +1,22 @@
+/**
+ * Récupère les années d'enseignement constatées pour une formation diplôme (cfd) et un dispositif donnés.
+ *
+ * Fichiers rawData utilisés :
+ * - "nMef" : données des dispositifs et MEF associés au cfd (FORMATION_DIPLOME, DISPOSITIF_FORMATION, MEF_STAT_11, LIBELLE_LONG, ANNEE_DISPOSITIF, DUREE_DISPOSITIF)
+ * - "constat_[year]" : données des constats de rentrée pour l'année spécifiée (Mef Bcp 11, UAI, Nombre d'élèves : Total)
+ *
+ * Cette fonction :
+ * 1. Récupère tous les nMef pour le cfd (via rawData type "nMef")
+ * 2. Transforme les données en dispositifs avec années d'enseignement et MEF correspondants
+ * 3. Filtre pour trouver le dispositif spécifié par son code
+ * 4. Pour chaque année du dispositif, cherche les constats de rentrée correspondants (via rawData type "constat_[year]")
+ * 5. Groupe les constats par établissement (UAI)
+ * 6. Enrichit les données avec l'effectif issu du constat de rentrée (si disponible)
+ *
+ * Retourne un objet contenant la liste des enseignements avec détails par établissement et année,
+ * ou undefined si le dispositif n'existe pas.
+ */
+
 import { chain } from "lodash-es";
 
 import { inject } from "@/utils/inject";

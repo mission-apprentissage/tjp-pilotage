@@ -1,3 +1,22 @@
+/**
+ * Importe un établissement scolaire avec ses données géolocalisation et administrative.
+ *
+ * Fichiers rawData utilisés :
+ * - "lyceesACCE" : données établissements (numero_uai, numero_siren_siret_uai, nature_uai, secteur_public_prive, dates ouverture/fermeture, ministere_tutelle, appellation_officielle, departement_insee_3)
+ *
+ * Données existantes en base consultées :
+ * - Table "departement" : récupère codes académie et région via code département
+ * - API géolocalisation : récupère adresse, commune, code postal, latitude/longitude
+ *
+ * Cette fonction :
+ * 1. Récupère les données établissement via UAI depuis rawData type "lyceesACCE"
+ * 2. Recherche le département pour récupérer académie et région
+ * 3. Appelle API géolocalisation pour adresse et coordonnées
+ * 4. Insère ou met à jour dans la table "etablissement" avec tous les champs
+ *
+ * Retourne après insertion des données.
+ */
+
 import type { Insertable, Selectable } from "kysely";
 import { DateTime } from "luxon";
 

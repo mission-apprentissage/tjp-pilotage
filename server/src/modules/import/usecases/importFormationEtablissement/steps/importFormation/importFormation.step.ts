@@ -1,3 +1,18 @@
+/**
+ * [LA TABLE "formation" N'EST PLUS UTILE, CETTE FONCTIONNALITÉ EST CONSERVÉE POUR HISTORIQUE]
+ * Importe une formation au sein d'un établissement en créant une entrée formation.
+ *
+ * Données existantes en base consultées :
+ * - Table "dataFormation" : récupère CFD, libellés, RNCP, codes NSF, niveaux et secteurs professionnels
+ *
+ * Cette fonction :
+ * 1. Recherche les données de formation depuis la table dataFormation via CFD
+ * 2. Vérifie que la date d'ouverture est présente
+ * 3. Insère ou met à jour dans la table "formation" avec tous les champs (CFD, RNCP, libellés, secteurs, NSF)
+ *
+ * Retourne l'objet formation créé/mis à jour.
+ */
+
 import { inject } from "@/utils/inject";
 
 import { createFormation } from "./createFormation.dep";

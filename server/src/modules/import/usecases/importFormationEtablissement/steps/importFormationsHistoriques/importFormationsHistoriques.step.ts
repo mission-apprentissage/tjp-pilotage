@@ -1,3 +1,22 @@
+/**
+ * Importe les anciennes formations (formations historiques cessées) liées à une nouvelle formation.
+ *
+ * Fichiers rawData utilisés :
+ * - "nFormationDiplome_" : données des formations diplômantes (FORMATION_DIPLOME, ANCIEN_DIPLOME_1 à 7, DATE_FERMETURE)
+ *
+ * Données existantes en base consultées :
+ * - Table "dataFormation" : récupère les caractéristiques de chaque ancien CFD
+ *
+ * Cette fonction :
+ * 1. Récupère les données de la formation actuelle depuis rawData type "nFormationDiplome_"
+ * 2. Extrait les 7 anciens CFD potentiels (ANCIEN_DIPLOME_1 à 7)
+ * 3. Pour chaque ancien CFD, récupère ses caractéristiques depuis dataFormation
+ * 4. Ignore les formations fermées avant 2018 (trop anciennes)
+ * 5. Insère les liens de succession dans la table "formationHistorique"
+ *
+ * Retourne le tableau des anciens CFD traités.
+ */
+
 import type { NFormationDiplomeLine } from "@/modules/import/fileTypes/NFormationDiplome";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { inject } from "@/utils/inject";

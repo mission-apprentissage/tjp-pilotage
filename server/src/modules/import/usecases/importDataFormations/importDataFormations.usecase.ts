@@ -1,3 +1,25 @@
+/**
+ * Importe les données de formations (CAP, BTS, Bac Pro, etc.) avec leurs caractéristiques professionnelles.
+ *
+ * Fichiers rawData utilisés :
+ * - "nFormationDiplome_" : données des formations diplômantes scolaires (FORMATION_DIPLOME, LIBELLE_LONG_200, DATE_OUVERTURE, DATE_FERMETURE)
+ * - "vFormationDiplome_" : données des formations diplômantes en apprentissage (FORMATION_DIPLOME, LIBELLE_LONG_200, DATE_OUVERTURE, DATE_FERMETURE)
+ * - "diplomesProfessionnels" : enrichissement avec détails professionnels (Code diplôme, Intitulé de la spécialité, Code RNCP, Commission professionnelle consultative, Secteur, Sous-secteur)
+ *
+ * Données existantes en base consultées :
+ * - Tables "2ndeCommune" et "specialite" : données de classification des formations
+ *
+ * Cette fonction :
+ * 1. Récupère les formations scolaires depuis rawData type "nFormationDiplome_"
+ * 2. Récupère les formations en apprentissage depuis rawData type "vFormationDiplome_"
+ * 3. Enrichit avec données professionnelles depuis rawData type "diplomesProfessionnels"
+ * 4. Détermine la famille de formation (2nde commune, spécialité, option, 1ere commune)
+ * 5. Insère ou met à jour une ligne dans la table "dataFormation" avec CFD, libellé, RNCP, secteurs, NSF et dates
+ * 6. Gère les doublons et les erreurs
+ *
+ * Retourne le nombre total de formations importées (scolaires + apprentissage).
+ */
+
 import { capitalize, isString, pickBy } from "lodash-es";
 import { DateTime } from "luxon";
 import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";

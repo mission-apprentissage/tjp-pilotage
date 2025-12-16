@@ -1,3 +1,20 @@
+/**
+ * Importe les indicateurs de tension du marché du travail départemental via l'API France Travail.
+ *
+ * Sources externes :
+ * - API France Travail : données de perspectives de recrutement par code ROME et département (Stats Perspectives Recrutement Departement)
+ *
+ * Cette fonction :
+ * 1. Récupère tous les codes ROME existants en base
+ * 2. Récupère tous les départements existants en base
+ * 3. Pour chaque combinaison ROME-département, appelle l'API France Travail
+ * 4. Gère les rate limits (429) avec retry automatique
+ * 5. Écrit les résultats dans un fichier départemental
+ * 6. Gère les erreurs spécifiques
+ *
+ * Retourne le nombre total de tensions départementales par ROME importées.
+ */
+
 import { AxiosError } from "axios";
 import { setTimeout } from "timers/promises";
 

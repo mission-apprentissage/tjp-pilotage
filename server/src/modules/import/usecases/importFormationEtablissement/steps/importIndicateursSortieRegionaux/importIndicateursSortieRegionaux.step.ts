@@ -1,3 +1,29 @@
+/**
+ * Importe les indicateurs de sortie régionaux (insertion par région) pour formations en voie scolaire et apprentissage.
+ *
+ * Fichiers rawData utilisés :
+ * - "ij_reg" : données d'insertion régionales par (MEFSTAT/CFD, millesime, codeRegion, scolaire/apprentissage data)
+ *
+ * Données existantes en base consultées (fallback CONTINUUM) :
+ * - Tables "formationHistorique", "formation", "indicateurRegionSortie" : recherche continuité historique si données IJ régionales manquantes
+ *
+ * Cette fonction (2 exports) :
+ *
+ * 1. importIndicateursRegionSortie (scolaire) :
+ *    - Pour chaque région et millésime, récupère données ij_reg
+ *    - Filtre par MEFSTAT dans voie scolaire
+ *    - Si manquant, utilise fallback CONTINUUM (anciennes formations)
+ *    - Insère dans table "indicateurRegionSortie"
+ *
+ * 2. importIndicateursRegionSortieApprentissage (apprentissage) :
+ *    - Pour chaque région et millésime, récupère données ij_reg
+ *    - Filtre par CFD dans voie apprentissage
+ *    - Si manquant, utilise fallback CONTINUUM (anciennes formations)
+ *    - Insère dans table "indicateurRegionSortie"
+ *
+ * Retourne après insertion des données.
+ */
+
 import { MILLESIMES_IJ_REG } from "shared";
 
 import { regionAcademiqueMapping } from "@/modules/import/domain/regionAcademiqueMapping";

@@ -1,3 +1,17 @@
+/**
+ * Importe les codes NSF (Nomenclature des Spécialités et Formations) avec leurs libellés.
+ *
+ * Fichiers rawData utilisés :
+ * - "n_groupe_specialite_" : données des groupes de spécialités NSF (GROUPE_SPECIALITE, LIBELLE_EDITION, LIBELLE_LONG)
+ *
+ * Cette fonction :
+ * 1. Récupère les groupes de spécialités depuis rawData type "n_groupe_specialite_"
+ * 2. Normalise le libellé (utilise LIBELLE_EDITION si disponible, sinon LIBELLE_LONG)
+ * 3. Insère ou met à jour une ligne dans la table "nsf" avec code NSF et libellé
+ *
+ * Retourne le nombre total de codes NSF importés.
+ */
+
 import type { Insertable } from "kysely";
 import { capitalize } from "lodash-es";
 

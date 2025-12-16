@@ -1,3 +1,21 @@
+/**
+ * Importe les données d'Insertion et Jeunesse (IJ) provenant de l'API externe ou d'historiques.
+ *
+ * Fichiers rawData consultés :
+ * - Données existantes en base : formations historiques, diplômes professionnels, familles de métiers
+ * - Données IJ nationales et régionales : fetchées via API externe (France Travail)
+ *
+ * Cette fonction :
+ * 1. Récupère les régions nationales et régionales IJ via fetchIjReg() depuis API
+ * 2. Itère sur les diplômes professionnels pour extraire CFD et voie (scolaire/apprentissage)
+ * 3. Pour chaque CFD, récupère les anciens CFD historiques en base et importe IJ pour tous
+ * 4. Itère sur les familles de métiers pour extraire CFD et importe IJ correspondants
+ * 5. Accumule les UAI à traiter à partir des formations récupérées
+ * 6. Traite les données IJ par batch de 50 UAI
+ *
+ * Retourne le nombre total d'UAI et de données IJ traitées/importées.
+ */
+
 import { RENTREES_SCOLAIRES } from "shared";
 
 import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";

@@ -1,3 +1,18 @@
+/**
+ * Utilitaire générique d'import de fichiers CSV dans la table rawData.
+ *
+ * Cette fonction :
+ * 1. Vérifie l'encodage du fichier (UTF-8)
+ * 2. Supprime les données rawData existantes du type spécifié
+ * 3. Lit le fichier CSV ligne par ligne via un stream
+ * 4. Valide chaque ligne contre le schéma Zod fourni
+ * 5. Nettoie les guillemets supplémentaires des valeurs
+ * 6. Insère les lignes en batch dans la table "rawData" avec type et données
+ * 7. Collecte les erreurs de validation (au niveau fichier ou ligne)
+ *
+ * Retourne un tableau d'erreurs (vide si succès) contenant détails du fichier/ligne problématique.
+ */
+
 import { pipeline, Writable } from "node:stream";
 
 import fs from "fs";

@@ -1,3 +1,19 @@
+/**
+ * Importe les données des établissements (lycées ACCE) avec leurs informations géographiques et administratives.
+ *
+ * Fichiers rawData utilisés :
+ * - "lyceesACCE" : données des établissements (numero_uai, numero_siren_siret_uai, appellation_officielle, adresse_uai, commune_libe, code_postal_uai, secteur_public_prive, ministere_tutelle, type_uai, departement_insee_3)
+ *
+ * Cette fonction :
+ * 1. Récupère les établissements depuis rawData type "lyceesACCE"
+ * 2. Extrait et formate le code département à partir du code INSEE
+ * 3. Recherche les codes académie et région correspondants
+ * 4. Insère ou met à jour une ligne dans la table "dataEtablissement" avec UAI, SIRET, codes, adresse et informations de l'établissement
+ * 5. Gère les erreurs et compte les lignes importées
+ *
+ * Retourne le nombre total de données d'établissements importées.
+ */
+
 import type { DB } from "@/db/db";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { streamIt } from "@/modules/import/utils/streamIt";

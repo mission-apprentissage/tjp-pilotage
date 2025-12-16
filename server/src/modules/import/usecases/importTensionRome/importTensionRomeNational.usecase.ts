@@ -1,3 +1,19 @@
+/**
+ * Importe les indicateurs de tension du marché du travail par code ROME au niveau national.
+ *
+ * Fichiers rawData utilisés :
+ * - "tension_rome" : données de tension du marché du travail par ROME (codeActivite/codeRome, codePeriode/annee, codeNomenclature, libNomenclature, valeurPrincipaleNom)
+ *
+ * Cette fonction :
+ * 1. Supprime les données de tension nationales existantes (tensionRome)
+ * 2. Récupère les données de tension depuis rawData type "tension_rome"
+ * 3. Pour chaque tension unique (code + libellé), insère ou met à jour dans la table "tension"
+ * 4. Insère les relations ROME-tension dans la table "tensionRome" avec année et valeur
+ * 5. Gère les doublons et les conflits d'insertion
+ *
+ * Retourne le nombre total de tensions nationales ROME importées.
+ */
+
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/schema";

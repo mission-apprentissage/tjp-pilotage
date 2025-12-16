@@ -1,3 +1,23 @@
+/**
+ * Importe les familles de métiers via les données BCN (référentiel pédagogique de l'Éducation nationale).
+ *
+ * Fichiers rawData utilisés :
+ * - "n_lien_formation_groupe_" : liens entre formations diplôme et groupes de formation (FORMATION_DIPLOME, GROUPE_FORMATION)
+ * - "n_groupe_formation_" : informations sur les groupes de formation (GROUPE_FORMATION, LIBELLE_EDITION, TYPE_GROUPE_FORMATION)
+ * - "n_type_groupe_formation_" : types de groupes de formation (TYPE_GROUPE_FORMATION, LIBELLE_EDITION)
+ * - "nFormationDiplome_" : informations sur les formations diplôme pour nature et dates (FORMATION_DIPLOME, NATURE_FORMATION_DIPLOME, DATE_OUVERTURE, DATE_FERMETURE)
+ *
+ * Cette fonction :
+ * 1. Récupère les CFD uniques depuis rawData type "n_lien_formation_groupe_"
+ * 2. Pour chaque CFD, récupère groupe, libellé groupe et type depuis rawData correspondants
+ * 3. Insère ou met à jour une ligne dans la table "familleMetier" avec CFD, groupe et libellé
+ * 4. Itère une seconde fois pour remplir le champ cfdFamille en cherchant les CFD de nature = "T" (représentant la classe commune)
+ * 5. Valide les dates d'ouverture/fermeture pour les mises à jour
+ * 6. Gère les erreurs et compte les formations traitées
+ *
+ * Retourne le nombre total de familles de métiers BCN importées.
+ */
+
 import { importFamillesMetiersDepsBcn } from "./importFamillesMetiersBcn.deps";
 
 export const importFamillesMetiersBcnFactory =

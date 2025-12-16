@@ -1,3 +1,21 @@
+/**
+ * Importe les diplômes professionnels pour les deux voies de formation (scolaire et apprentissage).
+ *
+ * Fichiers rawData utilisés :
+ * - "diplomesProfessionnels" : données des diplômes scolaires (Code diplôme, Intitulé de la spécialité, Commission professionnelle consultative, Secteur, Sous-secteur, Code RNCP)
+ * - "offres_apprentissage" : données des offres d'apprentissage pour extraire les CFD en apprentissage (Formation: code CFD)
+ *
+ * Cette fonction :
+ * 1. Récupère les diplômes professionnels depuis rawData type "diplomesProfessionnels"
+ * 2. Normalise le CFD (supprime tirets, limite à 8 caractères, valide le format numérique)
+ * 3. Insère ou met à jour une ligne dans la table "diplomeProfessionnel" avec CFD et voie "scolaire"
+ * 4. Récupère les CFD depuis rawData type "offres_apprentissage" (filtrés sur CFD de niveau 3, 4, 5)
+ * 5. Insère ou met à jour une ligne dans la table "diplomeProfessionnel" avec CFD et voie "apprentissage"
+ * 6. Gère les erreurs pour les deux voies
+ *
+ * Retourne le nombre total de diplômes professionnels importés (scolaire + apprentissage).
+ */
+
 import type { DiplomeProfessionnelLine } from "@/modules/import/fileTypes/DiplomesProfessionnels";
 import { streamIt } from "@/modules/import/utils/streamIt";
 import { inject } from "@/utils/inject";

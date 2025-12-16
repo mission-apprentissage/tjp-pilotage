@@ -1,3 +1,22 @@
+/**
+ * Importe les indicateurs de sortie (insertion post-formation) pour une formation et établissement.
+ *
+ * Fichiers rawData utilisés :
+ * - "ij" : données d'insertion Jeunes par UAI et millésime (scolaire/apprentissage, effectifs, insertion 6/12/24 mois)
+ *
+ * Données externes consultées :
+ * - API CONTINUUM : alternative si données IJ non disponibles
+ *
+ * Cette fonction :
+ * 1. Récupère les données IJ pour l'UAI et le millésime depuis rawData type "ij"
+ * 2. Filtre les données pour le MEFSTAT spécifique dans la voie scolaire
+ * 3. Si pas de données MEF, utilise CONTINUUM API alternative
+ * 4. Extrait effectifs de sortie, insertion 6/12/24 mois, poursuite d'études
+ * 5. Insère ou met à jour dans la table "indicateurSortie"
+ *
+ * Retourne après insertion des données.
+ */
+
 import { omit } from "lodash-es";
 
 import { inject } from "@/utils/inject";

@@ -1,3 +1,20 @@
+/**
+ * Importe les indicateurs de tension du marché du travail par code ROME au niveau départemental.
+ *
+ * Fichiers rawData utilisés :
+ * - "tension_rome_departement" : données de tension départementale par ROME (codeActivite/codeRome, codeDepartement, codePeriode/annee, codeNomenclature, libNomenclature, valeurPrincipaleNom)
+ *
+ * Cette fonction :
+ * 1. Supprime les données de tension départementales existantes (tensionRomeDepartement)
+ * 2. Récupère les données de tension départementale depuis rawData type "tension_rome_departement"
+ * 3. Formate les codes département (ajoute leading 0 si nécessaire)
+ * 4. Pour chaque tension unique (code + libellé), insère ou met à jour dans la table "tension"
+ * 5. Insère les relations ROME-département-tension dans la table "tensionRomeDepartement" avec année et valeur
+ * 6. Gère les doublons et les conflits d'insertion
+ *
+ * Retourne le nombre total de tensions départementales ROME importées.
+ */
+
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/schema";

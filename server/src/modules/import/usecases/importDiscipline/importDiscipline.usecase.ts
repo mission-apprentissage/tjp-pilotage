@@ -1,3 +1,17 @@
+/**
+ * Importe les disciplines d'enseignement avec leurs codes et libellés.
+ *
+ * Fichiers rawData utilisés :
+ * - "discipline" : données des disciplines (codeDiscipline, libelleDiscipline)
+ *
+ * Cette fonction :
+ * 1. Récupère les disciplines depuis rawData type "discipline"
+ * 2. Insère ou met à jour une ligne dans la table "discipline" avec code et libellé
+ * 3. Gère les erreurs
+ *
+ * Retourne le nombre total de disciplines importées.
+ */
+
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/schema";

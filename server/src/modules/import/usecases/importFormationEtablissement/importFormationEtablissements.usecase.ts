@@ -1,3 +1,23 @@
+/**
+ * Importe et coordonne les données de formations par établissement avec tous leurs indicateurs (scolaire et apprentissage).
+ *
+ * Fichiers rawData consultés :
+ * - "nMef" : dispositifs et codes MEF des formations (codeMef, codeDispositif, sigle)
+ * - Données existantes en base : diplômes professionnels et familles de métiers
+ * - Données historiques de formations en base
+ * - rawData type "offres_apprentissage" : offres d'apprentissage avec données d'alternance (uai, cfd, voie)
+ *
+ * Cette fonction orchestrant plusieurs étapes :
+ * 1. Nettoie les données d'apprentissage existantes (indicateurs IJ)
+ * 2. Pour chaque diplôme professionnel : importFormation, importFormationHistorique et indicateurs
+ * 3. Pour chaque famille de métiers : importFormation, importFormationHistorique et indicateurs
+ * 4. Importe les établissements de formation avec localisation géographique
+ * 5. Importe les indicateurs d'établissement (entrées, sorties, sorties régionales)
+ * 6. Gère l'apprentissage séparé de la voie scolaire avec données spécifiques
+ *
+ * Retourne le nombre total de formations et établissements importés.
+ */
+
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES, VoieEnum } from "shared";
 
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";

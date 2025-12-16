@@ -1,3 +1,19 @@
+/**
+ * Importe les indicateurs de tension du marché du travail national via l'API France Travail (anciennement Pôle Emploi).
+ *
+ * Sources externes :
+ * - API France Travail : données de perspectives de recrutement par code ROME (Stats Perspectives Recrutement)
+ *
+ * Cette fonction :
+ * 1. Récupère tous les codes ROME existants en base
+ * 2. Pour chaque ROME, appelle l'API France Travail pour récupérer les stats de recrutement
+ * 3. Gère les rate limits (429) avec retry automatique
+ * 4. Écrit les résultats dans un fichier au format déterminé (csv dans notre cas)
+ * 5. Gère les erreurs spécifiques (pas de résultats avec ce code, etc.)
+ *
+ * Retourne le nombre total de tensions nationales par ROME importées.
+ */
+
 import { AxiosError } from "axios";
 import { setTimeout } from "timers/promises";
 

@@ -1,3 +1,23 @@
+/**
+ * Importe les indicateurs d'entrée (capacités et premiers voeux) pour une formation dans un établissement.
+ *
+ * Fichiers rawData utilisés (via appels aux steps) :
+ * - "BTS_attractivite_capacite" : pour formations BTS (via getIndicateursParcoursSup)
+ * - "attractivite_capacite" : pour formations hors-BTS (via getIndicateursAffelnet)
+ *
+ * Données existantes en base consultées :
+ * - Table "familleMetier" : recherche si le CFD est année commune (cfdFamille) ou spécialité (cfd)
+ *
+ * Cette fonction :
+ * 1. Détermine si c'est une spécialité ou année commune (affecte anneeDebut)
+ * 2. Pour apprentissage : crée entrée vide (aucun indicateur)
+ * 3. Pour scolaire BTS : récupère capacités/voeux via Parcoursup (rawData "BTS_attractivite_capacite")
+ * 4. Pour scolaire hors-BTS : récupère capacités/voeux via Affelnet (rawData "attractivite_capacite")
+ * 5. Insère ou met à jour dans la table "indicateurEntree"
+ *
+ * Retourne après insertion des données.
+ */
+
 import type { VoieType } from "shared";
 
 import type {

@@ -1,3 +1,23 @@
+/**
+ * Importe les liens entre formations professionnelles et emplois (nomenclature ROME).
+ *
+ * Fichiers rawData utilisés :
+ * - "domaine_professionnel" : domaines professionnels ROME (code_domaine_professionnel, libelle_domaine_professionnel)
+ * - "rome" : fiches ROME avec codes et libellés métiers (code_rome, libelle_rome, transition_eco, transition_num, transition_demo)
+ * - "metier" : métiers avec codes OGR (code_rome, libelle_appellation_long, code_ogr)
+ * - "certif_info" : certifications avec liens aux codes ROME (Code_Scolarité/CFD, Code_Rome_1 à 5)
+ *
+ * Cette fonction :
+ * 1. Supprime les données existantes (formationsRome, métiers, ROME, domaines professionnels)
+ * 2. Récupère et insère les domaines professionnels dans la table "domaineProfessionnel"
+ * 3. Récupère et insère les fiches ROME avec codes domaine dans la table "rome"
+ * 4. Récupère et insère les métiers dans la table "metier"
+ * 5. Pour chaque diplôme professionnel, récupère les certifications depuis rawData type "certif_info"
+ * 6. Insère les liens CFD-ROME dans la table "formationRome" pour chaque code ROME de la certification
+ *
+ * Retourne le nombre total de domaines, ROME, métiers et formationRome importés.
+ */
+
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/db";

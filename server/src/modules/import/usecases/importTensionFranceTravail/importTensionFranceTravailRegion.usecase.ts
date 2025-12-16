@@ -1,3 +1,20 @@
+/**
+ * Importe les indicateurs de tension du marché du travail régional via l'API France Travail.
+ *
+ * Sources externes :
+ * - API France Travail : données de perspectives de recrutement par code ROME et région (Stats Perspectives Recrutement Region)
+ *
+ * Cette fonction :
+ * 1. Récupère tous les codes ROME existants en base
+ * 2. Récupère toutes les régions existantes en base
+ * 3. Pour chaque combinaison ROME-région, appelle l'API France Travail
+ * 4. Gère les rate limits (429) avec retry automatique
+ * 5. Écrit les résultats dans un fichier régional
+ * 6. Gère les erreurs spécifiques
+ *
+ * Retourne le nombre total de tensions régionales par ROME importées.
+ */
+
 import { AxiosError } from "axios";
 import { setTimeout } from "timers/promises";
 

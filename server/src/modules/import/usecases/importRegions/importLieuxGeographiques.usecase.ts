@@ -1,3 +1,19 @@
+/**
+ * Importe les lieux géographiques : régions, académies et départements avec leurs relations.
+ *
+ * Fichiers rawData utilisés :
+ * - "departements_academies_regions_" : données de géographie administrative (codeRegion, libelleRegion, codeAcademie, libelleAcademie, codeDepartement, libelleDepartement)
+ *
+ * Cette fonction :
+ * 1. Récupère les correspondances département-académie-région depuis rawData type "departements_academies_regions_"
+ * 2. Pour chaque ligne de ces données brutes de rawData :
+ *  a. insère ou met à jour une ligne dans la table "region"
+ *  b. Insère ou met à jour une ligne dans la table "academie" (si codeAcademie valide)
+ *  c. Insère ou met à jour une ligne dans la table "departement" (si données complètes)
+ *
+ * Retourne le nombre total de régions, académies et départements importés.
+ */
+
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/db";
